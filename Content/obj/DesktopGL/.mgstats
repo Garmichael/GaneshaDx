@@ -1,0 +1,8 @@
+Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
+"C:/Users/Garmy/Documents/GaneshaX/GaneshaDx/Content/DebugFont.spritefont","C:/Users/Garmy/Documents/GaneshaX/GaneshaDx/Content/bin/DesktopGL/DebugFont.xnb","FontDescriptionProcessor","SpriteFontContent",2008,21538,0.5287212
+"C:/Users/Garmy/Documents/GaneshaX/GaneshaDx/Content/FFTPolygonShader.fx","C:/Users/Garmy/Documents/GaneshaX/GaneshaDx/Content/bin/DesktopGL/FFTPolygonShader.xnb","EffectProcessor","CompiledEffectContent",21509,28174,2.8144307
+"C:/Users/Garmy/Documents/GaneshaX/GaneshaDx/Content/GaneshaLogo.png","C:/Users/Garmy/Documents/GaneshaX/GaneshaDx/Content/bin/DesktopGL/GaneshaLogo.xnb","TextureProcessor","Texture2DContent",11538,320085,0.5335558
+"C:/Users/Garmy/Documents/GaneshaX/GaneshaDx/Content/icomoon.ttf","C:\Users\Garmy\Documents\GaneshaX\GaneshaDx\Content\bin\DesktopGL\icomoon.ttf","CopyItem","File",1940,1940,0.0064684
+"C:/Users/Garmy/Documents/GaneshaX/GaneshaDx/Content/Roboto-Light.ttf","C:\Users\Garmy\Documents\GaneshaX\GaneshaDx\Content\bin\DesktopGL\Roboto-Light.ttf","CopyItem","File",162636,162636,0.0124128
+"C:/Users/Garmy/Documents/GaneshaX/GaneshaDx/Content/Roboto-Medium.ttf","C:\Users\Garmy\Documents\GaneshaX\GaneshaDx\Content\bin\DesktopGL\Roboto-Medium.ttf","CopyItem","File",160696,160696,0.0082802
+"C:/Users/Garmy/Documents/GaneshaX/GaneshaDx/Content/StormGardenStudioLogo.png","C:/Users/Garmy/Documents/GaneshaX/GaneshaDx/Content/bin/DesktopGL/StormGardenStudioLogo.xnb","TextureProcessor","Texture2DContent",3965,35285,0.0024031

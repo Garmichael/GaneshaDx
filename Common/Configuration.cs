@@ -1,0 +1,50 @@
+﻿using System.IO;
+using System.Text;
+using Microsoft.Xna.Framework;
+using Newtonsoft.Json;
+using Vector3 = System.Numerics.Vector3;
+
+namespace GaneshaDx.Common {
+	public static class Configuration {
+		private const string ConfigurationFile = "Preferences.json";
+		public static ConfigurationProperties Properties;
+
+		public static void LoadConfiguration() {
+			if (!File.Exists(ConfigurationFile)) {
+				Properties = new ConfigurationProperties();
+				SaveConfiguration();
+			} else {
+				string json = File.ReadAllText(ConfigurationFile);
+				Properties = JsonConvert.DeserializeObject<ConfigurationProperties>(json);
+			}
+		}
+
+		public static void SaveConfiguration() {
+			FileStream stream = new FileStream(ConfigurationFile, FileMode.Create);
+			using (StreamWriter writer = new StreamWriter(stream, Encoding.Default)) {
+				writer.WriteLine(JsonConvert.SerializeObject(Properties, Formatting.Indented));
+			}
+			
+			stream.Dispose();
+		}
+
+		public class ConfigurationProperties {
+			public bool ShowFps = true;
+			public string LoadFolder = @"C:\";
+			public float PanningSensitivity = 1f;
+			public float RotationSensitivity = 1f;
+			public float ZoomStrength = 1.2f;
+			public bool InvertedPanning;
+			public bool InvertedRotation;
+			public bool RenderAlphaAsSemiTransparent;
+			public bool AllowBackfaceSelection;
+			public bool HighlightSelectionOnTexturePage = true;
+			public bool TexturePreviewShowUnselectedUvs = true;
+			public int TexturePreviewShiftArrowDistance = 20;
+			public int TerrainTransparencyForPolygonEditing = 50;
+			public float TranslateAxisControlSpeed = 0.33f;
+			public Vector3 TerrainColorForPolygonEditing = Utilities.ConvertVector3(Color.Red.ToVector3());
+			public bool RenderPolygonsInLightingMode = false;
+		}
+	}
+}
