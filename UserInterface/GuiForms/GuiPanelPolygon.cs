@@ -339,6 +339,19 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					Utilities.AverageNormals();
 				}
 
+				if (polygon.IsQuad && ImGui.Button("Break", new Vector2(GuiStyle.WidgetWidth, 20))) {
+					List<Polygon> newPolys = new List<Polygon>();
+					foreach (Polygon selectedPolygon in Selection.SelectedPolygons) {
+						newPolys.AddRange(selectedPolygon.Break());
+					}
+
+					Selection.SelectedPolygons.Clear();
+					
+					foreach (Polygon newPolygon in newPolys) {
+						Selection.AddPolyToSelection(newPolygon);
+					}
+				}
+
 				ImGui.Columns(1);
 				ImGui.Unindent();
 				GuiStyle.AddSpace();

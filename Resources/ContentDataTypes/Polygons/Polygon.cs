@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using GaneshaDx.Common;
 using GaneshaDx.Environment;
 using GaneshaDx.Rendering;
@@ -258,6 +259,87 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 			}
 
 			return newPolygon;
+		}
+
+		public List<Polygon> Break() {
+			if (!IsQuad) {
+				return new List<Polygon>();
+			}
+
+			Polygon newPolygonA = new Polygon {
+				MeshType = MeshType,
+				PaletteId = PaletteId,
+				PolygonType = IsTextured ? PolygonType.TexturedTriangle : PolygonType.UntexturedTriangle,
+				RenderingProperties = new PolygonRenderingProperties(RenderingProperties.RawData),
+				TerrainLevel = TerrainLevel,
+				TerrainX = TerrainX,
+				TerrainZ = TerrainZ,
+				TexturePage = TexturePage,
+				Vertices = new List<Vertex>()
+			};
+
+			Polygon newPolygonB = new Polygon {
+				MeshType = MeshType,
+				PaletteId = PaletteId,
+				PolygonType = IsTextured ? PolygonType.TexturedTriangle : PolygonType.UntexturedTriangle,
+				RenderingProperties = new PolygonRenderingProperties(RenderingProperties.RawData),
+				TerrainLevel = TerrainLevel,
+				TerrainX = TerrainX,
+				TerrainZ = TerrainZ,
+				TexturePage = TexturePage,
+				Vertices = new List<Vertex>()
+			};
+
+			newPolygonA.Vertices.Add(CloneVertex(0, Color.Red));
+			newPolygonA.Vertices.Add(CloneVertex(1, Color.Green));
+			newPolygonA.Vertices.Add(CloneVertex(2, Color.Blue));
+
+			newPolygonB.Vertices.Add(CloneVertex(1, Color.Red));
+			newPolygonB.Vertices.Add(CloneVertex(3, Color.Green));
+			newPolygonB.Vertices.Add(CloneVertex(2, Color.Blue));
+
+			if (IsTextured) {
+				newPolygonA.UvCoordinates = new List<Vector2> {
+					new Vector2(UvCoordinates[0].X, UvCoordinates[0].Y),
+					new Vector2(UvCoordinates[1].X, UvCoordinates[1].Y),
+					new Vector2(UvCoordinates[2].X, UvCoordinates[2].Y)
+				};
+
+				newPolygonB.UvCoordinates = new List<Vector2> {
+					new Vector2(UvCoordinates[1].X, UvCoordinates[1].Y),
+					new Vector2(UvCoordinates[3].X, UvCoordinates[3].Y),
+					new Vector2(UvCoordinates[2].X, UvCoordinates[2].Y)
+				};
+
+				CurrentMapState.StateData.PolygonCollection[MeshType][PolygonType.TexturedQuad].Remove(this);
+				CurrentMapState.StateData.PolygonCollection[MeshType][PolygonType.TexturedTriangle].Add(newPolygonA);
+				CurrentMapState.StateData.PolygonCollection[MeshType][PolygonType.TexturedTriangle].Add(newPolygonB);
+			} else {
+				CurrentMapState.StateData.PolygonCollection[MeshType][PolygonType.UntexturedQuad].Remove(this);
+				CurrentMapState.StateData.PolygonCollection[MeshType][PolygonType.UntexturedTriangle].Add(newPolygonA);
+				CurrentMapState.StateData.PolygonCollection[MeshType][PolygonType.UntexturedTriangle].Add(newPolygonB);
+			}
+
+			return new List<Polygon> {newPolygonA, newPolygonB};
+		}
+
+		private Vertex CloneVertex(int vertexIndex, Color newColor) {
+			return new Vertex {
+				Position = new Vector3(
+					Vertices[vertexIndex].Position.X,
+					Vertices[vertexIndex].Position.Y,
+					Vertices[vertexIndex].Position.Z
+				),
+				AnimationAdjustedPosition = new Vector3(
+					Vertices[vertexIndex].Position.X,
+					Vertices[vertexIndex].Position.Y,
+					Vertices[vertexIndex].Position.Z
+				),
+				Color = newColor,
+				NormalElevation = Vertices[vertexIndex].NormalElevation,
+				NormalAzimuth = Vertices[vertexIndex].NormalAzimuth,
+				UsesNormal = Vertices[vertexIndex].UsesNormal
+			};
 		}
 
 		private void SetTexture() {
