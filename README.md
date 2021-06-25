@@ -2,12 +2,76 @@
 
 ## About
 
-GaneshaDX is a map editor for Final Fatnasy Tactics for Playstation (PSX). 
+GaneshaDX is a map editor for Final Fantasy Tactics for Playstation (PSX).
 
 Check the [Releases Page](https://github.com/Garmichael/GaneshaDx/releases) for the most recent download.
 
 ---
 
-## Todo List
+# Manual
+
+## General
+
+### Camera Controls
+
+    Hold Right Mouse: Pan the Camera
+    Hold Middle Mouse: Rotate the Camera
+    Scroll Wheel: Zoom in and out
+
+## Polygon Editing
+
+### General
+
+    Click any Polygon to change the right panel to the Polygon Properties Panel. 
+    The Polygon Properties panel shows the values for the First Polygon in the selection.
+    Changing any property will set that value to all selected Polygons.
+
+### Shortcut Keys
+
+    Q: Translate Widget
+    W: Rotation Widget
+    E: Translate Vertex
+    R: Translate Edge
+    Z: Focus camera on selection
+
+### Selection
+
+    Click: Select Hovered Polygon
+    Control + Click: Add/Remove Hovered Polygon from Selection
+    Alt + Click: Clicked polygon become First Polygon in Selection
+    Plus Key (+): Grows the Selection by selecting all Polygons that share a vertex position with an already selected Polygon 
+
+### Transform Widget
+
+    Shift + Drag: Create Clone of Selection
+    Control + Drag: Slow Translation
+    Alt + Drag: Move in Grid Incriments
+
+### Rotation Widget
+
+    Shift + Click: Mirror on Axis
+    Alt + Click: Rotate Face
+    Colored Boxes: 
+
+### Panel Functions
+
+    Set Normal: Automatically sets Vertex Normals
+    Break: Breaks a Quad Polygon into two Triangle Polygons
+
+## Texture Editing
+
+### Texture Preview Window
+
+#### General
+
+    Right Click: Pan
+    Scroll Wheel: Zoom in and out
+    Click a polygon to select it
+    Drag a selection of Polygons to move them
+    Drag a Vertex to move it
+    
+---
+
+# Todo List
 
 The most up-to-date Todo List can be found [here](https://github.com/Garmichael/GaneshaDx/blob/main/Documentation/Todo.md).
