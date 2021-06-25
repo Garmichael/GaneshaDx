@@ -572,19 +572,23 @@ namespace GaneshaDx.UserInterface.GuiForms {
 		private static void RenderAnimation() {
 			UvAnimation selectedAnimation = (UvAnimation) GuiPanelTexture.SelectedTextureAnimation;
 
-			SetAnimationFrameBasicEffectProperties(selectedAnimation, "canvas", 0);
-
-			foreach (EffectPass pass in Stage.BasicEffect.CurrentTechnique.Passes) {
-				pass.Apply();
-				Stage.GraphicsDevice.DrawPrimitives(PrimitiveType.LineStrip, 0, 4);
-			}
-
-			for (int frameIndex = 0; frameIndex < selectedAnimation.FrameCount; frameIndex++) {
-				SetAnimationFrameBasicEffectProperties(selectedAnimation, "frame", frameIndex);
+			if (selectedAnimation.CanvasTexturePage == _texturePage) {
+				SetAnimationFrameBasicEffectProperties(selectedAnimation, "canvas", 0);
 
 				foreach (EffectPass pass in Stage.BasicEffect.CurrentTechnique.Passes) {
 					pass.Apply();
 					Stage.GraphicsDevice.DrawPrimitives(PrimitiveType.LineStrip, 0, 4);
+				}
+			}
+
+			if (selectedAnimation.FirstFrameTexturePage == _texturePage) {
+				for (int frameIndex = 0; frameIndex < selectedAnimation.FrameCount; frameIndex++) {
+					SetAnimationFrameBasicEffectProperties(selectedAnimation, "frame", frameIndex);
+
+					foreach (EffectPass pass in Stage.BasicEffect.CurrentTechnique.Passes) {
+						pass.Apply();
+						Stage.GraphicsDevice.DrawPrimitives(PrimitiveType.LineStrip, 0, 4);
+					}
 				}
 			}
 		}
