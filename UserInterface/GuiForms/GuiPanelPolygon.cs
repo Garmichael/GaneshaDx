@@ -30,14 +30,45 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			GuiStyle.AddSpace();
 			ImGui.Indent();
 
+
+			if (Stage.WidgetSelectionMode == WidgetSelectionMode.Select) {
+				GuiStyle.SetElementStyle(ElementStyle.ButtonSelected);
+			} else {
+				GuiStyle.SetNewUiToDefaultStyle();
+			}
+
+			ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
+			if (ImGui.Button("Q##selectionMode")) {
+				Stage.WidgetSelectionMode = WidgetSelectionMode.Select;
+			}
+
+			ImGui.PopFont();
+
+			if (ImGui.IsItemHovered()) {
+				ImGui.BeginTooltip();
+				ImGui.Text("Select Polygons");
+				ImGui.EndTooltip();
+			}
+
+			ImGui.SameLine();
+
 			if (Stage.WidgetSelectionMode == WidgetSelectionMode.PolygonTranslate) {
 				GuiStyle.SetElementStyle(ElementStyle.ButtonSelected);
 			} else {
 				GuiStyle.SetNewUiToDefaultStyle();
 			}
 
-			if (ImGui.Button("Translate")) {
+			ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
+			if (ImGui.Button("W##translateMode")) {
 				Stage.WidgetSelectionMode = WidgetSelectionMode.PolygonTranslate;
+			}
+
+			ImGui.PopFont();
+
+			if (ImGui.IsItemHovered()) {
+				ImGui.BeginTooltip();
+				ImGui.Text("Translate Polygons");
+				ImGui.EndTooltip();
 			}
 
 			ImGui.SameLine();
@@ -48,8 +79,17 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				GuiStyle.SetNewUiToDefaultStyle();
 			}
 
-			if (ImGui.Button("Rotate")) {
+			ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
+			if (ImGui.Button("E##rotateMode")) {
 				Stage.WidgetSelectionMode = WidgetSelectionMode.PolygonRotate;
+			}
+
+			ImGui.PopFont();
+
+			if (ImGui.IsItemHovered()) {
+				ImGui.BeginTooltip();
+				ImGui.Text("Rotate Polygons");
+				ImGui.EndTooltip();
 			}
 
 			ImGui.SameLine();
@@ -60,8 +100,17 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				GuiStyle.SetNewUiToDefaultStyle();
 			}
 
-			if (ImGui.Button("Vertex")) {
+			ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
+			if (ImGui.Button("R##vertexMode")) {
 				Stage.WidgetSelectionMode = WidgetSelectionMode.PolygonVertexTranslate;
+			}
+
+			ImGui.PopFont();
+
+			if (ImGui.IsItemHovered()) {
+				ImGui.BeginTooltip();
+				ImGui.Text("Translate Vertex");
+				ImGui.EndTooltip();
 			}
 
 			ImGui.SameLine();
@@ -72,9 +121,19 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				GuiStyle.SetNewUiToDefaultStyle();
 			}
 
-			if (ImGui.Button("Edge")) {
+			ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
+
+			if (ImGui.Button("T##edgeMode")) {
 				Stage.WidgetSelectionMode = WidgetSelectionMode.PolygonEdgeTranslate;
 			}
+
+			ImGui.PopFont();
+			if (ImGui.IsItemHovered()) {
+				ImGui.BeginTooltip();
+				ImGui.Text("Translate Edge");
+				ImGui.EndTooltip();
+			}
+
 
 			if (Stage.WidgetSelectionMode == WidgetSelectionMode.PolygonRotate &&
 			    Selection.SelectedPolygons.Count > 0
@@ -89,7 +148,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 		private static void RenderRotationVertexSelection() {
 			GuiStyle.AddSpace();
 
-			ImGui.SetCursorPosX(100);
+			ImGui.SetCursorPosX(72);
 			GuiStyle.SetNewUiToDefaultStyle();
 
 			const int buttonSize = 20;

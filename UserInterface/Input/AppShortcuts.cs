@@ -25,18 +25,22 @@ namespace GaneshaDx.UserInterface.Input {
 				}
 
 				if (AppInput.KeyJustPressed(Keys.Q)) {
-					Stage.WidgetSelectionMode = WidgetSelectionMode.PolygonTranslate;
+					Stage.WidgetSelectionMode = WidgetSelectionMode.Select;
 				}
 
 				if (AppInput.KeyJustPressed(Keys.W)) {
-					Stage.WidgetSelectionMode = WidgetSelectionMode.PolygonRotate;
+					Stage.WidgetSelectionMode = WidgetSelectionMode.PolygonTranslate;
 				}
 
 				if (AppInput.KeyJustPressed(Keys.E)) {
-					Stage.WidgetSelectionMode = WidgetSelectionMode.PolygonVertexTranslate;
+					Stage.WidgetSelectionMode = WidgetSelectionMode.PolygonRotate;
 				}
 
 				if (AppInput.KeyJustPressed(Keys.R)) {
+					Stage.WidgetSelectionMode = WidgetSelectionMode.PolygonVertexTranslate;
+				}
+
+				if (AppInput.KeyJustPressed(Keys.T)) {
 					Stage.WidgetSelectionMode = WidgetSelectionMode.PolygonEdgeTranslate;
 				}
 

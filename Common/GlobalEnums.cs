@@ -37,6 +37,7 @@
 	}
 	
 	public enum WidgetSelectionMode {
+		Select,
 		PolygonTranslate,
 		PolygonEdgeTranslate,
 		PolygonVertexTranslate,

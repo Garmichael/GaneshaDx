@@ -474,13 +474,13 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				ImGui.GetStyle().Colors[(int) ImGuiCol.Button] =
 					GuiStyle.ColorPalette[ColorName.Transparent];
 
-				if (ImGui.Button("I##import" + paletteIndex)) {
+				if (ImGui.Button("Z##import" + paletteIndex)) {
 					MyraGui.OpenImportPaletteFileDialog(paletteIndex, "main");
 				}
 
 				ImGui.SameLine();
 
-				if (ImGui.Button("E##export" + paletteIndex)) {
+				if (ImGui.Button("X##export" + paletteIndex)) {
 					string fileName = MapData.MapName + "." +
 					                  CurrentMapState.StateData.StateMeshResources[0].XFile +
 					                  ".act";
@@ -670,16 +670,15 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				style.FrameBorderSize = 0;
 
 				ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
-				ImGui.GetStyle().Colors[(int) ImGuiCol.Button] =
-					GuiStyle.ColorPalette[ColorName.Transparent];
+				ImGui.GetStyle().Colors[(int) ImGuiCol.Button] = GuiStyle.ColorPalette[ColorName.Transparent];
 
-				if (ImGui.Button("I##importA" + paletteIndex)) {
+				if (ImGui.Button("Z##importA" + paletteIndex)) {
 					MyraGui.OpenImportPaletteFileDialog(paletteIndex, "animation");
 				}
 
 				ImGui.SameLine();
 
-				if (ImGui.Button("E##exportA" + paletteIndex)) {
+				if (ImGui.Button("X##exportA" + paletteIndex)) {
 					string fileName = MapData.MapName + "." +
 					                  CurrentMapState.StateData.StateMeshResources[0].XFile +
 					                  ".act";

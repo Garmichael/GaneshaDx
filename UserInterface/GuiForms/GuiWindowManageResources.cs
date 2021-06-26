@@ -155,9 +155,9 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			if (data.HasPrimaryMesh) {
 				ImGui.SameLine();
 				ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
-				ImGui.Button("c###copyPrimaryMesh" + index);
+				ImGui.Button("C###copyPrimaryMesh" + index);
 				ImGui.SameLine();
-				ImGui.Button("v###pastePrimaryMesh" + index);
+				ImGui.Button("V###copyPrimaryMesh" + index);
 				ImGui.PopFont();
 			}
 
@@ -179,9 +179,9 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			if (data.HasPalettes) {
 				ImGui.SameLine();
 				ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
-				ImGui.Button("c###copyPalettes" + index);
+				ImGui.Button("C###copyPalettes" + index);
 				ImGui.SameLine();
-				ImGui.Button("v###pastePalettes" + index);
+				ImGui.Button("V###copyPalettes" + index);
 				ImGui.PopFont();
 			}
 
@@ -220,9 +220,9 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			if (data.HasLightsAndBackground) {
 				ImGui.SameLine();
 				ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
-				ImGui.Button("c###copyLighting" + index);
+				ImGui.Button("C###copyLighting" + index);
 				ImGui.SameLine();
-				ImGui.Button("v###pasteLighting" + index);
+				ImGui.Button("V###copyLighting" + index);
 				ImGui.PopFont();
 			}
 
@@ -258,9 +258,9 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			if (data.HasLightsAndBackground) {
 				ImGui.SameLine();
 				ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
-				ImGui.Button("c###copyTerrain" + index);
+				ImGui.Button("C###copyTerrain" + index);
 				ImGui.SameLine();
-				ImGui.Button("v###pasteTerrain" + index);
+				ImGui.Button("V###copyTerrain" + index);
 				ImGui.PopFont();
 			}
 
@@ -294,9 +294,9 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			if (data.HasTextureAnimations) {
 				ImGui.SameLine();
 				ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
-				ImGui.Button("c###copyTextureAnimation" + index);
+				ImGui.Button("C###copyTextureAnimation" + index);
 				ImGui.SameLine();
-				ImGui.Button("v###pasteTextureAnimation" + index);
+				ImGui.Button("V###copyTextureAnimation" + index);
 				ImGui.PopFont();
 			}
 
@@ -324,9 +324,9 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			if (data.HasPaletteAnimationFrames) {
 				ImGui.SameLine();
 				ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
-				ImGui.Button("c###copyAnimatedPalettes" + index);
+				ImGui.Button("C###copyAnimatedPalettes" + index);
 				ImGui.SameLine();
-				ImGui.Button("v###pasteAnimatedPalettes" + index);
+				ImGui.Button("V###copyAnimatedPalettes" + index);
 				ImGui.PopFont();
 			}
 
@@ -384,9 +384,9 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			if (data.HasAnimatedMeshes) {
 				ImGui.SameLine();
 				ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
-				ImGui.Button("c###copyAnimatedMeshes" + index);
+				ImGui.Button("C###copyAnimatedMeshes" + index);
 				ImGui.SameLine();
-				ImGui.Button("v###pasteAnimatedMeshes" + index);
+				ImGui.Button("V###copyAnimatedMeshes" + index);
 				ImGui.PopFont();
 			}
 

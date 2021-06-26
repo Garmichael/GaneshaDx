@@ -277,8 +277,8 @@ namespace GaneshaDx.UserInterface {
 				} else {
 					int indexOfSelected = 0;
 
-					if (Stage.WidgetSelectionMode != WidgetSelectionMode.PolygonVertexTranslate ||
-					    Stage.WidgetSelectionMode != WidgetSelectionMode.PolygonEdgeTranslate
+					if (Stage.WidgetSelectionMode == WidgetSelectionMode.PolygonVertexTranslate ||
+					    Stage.WidgetSelectionMode == WidgetSelectionMode.PolygonEdgeTranslate
 					) {
 						if (AppInput.ControlHeld) {
 							Stage.WidgetSelectionMode = WidgetSelectionMode.PolygonTranslate;
@@ -302,9 +302,7 @@ namespace GaneshaDx.UserInterface {
 
 						SelectPolygon(HoveredPolygons[indexOfSelected]);
 						SelectCompleteAnimatedMeshPolygons();
-					}
-
-					if (Stage.WidgetSelectionMode == WidgetSelectionMode.PolygonVertexTranslate) {
+					} else if (Stage.WidgetSelectionMode == WidgetSelectionMode.PolygonVertexTranslate) {
 						if (SelectedPolygons.Count == 0) {
 							SelectPolygon(HoveredPolygons[indexOfSelected]);
 							SelectCompleteAnimatedMeshPolygons();
@@ -329,9 +327,7 @@ namespace GaneshaDx.UserInterface {
 								SelectedPolygons[0].Vertices.IndexOf(closestVertex)
 							);
 						}
-					}
-
-					if (Stage.WidgetSelectionMode == WidgetSelectionMode.PolygonEdgeTranslate) {
+					} else if (Stage.WidgetSelectionMode == WidgetSelectionMode.PolygonEdgeTranslate) {
 						if (SelectedPolygons.Count == 0) {
 							SelectPolygon(HoveredPolygons[indexOfSelected]);
 							SelectCompleteAnimatedMeshPolygons();
