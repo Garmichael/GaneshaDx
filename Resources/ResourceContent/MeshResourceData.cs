@@ -18,7 +18,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 		private const int TextureAnimationsPointer = 108;
 		private const int PaletteAnimationsPointer = 112;
 		private const int TexturePalettesGrayscalePointer = 124;
-		private const int MeshAnimationInstructionsPointer = 140;
+		private const int AnimatedMeshInstructionsPointer = 140;
 		private const int AnimatedMesh1Pointer = 144;
 		private const int AnimatedMesh2Pointer = 148;
 		private const int AnimatedMesh3Pointer = 152;
@@ -54,15 +54,23 @@ namespace GaneshaDx.Resources.ResourceContent {
 		public Color BackgroundBottomColor;
 		public Color AmbientLightColor;
 
-		public readonly List<byte> UnknownChunkOfPolygonData = new List<byte>();
+		private readonly Dictionary<MeshType, List<byte>> UnknownChunks = new Dictionary<MeshType, List<byte>> {
+			{MeshType.PrimaryMesh, new List<byte>()},
+			{MeshType.AnimatedMesh1, new List<byte>()},
+			{MeshType.AnimatedMesh2, new List<byte>()},
+			{MeshType.AnimatedMesh3, new List<byte>()},
+			{MeshType.AnimatedMesh4, new List<byte>()},
+			{MeshType.AnimatedMesh5, new List<byte>()},
+			{MeshType.AnimatedMesh6, new List<byte>()},
+			{MeshType.AnimatedMesh7, new List<byte>()},
+			{MeshType.AnimatedMesh8, new List<byte>()}
+		};
+
 		public List<Palette> Palettes = new List<Palette>();
 		public List<Palette> PaletteAnimationFrames = new List<Palette>();
 		public List<Palette> PalettesGrayscale = new List<Palette>();
 
 		public List<AnimatedTextureInstructions> AnimatedTextureInstructions = new List<AnimatedTextureInstructions>();
-
-		public Dictionary<MeshType, MeshAnimationInstruction> AnimatedMeshInstructions =
-			new Dictionary<MeshType, MeshAnimationInstruction>();
 
 		public Terrain Terrain;
 
@@ -220,29 +228,34 @@ namespace GaneshaDx.Resources.ResourceContent {
 			ProcessMeshPositionDataPerPoly(
 				_texturedTriangleCount[meshType],
 				PolygonCollection[meshType][PolygonType.TexturedTriangle],
-				3
+				3,
+				meshType == MeshType.PrimaryMesh
 			);
 
 			ProcessMeshPositionDataPerPoly(
 				_texturedQuadCount[meshType],
 				PolygonCollection[meshType][PolygonType.TexturedQuad],
-				4
+				4,
+				meshType == MeshType.PrimaryMesh
 			);
 
 			ProcessMeshPositionDataPerPoly(
 				_unTexturedTriangleCount[meshType],
 				PolygonCollection[meshType][PolygonType.UntexturedTriangle],
-				3
+				3,
+				meshType == MeshType.PrimaryMesh
 			);
 
 			ProcessMeshPositionDataPerPoly(
 				_unTexturedQuadCount[meshType],
 				PolygonCollection[meshType][PolygonType.UntexturedQuad],
-				4
+				4,
+				meshType == MeshType.PrimaryMesh
 			);
 		}
 
-		private void ProcessMeshPositionDataPerPoly(int totalCount, List<Polygon> polyContainer, int totalVerts) {
+		private void ProcessMeshPositionDataPerPoly(int totalCount, List<Polygon> polyContainer, int totalVerts,
+			bool isPrimary) {
 			List<Color> vertexColors = new List<Color> {Color.Red, Color.Green, Color.Blue, Color.Yellow};
 
 			for (int index = 0; index < totalCount; index++) {
@@ -254,10 +267,10 @@ namespace GaneshaDx.Resources.ResourceContent {
 							RawData[_currentByteIndex],
 							RawData[_currentByteIndex + 1]
 						),
-						Y = -Utilities.GetIntFromLittleEndian(
+						Y = Utilities.GetIntFromLittleEndian(
 							RawData[_currentByteIndex + 2],
 							RawData[_currentByteIndex + 3]
-						),
+						) * (isPrimary ? -1 : 1),
 						Z = Utilities.GetIntFromLittleEndian(
 							RawData[_currentByteIndex + 4],
 							RawData[_currentByteIndex + 5]
@@ -374,7 +387,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 		private void ProcessMeshUnknownChunk(MeshType meshType) {
 			int totalBytes = 4 * _unTexturedQuadCount[meshType] + 4 * _unTexturedTriangleCount[meshType];
 			for (int index = 0; index < totalBytes; index++) {
-				UnknownChunkOfPolygonData.Add(RawData[_currentByteIndex]);
+				UnknownChunks[meshType].Add(RawData[_currentByteIndex]);
 				_currentByteIndex++;
 			}
 		}
@@ -738,83 +751,32 @@ namespace GaneshaDx.Resources.ResourceContent {
 			}
 		}
 
+		private readonly List<byte> _rawMeshAnimationInstructionData = new List<byte>();
+
+		public MeshAnimationInstructions AnimatedMeshInstructions;
+
 		private void ProcessMeshAnimations() {
+			const int instructionChunkSize = 14620;
+
 			_currentByteIndex = Utilities.GetUIntFromLittleEndian(
-				RawData[MeshAnimationInstructionsPointer],
-				RawData[MeshAnimationInstructionsPointer + 1]
+				RawData[AnimatedMeshInstructionsPointer],
+				RawData[AnimatedMeshInstructionsPointer + 1]
 			);
 
 			if (_currentByteIndex == 0) {
 				return;
 			}
 
-			_currentByteIndex += 8;
-
-			foreach (MeshType meshType in CommonLists.MeshTypes) {
-				if (meshType == MeshType.PrimaryMesh) {
-					continue;
+			for (int i = 0; i < instructionChunkSize; i++) {
+				if (_currentByteIndex + i > RawData.Count - 1) {
+					break;
 				}
 
-				MeshAnimationInstruction animationInstruction = new MeshAnimationInstruction {
-					Rotation = new Dictionary<Axis, int> {
-						{
-							Axis.X, Utilities.GetIntFromLittleEndian(
-								RawData[_currentByteIndex],
-								RawData[_currentByteIndex + 1]
-							) / 4096
-						}, {
-							Axis.Y, -Utilities.GetIntFromLittleEndian(
-								RawData[_currentByteIndex + 2],
-								RawData[_currentByteIndex + 3]
-							) / 4096
-						}, {
-							Axis.Z, Utilities.GetIntFromLittleEndian(
-								RawData[_currentByteIndex + 4],
-								RawData[_currentByteIndex + 5]
-							) / 4096
-						}
-					},
-					Position = new Dictionary<Axis, int> {
-						{
-							Axis.X, -Utilities.GetIntFromLittleEndian(
-								RawData[_currentByteIndex + 8],
-								RawData[_currentByteIndex + 9]
-							)
-						}, {
-							Axis.Y, -Utilities.GetIntFromLittleEndian(
-								RawData[_currentByteIndex + 10],
-								RawData[_currentByteIndex + 11]
-							)
-						}, {
-							Axis.Z, Utilities.GetIntFromLittleEndian(
-								RawData[_currentByteIndex + 12],
-								RawData[_currentByteIndex + 13]
-							)
-						}
-					},
-					Scale = new Dictionary<Axis, int> {
-						{
-							Axis.X, Utilities.GetIntFromLittleEndian(
-								RawData[_currentByteIndex + 16],
-								RawData[_currentByteIndex + 17]
-							) / 4096
-						}, {
-							Axis.Y, -Utilities.GetIntFromLittleEndian(
-								RawData[_currentByteIndex + 18],
-								RawData[_currentByteIndex + 19]
-							) / 4096
-						}, {
-							Axis.Z, Utilities.GetIntFromLittleEndian(
-								RawData[_currentByteIndex + 20],
-								RawData[_currentByteIndex + 21]
-							) / 4096
-						}
-					}
-				};
+				_rawMeshAnimationInstructionData.Add(RawData[_currentByteIndex + i]);
+			}
 
-
-				AnimatedMeshInstructions.Add(meshType, animationInstruction);
-				_currentByteIndex += 80;
+			if (_rawMeshAnimationInstructionData.Count == instructionChunkSize) {
+				AnimatedMeshInstructions = new MeshAnimationInstructions(_rawMeshAnimationInstructionData);
 			}
 		}
 
@@ -901,8 +863,8 @@ namespace GaneshaDx.Resources.ResourceContent {
 			BuildRawDataTextureAnimations();
 			BuildRawDataPaletteAnimationFrames();
 			// BuildRawDataGrayscalePalettes();
-			//BuildRawDataAnimatedMeshInstructions();
-			//BuildRawDataAnimatedMeshes();
+			BuildRawDataAnimatedMeshInstructions();
+			BuildRawDataAnimatedMeshes();
 			BuildRawDataRenderProperties();
 		}
 
@@ -920,48 +882,48 @@ namespace GaneshaDx.Resources.ResourceContent {
 			(RawData[PrimaryMeshPointer], RawData[PrimaryMeshPointer + 1]) =
 				Utilities.GetLittleEndianFromInt(RawData.Count);
 
-			BuildRawDataPrimaryMeshHeader();
-			BuildRawDataPrimaryMeshPosition();
-			BuildRawDataPrimaryMeshNormals();
-			BuildRawDataPrimaryMeshTextureProperties();
-			BuildRawDataPrimaryMeshUnknownData();
-			BuildRawDataPrimaryMeshTerrainDefinitions();
+			BuildRawDataPrimaryMeshHeader(MeshType.PrimaryMesh);
+			BuildRawDataPrimaryMeshPosition(MeshType.PrimaryMesh);
+			BuildRawDataPrimaryMeshNormals(MeshType.PrimaryMesh);
+			BuildRawDataPrimaryMeshTextureProperties(MeshType.PrimaryMesh);
+			BuildRawDataPrimaryMeshUnknownData(MeshType.PrimaryMesh);
+			BuildRawDataPrimaryMeshTerrainDefinitions(MeshType.PrimaryMesh);
 
 			RawData.Add(0);
 			RawData.Add(0);
 		}
 
-		private void BuildRawDataPrimaryMeshHeader() {
+		private void BuildRawDataPrimaryMeshHeader(MeshType meshType) {
 			byte high;
 			byte low;
 
-			int count = PolygonCollection[MeshType.PrimaryMesh][PolygonType.TexturedTriangle].Count;
+			int count = PolygonCollection[meshType][PolygonType.TexturedTriangle].Count;
 			(high, low) = Utilities.GetLittleEndianFromInt(count);
 
 			RawData.Add(high);
 			RawData.Add(low);
 
-			count = PolygonCollection[MeshType.PrimaryMesh][PolygonType.TexturedQuad].Count;
+			count = PolygonCollection[meshType][PolygonType.TexturedQuad].Count;
 			(high, low) = Utilities.GetLittleEndianFromInt(count);
 
 			RawData.Add(high);
 			RawData.Add(low);
 
-			count = PolygonCollection[MeshType.PrimaryMesh][PolygonType.UntexturedTriangle].Count;
+			count = PolygonCollection[meshType][PolygonType.UntexturedTriangle].Count;
 			(high, low) = Utilities.GetLittleEndianFromInt(count);
 
 			RawData.Add(high);
 			RawData.Add(low);
 
-			count = PolygonCollection[MeshType.PrimaryMesh][PolygonType.UntexturedQuad].Count;
+			count = PolygonCollection[meshType][PolygonType.UntexturedQuad].Count;
 			(high, low) = Utilities.GetLittleEndianFromInt(count);
 
 			RawData.Add(high);
 			RawData.Add(low);
 		}
 
-		private void BuildRawDataPrimaryMeshPosition() {
-			foreach (Polygon polygon in PolygonCollection[MeshType.PrimaryMesh][PolygonType.TexturedTriangle]) {
+		private void BuildRawDataPrimaryMeshPosition(MeshType meshType) {
+			foreach (Polygon polygon in PolygonCollection[meshType][PolygonType.TexturedTriangle]) {
 				for (int vertexIndex = 0; vertexIndex < 3; vertexIndex++) {
 					byte high;
 					byte low;
@@ -980,7 +942,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 				}
 			}
 
-			foreach (Polygon polygon in PolygonCollection[MeshType.PrimaryMesh][PolygonType.TexturedQuad]) {
+			foreach (Polygon polygon in PolygonCollection[meshType][PolygonType.TexturedQuad]) {
 				for (int vertexIndex = 0; vertexIndex < 4; vertexIndex++) {
 					byte high;
 					byte low;
@@ -999,7 +961,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 				}
 			}
 
-			foreach (Polygon polygon in PolygonCollection[MeshType.PrimaryMesh][PolygonType.UntexturedTriangle]) {
+			foreach (Polygon polygon in PolygonCollection[meshType][PolygonType.UntexturedTriangle]) {
 				for (int vertexIndex = 0; vertexIndex < 3; vertexIndex++) {
 					byte high;
 					byte low;
@@ -1018,7 +980,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 				}
 			}
 
-			foreach (Polygon polygon in PolygonCollection[MeshType.PrimaryMesh][PolygonType.UntexturedQuad]) {
+			foreach (Polygon polygon in PolygonCollection[meshType][PolygonType.UntexturedQuad]) {
 				for (int vertexIndex = 0; vertexIndex < 4; vertexIndex++) {
 					byte high;
 					byte low;
@@ -1038,8 +1000,8 @@ namespace GaneshaDx.Resources.ResourceContent {
 			}
 		}
 
-		private void BuildRawDataPrimaryMeshNormals() {
-			foreach (Polygon polygon in PolygonCollection[MeshType.PrimaryMesh][PolygonType.TexturedTriangle]) {
+		private void BuildRawDataPrimaryMeshNormals(MeshType meshType) {
+			foreach (Polygon polygon in PolygonCollection[meshType][PolygonType.TexturedTriangle]) {
 				for (int vertexIndex = 0; vertexIndex < 3; vertexIndex++) {
 					Vector3 normalData = Utilities.SphereToVector(
 						polygon.Vertices[vertexIndex].NormalElevation,
@@ -1063,7 +1025,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 				}
 			}
 
-			foreach (Polygon polygon in PolygonCollection[MeshType.PrimaryMesh][PolygonType.TexturedQuad]) {
+			foreach (Polygon polygon in PolygonCollection[meshType][PolygonType.TexturedQuad]) {
 				for (int vertexIndex = 0; vertexIndex < 4; vertexIndex++) {
 					Vector3 normalData = Utilities.SphereToVector(
 						polygon.Vertices[vertexIndex].NormalElevation,
@@ -1088,8 +1050,8 @@ namespace GaneshaDx.Resources.ResourceContent {
 			}
 		}
 
-		private void BuildRawDataPrimaryMeshTextureProperties() {
-			foreach (Polygon polygon in PolygonCollection[MeshType.PrimaryMesh][PolygonType.TexturedTriangle]) {
+		private void BuildRawDataPrimaryMeshTextureProperties(MeshType meshType) {
+			foreach (Polygon polygon in PolygonCollection[meshType][PolygonType.TexturedTriangle]) {
 				RawData.Add((byte) polygon.UvCoordinates[0].X);
 				RawData.Add((byte) polygon.UvCoordinates[0].Y);
 				RawData.Add((byte) polygon.PaletteId);
@@ -1105,7 +1067,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 				RawData.Add((byte) polygon.UvCoordinates[2].Y);
 			}
 
-			foreach (Polygon polygon in PolygonCollection[MeshType.PrimaryMesh][PolygonType.TexturedQuad]) {
+			foreach (Polygon polygon in PolygonCollection[meshType][PolygonType.TexturedQuad]) {
 				RawData.Add((byte) polygon.UvCoordinates[0].X);
 				RawData.Add((byte) polygon.UvCoordinates[0].Y);
 				RawData.Add((byte) polygon.PaletteId);
@@ -1124,14 +1086,14 @@ namespace GaneshaDx.Resources.ResourceContent {
 			}
 		}
 
-		private void BuildRawDataPrimaryMeshUnknownData() {
-			foreach (byte originalByte in UnknownChunkOfPolygonData) {
+		private void BuildRawDataPrimaryMeshUnknownData(MeshType meshType) {
+			foreach (byte originalByte in UnknownChunks[meshType]) {
 				RawData.Add(originalByte);
 			}
 		}
 
-		private void BuildRawDataPrimaryMeshTerrainDefinitions() {
-			foreach (Polygon polygon in PolygonCollection[MeshType.PrimaryMesh][PolygonType.TexturedTriangle]) {
+		private void BuildRawDataPrimaryMeshTerrainDefinitions(MeshType meshType) {
+			foreach (Polygon polygon in PolygonCollection[meshType][PolygonType.TexturedTriangle]) {
 				string binary = Utilities.GetBinaryFromInt(polygon.TerrainZ, 7) +
 				                (polygon.TerrainLevel == 0 ? "0" : "1");
 
@@ -1139,7 +1101,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 				RawData.Add((byte) polygon.TerrainX);
 			}
 
-			foreach (Polygon polygon in PolygonCollection[MeshType.PrimaryMesh][PolygonType.TexturedQuad]) {
+			foreach (Polygon polygon in PolygonCollection[meshType][PolygonType.TexturedQuad]) {
 				string binary = Utilities.GetBinaryFromInt(polygon.TerrainZ, 7) +
 				                (polygon.TerrainLevel == 0 ? "0" : "1");
 
@@ -1464,6 +1426,62 @@ namespace GaneshaDx.Resources.ResourceContent {
 					RawData.Add(high);
 				}
 			}
+		}
+
+		private void BuildRawDataAnimatedMeshInstructions() {
+			if (AnimatedMeshInstructions == null) {
+				return;
+			}
+			
+			(RawData[AnimatedMeshInstructionsPointer], RawData[AnimatedMeshInstructionsPointer + 1]) =
+				Utilities.GetLittleEndianFromInt(RawData.Count);
+
+			RawData.AddRange(AnimatedMeshInstructions.InstructionsHeader);
+
+			foreach (MeshAnimationInstruction instruction in AnimatedMeshInstructions.Instructions) {
+				RawData.AddRange(instruction.Data);
+			}
+			
+			RawData.AddRange(AnimatedMeshInstructions.LinksHeader);
+
+			foreach (MeshAnimationLink link in AnimatedMeshInstructions.Links) {
+				RawData.AddRange(link.Data);
+			}
+			
+			RawData.AddRange(AnimatedMeshInstructions.UnknownChunkHeader);
+			RawData.AddRange(AnimatedMeshInstructions.UnknownChunk.Data);
+		}
+
+		private void BuildRawDataAnimatedMeshes() {
+			(RawData[AnimatedMesh1Pointer], RawData[AnimatedMesh1Pointer + 1]) =
+				Utilities.GetLittleEndianFromInt(RawData.Count);
+
+			BuildRawDataPrimaryMeshHeader(MeshType.AnimatedMesh1);
+			BuildRawDataPrimaryMeshPosition(MeshType.AnimatedMesh1);
+			BuildRawDataPrimaryMeshNormals(MeshType.AnimatedMesh1);
+			BuildRawDataPrimaryMeshTextureProperties(MeshType.AnimatedMesh1);
+			BuildRawDataPrimaryMeshUnknownData(MeshType.AnimatedMesh1);
+			BuildRawDataPrimaryMeshTerrainDefinitions(MeshType.AnimatedMesh1);
+
+			(RawData[AnimatedMesh2Pointer], RawData[AnimatedMesh2Pointer + 1]) =
+				Utilities.GetLittleEndianFromInt(RawData.Count);
+
+			BuildRawDataPrimaryMeshHeader(MeshType.AnimatedMesh2);
+			BuildRawDataPrimaryMeshPosition(MeshType.AnimatedMesh2);
+			BuildRawDataPrimaryMeshNormals(MeshType.AnimatedMesh2);
+			BuildRawDataPrimaryMeshTextureProperties(MeshType.AnimatedMesh2);
+			BuildRawDataPrimaryMeshUnknownData(MeshType.AnimatedMesh2);
+			BuildRawDataPrimaryMeshTerrainDefinitions(MeshType.AnimatedMesh2);
+
+			(RawData[AnimatedMesh3Pointer], RawData[AnimatedMesh3Pointer + 1]) =
+				Utilities.GetLittleEndianFromInt(RawData.Count);
+
+			BuildRawDataPrimaryMeshHeader(MeshType.AnimatedMesh3);
+			BuildRawDataPrimaryMeshPosition(MeshType.AnimatedMesh3);
+			BuildRawDataPrimaryMeshNormals(MeshType.AnimatedMesh3);
+			BuildRawDataPrimaryMeshTextureProperties(MeshType.AnimatedMesh3);
+			BuildRawDataPrimaryMeshUnknownData(MeshType.AnimatedMesh3);
+			BuildRawDataPrimaryMeshTerrainDefinitions(MeshType.AnimatedMesh3);
 		}
 
 		private void BuildRawDataRenderProperties() {

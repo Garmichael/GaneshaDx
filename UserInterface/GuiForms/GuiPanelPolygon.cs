@@ -346,7 +346,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					}
 
 					Selection.SelectedPolygons.Clear();
-					
+
 					foreach (Polygon newPolygon in newPolys) {
 						Selection.AddPolyToSelection(newPolygon);
 					}
@@ -432,11 +432,16 @@ namespace GaneshaDx.UserInterface.GuiForms {
 		}
 
 		private static void RenderInvisibilityAngles() {
+			Polygon polygon = Selection.SelectedPolygons[0];
+
+			if (polygon.RenderingProperties == null) {
+				return;
+			}
+
 			GuiStyle.SetNewUiToDefaultStyle();
 			GuiStyle.SetElementStyle(ElementStyle.Header);
 
 			if (ImGui.CollapsingHeader("Invisibility Angles", ImGuiTreeNodeFlags.DefaultOpen)) {
-				Polygon polygon = Selection.SelectedPolygons[0];
 				GuiStyle.SetNewUiToDefaultStyle();
 				ImGui.Indent();
 				ImGui.Columns(5, "InvisibilityAnglesColumns", false);

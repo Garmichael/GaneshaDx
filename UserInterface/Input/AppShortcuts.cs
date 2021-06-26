@@ -67,7 +67,7 @@ namespace GaneshaDx.UserInterface.Input {
 					Gui.ShowPreferencesWindow = !Gui.ShowPreferencesWindow;
 				}
 
-				if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.J)) {
+				if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.D)) {
 					CurrentMapState.CloneSelection();
 				}
 
@@ -108,6 +108,10 @@ namespace GaneshaDx.UserInterface.Input {
 					if (MyraGui.LastImportedTextureFile != "") {
 						MapData.ImportTexture(MyraGui.LastImportedTextureFile);
 					}
+				}
+				
+				if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.T)) {
+					Gui.ShowDebugAnimatedMeshWindow = !Gui.ShowDebugAnimatedMeshWindow;
 				}
 			}
 		}

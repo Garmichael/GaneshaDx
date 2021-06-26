@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using GaneshaDx.Common;
 using GaneshaDx.Environment;
 using GaneshaDx.Rendering;
-using GaneshaDx.Resources.ContentDataTypes.MeshAnimations;
 using GaneshaDx.UserInterface;
 using GaneshaDx.UserInterface.GuiDefinitions;
 using GaneshaDx.UserInterface.Widgets;
@@ -385,43 +383,43 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 				Vertices[vertexIndex].NormalAzimuth
 			);
 
-			if (MeshType != MeshType.PrimaryMesh && CurrentMapState.StateData.MeshAnimationInstructions != null) {
-				MeshAnimationInstruction meshAnimationInstruction =
-					CurrentMapState.StateData.MeshAnimationInstructions[MeshType];
-
-				int frame = (int) Stage.GameTime.TotalGameTime.TotalMilliseconds % (360 * 5);
-
-				frame /= 5;
-
-				if (meshAnimationInstruction.Rotation[Axis.X] > 0) {
-					Matrix rotation = Matrix.CreateRotationX(MathHelper.ToRadians(0 + frame));
-					vertexPosition = Vector3.Transform(vertexPosition, rotation);
-				}
-
-				if (meshAnimationInstruction.Rotation[Axis.Y] > 0) {
-					Matrix rotation = Matrix.CreateRotationY(MathHelper.ToRadians(0 + frame));
-					vertexPosition = Vector3.Transform(vertexPosition, rotation);
-				}
-
-				if (meshAnimationInstruction.Rotation[Axis.Z] > 0) {
-					Matrix rotation = Matrix.CreateRotationZ(MathHelper.ToRadians(0 + frame));
-					vertexPosition = Vector3.Transform(vertexPosition, rotation);
-				}
-
-				Matrix scale = Matrix.CreateScale(new Vector3(
-					meshAnimationInstruction.Scale[Axis.X],
-					meshAnimationInstruction.Scale[Axis.Y],
-					meshAnimationInstruction.Scale[Axis.Z]
-				));
-
-				vertexPosition = Vector3.Transform(vertexPosition, scale);
-
-				vertexPosition += new Vector3(
-					meshAnimationInstruction.Position[Axis.X],
-					meshAnimationInstruction.Position[Axis.Y],
-					meshAnimationInstruction.Position[Axis.Z]
-				);
-			}
+			// if (MeshType != MeshType.PrimaryMesh && CurrentMapState.StateData.MeshAnimationInstructions != null) {
+			// 	MeshAnimationInstruction meshAnimationInstruction =
+			// 		CurrentMapState.StateData.MeshAnimationInstructions[MeshType];
+			//
+			// 	int frame = (int) Stage.GameTime.TotalGameTime.TotalMilliseconds % (360 * 5);
+			//
+			// 	frame /= 5;
+			//
+			// 	if (meshAnimationInstruction.Rotation[Axis.X] > 0) {
+			// 		Matrix rotation = Matrix.CreateRotationX(MathHelper.ToRadians(0 + frame));
+			// 		vertexPosition = Vector3.Transform(vertexPosition, rotation);
+			// 	}
+			//
+			// 	if (meshAnimationInstruction.Rotation[Axis.Y] > 0) {
+			// 		Matrix rotation = Matrix.CreateRotationY(MathHelper.ToRadians(0 + frame));
+			// 		vertexPosition = Vector3.Transform(vertexPosition, rotation);
+			// 	}
+			//
+			// 	if (meshAnimationInstruction.Rotation[Axis.Z] > 0) {
+			// 		Matrix rotation = Matrix.CreateRotationZ(MathHelper.ToRadians(0 + frame));
+			// 		vertexPosition = Vector3.Transform(vertexPosition, rotation);
+			// 	}
+			//
+			// 	Matrix scale = Matrix.CreateScale(new Vector3(
+			// 		meshAnimationInstruction.Scale[Axis.X],
+			// 		meshAnimationInstruction.Scale[Axis.Y],
+			// 		meshAnimationInstruction.Scale[Axis.Z]
+			// 	));
+			//
+			// 	vertexPosition = Vector3.Transform(vertexPosition, scale);
+			//
+			// 	vertexPosition += new Vector3(
+			// 		meshAnimationInstruction.Position[Axis.X],
+			// 		meshAnimationInstruction.Position[Axis.Y],
+			// 		meshAnimationInstruction.Position[Axis.Z]
+			// 	);
+			// }
 
 			Vertices[vertexIndex].AnimationAdjustedPosition = vertexPosition;
 

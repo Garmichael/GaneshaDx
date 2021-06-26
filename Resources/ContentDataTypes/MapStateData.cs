@@ -107,7 +107,7 @@ namespace GaneshaDx.Resources.ContentDataTypes {
 			}
 		}
 
-		public Dictionary<MeshType, MeshAnimationInstruction> MeshAnimationInstructions {
+		public MeshAnimationInstructions MeshAnimationInstructions {
 			get => _animatedMeshSource?.AnimatedMeshInstructions;
 			set {
 				if (_animatedMeshSource != null) {
@@ -115,7 +115,6 @@ namespace GaneshaDx.Resources.ContentDataTypes {
 				}
 			}
 		}
-
 
 		public Terrain Terrain {
 			get => _terrainSource?.Terrain;

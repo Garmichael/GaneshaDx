@@ -18,6 +18,7 @@ namespace GaneshaDx.UserInterface {
 		public static bool ShowAddPolygonWindow;
 		private static bool _showManageResourcesWindow;
 		public static bool ShowTipsWindow;
+		public static bool ShowDebugAnimatedMeshWindow;
 
 		public static void Render() {
 			Stage.GraphicsDevice.Clear(Color.Transparent);
@@ -60,6 +61,12 @@ namespace GaneshaDx.UserInterface {
 
 						if (ShowTipsWindow) {
 							GuiWindowTips.Render();
+						}
+
+						if (ShowDebugAnimatedMeshWindow &&
+						    MapData.MapIsLoaded && CurrentMapState.StateData.MeshAnimationInstructions != null
+						) {
+							GuiWindowDebugAnimatedMeshData.Render();
 						}
 					}
 
