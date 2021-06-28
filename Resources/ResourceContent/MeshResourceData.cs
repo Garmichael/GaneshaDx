@@ -753,7 +753,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 
 		private readonly List<byte> _rawMeshAnimationInstructionData = new List<byte>();
 
-		public MeshAnimationInstructions AnimatedMeshInstructions;
+		public MeshAnimation AnimatedMesh;
 
 		private void ProcessMeshAnimations() {
 			const int instructionChunkSize = 14620;
@@ -776,7 +776,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 			}
 
 			if (_rawMeshAnimationInstructionData.Count == instructionChunkSize) {
-				AnimatedMeshInstructions = new MeshAnimationInstructions(_rawMeshAnimationInstructionData);
+				AnimatedMesh = new MeshAnimation(_rawMeshAnimationInstructionData);
 			}
 		}
 
@@ -1429,27 +1429,32 @@ namespace GaneshaDx.Resources.ResourceContent {
 		}
 
 		private void BuildRawDataAnimatedMeshInstructions() {
-			if (AnimatedMeshInstructions == null) {
+			if (AnimatedMesh == null) {
 				return;
 			}
-			
+
 			(RawData[AnimatedMeshInstructionsPointer], RawData[AnimatedMeshInstructionsPointer + 1]) =
 				Utilities.GetLittleEndianFromInt(RawData.Count);
 
-			RawData.AddRange(AnimatedMeshInstructions.InstructionsHeader);
+			RawData.AddRange(AnimatedMesh.InstructionsHeader);
 
-			foreach (MeshAnimationInstruction instruction in AnimatedMeshInstructions.Instructions) {
-				RawData.AddRange(instruction.Data);
+			foreach (MeshAnimationInstruction instruction in AnimatedMesh.Instructions) {
+				foreach (int property in instruction.Properties) {
+					(byte high, byte low) = Utilities.GetLittleEndianFromInt(property);
+					RawData.Add(high);
+					RawData.Add(low);
+				}
 			}
-			
-			RawData.AddRange(AnimatedMeshInstructions.LinksHeader);
 
-			foreach (MeshAnimationLink link in AnimatedMeshInstructions.Links) {
-				RawData.AddRange(link.Data);
+			RawData.AddRange(AnimatedMesh.LinksHeader);
+
+			foreach (MeshAnimationLink link in AnimatedMesh.Links) {
+				link.GenerateRawData();
+				RawData.AddRange(link.RawData);
 			}
-			
-			RawData.AddRange(AnimatedMeshInstructions.UnknownChunkHeader);
-			RawData.AddRange(AnimatedMeshInstructions.UnknownChunk.Data);
+
+			RawData.AddRange(AnimatedMesh.UnknownChunkHeader);
+			RawData.AddRange(AnimatedMesh.UnknownChunk.Data);
 		}
 
 		private void BuildRawDataAnimatedMeshes() {

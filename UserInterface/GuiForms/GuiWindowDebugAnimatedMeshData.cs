@@ -16,37 +16,50 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 			ImGui.Begin("Animation Bytes", ref windowIsOpen);
 			{
-				MeshAnimationInstructions instructionSet = CurrentMapState.StateData.MeshAnimationInstructions;
+				MeshAnimation set = CurrentMapState.StateData.MeshAnimation;
 				ImGui.PopFont();
 
 				if (ImGui.CollapsingHeader("Instructions")) {
 					ImGui.Indent();
 
 					const int inputWidth = 40;
-					for (int setIndex = 0; setIndex < instructionSet.Instructions.Count; setIndex++) {
-						MeshAnimationInstruction instruction = instructionSet.Instructions[setIndex];
+					for (int setIndex = 0; setIndex < set.Instructions.Count; setIndex++) {
+						MeshAnimationInstruction instruction = set.Instructions[setIndex];
 
-						if (ImGui.CollapsingHeader("Set " + (setIndex + 1))) {
-							ImGui.Columns(9, "Data", false);
+						GuiStyle.SetNewUiToDefaultStyle();
+
+						bool highlightHeader = false;
+
+						foreach (int data in instruction.Properties) {
+							if (data != 0) {
+								highlightHeader = true;
+								break;
+							}
+						}
+
+						if (highlightHeader) {
+							ImGui.GetStyle().Colors[(int) ImGuiCol.Header] = GuiStyle.ColorPalette[ColorName.Lightest];
+							ImGui.GetStyle().Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.Dark];
+						}
+
+						if (highlightHeader && ImGui.CollapsingHeader("Set " + (setIndex + 1))) {
+							GuiStyle.SetNewUiToDefaultStyle();
+							ImGui.Columns(5, "InstructionSetData", false);
 							ImGui.SetColumnWidth(0, 30);
 							ImGui.SetColumnWidth(1, inputWidth + 10);
 							ImGui.SetColumnWidth(2, inputWidth + 10);
 							ImGui.SetColumnWidth(3, inputWidth + 10);
 							ImGui.SetColumnWidth(4, inputWidth + 10);
-							ImGui.SetColumnWidth(5, inputWidth + 10);
-							ImGui.SetColumnWidth(6, inputWidth + 10);
-							ImGui.SetColumnWidth(7, inputWidth + 10);
-							ImGui.SetColumnWidth(8, inputWidth + 10);
 
-							for (int dataIndex = 0; dataIndex < instruction.Data.Count;) {
+							for (int dataIndex = 0; dataIndex < instruction.Properties.Count;) {
 								ImGui.Text(dataIndex + ": ");
 								ImGui.NextColumn();
 
-								for (int field = 0; field < 8; field++) {
-									int value = instruction.Data[dataIndex];
+								for (int field = 0; field < 4; field++) {
+									int value = instruction.Properties[dataIndex];
 									ImGui.SetNextItemWidth(inputWidth);
-									ImGui.DragInt("##instruction_" + setIndex + "_" + dataIndex, ref value);
-									instruction.Data[dataIndex] = (byte) value;
+									ImGui.DragInt("###instruction_" + setIndex + "_" + dataIndex, ref value);
+									instruction.Properties[dataIndex] = value;
 									ImGui.NextColumn();
 									dataIndex++;
 								}
@@ -56,7 +69,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 							if (ImGui.Button("Copy##instructionSet_" + setIndex)) {
 								List<string> bytes = new List<string>();
-								foreach (byte x in instruction.Data) {
+								foreach (int x in instruction.Properties) {
 									bytes.Add(x.ToString());
 								}
 
@@ -71,7 +84,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 								for (int index = 0; index < byteArray.Length; index++) {
 									string entry = byteArray[index];
 									byte byteValue = (byte) int.Parse(entry);
-									instruction.Data[index] = byteValue;
+									instruction.Properties[index] = byteValue;
 								}
 							}
 						}
@@ -84,11 +97,28 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					ImGui.Indent();
 
 					const int inputWidth = 40;
-					for (int setIndex = 0; setIndex < instructionSet.Links.Count; setIndex++) {
-						MeshAnimationLink link = instructionSet.Links[setIndex];
+					for (int setIndex = 0; setIndex < set.Links.Count; setIndex++) {
+						MeshAnimationLink link = set.Links[setIndex];
 
-						if (ImGui.CollapsingHeader("Link " + (setIndex + 1))) {
-							ImGui.Columns(9, "Data", false);
+						GuiStyle.SetNewUiToDefaultStyle();
+
+						bool highlightHeader = false;
+
+						foreach (int data in link.RawData) {
+							if (data != 0) {
+								highlightHeader = true;
+								break;
+							}
+						}
+
+						if (highlightHeader) {
+							ImGui.GetStyle().Colors[(int) ImGuiCol.Header] = GuiStyle.ColorPalette[ColorName.Lightest];
+							ImGui.GetStyle().Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.Dark];
+						}
+
+						if (highlightHeader && ImGui.CollapsingHeader("Link " + (setIndex + 1))) {
+							GuiStyle.SetNewUiToDefaultStyle();
+							ImGui.Columns(9, "LinkSetData", false);
 							ImGui.SetColumnWidth(0, 30);
 							ImGui.SetColumnWidth(1, inputWidth + 10);
 							ImGui.SetColumnWidth(2, inputWidth + 10);
@@ -99,15 +129,15 @@ namespace GaneshaDx.UserInterface.GuiForms {
 							ImGui.SetColumnWidth(7, inputWidth + 10);
 							ImGui.SetColumnWidth(8, inputWidth + 10);
 
-							for (int dataIndex = 0; dataIndex < link.Data.Count;) {
+							for (int dataIndex = 0; dataIndex < link.RawData.Count;) {
 								ImGui.Text(dataIndex + ": ");
 								ImGui.NextColumn();
 
 								for (int field = 0; field < 8; field++) {
-									int value = link.Data[dataIndex];
+									int value = link.RawData[dataIndex];
 									ImGui.SetNextItemWidth(inputWidth);
 									ImGui.DragInt("###link_" + setIndex + "_" + dataIndex, ref value);
-									link.Data[dataIndex] = (byte) value;
+									link.RawData[dataIndex] = (byte) value;
 									ImGui.NextColumn();
 									dataIndex++;
 								}
@@ -117,7 +147,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 							if (ImGui.Button("Copy##linkSet_" + setIndex)) {
 								List<string> bytes = new List<string>();
-								foreach (byte x in link.Data) {
+								foreach (byte x in link.RawData) {
 									bytes.Add(x.ToString());
 								}
 
@@ -132,7 +162,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 								for (int index = 0; index < byteArray.Length; index++) {
 									string entry = byteArray[index];
 									byte byteValue = (byte) int.Parse(entry);
-									link.Data[index] = byteValue;
+									link.RawData[index] = byteValue;
 								}
 							}
 						}
@@ -157,18 +187,18 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					ImGui.SetColumnWidth(7, inputWidth + 10);
 					ImGui.SetColumnWidth(8, inputWidth + 10);
 
-					for (int dataIndex = 0; dataIndex < instructionSet.UnknownChunk.Data.Count;) {
+					for (int dataIndex = 0; dataIndex < set.UnknownChunk.Data.Count;) {
 						ImGui.Text(dataIndex + ": ");
 						ImGui.NextColumn();
 
 						for (int field = 0; field < 8; field++) {
-							int value = instructionSet.UnknownChunk.Data[dataIndex];
+							int value = set.UnknownChunk.Data[dataIndex];
 							ImGui.SetNextItemWidth(inputWidth);
 							ImGui.DragInt("###linkUnknownChunk" + dataIndex, ref value);
-							instructionSet.UnknownChunk.Data[dataIndex] = (byte) value;
+							set.UnknownChunk.Data[dataIndex] = (byte) value;
 							ImGui.NextColumn();
 							dataIndex++;
-							if (dataIndex > instructionSet.UnknownChunk.Data.Count - 1) {
+							if (dataIndex > set.UnknownChunk.Data.Count - 1) {
 								break;
 							}
 						}
@@ -178,7 +208,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 					if (ImGui.Button("Copy##linkUnknownChunk")) {
 						List<string> bytes = new List<string>();
-						foreach (byte x in instructionSet.UnknownChunk.Data) {
+						foreach (byte x in set.UnknownChunk.Data) {
 							bytes.Add(x.ToString());
 						}
 
@@ -193,14 +223,13 @@ namespace GaneshaDx.UserInterface.GuiForms {
 						for (int index = 0; index < byteArray.Length; index++) {
 							string entry = byteArray[index];
 							byte byteValue = (byte) int.Parse(entry);
-							instructionSet.UnknownChunk.Data[index] = byteValue;
+							set.UnknownChunk.Data[index] = byteValue;
 						}
 					}
 				}
 
 				ImGui.Unindent();
 			}
-
 			if (!windowIsOpen) {
 				Gui.ShowDebugAnimatedMeshWindow = false;
 			}

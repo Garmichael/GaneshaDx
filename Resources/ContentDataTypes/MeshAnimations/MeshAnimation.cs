@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
-	public class MeshAnimationInstructions {
+	public class MeshAnimation {
 		public readonly List<byte> InstructionsHeader = new List<byte>();
 		public readonly List<MeshAnimationInstruction> Instructions = new List<MeshAnimationInstruction>();
 		
@@ -9,9 +9,9 @@ namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 		public readonly List<MeshAnimationLink> Links = new List<MeshAnimationLink>();
 		
 		public readonly List<byte> UnknownChunkHeader = new List<byte>();
-		public MeshAnimationUnknown UnknownChunk;
+		public readonly MeshAnimationUnknown UnknownChunk;
 		
-		public MeshAnimationInstructions(List<byte> rawData) {
+		public MeshAnimation(List<byte> rawData) {
 			const int headerLength = 8;
 			const int totalInstructions = 128;
 			const int instructionLength = 80;
@@ -26,12 +26,13 @@ namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 			}
 
 			for (int instructionIndex = 0; instructionIndex < totalInstructions; instructionIndex++) {
-				MeshAnimationInstruction newInstruction = new MeshAnimationInstruction();
+				List<byte> instructionData = new List<byte>();
 				for (int byteIndex = 0; byteIndex < instructionLength; byteIndex++) {
-					newInstruction.Data.Add(rawData[currentByteIndex]);
+					instructionData.Add(rawData[currentByteIndex]);
 					currentByteIndex++;
 				}
 
+				MeshAnimationInstruction newInstruction = new MeshAnimationInstruction(instructionData);
 				Instructions.Add(newInstruction);
 			}
 
@@ -41,13 +42,13 @@ namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 			}
 
 			for (int linkIndex = 0; linkIndex < totalLinks; linkIndex++) {
-				MeshAnimationLink newLink = new MeshAnimationLink();
+				List<byte> data = new List<byte>();
 				for (int byteIndex = 0; byteIndex < linkLength; byteIndex++) {
-					newLink.Data.Add(rawData[currentByteIndex]);
+					data.Add(rawData[currentByteIndex]);
 					currentByteIndex++;
 				}
 
-				Links.Add(newLink);
+				Links.Add(new MeshAnimationLink(data));
 			}
 
 			while (UnknownChunkHeader.Count < headerLength) {

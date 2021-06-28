@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using GaneshaDx.Common;
-using GaneshaDx.Environment;
 using GaneshaDx.Resources.ContentDataTypes.Polygons;
 using GaneshaDx.UserInterface.GuiDefinitions;
 using GaneshaDx.UserInterface.Widgets;

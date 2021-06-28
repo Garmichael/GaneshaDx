@@ -107,11 +107,11 @@ namespace GaneshaDx.Resources.ContentDataTypes {
 			}
 		}
 
-		public MeshAnimationInstructions MeshAnimationInstructions {
-			get => _animatedMeshSource?.AnimatedMeshInstructions;
+		public MeshAnimation MeshAnimation {
+			get => _animatedMeshSource?.AnimatedMesh;
 			set {
 				if (_animatedMeshSource != null) {
-					_animatedMeshSource.AnimatedMeshInstructions = value;
+					_animatedMeshSource.AnimatedMesh = value;
 				}
 			}
 		}
