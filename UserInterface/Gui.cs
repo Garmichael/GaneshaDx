@@ -1,4 +1,5 @@
 ﻿using System;
+using GaneshaDx.Common;
 using GaneshaDx.Environment;
 using GaneshaDx.Resources;
 using GaneshaDx.UserInterface.GuiDefinitions;
@@ -12,6 +13,8 @@ using Vector2 = System.Numerics.Vector2;
 namespace GaneshaDx.UserInterface {
 	public static class Gui {
 		public static RightPanelTab SelectedTab;
+		public static WidgetSelectionMode WidgetSelectionMode = WidgetSelectionMode.PolygonTranslate;
+
 		private static bool _showDebugPanel;
 		public static bool ShowCameraControlWindow;
 		public static bool ShowPreferencesWindow;

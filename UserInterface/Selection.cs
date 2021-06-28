@@ -39,14 +39,14 @@ namespace GaneshaDx.UserInterface {
 			HoveredTerrainTiles.Clear();
 			HoveredPolygons.Clear();
 
-			bool transformWidgetInUse = Stage.WidgetSelectionMode == WidgetSelectionMode.PolygonTranslate &&
+			bool transformWidgetInUse = Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonTranslate &&
 			                            (TransformWidget.IsHovered || TransformWidget.IsActive) ||
-			                            Stage.WidgetSelectionMode == WidgetSelectionMode.PolygonVertexTranslate &&
+			                            Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonVertexTranslate &&
 			                            (TransformWidget.IsHovered || TransformWidget.IsActive) ||
-			                            Stage.WidgetSelectionMode == WidgetSelectionMode.PolygonEdgeTranslate &&
+			                            Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonEdgeTranslate &&
 			                            (TransformWidget.IsHovered || TransformWidget.IsActive);
 
-			bool rotationWidgetInUse = Stage.WidgetSelectionMode == WidgetSelectionMode.PolygonRotate &&
+			bool rotationWidgetInUse = Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonRotate &&
 			                           RotationWidget.IsHovered;
 
 			if (AppInput.MouseIsWithinModelViewport && !transformWidgetInUse && !rotationWidgetInUse) {
@@ -57,219 +57,6 @@ namespace GaneshaDx.UserInterface {
 			SetAnchorPositions();
 		}
 
-		private static void HandleInputForTerrain() {
-			HoveredPolygons.Clear();
-			SelectedPolygons.Clear();
-			HoveredTerrainTiles.Clear();
-
-			if (AppInput.MouseIsWithinModelViewport) {
-				CollectHoveredTerrainTiles();
-				ClickTerrainSelection();
-			}
-		}
-
-		public static void SelectPolygon(Polygon polygon) {
-			if (AppInput.ControlHeld) {
-				if (SelectedPolygons.Contains(polygon)) {
-					RemovePolyFromSelection(polygon);
-				} else {
-					AddPolyToSelection(polygon);
-				}
-			} else if (AppInput.AltHeld) {
-				if (SelectedPolygons.Contains(polygon)) {
-					SelectedPolygons.Remove(polygon);
-					SelectedPolygons.Insert(0, polygon);
-				} else {
-					SelectedPolygons.Insert(0, polygon);
-				}
-			} else {
-				SetPolyAsSelection(polygon);
-			}
-
-			if (
-				Gui.SelectedTab != RightPanelTab.Polygon &&
-				Gui.SelectedTab != RightPanelTab.Texture
-			) {
-				Gui.SelectedTab = RightPanelTab.Polygon;
-			}
-		}
-
-		public static void AddPolyToSelection(Polygon polygon) {
-			if (!SelectedPolygons.Contains(polygon)) {
-				SelectedPolygons.Add(polygon);
-				if (AppInput.ShiftHeld) {
-					StageCamera.CamTarget = polygon.AveragePoint;
-				}
-			}
-		}
-
-		public static void RemovePolyFromSelection(Polygon polygon) {
-			SelectedPolygons.Remove(polygon);
-		}
-
-		public static void SetPolyAsSelection(Polygon polygon) {
-			SelectedPolygons.Clear();
-			SelectedPolygons.Add(polygon);
-			if (AppInput.ShiftHeld) {
-				StageCamera.CamTarget = polygon.AveragePoint;
-			}
-		}
-
-		public static void UnselectAllExceptLast() {
-			while (SelectedPolygons.Count > 1) {
-				SelectedPolygons.RemoveAt(0);
-			}
-		}
-
-		public static void GrowPolygonSelection() {
-			List<Polygon> polygonsToAddToSelection = new List<Polygon>();
-
-			foreach (Polygon otherPolygon in CurrentMapState.StateData.PolygonCollectionBucket) {
-				if (!SelectedPolygons.Contains(otherPolygon)) {
-					foreach (Polygon selectedPolygon in SelectedPolygons) {
-						foreach (Vertex selectedVertex in selectedPolygon.Vertices) {
-							foreach (Vertex otherVertex in otherPolygon.Vertices) {
-								bool sharesVertices = (int) selectedVertex.Position.X == (int) otherVertex.Position.X &&
-								                      (int) selectedVertex.Position.Y == (int) otherVertex.Position.Y &&
-								                      (int) selectedVertex.Position.Z == (int) otherVertex.Position.Z;
-
-								if (sharesVertices) {
-									if (!polygonsToAddToSelection.Contains(otherPolygon)) {
-										polygonsToAddToSelection.Add(otherPolygon);
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-
-			SelectedPolygons.AddRange(polygonsToAddToSelection);
-		}
-
-		public static void SelectAllPolygons() {
-			SelectedPolygons.Clear();
-			SelectedPolygons.AddRange(CurrentMapState.StateData.PolygonCollectionBucket);
-		}
-
-		private static void SelectCompleteAnimatedMeshPolygons() {
-			List<MeshType> selectedMeshTypes = new List<MeshType>();
-
-			foreach (Polygon polygon in SelectedPolygons) {
-				if (polygon.MeshType != MeshType.PrimaryMesh && !selectedMeshTypes.Contains(polygon.MeshType)) {
-					selectedMeshTypes.Add(polygon.MeshType);
-				}
-			}
-
-			foreach (MeshType meshType in selectedMeshTypes) {
-				foreach (PolygonType polygonType in CommonLists.PolygonTypes) {
-					foreach (Polygon polygon in CurrentMapState.StateData.PolygonCollection[meshType][polygonType]) {
-						if (!SelectedPolygons.Contains(polygon)) {
-							AddPolyToSelection(polygon);
-						}
-					}
-				}
-			}
-		}
-
-		private static void ClickTerrainSelection() {
-			if (AppInput.LeftMouseClicked) {
-				if (HoveredTerrainTiles.Count > 0) {
-					SelectTerrainTile(HoveredTerrainTiles[0]);
-				} else {
-					SelectedTerrainTiles.Clear();
-				}
-			}
-		}
-
-		public static void SelectTerrainTile(TerrainTile terrainTile) {
-			if (AppInput.ControlHeld) {
-				if (SelectedTerrainTiles.Contains(terrainTile)) {
-					SelectedTerrainTiles.Remove(terrainTile);
-					TerrainTile companion = CurrentMapState.StateData.Terrain.GetCompanionTerrainTile(terrainTile);
-					SelectedTerrainTiles.Remove(companion);
-				} else {
-					SelectedTerrainTiles.Add(terrainTile);
-					TerrainTile companion = CurrentMapState.StateData.Terrain.GetCompanionTerrainTile(terrainTile);
-					SelectedTerrainTiles.Add(companion);
-				}
-			} else {
-				SelectedTerrainTiles.Clear();
-				SelectedTerrainTiles.Add(terrainTile);
-				TerrainTile companion = CurrentMapState.StateData.Terrain.GetCompanionTerrainTile(terrainTile);
-				SelectedTerrainTiles.Add(companion);
-			}
-
-			if (AppInput.ShiftHeld) {
-				StageCamera.CamTarget = terrainTile.AveragePoint;
-			}
-		}
-
-		public static void SelectAllTerrainTiles() {
-			SelectedTerrainTiles.Clear();
-			foreach (List<TerrainTile> row in CurrentMapState.StateData.Terrain.Level0Tiles) {
-				foreach (TerrainTile terrainTile in row) {
-					SelectedTerrainTiles.Add(terrainTile);
-					TerrainTile companion = CurrentMapState.StateData.Terrain.GetCompanionTerrainTile(terrainTile);
-					SelectedTerrainTiles.Add(companion);
-				}
-			}
-		}
-
-		public static void GrowTerrainSelection() {
-			Terrain terrain = CurrentMapState.StateData.Terrain;
-			List<TerrainTile> tilesToAdd = new List<TerrainTile>();
-
-			foreach (List<TerrainTile> row in terrain.Level0Tiles) {
-				foreach (TerrainTile terrainTile in row) {
-					if (SelectedTerrainTiles.Contains(terrainTile)) {
-						continue;
-					}
-
-					if (terrainTile.IndexZ > 0) {
-						TerrainTile targetTile = terrain.Level0Tiles[terrainTile.IndexZ - 1][terrainTile.IndexX];
-
-						if (SelectedTerrainTiles.Contains(targetTile)) {
-							tilesToAdd.Add(terrainTile);
-							continue;
-						}
-					}
-
-					if (terrainTile.IndexX > 0) {
-						TerrainTile targetTile = terrain.Level0Tiles[terrainTile.IndexZ][terrainTile.IndexX - 1];
-
-						if (SelectedTerrainTiles.Contains(targetTile)) {
-							tilesToAdd.Add(terrainTile);
-							continue;
-						}
-					}
-
-					if (terrainTile.IndexZ < terrain.SizeZ - 1) {
-						TerrainTile targetTile = terrain.Level0Tiles[terrainTile.IndexZ + 1][terrainTile.IndexX];
-
-						if (SelectedTerrainTiles.Contains(targetTile)) {
-							tilesToAdd.Add(terrainTile);
-							continue;
-						}
-					}
-
-					if (terrainTile.IndexX < terrain.SizeX - 1) {
-						TerrainTile targetTile = terrain.Level0Tiles[terrainTile.IndexZ][terrainTile.IndexX + 1];
-
-						if (SelectedTerrainTiles.Contains(targetTile)) {
-							tilesToAdd.Add(terrainTile);
-						}
-					}
-				}
-			}
-
-			foreach (TerrainTile terrainTile in tilesToAdd) {
-				SelectedTerrainTiles.Add(terrainTile);
-				TerrainTile companion = CurrentMapState.StateData.Terrain.GetCompanionTerrainTile(terrainTile);
-				SelectedTerrainTiles.Add(companion);
-			}
-		}
-
 		private static void ClickPolygonSelection() {
 			if (AppInput.LeftMouseClicked) {
 				if (HoveredPolygons.Count == 0) {
@@ -277,16 +64,16 @@ namespace GaneshaDx.UserInterface {
 				} else {
 					int indexOfSelected = 0;
 
-					if (Stage.WidgetSelectionMode == WidgetSelectionMode.PolygonVertexTranslate ||
-					    Stage.WidgetSelectionMode == WidgetSelectionMode.PolygonEdgeTranslate
+					if (Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonVertexTranslate ||
+					    Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonEdgeTranslate
 					) {
 						if (AppInput.ControlHeld) {
-							Stage.WidgetSelectionMode = WidgetSelectionMode.PolygonTranslate;
+							Gui.WidgetSelectionMode = WidgetSelectionMode.PolygonTranslate;
 						}
 					}
 
-					if (Stage.WidgetSelectionMode != WidgetSelectionMode.PolygonVertexTranslate &&
-					    Stage.WidgetSelectionMode != WidgetSelectionMode.PolygonEdgeTranslate
+					if (Gui.WidgetSelectionMode != WidgetSelectionMode.PolygonVertexTranslate &&
+					    Gui.WidgetSelectionMode != WidgetSelectionMode.PolygonEdgeTranslate
 					) {
 						if (!AppInput.ControlHeld && SelectedPolygons.Count == 1) {
 							for (int polyIndex = 0; polyIndex < HoveredPolygons.Count; polyIndex++) {
@@ -302,7 +89,7 @@ namespace GaneshaDx.UserInterface {
 
 						SelectPolygon(HoveredPolygons[indexOfSelected]);
 						SelectCompleteAnimatedMeshPolygons();
-					} else if (Stage.WidgetSelectionMode == WidgetSelectionMode.PolygonVertexTranslate) {
+					} else if (Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonVertexTranslate) {
 						if (SelectedPolygons.Count == 0) {
 							SelectPolygon(HoveredPolygons[indexOfSelected]);
 							SelectCompleteAnimatedMeshPolygons();
@@ -327,7 +114,7 @@ namespace GaneshaDx.UserInterface {
 								SelectedPolygons[0].Vertices.IndexOf(closestVertex)
 							);
 						}
-					} else if (Stage.WidgetSelectionMode == WidgetSelectionMode.PolygonEdgeTranslate) {
+					} else if (Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonEdgeTranslate) {
 						if (SelectedPolygons.Count == 0) {
 							SelectPolygon(HoveredPolygons[indexOfSelected]);
 							SelectCompleteAnimatedMeshPolygons();
@@ -384,6 +171,236 @@ namespace GaneshaDx.UserInterface {
 			}
 
 			HoveredPolygons = HoveredPolygons.OrderBy(polygon => polygon.DistanceToCamera).ToList();
+		}
+
+		public static void SelectPolygon(Polygon polygon) {
+			if (AppInput.ControlHeld) {
+				if (SelectedPolygons.Contains(polygon)) {
+					SelectedPolygons.Remove(polygon);
+				} else {
+					AddPolyToSelection(polygon);
+				}
+			} else if (AppInput.AltHeld) {
+				if (SelectedPolygons.Contains(polygon)) {
+					SelectedPolygons.Remove(polygon);
+				}
+
+				SelectedPolygons.Insert(0, polygon);
+			} else {
+				SelectedPolygons.Clear();
+				SelectedPolygons.Add(polygon);
+				if (AppInput.ShiftHeld) {
+					StageCamera.CamTarget = polygon.AveragePoint;
+				}
+			}
+
+			if (
+				Gui.SelectedTab != RightPanelTab.Polygon &&
+				Gui.SelectedTab != RightPanelTab.Texture
+			) {
+				Gui.SelectedTab = RightPanelTab.Polygon;
+			}
+		}
+
+		public static void AddPolyToSelection(Polygon polygon) {
+			if (!SelectedPolygons.Contains(polygon)) {
+				SelectedPolygons.Add(polygon);
+				if (AppInput.ShiftHeld) {
+					StageCamera.CamTarget = polygon.AveragePoint;
+				}
+			}
+		}
+
+		private static void SelectCompleteAnimatedMeshPolygons() {
+			List<MeshType> selectedMeshTypes = new List<MeshType>();
+
+			foreach (Polygon polygon in SelectedPolygons) {
+				if (polygon.MeshType != MeshType.PrimaryMesh && !selectedMeshTypes.Contains(polygon.MeshType)) {
+					selectedMeshTypes.Add(polygon.MeshType);
+				}
+			}
+
+			if (selectedMeshTypes.Count > 0) {
+				if (Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonVertexTranslate ||
+				    Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonEdgeTranslate
+				) {
+					Gui.WidgetSelectionMode = WidgetSelectionMode.PolygonTranslate;
+				}
+			}
+
+			foreach (MeshType meshType in selectedMeshTypes) {
+				foreach (PolygonType polygonType in CommonLists.PolygonTypes) {
+					foreach (Polygon polygon in CurrentMapState.StateData.PolygonCollection[meshType][polygonType]) {
+						if (!SelectedPolygons.Contains(polygon)) {
+							AddPolyToSelection(polygon);
+						}
+					}
+				}
+			}
+		}
+
+		public static void SelectAllPolygons() {
+			Polygon firstPolygon = null;
+			if (SelectedPolygons.Count > 0) {
+				firstPolygon = SelectedPolygons.First();
+			}
+
+			SelectedPolygons.Clear();
+			SelectedPolygons.AddRange(CurrentMapState.StateData.PolygonCollectionBucket);
+
+			if (firstPolygon != null) {
+				SelectedPolygons.Remove(firstPolygon);
+				SelectedPolygons.Insert(0, firstPolygon);
+			}
+		}
+
+		public static void UnselectAllExceptLast() {
+			while (SelectedPolygons.Count > 1) {
+				SelectedPolygons.RemoveAt(0);
+			}
+		}
+
+		public static void GrowPolygonSelection() {
+			if (SelectedPolygons.Count == 0) {
+				return;
+			}
+
+			List<Polygon> polygonsToAddToSelection = new List<Polygon>();
+
+			foreach (Polygon otherPolygon in CurrentMapState.StateData.PolygonCollectionBucket) {
+				if (!SelectedPolygons.Contains(otherPolygon)) {
+					foreach (Polygon selectedPolygon in SelectedPolygons) {
+						foreach (Vertex selectedVertex in selectedPolygon.Vertices) {
+							foreach (Vertex otherVertex in otherPolygon.Vertices) {
+								bool sharesVertices = (int) selectedVertex.Position.X == (int) otherVertex.Position.X &&
+								                      (int) selectedVertex.Position.Y == (int) otherVertex.Position.Y &&
+								                      (int) selectedVertex.Position.Z == (int) otherVertex.Position.Z;
+
+								if (sharesVertices) {
+									if (!polygonsToAddToSelection.Contains(otherPolygon)) {
+										polygonsToAddToSelection.Add(otherPolygon);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			SelectedPolygons.AddRange(polygonsToAddToSelection);
+		}
+
+		private static void HandleInputForTerrain() {
+			HoveredPolygons.Clear();
+			SelectedPolygons.Clear();
+			HoveredTerrainTiles.Clear();
+
+			if (AppInput.MouseIsWithinModelViewport) {
+				CollectHoveredTerrainTiles();
+				ClickTerrainSelection();
+			}
+		}
+
+		private static void ClickTerrainSelection() {
+			if (AppInput.LeftMouseClicked) {
+				if (HoveredTerrainTiles.Count > 0) {
+					SelectTerrainTile(HoveredTerrainTiles[0]);
+				} else {
+					SelectedTerrainTiles.Clear();
+				}
+			}
+		}
+
+		public static void SelectTerrainTile(TerrainTile terrainTile) {
+			if (AppInput.ControlHeld) {
+				if (SelectedTerrainTiles.Contains(terrainTile)) {
+					SelectedTerrainTiles.Remove(terrainTile);
+					TerrainTile companion = CurrentMapState.StateData.Terrain.GetCompanionTerrainTile(terrainTile);
+					SelectedTerrainTiles.Remove(companion);
+				} else {
+					SelectedTerrainTiles.Add(terrainTile);
+					TerrainTile companion = CurrentMapState.StateData.Terrain.GetCompanionTerrainTile(terrainTile);
+					SelectedTerrainTiles.Add(companion);
+				}
+			} else {
+				SelectedTerrainTiles.Clear();
+				SelectedTerrainTiles.Add(terrainTile);
+				TerrainTile companion = CurrentMapState.StateData.Terrain.GetCompanionTerrainTile(terrainTile);
+				SelectedTerrainTiles.Add(companion);
+			}
+
+			if (AppInput.ShiftHeld) {
+				StageCamera.CamTarget = terrainTile.AveragePoint;
+			}
+		}
+
+		public static void SelectAllTerrainTiles() {
+			SelectedTerrainTiles.Clear();
+			foreach (List<TerrainTile> row in CurrentMapState.StateData.Terrain.Level0Tiles) {
+				foreach (TerrainTile terrainTile in row) {
+					SelectedTerrainTiles.Add(terrainTile);
+					TerrainTile companion = CurrentMapState.StateData.Terrain.GetCompanionTerrainTile(terrainTile);
+					SelectedTerrainTiles.Add(companion);
+				}
+			}
+		}
+
+		public static void GrowTerrainSelection() {
+			if (SelectedTerrainTiles.Count == 0) {
+				return;
+			}
+
+			Terrain terrain = CurrentMapState.StateData.Terrain;
+			List<TerrainTile> tilesToAdd = new List<TerrainTile>();
+
+			foreach (List<TerrainTile> row in terrain.Level0Tiles) {
+				foreach (TerrainTile terrainTile in row) {
+					if (SelectedTerrainTiles.Contains(terrainTile)) {
+						continue;
+					}
+
+					if (terrainTile.IndexZ > 0) {
+						TerrainTile targetTile = terrain.Level0Tiles[terrainTile.IndexZ - 1][terrainTile.IndexX];
+
+						if (SelectedTerrainTiles.Contains(targetTile)) {
+							tilesToAdd.Add(terrainTile);
+							continue;
+						}
+					}
+
+					if (terrainTile.IndexX > 0) {
+						TerrainTile targetTile = terrain.Level0Tiles[terrainTile.IndexZ][terrainTile.IndexX - 1];
+
+						if (SelectedTerrainTiles.Contains(targetTile)) {
+							tilesToAdd.Add(terrainTile);
+							continue;
+						}
+					}
+
+					if (terrainTile.IndexZ < terrain.SizeZ - 1) {
+						TerrainTile targetTile = terrain.Level0Tiles[terrainTile.IndexZ + 1][terrainTile.IndexX];
+
+						if (SelectedTerrainTiles.Contains(targetTile)) {
+							tilesToAdd.Add(terrainTile);
+							continue;
+						}
+					}
+
+					if (terrainTile.IndexX < terrain.SizeX - 1) {
+						TerrainTile targetTile = terrain.Level0Tiles[terrainTile.IndexZ][terrainTile.IndexX + 1];
+
+						if (SelectedTerrainTiles.Contains(targetTile)) {
+							tilesToAdd.Add(terrainTile);
+						}
+					}
+				}
+			}
+
+			foreach (TerrainTile terrainTile in tilesToAdd) {
+				SelectedTerrainTiles.Add(terrainTile);
+				TerrainTile companion = CurrentMapState.StateData.Terrain.GetCompanionTerrainTile(terrainTile);
+				SelectedTerrainTiles.Add(companion);
+			}
 		}
 
 		private static void CollectHoveredTerrainTiles() {

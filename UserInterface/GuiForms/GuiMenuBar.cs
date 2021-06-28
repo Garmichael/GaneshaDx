@@ -72,6 +72,50 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					ImGui.EndMenu();
 				}
 
+				if (ImGui.BeginMenu("Selection")) {
+					if (ImGui.MenuItem(
+						"Select All Polygons",
+						"Ctrl + A",
+						false,
+						MapData.MapIsLoaded && Gui.SelectedTab != RightPanelTab.Terrain
+					)) {
+						Gui.WidgetSelectionMode = WidgetSelectionMode.PolygonTranslate;
+						Selection.SelectAllPolygons();
+					}
+
+					if (ImGui.MenuItem(
+						"Grow Polygon Selection",
+						"+",
+						false,
+						MapData.MapIsLoaded &&
+						Gui.SelectedTab != RightPanelTab.Terrain &&
+						Selection.SelectedPolygons.Count > 0
+					)) {
+						Selection.GrowPolygonSelection();
+					}
+
+					ImGui.Separator();
+
+					if (ImGui.MenuItem("Select All Terrain Tiles", "Ctrl + A", false,
+						MapData.MapIsLoaded && Gui.SelectedTab == RightPanelTab.Terrain)
+					) {
+						Selection.SelectAllTerrainTiles();
+					}
+
+					if (ImGui.MenuItem(
+						"Grow Terrain Selection",
+						"+",
+						false,
+						MapData.MapIsLoaded &&
+						Gui.SelectedTab == RightPanelTab.Terrain &&
+						Selection.SelectedTerrainTiles.Count > 0)
+					) {
+						Selection.GrowTerrainSelection();
+					}
+
+					ImGui.EndMenu();
+				}
+
 				if (ImGui.BeginMenu("View")) {
 					ImGui.MenuItem("Camera Controls", "C", ref Gui.ShowCameraControlWindow, MapData.MapIsLoaded);
 

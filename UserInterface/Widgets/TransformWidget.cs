@@ -41,25 +41,22 @@ namespace GaneshaDx.UserInterface.Widgets {
 		}
 
 		public static void Update() {
-			if (Stage.WidgetSelectionMode == WidgetSelectionMode.PolygonTranslate) {
+			if (Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonTranslate) {
 				foreach (TransformWidgetAxis axis in AxesSet) {
 					axis.Update();
 				}
-			} else if (
-				Stage.WidgetSelectionMode == WidgetSelectionMode.PolygonVertexTranslate ||
-				Stage.WidgetSelectionMode == WidgetSelectionMode.PolygonEdgeTranslate
+			} else if (Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonVertexTranslate ||
+			           Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonEdgeTranslate
 			) {
-				if (
-					Stage.WidgetSelectionMode == WidgetSelectionMode.PolygonVertexTranslate &&
-					SelectedVertexIndices.Count == 0
+				if (Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonVertexTranslate &&
+				    SelectedVertexIndices.Count == 0
 				) {
 					SelectedVertexIndices.Clear();
 					SelectedVertexIndices.Add(0);
 				}
 
-				if (
-					Stage.WidgetSelectionMode == WidgetSelectionMode.PolygonEdgeTranslate &&
-					SelectedVertexIndices.Count < 2
+				if (Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonEdgeTranslate &&
+				    SelectedVertexIndices.Count < 2
 				) {
 					SelectedVertexIndices.Clear();
 					SelectedVertexIndices.Add(0);
@@ -83,9 +80,9 @@ namespace GaneshaDx.UserInterface.Widgets {
 
 		public static void Render() {
 			if (Selection.SelectedPolygons.Count == 0 ||
-			    Stage.WidgetSelectionMode != WidgetSelectionMode.PolygonTranslate &&
-			    Stage.WidgetSelectionMode != WidgetSelectionMode.PolygonVertexTranslate &&
-			    Stage.WidgetSelectionMode != WidgetSelectionMode.PolygonEdgeTranslate
+			    Gui.WidgetSelectionMode != WidgetSelectionMode.PolygonTranslate &&
+			    Gui.WidgetSelectionMode != WidgetSelectionMode.PolygonVertexTranslate &&
+			    Gui.WidgetSelectionMode != WidgetSelectionMode.PolygonEdgeTranslate
 			) {
 				return;
 			}

@@ -31,7 +31,6 @@ namespace GaneshaDx.Environment {
 		public static GameTime GameTime;
 		public static VertexBuffer UntexturedVertexBuffer;
 		public static VertexBuffer PolygonVertexBuffer;
-		public static WidgetSelectionMode WidgetSelectionMode = WidgetSelectionMode.PolygonTranslate;
 		public static MonoGameImGuiRenderer ImGuiRenderer;
 		public static bool FullModelingViewportMode;
 		public static RenderTarget2D ImGuiRenderTarget;

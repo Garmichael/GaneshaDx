@@ -25,23 +25,23 @@ namespace GaneshaDx.UserInterface.Input {
 				}
 
 				if (AppInput.KeyJustPressed(Keys.Q)) {
-					Stage.WidgetSelectionMode = WidgetSelectionMode.Select;
+					Gui.WidgetSelectionMode = WidgetSelectionMode.Select;
 				}
 
 				if (AppInput.KeyJustPressed(Keys.W)) {
-					Stage.WidgetSelectionMode = WidgetSelectionMode.PolygonTranslate;
+					Gui.WidgetSelectionMode = WidgetSelectionMode.PolygonTranslate;
 				}
 
 				if (AppInput.KeyJustPressed(Keys.E)) {
-					Stage.WidgetSelectionMode = WidgetSelectionMode.PolygonRotate;
+					Gui.WidgetSelectionMode = WidgetSelectionMode.PolygonRotate;
 				}
 
 				if (AppInput.KeyJustPressed(Keys.R)) {
-					Stage.WidgetSelectionMode = WidgetSelectionMode.PolygonVertexTranslate;
+					Gui.WidgetSelectionMode = WidgetSelectionMode.PolygonVertexTranslate;
 				}
 
 				if (AppInput.KeyJustPressed(Keys.T)) {
-					Stage.WidgetSelectionMode = WidgetSelectionMode.PolygonEdgeTranslate;
+					Gui.WidgetSelectionMode = WidgetSelectionMode.PolygonEdgeTranslate;
 				}
 
 				if (AppInput.KeyJustPressed(Keys.L)) {
@@ -54,7 +54,7 @@ namespace GaneshaDx.UserInterface.Input {
 					if (Gui.SelectedTab == RightPanelTab.Terrain) {
 						Selection.SelectAllTerrainTiles();
 					} else {
-						Stage.WidgetSelectionMode = WidgetSelectionMode.PolygonTranslate;
+						Gui.WidgetSelectionMode = WidgetSelectionMode.PolygonTranslate;
 						Selection.SelectAllPolygons();
 					}
 				}
@@ -114,7 +114,7 @@ namespace GaneshaDx.UserInterface.Input {
 					}
 				}
 				
-				if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.T)) {
+				if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.G)) {
 					Gui.ShowDebugAnimatedMeshWindow = !Gui.ShowDebugAnimatedMeshWindow;
 				}
 			}

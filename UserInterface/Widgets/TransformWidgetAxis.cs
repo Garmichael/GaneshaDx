@@ -65,7 +65,7 @@ namespace GaneshaDx.UserInterface.Widgets {
 		}
 
 		public void Update() {
-			_center = Stage.WidgetSelectionMode switch {
+			_center = Gui.WidgetSelectionMode switch {
 				WidgetSelectionMode.PolygonVertexTranslate => Selection.SelectedPolygons[0]
 					.Vertices[TransformWidget.SelectedVertexIndices[0]]
 					.AnimationAdjustedPosition,
@@ -85,11 +85,11 @@ namespace GaneshaDx.UserInterface.Widgets {
 			}
 
 			if (IsActive) {
-				if (Stage.WidgetSelectionMode == WidgetSelectionMode.PolygonTranslate) {
+				if (Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonTranslate) {
 					TranslatePolySelection();
-				} else if (Stage.WidgetSelectionMode == WidgetSelectionMode.PolygonVertexTranslate) {
+				} else if (Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonVertexTranslate) {
 					TranslateVertex();
-				} else if (Stage.WidgetSelectionMode == WidgetSelectionMode.PolygonEdgeTranslate) {
+				} else if (Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonEdgeTranslate) {
 					TranslateEdge();
 				}
 			}

@@ -157,17 +157,19 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 				ImGui.NextColumn();
 
-				ImGui.Text("Texture is Lit");
-				ImGui.NextColumn();
+				if (Selection.SelectedPolygons[0].RenderingProperties != null) {
+					ImGui.Text("Texture is Lit");
+					ImGui.NextColumn();
 
-				bool isLit = Selection.SelectedPolygons[0].RenderingProperties.LitTexture;
-				bool beforeIsLit = isLit;
-				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
-				ImGui.Checkbox("##TextureIsLit", ref isLit);
+					bool isLit = Selection.SelectedPolygons[0].RenderingProperties.LitTexture;
+					bool beforeIsLit = isLit;
+					ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+					ImGui.Checkbox("##TextureIsLit", ref isLit);
 
-				if (beforeIsLit != isLit) {
-					foreach (Polygon selectedPolygon in Selection.SelectedPolygons) {
-						selectedPolygon.RenderingProperties.LitTexture = isLit;
+					if (beforeIsLit != isLit) {
+						foreach (Polygon selectedPolygon in Selection.SelectedPolygons) {
+							selectedPolygon.RenderingProperties.LitTexture = isLit;
+						}
 					}
 				}
 

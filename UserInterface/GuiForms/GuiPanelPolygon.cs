@@ -31,7 +31,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			ImGui.Indent();
 
 
-			if (Stage.WidgetSelectionMode == WidgetSelectionMode.Select) {
+			if (Gui.WidgetSelectionMode == WidgetSelectionMode.Select) {
 				GuiStyle.SetElementStyle(ElementStyle.ButtonSelected);
 			} else {
 				GuiStyle.SetNewUiToDefaultStyle();
@@ -39,7 +39,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 			ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
 			if (ImGui.Button("Q##selectionMode")) {
-				Stage.WidgetSelectionMode = WidgetSelectionMode.Select;
+				Gui.WidgetSelectionMode = WidgetSelectionMode.Select;
 			}
 
 			ImGui.PopFont();
@@ -52,7 +52,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 			ImGui.SameLine();
 
-			if (Stage.WidgetSelectionMode == WidgetSelectionMode.PolygonTranslate) {
+			if (Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonTranslate) {
 				GuiStyle.SetElementStyle(ElementStyle.ButtonSelected);
 			} else {
 				GuiStyle.SetNewUiToDefaultStyle();
@@ -60,7 +60,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 			ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
 			if (ImGui.Button("W##translateMode")) {
-				Stage.WidgetSelectionMode = WidgetSelectionMode.PolygonTranslate;
+				Gui.WidgetSelectionMode = WidgetSelectionMode.PolygonTranslate;
 			}
 
 			ImGui.PopFont();
@@ -73,7 +73,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 			ImGui.SameLine();
 
-			if (Stage.WidgetSelectionMode == WidgetSelectionMode.PolygonRotate) {
+			if (Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonRotate) {
 				GuiStyle.SetElementStyle(ElementStyle.ButtonSelected);
 			} else {
 				GuiStyle.SetNewUiToDefaultStyle();
@@ -81,7 +81,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 			ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
 			if (ImGui.Button("E##rotateMode")) {
-				Stage.WidgetSelectionMode = WidgetSelectionMode.PolygonRotate;
+				Gui.WidgetSelectionMode = WidgetSelectionMode.PolygonRotate;
 			}
 
 			ImGui.PopFont();
@@ -94,7 +94,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 			ImGui.SameLine();
 
-			if (Stage.WidgetSelectionMode == WidgetSelectionMode.PolygonVertexTranslate) {
+			if (Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonVertexTranslate) {
 				GuiStyle.SetElementStyle(ElementStyle.ButtonSelected);
 			} else {
 				GuiStyle.SetNewUiToDefaultStyle();
@@ -102,7 +102,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 			ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
 			if (ImGui.Button("R##vertexMode")) {
-				Stage.WidgetSelectionMode = WidgetSelectionMode.PolygonVertexTranslate;
+				Gui.WidgetSelectionMode = WidgetSelectionMode.PolygonVertexTranslate;
 			}
 
 			ImGui.PopFont();
@@ -115,7 +115,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 			ImGui.SameLine();
 
-			if (Stage.WidgetSelectionMode == WidgetSelectionMode.PolygonEdgeTranslate) {
+			if (Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonEdgeTranslate) {
 				GuiStyle.SetElementStyle(ElementStyle.ButtonSelected);
 			} else {
 				GuiStyle.SetNewUiToDefaultStyle();
@@ -124,7 +124,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
 
 			if (ImGui.Button("T##edgeMode")) {
-				Stage.WidgetSelectionMode = WidgetSelectionMode.PolygonEdgeTranslate;
+				Gui.WidgetSelectionMode = WidgetSelectionMode.PolygonEdgeTranslate;
 			}
 
 			ImGui.PopFont();
@@ -135,7 +135,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			}
 
 
-			if (Stage.WidgetSelectionMode == WidgetSelectionMode.PolygonRotate &&
+			if (Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonRotate &&
 			    Selection.SelectedPolygons.Count > 0
 			) {
 				RenderRotationVertexSelection();
