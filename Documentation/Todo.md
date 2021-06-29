@@ -49,3 +49,6 @@
 
     [1] [1] Terrain, resizing after adding terrain to another state
     [1] [1] Turn off Resize Terrain Mode on tab switch / state switch / map load
+
+## Investigation
+    - Map 41. Overridden Mesh File possibly linked to Removeable Objects 

@@ -7,6 +7,8 @@ using TextCopy;
 
 namespace GaneshaDx.UserInterface.GuiForms {
 	public static class GuiWindowDebugAnimatedMeshData {
+		private static bool _showUnused = false;
+		
 		public static void Render() {
 			GuiStyle.SetNewUiToDefaultStyle();
 			ImGui.GetStyle().WindowRounding = 3;
@@ -16,6 +18,8 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 			ImGui.Begin("Animation Bytes", ref windowIsOpen);
 			{
+				ImGui.Checkbox("Show Unused? ", ref _showUnused);
+				
 				MeshAnimation set = CurrentMapState.StateData.MeshAnimation;
 				ImGui.PopFont();
 
@@ -42,7 +46,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 							ImGui.GetStyle().Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.Dark];
 						}
 
-						if (highlightHeader && ImGui.CollapsingHeader("Set " + (setIndex + 1))) {
+						if ((highlightHeader || _showUnused) && ImGui.CollapsingHeader("Set " + (setIndex + 1))) {
 							GuiStyle.SetNewUiToDefaultStyle();
 							ImGui.Columns(5, "InstructionSetData", false);
 							ImGui.SetColumnWidth(0, 30);
@@ -116,24 +120,39 @@ namespace GaneshaDx.UserInterface.GuiForms {
 							ImGui.GetStyle().Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.Dark];
 						}
 
-						if (highlightHeader && ImGui.CollapsingHeader("Link " + (setIndex + 1))) {
+						if ((highlightHeader || _showUnused) && ImGui.CollapsingHeader("Link " + (setIndex + 1))) {
 							GuiStyle.SetNewUiToDefaultStyle();
-							ImGui.Columns(9, "LinkSetData", false);
+							ImGui.Columns(6, "LinkSetData", false);
 							ImGui.SetColumnWidth(0, 30);
-							ImGui.SetColumnWidth(1, inputWidth + 10);
+							ImGui.SetColumnWidth(1, 30);
 							ImGui.SetColumnWidth(2, inputWidth + 10);
 							ImGui.SetColumnWidth(3, inputWidth + 10);
 							ImGui.SetColumnWidth(4, inputWidth + 10);
 							ImGui.SetColumnWidth(5, inputWidth + 10);
-							ImGui.SetColumnWidth(6, inputWidth + 10);
-							ImGui.SetColumnWidth(7, inputWidth + 10);
-							ImGui.SetColumnWidth(8, inputWidth + 10);
 
+							ImGui.Text("");
+							ImGui.NextColumn();
+							ImGui.Text("KF");
+							ImGui.NextColumn();
+							ImGui.Text("A");
+							ImGui.NextColumn();
+							ImGui.Text("B");
+							ImGui.NextColumn();
+							ImGui.Text("C");
+							ImGui.NextColumn();
+							ImGui.Text("D");
+							ImGui.NextColumn();
+
+							int keyFrameId = 1;
 							for (int dataIndex = 0; dataIndex < link.RawData.Count;) {
 								ImGui.Text(dataIndex + ": ");
 								ImGui.NextColumn();
 
-								for (int field = 0; field < 8; field++) {
+								ImGui.Text(keyFrameId.ToString());
+								keyFrameId++;
+								ImGui.NextColumn();
+
+								for (int field = 0; field < 4; field++) {
 									int value = link.RawData[dataIndex];
 									ImGui.SetNextItemWidth(inputWidth);
 									ImGui.DragInt("###link_" + setIndex + "_" + dataIndex, ref value);
