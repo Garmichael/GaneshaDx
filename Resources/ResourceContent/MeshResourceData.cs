@@ -32,7 +32,17 @@ namespace GaneshaDx.Resources.ResourceContent {
 		private int _currentByteIndex;
 
 		public bool HasPrimaryMesh;
-		public bool HasAnimatedMeshes;
+
+		public bool HasAnimatedMeshInstructions;
+		public bool HasAnimatedMesh1;
+		public bool HasAnimatedMesh2;
+		public bool HasAnimatedMesh3;
+		public bool HasAnimatedMesh4;
+		public bool HasAnimatedMesh5;
+		public bool HasAnimatedMesh6;
+		public bool HasAnimatedMesh7;
+		public bool HasAnimatedMesh8;
+
 		public bool HasPalettes;
 		public bool HasLightsAndBackground;
 		public bool HasTextureAnimations;
@@ -87,7 +97,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 			ProcessTextureAnimations();
 			ProcessPaletteAnimationFrames();
 			// ProcessGrayscalePalette();
-			ProcessMeshAnimations();
+			ProcessMeshAnimationInstructions();
 			ProcessPolygonRenderProperties();
 		}
 
@@ -129,10 +139,36 @@ namespace GaneshaDx.Resources.ResourceContent {
 					return;
 				}
 
-				if (meshType == MeshType.PrimaryMesh) {
-					HasPrimaryMesh = true;
-				} else {
-					HasAnimatedMeshes = true;
+				switch (meshType) {
+					case MeshType.PrimaryMesh:
+						HasPrimaryMesh = true;
+						break;
+					case MeshType.AnimatedMesh1:
+						HasAnimatedMesh1 = true;
+						break;
+					case MeshType.AnimatedMesh2:
+						HasAnimatedMesh2 = true;
+						break;
+					case MeshType.AnimatedMesh3:
+						HasAnimatedMesh3 = true;
+						break;
+					case MeshType.AnimatedMesh4:
+						HasAnimatedMesh4 = true;
+						break;
+					case MeshType.AnimatedMesh5:
+						HasAnimatedMesh5 = true;
+						break;
+					case MeshType.AnimatedMesh6:
+						HasAnimatedMesh6 = true;
+						break;
+					case MeshType.AnimatedMesh7:
+						HasAnimatedMesh7 = true;
+						break;
+					case MeshType.AnimatedMesh8:
+						HasAnimatedMesh8 = true;
+						break;
+					default:
+						throw new ArgumentOutOfRangeException();
 				}
 
 				ProcessMeshPolyCounts(meshType, pointer);
@@ -757,9 +793,9 @@ namespace GaneshaDx.Resources.ResourceContent {
 
 		private readonly List<byte> _rawMeshAnimationInstructionData = new List<byte>();
 
-		public MeshAnimation AnimatedMesh;
+		public MeshAnimationInstructions MeshAnimationInstructions;
 
-		private void ProcessMeshAnimations() {
+		private void ProcessMeshAnimationInstructions() {
 			const int instructionChunkSize = 14620;
 
 			_currentByteIndex = Utilities.GetUIntFromLittleEndian(
@@ -771,6 +807,8 @@ namespace GaneshaDx.Resources.ResourceContent {
 				return;
 			}
 
+			HasAnimatedMeshInstructions = true;
+			
 			for (int i = 0; i < instructionChunkSize; i++) {
 				if (_currentByteIndex + i > RawData.Count - 1) {
 					break;
@@ -780,7 +818,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 			}
 
 			if (_rawMeshAnimationInstructionData.Count == instructionChunkSize) {
-				AnimatedMesh = new MeshAnimation(_rawMeshAnimationInstructionData);
+				MeshAnimationInstructions = new MeshAnimationInstructions(_rawMeshAnimationInstructionData);
 			}
 		}
 
@@ -1433,16 +1471,16 @@ namespace GaneshaDx.Resources.ResourceContent {
 		}
 
 		private void BuildRawDataAnimatedMeshInstructions() {
-			if (AnimatedMesh == null) {
+			if (MeshAnimationInstructions == null) {
 				return;
 			}
 
 			(RawData[AnimatedMeshInstructionsPointer], RawData[AnimatedMeshInstructionsPointer + 1]) =
 				Utilities.GetLittleEndianFromInt(RawData.Count);
 
-			RawData.AddRange(AnimatedMesh.InstructionsHeader);
+			RawData.AddRange(MeshAnimationInstructions.InstructionsHeader);
 
-			foreach (MeshAnimationInstruction instruction in AnimatedMesh.Instructions) {
+			foreach (MeshAnimationInstruction instruction in MeshAnimationInstructions.Instructions) {
 				foreach (int property in instruction.Properties) {
 					(byte high, byte low) = Utilities.GetLittleEndianFromInt(property);
 					RawData.Add(high);
@@ -1450,15 +1488,15 @@ namespace GaneshaDx.Resources.ResourceContent {
 				}
 			}
 
-			RawData.AddRange(AnimatedMesh.LinksHeader);
+			RawData.AddRange(MeshAnimationInstructions.LinksHeader);
 
-			foreach (MeshAnimationLink link in AnimatedMesh.Links) {
+			foreach (MeshAnimationLink link in MeshAnimationInstructions.Links) {
 				link.GenerateRawData();
 				RawData.AddRange(link.RawData);
 			}
 
-			RawData.AddRange(AnimatedMesh.UnknownChunkHeader);
-			RawData.AddRange(AnimatedMesh.UnknownChunk.Data);
+			RawData.AddRange(MeshAnimationInstructions.UnknownChunkHeader);
+			RawData.AddRange(MeshAnimationInstructions.UnknownChunk.Data);
 		}
 
 		private void BuildRawDataAnimatedMeshes() {
@@ -1491,7 +1529,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 			BuildRawDataPrimaryMeshTextureProperties(MeshType.AnimatedMesh3);
 			BuildRawDataPrimaryMeshUnknownData(MeshType.AnimatedMesh3);
 			BuildRawDataPrimaryMeshTerrainDefinitions(MeshType.AnimatedMesh3);
-			
+
 			(RawData[AnimatedMesh4Pointer], RawData[AnimatedMesh4Pointer + 1]) =
 				Utilities.GetLittleEndianFromInt(RawData.Count);
 
@@ -1501,7 +1539,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 			BuildRawDataPrimaryMeshTextureProperties(MeshType.AnimatedMesh4);
 			BuildRawDataPrimaryMeshUnknownData(MeshType.AnimatedMesh4);
 			BuildRawDataPrimaryMeshTerrainDefinitions(MeshType.AnimatedMesh4);
-			
+
 			(RawData[AnimatedMesh5Pointer], RawData[AnimatedMesh5Pointer + 1]) =
 				Utilities.GetLittleEndianFromInt(RawData.Count);
 
@@ -1511,7 +1549,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 			BuildRawDataPrimaryMeshTextureProperties(MeshType.AnimatedMesh5);
 			BuildRawDataPrimaryMeshUnknownData(MeshType.AnimatedMesh5);
 			BuildRawDataPrimaryMeshTerrainDefinitions(MeshType.AnimatedMesh5);
-			
+
 			(RawData[AnimatedMesh6Pointer], RawData[AnimatedMesh6Pointer + 1]) =
 				Utilities.GetLittleEndianFromInt(RawData.Count);
 
@@ -1521,7 +1559,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 			BuildRawDataPrimaryMeshTextureProperties(MeshType.AnimatedMesh6);
 			BuildRawDataPrimaryMeshUnknownData(MeshType.AnimatedMesh6);
 			BuildRawDataPrimaryMeshTerrainDefinitions(MeshType.AnimatedMesh6);
-			
+
 			(RawData[AnimatedMesh7Pointer], RawData[AnimatedMesh7Pointer + 1]) =
 				Utilities.GetLittleEndianFromInt(RawData.Count);
 
@@ -1531,7 +1569,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 			BuildRawDataPrimaryMeshTextureProperties(MeshType.AnimatedMesh7);
 			BuildRawDataPrimaryMeshUnknownData(MeshType.AnimatedMesh7);
 			BuildRawDataPrimaryMeshTerrainDefinitions(MeshType.AnimatedMesh7);
-			
+
 			(RawData[AnimatedMesh8Pointer], RawData[AnimatedMesh8Pointer + 1]) =
 				Utilities.GetLittleEndianFromInt(RawData.Count);
 

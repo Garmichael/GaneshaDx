@@ -463,13 +463,13 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 			}
 
 			Stage.FftPolygonEffect.Parameters["PaletteColors"].SetValue(shaderColors);
-
 			Stage.FftPolygonEffect.Parameters["HighlightBright"].SetValue(false);
 			Stage.FftPolygonEffect.Parameters["HighlightDim"].SetValue(false);
 
 			if (IsSelected && this == Selection.SelectedPolygons[0]) {
-				bool shouldHighlight = Gui.SelectedTab != RightPanelTab.Texture ||
-				                       Configuration.Properties.HighlightSelectionOnTexturePage;
+				bool shouldHighlight =
+					!(Gui.SelectedTab == RightPanelTab.Mesh && Gui.SelectedSubTab == RightPanelTab.Texture) ||
+					Configuration.Properties.HighlightSelectionOnTexturePage;
 
 				Stage.FftPolygonEffect.Parameters["HighlightBright"].SetValue(shouldHighlight);
 			} else if (IsHovered || IsSelected && this != Selection.SelectedPolygons[0]) {

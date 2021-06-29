@@ -32,6 +32,8 @@ namespace GaneshaDx.UserInterface.GuiForms {
 		private static Polygon _copiedPolygon;
 
 		public static void Render() {
+			GuiPanelMesh.Render();
+
 			if (CurrentPanelMode == PanelMode.UVs) {
 				if (Selection.SelectedPolygons.Count > 0 && Selection.SelectedPolygons[0].IsTextured) {
 					RenderUvValues();
@@ -369,9 +371,9 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 				ImGui.SameLine();
 
-				bool disabled = CurrentMapState.StateData.TextureAnimations == null || 
+				bool disabled = CurrentMapState.StateData.TextureAnimations == null ||
 				                CurrentMapState.StateData.TextureAnimations.Count == 0;
-				
+
 				if (disabled) {
 					GuiStyle.SetElementStyle(ElementStyle.ButtonDisabled);
 				}

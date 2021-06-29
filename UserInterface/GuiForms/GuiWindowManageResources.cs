@@ -379,9 +379,9 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 		private static void BuildColumnHasAnimatedMeshes(int index, MeshResourceData data) {
 			ImGui.GetStyle().ItemSpacing = new Vector2(1, 0);
-			bool beforeAnimatedMeshes = data.HasAnimatedMeshes;
-			ImGui.Checkbox("###hasAnimatedMeshes" + index, ref data.HasAnimatedMeshes);
-			if (data.HasAnimatedMeshes) {
+			bool beforeAnimatedMeshes = data.HasAnimatedMeshInstructions;
+			ImGui.Checkbox("###hasAnimatedMeshes" + index, ref data.HasAnimatedMeshInstructions);
+			if (data.HasAnimatedMeshInstructions) {
 				ImGui.SameLine();
 				ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
 				ImGui.Button("C###copyAnimatedMeshes" + index);
@@ -390,8 +390,8 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				ImGui.PopFont();
 			}
 
-			if (beforeAnimatedMeshes != data.HasAnimatedMeshes) {
-				data.HasAnimatedMeshes = beforeAnimatedMeshes;
+			if (beforeAnimatedMeshes != data.HasAnimatedMeshInstructions) {
+				data.HasAnimatedMeshInstructions = beforeAnimatedMeshes;
 				CurrentMapState.ResetState();
 			}
 		}

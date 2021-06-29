@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
-	public class MeshAnimation {
+	public class MeshAnimationInstructions {
 		public readonly List<byte> InstructionsHeader = new List<byte>();
 		public readonly List<MeshAnimationInstruction> Instructions = new List<MeshAnimationInstruction>();
 		
@@ -11,7 +11,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 		public readonly List<byte> UnknownChunkHeader = new List<byte>();
 		public readonly MeshAnimationUnknown UnknownChunk;
 		
-		public MeshAnimation(List<byte> rawData) {
+		public MeshAnimationInstructions(List<byte> rawData) {
 			const int headerLength = 8;
 			const int totalInstructions = 128;
 			const int instructionLength = 80;

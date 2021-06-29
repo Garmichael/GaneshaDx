@@ -1,6 +1,7 @@
 ﻿namespace GaneshaDx.UserInterface.GuiDefinitions {
 	public enum RightPanelTab {
 		Map,
+		Mesh,
 		Polygon,
 		Texture,
 		Terrain

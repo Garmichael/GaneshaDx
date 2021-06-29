@@ -12,7 +12,8 @@ using Vector2 = System.Numerics.Vector2;
 
 namespace GaneshaDx.UserInterface {
 	public static class Gui {
-		public static RightPanelTab SelectedTab;
+		public static RightPanelTab SelectedTab = RightPanelTab.Map;
+		public static RightPanelTab SelectedSubTab = RightPanelTab.Polygon;
 		public static WidgetSelectionMode WidgetSelectionMode = WidgetSelectionMode.PolygonTranslate;
 
 		private static bool _showDebugPanel;
@@ -67,7 +68,7 @@ namespace GaneshaDx.UserInterface {
 						}
 
 						if (ShowDebugAnimatedMeshWindow &&
-						    MapData.MapIsLoaded && CurrentMapState.StateData.MeshAnimation != null
+						    MapData.MapIsLoaded && CurrentMapState.StateData.MeshAnimationInstructions != null
 						) {
 							GuiWindowDebugAnimatedMeshData.Render();
 						}
@@ -89,31 +90,24 @@ namespace GaneshaDx.UserInterface {
 			GuiStyle.SetElementStyle(ElementStyle.WindowNoPadding);
 			ImGui.GetStyle().Colors[(int) ImGuiCol.WindowBg] = GuiStyle.ColorPalette[ColorName.Darker];
 
-			ImGui.SetNextWindowSize(new Vector2(GuiStyle.RightPanelWidth, GuiStyle.TabPanelHeight));
+			bool twoRows = SelectedTab == RightPanelTab.Mesh;
+			ImGui.SetNextWindowSize(new Vector2(GuiStyle.RightPanelWidth, GuiStyle.TabPanelHeight * (twoRows ? 2 : 1)));
 			ImGui.SetNextWindowPos(new Vector2(Stage.Width - GuiStyle.RightPanelWidth, GuiStyle.MenuBarHeight));
 
 			ImGui.Begin("Tab Panel", GuiStyle.FixedWindowFlags | ImGuiWindowFlags.NoBringToFrontOnFocus);
 			{
+				ImGui.GetStyle().ItemSpacing = Vector2.Zero;
 				ImGui.Indent();
-				GuiStyle.SetElementStyle(SelectedTab == RightPanelTab.Polygon
+				GuiStyle.SetElementStyle(SelectedTab == RightPanelTab.Mesh
 					? ElementStyle.ButtonTabSelected
 					: ElementStyle.ButtonTabUnselected);
 
-				if (ImGui.Button("Polygon")) {
-					SelectedTab = RightPanelTab.Polygon;
+				if (ImGui.Button("Mesh")) {
+					SelectedTab = RightPanelTab.Mesh;
 				}
 
 				ImGui.SameLine();
 
-				GuiStyle.SetElementStyle(SelectedTab == RightPanelTab.Texture
-					? ElementStyle.ButtonTabSelected
-					: ElementStyle.ButtonTabUnselected);
-
-				if (ImGui.Button("Texture")) {
-					SelectedTab = RightPanelTab.Texture;
-				}
-
-				ImGui.SameLine();
 
 				GuiStyle.SetElementStyle(SelectedTab == RightPanelTab.Terrain
 					? ElementStyle.ButtonTabSelected
@@ -133,13 +127,35 @@ namespace GaneshaDx.UserInterface {
 					SelectedTab = RightPanelTab.Map;
 				}
 
+				if (SelectedTab == RightPanelTab.Mesh) {
+					GuiStyle.SetElementStyle(SelectedSubTab == RightPanelTab.Polygon
+						? ElementStyle.ButtonTabSelected
+						: ElementStyle.ButtonTabUnselected);
+
+					if (ImGui.Button("Polygon")) {
+						SelectedSubTab = RightPanelTab.Polygon;
+					}
+
+					ImGui.SameLine();
+
+					GuiStyle.SetElementStyle(SelectedSubTab == RightPanelTab.Texture
+						? ElementStyle.ButtonTabSelected
+						: ElementStyle.ButtonTabUnselected);
+
+					if (ImGui.Button("Texture")) {
+						SelectedSubTab = RightPanelTab.Texture;
+					}
+				}
+
 				ImGui.Unindent();
 			}
 			ImGui.End();
 		}
 
 		private static void RenderMainPanel() {
-			const int top = GuiStyle.TabPanelHeight + GuiStyle.MenuBarHeight;
+			bool tabPanelTwoRows = SelectedTab == RightPanelTab.Mesh;
+			int top = GuiStyle.TabPanelHeight * (tabPanelTwoRows ? 2 : 1) + GuiStyle.MenuBarHeight;
+
 			ImGui.SetNextWindowSize(new Vector2(GuiStyle.RightPanelWidth, Stage.Height - top));
 			ImGui.SetNextWindowPos(new Vector2(Stage.Width - GuiStyle.RightPanelWidth, top));
 
@@ -151,11 +167,14 @@ namespace GaneshaDx.UserInterface {
 			ImGui.Begin("Main Panel", GuiStyle.FixedWindowFlags);
 			{
 				switch (SelectedTab) {
-					case RightPanelTab.Polygon:
-						GuiPanelPolygon.Render();
-						break;
-					case RightPanelTab.Texture:
-						GuiPanelTexture.Render();
+					case RightPanelTab.Mesh:
+
+						if (SelectedSubTab == RightPanelTab.Polygon) {
+							GuiPanelPolygon.Render();
+						} else if (SelectedSubTab == RightPanelTab.Texture) {
+							GuiPanelTexture.Render();
+						}
+
 						break;
 					case RightPanelTab.Terrain:
 						GuiPanelTerrain.Render();

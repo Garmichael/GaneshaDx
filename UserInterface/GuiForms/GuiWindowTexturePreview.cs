@@ -22,7 +22,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 		public static void Render() {
 			GuiStyle.SetNewUiToDefaultStyle();
-			bool isOnCorrectTab = Gui.SelectedTab == RightPanelTab.Texture;
+			bool isOnCorrectTab = Gui.SelectedTab == RightPanelTab.Mesh && Gui.SelectedSubTab == RightPanelTab.Texture;
 			bool isOnCorrectPanel = GuiPanelTexture.CurrentPanelMode == GuiPanelTexture.PanelMode.UVs ||
 			                        GuiPanelTexture.CurrentPanelMode == GuiPanelTexture.PanelMode.UvAnimation;
 

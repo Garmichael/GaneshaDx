@@ -20,7 +20,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			{
 				ImGui.Checkbox("Show Unused? ", ref _showUnused);
 				
-				MeshAnimation set = CurrentMapState.StateData.MeshAnimation;
+				MeshAnimationInstructions set = CurrentMapState.StateData.MeshAnimationInstructions;
 				ImGui.PopFont();
 
 				if (ImGui.CollapsingHeader("Instructions")) {

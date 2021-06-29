@@ -36,7 +36,15 @@ namespace GaneshaDx.Resources.ContentDataTypes {
 		}
 
 		private MeshResourceData _primaryMeshSource;
-		private MeshResourceData _animatedMeshSource;
+		private MeshResourceData _animatedMeshInstructionsSource;
+		private MeshResourceData _animatedMesh1Source;
+		private MeshResourceData _animatedMesh2Source;
+		private MeshResourceData _animatedMesh3Source;
+		private MeshResourceData _animatedMesh4Source;
+		private MeshResourceData _animatedMesh5Source;
+		private MeshResourceData _animatedMesh6Source;
+		private MeshResourceData _animatedMesh7Source;
+		private MeshResourceData _animatedMesh8Source;
 		private MeshResourceData _lightingAndBackgroundSource;
 		private MeshResourceData _terrainSource;
 		private MeshResourceData _paletteSource;
@@ -107,14 +115,23 @@ namespace GaneshaDx.Resources.ContentDataTypes {
 			}
 		}
 
-		public MeshAnimation MeshAnimation {
-			get => _animatedMeshSource?.AnimatedMesh;
+		public MeshAnimationInstructions MeshAnimationInstructions {
+			get => _animatedMeshInstructionsSource?.MeshAnimationInstructions;
 			set {
-				if (_animatedMeshSource != null) {
-					_animatedMeshSource.AnimatedMesh = value;
+				if (_animatedMeshInstructionsSource != null) {
+					_animatedMeshInstructionsSource.MeshAnimationInstructions = value;
 				}
 			}
 		}
+
+		public bool HasAnimatedMesh1 => _animatedMesh1Source is {HasAnimatedMesh1: true};
+		public bool HasAnimatedMesh2 => _animatedMesh1Source is {HasAnimatedMesh2: true};
+		public bool HasAnimatedMesh3 => _animatedMesh1Source is {HasAnimatedMesh3: true};
+		public bool HasAnimatedMesh4 => _animatedMesh1Source is {HasAnimatedMesh4: true};
+		public bool HasAnimatedMesh5 => _animatedMesh1Source is {HasAnimatedMesh5: true};
+		public bool HasAnimatedMesh6 => _animatedMesh1Source is {HasAnimatedMesh6: true};
+		public bool HasAnimatedMesh7 => _animatedMesh1Source is {HasAnimatedMesh7: true};
+		public bool HasAnimatedMesh8 => _animatedMesh1Source is {HasAnimatedMesh8: true};
 
 		public Terrain Terrain {
 			get => _terrainSource?.Terrain;
@@ -253,17 +270,161 @@ namespace GaneshaDx.Resources.ContentDataTypes {
 			// Animated Mesh Source
 			foreach (MapResource mapResource in stateMeshResources) {
 				MeshResourceData resourceData = (MeshResourceData) mapResource.ResourceData;
-				if (resourceData.HasAnimatedMeshes) {
-					_animatedMeshSource = resourceData;
+				if (resourceData.HasAnimatedMeshInstructions) {
+					_animatedMeshInstructionsSource = resourceData;
 					break;
 				}
 			}
 
-			if (_animatedMeshSource == null) {
+			if (_animatedMeshInstructionsSource == null) {
 				foreach (MapResource mapResource in initialMeshResources) {
 					MeshResourceData resourceData = (MeshResourceData) mapResource.ResourceData;
-					if (resourceData.HasAnimatedMeshes) {
-						_animatedMeshSource = resourceData;
+					if (resourceData.HasAnimatedMeshInstructions) {
+						_animatedMeshInstructionsSource = resourceData;
+						break;
+					}
+				}
+			}
+
+			foreach (MapResource mapResource in stateMeshResources) {
+				MeshResourceData resourceData = (MeshResourceData) mapResource.ResourceData;
+				if (resourceData.HasAnimatedMesh1) {
+					_animatedMesh1Source = resourceData;
+					break;
+				}
+			}
+
+			if (_animatedMeshInstructionsSource == null) {
+				foreach (MapResource mapResource in initialMeshResources) {
+					MeshResourceData resourceData = (MeshResourceData) mapResource.ResourceData;
+					if (resourceData.HasAnimatedMesh1) {
+						_animatedMesh1Source = resourceData;
+						break;
+					}
+				}
+			}
+
+			foreach (MapResource mapResource in stateMeshResources) {
+				MeshResourceData resourceData = (MeshResourceData) mapResource.ResourceData;
+				if (resourceData.HasAnimatedMesh2) {
+					_animatedMesh2Source = resourceData;
+					break;
+				}
+			}
+
+			if (_animatedMeshInstructionsSource == null) {
+				foreach (MapResource mapResource in initialMeshResources) {
+					MeshResourceData resourceData = (MeshResourceData) mapResource.ResourceData;
+					if (resourceData.HasAnimatedMesh2) {
+						_animatedMesh2Source = resourceData;
+						break;
+					}
+				}
+			}
+
+			foreach (MapResource mapResource in stateMeshResources) {
+				MeshResourceData resourceData = (MeshResourceData) mapResource.ResourceData;
+				if (resourceData.HasAnimatedMesh3) {
+					_animatedMesh3Source = resourceData;
+					break;
+				}
+			}
+
+			if (_animatedMeshInstructionsSource == null) {
+				foreach (MapResource mapResource in initialMeshResources) {
+					MeshResourceData resourceData = (MeshResourceData) mapResource.ResourceData;
+					if (resourceData.HasAnimatedMesh3) {
+						_animatedMesh3Source = resourceData;
+						break;
+					}
+				}
+			}
+
+			foreach (MapResource mapResource in stateMeshResources) {
+				MeshResourceData resourceData = (MeshResourceData) mapResource.ResourceData;
+				if (resourceData.HasAnimatedMesh4) {
+					_animatedMesh4Source = resourceData;
+					break;
+				}
+			}
+
+			if (_animatedMeshInstructionsSource == null) {
+				foreach (MapResource mapResource in initialMeshResources) {
+					MeshResourceData resourceData = (MeshResourceData) mapResource.ResourceData;
+					if (resourceData.HasAnimatedMesh4) {
+						_animatedMesh4Source = resourceData;
+						break;
+					}
+				}
+			}
+
+			foreach (MapResource mapResource in stateMeshResources) {
+				MeshResourceData resourceData = (MeshResourceData) mapResource.ResourceData;
+				if (resourceData.HasAnimatedMesh5) {
+					_animatedMesh5Source = resourceData;
+					break;
+				}
+			}
+
+			if (_animatedMeshInstructionsSource == null) {
+				foreach (MapResource mapResource in initialMeshResources) {
+					MeshResourceData resourceData = (MeshResourceData) mapResource.ResourceData;
+					if (resourceData.HasAnimatedMesh5) {
+						_animatedMesh5Source = resourceData;
+						break;
+					}
+				}
+			}
+
+			foreach (MapResource mapResource in stateMeshResources) {
+				MeshResourceData resourceData = (MeshResourceData) mapResource.ResourceData;
+				if (resourceData.HasAnimatedMesh6) {
+					_animatedMesh6Source = resourceData;
+					break;
+				}
+			}
+
+			if (_animatedMeshInstructionsSource == null) {
+				foreach (MapResource mapResource in initialMeshResources) {
+					MeshResourceData resourceData = (MeshResourceData) mapResource.ResourceData;
+					if (resourceData.HasAnimatedMesh6) {
+						_animatedMesh6Source = resourceData;
+						break;
+					}
+				}
+			}
+
+			foreach (MapResource mapResource in stateMeshResources) {
+				MeshResourceData resourceData = (MeshResourceData) mapResource.ResourceData;
+				if (resourceData.HasAnimatedMesh7) {
+					_animatedMesh7Source = resourceData;
+					break;
+				}
+			}
+
+			if (_animatedMeshInstructionsSource == null) {
+				foreach (MapResource mapResource in initialMeshResources) {
+					MeshResourceData resourceData = (MeshResourceData) mapResource.ResourceData;
+					if (resourceData.HasAnimatedMesh7) {
+						_animatedMesh7Source = resourceData;
+						break;
+					}
+				}
+			}
+
+			foreach (MapResource mapResource in stateMeshResources) {
+				MeshResourceData resourceData = (MeshResourceData) mapResource.ResourceData;
+				if (resourceData.HasAnimatedMesh8) {
+					_animatedMesh8Source = resourceData;
+					break;
+				}
+			}
+
+			if (_animatedMeshInstructionsSource == null) {
+				foreach (MapResource mapResource in initialMeshResources) {
+					MeshResourceData resourceData = (MeshResourceData) mapResource.ResourceData;
+					if (resourceData.HasAnimatedMesh8) {
+						_animatedMesh8Source = resourceData;
 						break;
 					}
 				}

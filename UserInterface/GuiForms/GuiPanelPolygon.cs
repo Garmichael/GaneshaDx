@@ -14,7 +14,9 @@ namespace GaneshaDx.UserInterface.GuiForms {
 	public static class GuiPanelPolygon {
 		public static void Render() {
 			RenderWidgetSelection();
-
+			
+			GuiPanelMesh.Render();
+			
 			if (Selection.SelectedPolygons.Count > 0) {
 				RenderMeshType();
 				RenderPositionValues();

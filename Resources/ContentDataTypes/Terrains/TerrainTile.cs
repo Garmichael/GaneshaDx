@@ -44,7 +44,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.Terrains {
 
 			float alpha = 1f;
 
-			if (Gui.SelectedTab == RightPanelTab.Polygon) {
+			if (Gui.SelectedTab == RightPanelTab.Mesh && Gui.SelectedSubTab == RightPanelTab.Polygon) {
 				alpha = Configuration.Properties.TerrainTransparencyForPolygonEditing / 100f;
 			} else if (Gui.SelectedTab != RightPanelTab.Terrain) {
 				alpha = 0;
@@ -136,7 +136,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.Terrains {
 		}
 
 		private Color GetVertexColor(float height) {
-			if (Gui.SelectedTab == RightPanelTab.Polygon) {
+			if (Gui.SelectedTab == RightPanelTab.Mesh && Gui.SelectedSubTab == RightPanelTab.Polygon) {
 				return new Color(
 					Configuration.Properties.TerrainColorForPolygonEditing.X,
 					Configuration.Properties.TerrainColorForPolygonEditing.Y,
