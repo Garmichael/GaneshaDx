@@ -78,7 +78,6 @@ namespace GaneshaDx.Resources.ResourceContent {
 
 		public List<Palette> Palettes = new List<Palette>();
 		public List<Palette> PaletteAnimationFrames = new List<Palette>();
-		public List<Palette> PalettesGrayscale = new List<Palette>();
 
 		public List<AnimatedTextureInstructions> AnimatedTextureInstructions = new List<AnimatedTextureInstructions>();
 
@@ -96,7 +95,6 @@ namespace GaneshaDx.Resources.ResourceContent {
 			ProcessTerrain();
 			ProcessTextureAnimations();
 			ProcessPaletteAnimationFrames();
-			// ProcessGrayscalePalette();
 			ProcessMeshAnimationInstructions();
 			ProcessPolygonRenderProperties();
 		}
@@ -755,42 +753,6 @@ namespace GaneshaDx.Resources.ResourceContent {
 			}
 		}
 
-		private void ProcessGrayscalePalette() {
-			_currentByteIndex = Utilities.GetUIntFromLittleEndian(
-				RawData[TexturePalettesGrayscalePointer],
-				RawData[TexturePalettesGrayscalePointer + 1]
-			);
-
-			if (_currentByteIndex == 0) {
-				return;
-			}
-
-			const int totalPalettes = 16;
-			const int totalColors = 16;
-
-			for (int paletteIndex = 0; paletteIndex < totalPalettes; paletteIndex++) {
-				Palette palette = new Palette();
-
-				for (int colorIndex = 0; colorIndex < totalColors; colorIndex++) {
-					string allBits =
-						Utilities.GetBinaryFromInt(RawData[_currentByteIndex + 1]) +
-						Utilities.GetBinaryFromInt(RawData[_currentByteIndex]);
-
-					bool isTransparent = Utilities.GetIntFromBinary(allBits.Substring(0, 1)) == 0;
-					int blue = Utilities.GetIntFromBinary(allBits.Substring(1, 5));
-					int green = Utilities.GetIntFromBinary(allBits.Substring(6, 5));
-					int red = Utilities.GetIntFromBinary(allBits.Substring(11, 5));
-
-					PaletteColor color = new PaletteColor(red, green, blue, isTransparent);
-
-					palette.Colors.Add(color);
-					_currentByteIndex += 2;
-				}
-
-				PalettesGrayscale.Add(palette);
-			}
-		}
-
 		private readonly List<byte> _rawMeshAnimationInstructionData = new List<byte>();
 
 		public MeshAnimationInstructions MeshAnimationInstructions;
@@ -808,7 +770,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 			}
 
 			HasAnimatedMeshInstructions = true;
-			
+
 			for (int i = 0; i < instructionChunkSize; i++) {
 				if (_currentByteIndex + i > RawData.Count - 1) {
 					break;
@@ -904,7 +866,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 			BuildRawDataTerrain();
 			BuildRawDataTextureAnimations();
 			BuildRawDataPaletteAnimationFrames();
-			// BuildRawDataGrayscalePalettes();
+			BuildRawDataGrayscalePalettes();
 			BuildRawDataAnimatedMeshInstructions();
 			BuildRawDataAnimatedMeshes();
 			BuildRawDataRenderProperties();
@@ -1452,14 +1414,16 @@ namespace GaneshaDx.Resources.ResourceContent {
 			(RawData[TexturePalettesGrayscalePointer], RawData[TexturePalettesGrayscalePointer + 1]) =
 				Utilities.GetLittleEndianFromInt(RawData.Count);
 
-			foreach (Palette palette in PalettesGrayscale) {
+			foreach (Palette palette in Palettes) {
 				foreach (PaletteColor color in palette.Colors) {
 					string binary = "";
 
+					int averageColor = (int) Math.Round((color.Red + color.Blue + color.Green) / 3f);
+
 					binary += color.IsTransparent ? "0" : "1";
-					binary += Utilities.GetBinaryFromInt(color.Blue, 5);
-					binary += Utilities.GetBinaryFromInt(color.Green, 5);
-					binary += Utilities.GetBinaryFromInt(color.Red, 5);
+					binary += Utilities.GetBinaryFromInt(averageColor, 5);
+					binary += Utilities.GetBinaryFromInt(averageColor, 5);
+					binary += Utilities.GetBinaryFromInt(averageColor, 5);
 
 					byte high = (byte) Utilities.GetIntFromBinary(binary.Substring(0, 8));
 					byte low = (byte) Utilities.GetIntFromBinary(binary.Substring(8, 8));
