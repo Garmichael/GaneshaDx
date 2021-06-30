@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Numerics;
 using GaneshaDx.Common;
 using GaneshaDx.Resources;
 using GaneshaDx.UserInterface.GuiDefinitions;
@@ -24,6 +25,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			}
 
 			GuiStyle.SetNewUiToDefaultStyle();
+
 			ImGui.Indent();
 			ImGui.Columns(2, "MeshSelectionColumns", false);
 			ImGui.SetColumnWidth(0, GuiStyle.LabelWidth - 20);
@@ -79,20 +81,30 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			ImGui.Combo("##SelectedMeshType", ref _selectedComboId, labels.ToArray(), meshTypes.Count);
 			SelectedMesh = meshTypes[_selectedComboId];
 
-			ImGui.NextColumn();
+			if (SelectedMesh != MeshType.PrimaryMesh) {
+				ImGui.NextColumn();
 
-			bool shouldAnimate = true;
-			ImGui.Text("Animate Meshes");
-			ImGui.NextColumn();
-			ImGui.Checkbox("##ShouldAnimateMeshes", ref shouldAnimate);
-			ImGui.NextColumn();
-			
-			bool isolateMeshes = true;
-			ImGui.Text("Isolate Mesh");
-			ImGui.NextColumn();
-			ImGui.Checkbox("##ShouldIsolateMesh", ref isolateMeshes);
+				ImGui.Text("Animate Meshes");
+				ImGui.NextColumn();
+				ImGui.Checkbox("##ShouldAnimateMeshes", ref Configuration.Properties.AnimateMeshes);
+				ImGui.NextColumn();
+
+				ImGui.Text("Isolate Mesh");
+				ImGui.NextColumn();
+				ImGui.Checkbox("##ShouldIsolateMesh", ref Configuration.Properties.IsolateMeshes);
+
+				ImGui.NextColumn();
+				ImGui.NextColumn();
+
+				if (ImGui.Button("Edit Mesh Animations", new Vector2(GuiStyle.WidgetWidth + 20, 20))) {
+					Gui.ShowMeshAnimationsWindow = true;
+				}
+			}
 
 			ImGui.Columns(1);
+
+
+			ImGui.Separator();
 			GuiStyle.AddSpace();
 			ImGui.Unindent();
 		}

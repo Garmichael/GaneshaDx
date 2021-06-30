@@ -15,8 +15,6 @@ namespace GaneshaDx.UserInterface.GuiForms {
 		public static void Render() {
 			RenderWidgetSelection();
 			
-			GuiPanelMesh.Render();
-			
 			if (Selection.SelectedPolygons.Count > 0) {
 				RenderMeshType();
 				RenderPositionValues();
@@ -44,6 +42,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			GuiStyle.AddSpace();
 			ImGui.Indent();
 
+			ImGui.SetCursorPosX(54);
 
 			if (Gui.WidgetSelectionMode == WidgetSelectionMode.Select) {
 				GuiStyle.SetElementStyle(ElementStyle.ButtonSelected);
@@ -162,7 +161,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 		private static void RenderRotationVertexSelection() {
 			GuiStyle.AddSpace();
 
-			ImGui.SetCursorPosX(72);
+			ImGui.SetCursorPosX(98);
 			GuiStyle.SetNewUiToDefaultStyle();
 
 			const int buttonSize = 20;

@@ -63,7 +63,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 			Stage.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
 			Stage.BasicEffect.Alpha = Gui.SelectedTab == RightPanelTab.Terrain
-				? Configuration.Properties.TerrainTransparencyForPolygonEditing / 100f
+				? Configuration.Properties.PolygonTransparencyForTerrainEditing / 100f
 				: 1f;
 
 			Stage.BasicEffect.Texture = _texture2D;
@@ -468,7 +468,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 
 			if (IsSelected && this == Selection.SelectedPolygons[0]) {
 				bool shouldHighlight =
-					!(Gui.SelectedTab == RightPanelTab.Mesh && Gui.SelectedSubTab == RightPanelTab.Texture) ||
+					!(Gui.SelectedTab == RightPanelTab.Texture) ||
 					Configuration.Properties.HighlightSelectionOnTexturePage;
 
 				Stage.FftPolygonEffect.Parameters["HighlightBright"].SetValue(shouldHighlight);
@@ -478,7 +478,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 
 			Stage.FftPolygonEffect.Parameters["MaxAlpha"].SetValue(
 				Gui.SelectedTab == RightPanelTab.Terrain
-					? Configuration.Properties.TerrainTransparencyForPolygonEditing / 100f
+					? Configuration.Properties.PolygonTransparencyForTerrainEditing / 100f
 					: 1f
 			);
 		}

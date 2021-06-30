@@ -194,7 +194,9 @@ namespace GaneshaDx.UserInterface {
 				}
 			}
 
-			Gui.SelectedTab = RightPanelTab.Mesh;
+			if (Gui.SelectedTab != RightPanelTab.Polygon && Gui.SelectedTab != RightPanelTab.Texture) {
+				Gui.SelectedTab = RightPanelTab.Polygon;
+			}
 		}
 
 		public static void AddPolyToSelection(Polygon polygon) {

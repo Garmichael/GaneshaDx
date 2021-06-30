@@ -8,6 +8,7 @@ using GaneshaDx.Resources.ContentDataTypes.Polygons;
 using GaneshaDx.Resources.ContentDataTypes.TextureAnimations;
 using GaneshaDx.UserInterface;
 using GaneshaDx.UserInterface.GuiDefinitions;
+using GaneshaDx.UserInterface.GuiForms;
 using GaneshaDx.UserInterface.Widgets;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -19,69 +20,14 @@ namespace GaneshaDx.Rendering {
 		public static readonly List<Palette> AnimationAdjustedPalettes = new List<Palette>();
 		private static Compass _compass;
 
-		public static void Update() {
-			if (MapData.MapIsLoaded) {
-				SetUvAnimationInstructionsToFftShader();
-				SetPaletteAnimationInstructions();
-			}
-		}
-
 		public static void Reset() {
 			LightIndicators.Clear();
 		}
 
-		public static void Render() {
-			if (!MapData.MapIsLoaded) {
-				return;
-			}
-
-			SetCompass();
-			SetDirectionalLightIndicators();
-
-			Stage.GraphicsDevice.Viewport = Stage.ModelingViewport;
-			Stage.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-			Stage.GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
-
-			if (Gui.SelectedTab == RightPanelTab.Terrain) {
-				CurrentMapState.StateData.Terrain.Render();
-
-				foreach (Polygon polygon in CurrentMapState.StateData.PolygonCollectionBucket) {
-					polygon.Render();
-				}
-			} else {
-				foreach (Polygon polygon in CurrentMapState.StateData.PolygonCollectionBucket) {
-					polygon.Render();
-				}
-
-				CurrentMapState.StateData.Terrain.Render();
-
-				foreach (Polygon polygon in Selection.SelectedPolygons) {
-					if (polygon.IsSelected && polygon != Selection.SelectedPolygons[0]) {
-						polygon.RenderVertexIndicators();
-					}
-					
-					Selection.SelectedPolygons[0].RenderVertexIndicators();
-				}
-			}
-
-			foreach (DirectionalLightIndicator lightIndicator in LightIndicators) {
-				lightIndicator.Render();
-			}
-
-			_compass.Render();
-		}
-
-		private static void SetCompass() {
-			_compass ??= new Compass();
-		}
-
-		private static void SetDirectionalLightIndicators() {
-			if (LightIndicators.Count != 3) {
-				LightIndicators.Clear();
-				List<DirectionalLight> directionalLights = CurrentMapState.StateData.DirectionalLights;
-				LightIndicators.Add(new DirectionalLightIndicator(directionalLights[0], Color.DarkRed));
-				LightIndicators.Add(new DirectionalLightIndicator(directionalLights[1], Color.DarkGreen));
-				LightIndicators.Add(new DirectionalLightIndicator(directionalLights[2], Color.DarkBlue));
+		public static void Update() {
+			if (MapData.MapIsLoaded) {
+				SetUvAnimationInstructionsToFftShader();
+				SetPaletteAnimationInstructions();
 			}
 		}
 
@@ -223,6 +169,80 @@ namespace GaneshaDx.Rendering {
 			int frameId = (int) Math.Floor((float) timeIntoLoop / adjustedFrameDuration);
 
 			return frameId;
+		}
+
+		public static void Render() {
+			if (!MapData.MapIsLoaded) {
+				return;
+			}
+
+			SetCompass();
+			SetDirectionalLightIndicators();
+			SetGraphicsDeviceProperties();
+
+			if (Gui.SelectedTab == RightPanelTab.Terrain) {
+				CurrentMapState.StateData.Terrain.Render();
+				RenderPolygons();
+			} else {
+				RenderPolygons();
+				CurrentMapState.StateData.Terrain.Render();
+				RenderVertexIndicators();
+			}
+
+			RenderLightIndicators();
+			RenderCompass();
+		}
+
+		private static void SetCompass() {
+			_compass ??= new Compass();
+		}
+
+		private static void SetDirectionalLightIndicators() {
+			if (LightIndicators.Count != 3) {
+				LightIndicators.Clear();
+				List<DirectionalLight> directionalLights = CurrentMapState.StateData.DirectionalLights;
+				LightIndicators.Add(new DirectionalLightIndicator(directionalLights[0], Color.DarkRed));
+				LightIndicators.Add(new DirectionalLightIndicator(directionalLights[1], Color.DarkGreen));
+				LightIndicators.Add(new DirectionalLightIndicator(directionalLights[2], Color.DarkBlue));
+			}
+		}
+
+		private static void SetGraphicsDeviceProperties() {
+			Stage.GraphicsDevice.Viewport = Stage.ModelingViewport;
+			Stage.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+			Stage.GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
+		}
+
+		private static void RenderPolygons() {
+			foreach (Polygon polygon in CurrentMapState.StateData.PolygonCollectionBucket) {
+				if (
+					!Configuration.Properties.IsolateMeshes ||
+					polygon.MeshType == GuiPanelMesh.SelectedMesh ||
+					GuiPanelMesh.SelectedMesh == MeshType.PrimaryMesh
+				) {
+					polygon.Render();
+				}
+			}
+		}
+
+		private static void RenderVertexIndicators() {
+			foreach (Polygon polygon in Selection.SelectedPolygons) {
+				if (polygon.IsSelected && polygon != Selection.SelectedPolygons[0]) {
+					polygon.RenderVertexIndicators();
+				}
+
+				Selection.SelectedPolygons[0].RenderVertexIndicators();
+			}
+		}
+
+		private static void RenderLightIndicators() {
+			foreach (DirectionalLightIndicator lightIndicator in LightIndicators) {
+				lightIndicator.Render();
+			}
+		}
+
+		private static void RenderCompass() {
+			_compass.Render();
 		}
 	}
 }

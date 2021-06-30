@@ -249,14 +249,14 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				ImGui.NextColumn();
 
 				ImGui.PushItemWidth(GuiStyle.WidgetWidth);
-				int beforeTransparency = Configuration.Properties.TerrainTransparencyForPolygonEditing;
+				int beforeTransparency = Configuration.Properties.PolygonTransparencyForTerrainEditing;
 				ImGui.SliderInt(
 					"###polyTransparency",
-					ref Configuration.Properties.TerrainTransparencyForPolygonEditing,
+					ref Configuration.Properties.PolygonTransparencyForTerrainEditing,
 					0, 100
 				);
 
-				if (beforeTransparency != Configuration.Properties.TerrainTransparencyForPolygonEditing) {
+				if (beforeTransparency != Configuration.Properties.PolygonTransparencyForTerrainEditing) {
 					Configuration.SaveConfiguration();
 				}
 
