@@ -28,6 +28,7 @@ namespace GaneshaDx.UserInterface.Input {
 
 		public static bool LeftMouseClicked;
 		public static bool LeftMouseReleased;
+		public static bool LeftMouseHeld;
 
 		public static bool MouseScrolledUp;
 		public static bool MouseScrolledDown;
@@ -51,7 +52,8 @@ namespace GaneshaDx.UserInterface.Input {
 			                   _lastMouseState.LeftButton == ButtonState.Released;
 			LeftMouseReleased = ThisMouseState.LeftButton == ButtonState.Released &&
 			                    _lastMouseState.LeftButton == ButtonState.Pressed;
-
+			LeftMouseHeld = ThisMouseState.LeftButton == ButtonState.Pressed;
+			
 			MouseIsWithinModelViewport =
 				ThisMousePosition.Y > Stage.ModelingViewport.Y &&
 				ThisMousePosition.Y < Stage.ModelingViewport.Y + Stage.ModelingViewport.Height &&

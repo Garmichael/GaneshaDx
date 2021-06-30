@@ -135,6 +135,14 @@ namespace GaneshaDx.UserInterface {
 					}
 				}
 			}
+
+			if (Gui.WidgetSelectionMode == WidgetSelectionMode.Select && AppInput.LeftMouseHeld) {
+				if (HoveredPolygons.Count > 0) {
+					if (!SelectedPolygons.Contains(HoveredPolygons[0])) {
+						SelectedPolygons.Add(HoveredPolygons[0]);
+					}
+				}
+			}
 		}
 
 		private static void CollectHoveredPolygons() {
@@ -299,7 +307,11 @@ namespace GaneshaDx.UserInterface {
 		}
 
 		private static void ClickTerrainSelection() {
-			if (AppInput.LeftMouseClicked) {
+			if (AppInput.AltHeld && AppInput.LeftMouseHeld) {
+				if (HoveredTerrainTiles.Count > 0) {
+					SelectTerrainTile(HoveredTerrainTiles[0]);
+				}
+			} else if (AppInput.LeftMouseClicked) {
 				if (HoveredTerrainTiles.Count > 0) {
 					SelectTerrainTile(HoveredTerrainTiles[0]);
 				} else {
@@ -315,6 +327,12 @@ namespace GaneshaDx.UserInterface {
 					TerrainTile companion = CurrentMapState.StateData.Terrain.GetCompanionTerrainTile(terrainTile);
 					SelectedTerrainTiles.Remove(companion);
 				} else {
+					SelectedTerrainTiles.Add(terrainTile);
+					TerrainTile companion = CurrentMapState.StateData.Terrain.GetCompanionTerrainTile(terrainTile);
+					SelectedTerrainTiles.Add(companion);
+				}
+			} else if (AppInput.AltHeld) {
+				if (!SelectedTerrainTiles.Contains(terrainTile)) {
 					SelectedTerrainTiles.Add(terrainTile);
 					TerrainTile companion = CurrentMapState.StateData.Terrain.GetCompanionTerrainTile(terrainTile);
 					SelectedTerrainTiles.Add(companion);
