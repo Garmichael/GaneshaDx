@@ -13,7 +13,7 @@
 
     [2] [8] Investigate Format
     [2] [2] Isolation Mode
-    [2] [3] Rendering Animation
+    [2] [5] Rendering Animation
     [2] [2] Saving
 
 ### Resource Management
