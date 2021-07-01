@@ -11,9 +11,9 @@
 
 ### Animated Meshes
 
-    [2] [3] Investigate Format
-    [2] [3] Isolation Mode
-    [2] [3] Positioning
+    [2] [8] Investigate Format
+    [2] [2] Isolation Mode
+    [2] [3] Rendering Animation
     [2] [2] Saving
 
 ### Resource Management
@@ -37,7 +37,6 @@
 
 ### Polygons
 
-    [1] [1] Selection Mode (no widget)
     [3] [1] Warn the user when more polys than the max are in the scene
     [4] [1] Snap Poly to Poly
     [4] [1] Snap Vertex to Vertex
