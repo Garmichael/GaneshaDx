@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using GaneshaDx.Common;
-using GaneshaDx.Environment;
+using GaneshaDx.UserInterface.Input;
+using Microsoft.Xna.Framework.Input;
 
 namespace GaneshaDx.UserInterface.Widgets {
 	public static class TransformWidget {
@@ -41,28 +42,53 @@ namespace GaneshaDx.UserInterface.Widgets {
 		}
 
 		public static void Update() {
-			if (Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonTranslate) {
+			bool isVertexSelectMode = Gui.Widget == WidgetSelectionMode.PolygonVertexTranslate ||
+			                          Gui.Widget == WidgetSelectionMode.PolygonEdgeTranslate;
+
+			if (!isVertexSelectMode) {
 				foreach (TransformWidgetAxis axis in AxesSet) {
 					axis.Update();
 				}
-			} else if (Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonVertexTranslate ||
-			           Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonEdgeTranslate
-			) {
-				if (Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonVertexTranslate &&
-				    SelectedVertexIndices.Count == 0
-				) {
-					SelectedVertexIndices.Clear();
-					SelectedVertexIndices.Add(0);
+			} else {
+				if (Gui.Widget == WidgetSelectionMode.PolygonVertexTranslate) {
+					if (SelectedVertexIndices.Count != 1) {
+						SelectedVertexIndices.Clear();
+						SelectedVertexIndices.Add(0);
+					}
+
+					if (Selection.SelectedPolygons.Count > 0) {
+						if (!Selection.SelectedPolygons[0].IsQuad && SelectedVertexIndices[0] == 3) {
+							SelectedVertexIndices.Clear();
+							SelectedVertexIndices.Add(0);
+						}
+
+						if (AppInput.KeyJustPressed(Keys.F)) {
+							SelectNextVertex(AppInput.ShiftHeld);
+						}
+					}
 				}
 
-				if (Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonEdgeTranslate &&
-				    SelectedVertexIndices.Count < 2
-				) {
-					SelectedVertexIndices.Clear();
-					SelectedVertexIndices.Add(0);
-					SelectedVertexIndices.Add(1);
-				}
+				if (Gui.Widget == WidgetSelectionMode.PolygonEdgeTranslate) {
+					if (SelectedVertexIndices.Count != 2) {
+						SelectedVertexIndices.Clear();
+						SelectedVertexIndices.Add(0);
+						SelectedVertexIndices.Add(1);
+					}
 
+					if (Selection.SelectedPolygons.Count > 0) {
+						if (!Selection.SelectedPolygons[0].IsQuad &&
+						    (SelectedVertexIndices[0] == 3 || SelectedVertexIndices[1] == 3)
+						) {
+							SelectedVertexIndices.Clear();
+							SelectedVertexIndices.Add(0);
+							SelectedVertexIndices.Add(1);
+						}
+					}
+
+					if (AppInput.KeyJustPressed(Keys.F)) {
+						SelectNextEdge(AppInput.ShiftHeld);
+					}
+				}
 
 				if (Selection.SelectedPolygons.Count > 0) {
 					Selection.UnselectAllExceptLast();
@@ -80,9 +106,9 @@ namespace GaneshaDx.UserInterface.Widgets {
 
 		public static void Render() {
 			if (Selection.SelectedPolygons.Count == 0 ||
-			    Gui.WidgetSelectionMode != WidgetSelectionMode.PolygonTranslate &&
-			    Gui.WidgetSelectionMode != WidgetSelectionMode.PolygonVertexTranslate &&
-			    Gui.WidgetSelectionMode != WidgetSelectionMode.PolygonEdgeTranslate
+			    Gui.Widget != WidgetSelectionMode.PolygonTranslate &&
+			    Gui.Widget != WidgetSelectionMode.PolygonVertexTranslate &&
+			    Gui.Widget != WidgetSelectionMode.PolygonEdgeTranslate
 			) {
 				return;
 			}
@@ -107,6 +133,105 @@ namespace GaneshaDx.UserInterface.Widgets {
 
 			for (int axisIndex = 1; axisIndex < hoveredAxes.Count; axisIndex++) {
 				hoveredAxes[axisIndex].HoveredAxisResults = new CameraRayResults {HasHit = false};
+			}
+		}
+
+
+		public static void SelectNextVertex(bool reverse) {
+			if (Selection.SelectedPolygons[0].IsQuad) {
+				List<int> vertexOrder = new List<int> {0, 1, 3, 2};
+				int currentIndex = vertexOrder.IndexOf(SelectedVertexIndices[0]);
+
+				int newIndex = reverse
+					? currentIndex - 1
+					: currentIndex + 1;
+
+				if (newIndex < 0) {
+					newIndex = vertexOrder.Count - 1;
+				}
+
+				if (newIndex > vertexOrder.Count - 1) {
+					newIndex = 0;
+				}
+
+				SelectedVertexIndices[0] = vertexOrder[newIndex];
+			} else {
+				int lastIndex = Selection.SelectedPolygons[0].Vertices.Count - 1;
+				if (reverse) {
+					SelectedVertexIndices[0]--;
+				} else {
+					SelectedVertexIndices[0]++;
+				}
+
+				if (SelectedVertexIndices[0] > lastIndex) {
+					SelectedVertexIndices[0] = 0;
+				}
+
+				if (SelectedVertexIndices[0] < 0) {
+					SelectedVertexIndices[0] = lastIndex;
+				}
+			}
+		}
+
+		public static void SelectNextEdge(bool reverse) {
+			if (Selection.SelectedPolygons[0].IsQuad) {
+				SelectedVertexIndices.Sort();
+
+				List<int[]> coordinates = new List<int[]> {
+					new[] {0, 1}, new[] {1, 3}, new[] {2, 3}, new[] {0, 2}, new[] {0, 3}, new[] {1, 2}
+				};
+
+				int currentIndex = 0;
+				for (int coordinateIndex = 0; coordinateIndex < coordinates.Count; coordinateIndex++) {
+					int[] coordinate = coordinates[coordinateIndex];
+					if (SelectedVertexIndices[0] == coordinate[0] &&
+					    SelectedVertexIndices[1] == coordinate[1]
+					) {
+						currentIndex = coordinateIndex;
+						break;
+					}
+				}
+
+				int newIndex = reverse
+					? currentIndex - 1
+					: currentIndex + 1;
+
+				if (newIndex > coordinates.Count - 1) {
+					newIndex = 0;
+				}
+
+				if (newIndex < 0) {
+					newIndex = coordinates.Count - 1;
+				}
+
+				SelectedVertexIndices[0] = coordinates[newIndex][0];
+				SelectedVertexIndices[1] = coordinates[newIndex][1];
+			} else {
+				int lastIndex = Selection.SelectedPolygons[0].Vertices.Count - 1;
+
+				if (reverse) {
+					SelectedVertexIndices[0]--;
+					SelectedVertexIndices[1]--;
+				} else {
+					SelectedVertexIndices[0]++;
+					SelectedVertexIndices[1]++;
+				}
+
+				if (SelectedVertexIndices[0] > lastIndex) {
+					SelectedVertexIndices[0] = 0;
+				}
+
+				if (SelectedVertexIndices[1] > lastIndex) {
+					SelectedVertexIndices[1] = 0;
+				}
+
+				if (SelectedVertexIndices[0] < 0) {
+					SelectedVertexIndices[0] = lastIndex;
+				}
+
+				if (SelectedVertexIndices[1] < 0) {
+					SelectedVertexIndices[1] = lastIndex;
+				}
 			}
 		}
 	}

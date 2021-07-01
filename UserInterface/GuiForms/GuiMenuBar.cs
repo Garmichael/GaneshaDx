@@ -2,6 +2,7 @@
 using GaneshaDx.Environment;
 using GaneshaDx.Resources;
 using GaneshaDx.UserInterface.GuiDefinitions;
+using GaneshaDx.UserInterface.Widgets;
 using ImGuiNET;
 
 namespace GaneshaDx.UserInterface.GuiForms {
@@ -79,7 +80,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 						false,
 						MapData.MapIsLoaded && Gui.SelectedTab != RightPanelTab.Terrain
 					)) {
-						Gui.WidgetSelectionMode = WidgetSelectionMode.PolygonTranslate;
+						Gui.Widget = WidgetSelectionMode.PolygonTranslate;
 						Selection.SelectAllPolygons();
 					}
 
@@ -111,6 +112,53 @@ namespace GaneshaDx.UserInterface.GuiForms {
 						Selection.SelectedTerrainTiles.Count > 0)
 					) {
 						Selection.GrowTerrainSelection();
+					}
+
+
+					ImGui.Separator();
+
+					if (ImGui.MenuItem(
+						"Select Next Vertex",
+						"F",
+						false,
+						MapData.MapIsLoaded &&
+						Selection.SelectedPolygons.Count > 0 &&
+						Gui.Widget == WidgetSelectionMode.PolygonVertexTranslate)
+					) {
+						TransformWidget.SelectNextVertex(false);
+					}
+
+					if (ImGui.MenuItem(
+						"Select Previous Vertex",
+						"Shift + F",
+						false,
+						MapData.MapIsLoaded &&
+						Selection.SelectedPolygons.Count > 0 &&
+						Gui.Widget == WidgetSelectionMode.PolygonVertexTranslate)
+					) {
+						TransformWidget.SelectNextVertex(true);
+					}
+
+					if (ImGui.MenuItem(
+						"Select Next Edge",
+						"F",
+						false,
+						MapData.MapIsLoaded &&
+						Selection.SelectedPolygons.Count > 0 &&
+						Gui.Widget == WidgetSelectionMode.PolygonEdgeTranslate)
+					) {
+						TransformWidget.SelectNextEdge(false);
+					}
+
+					if (ImGui.MenuItem(
+						"Select Previous Edge",
+						"Shift + F",
+						false,
+						MapData.MapIsLoaded &&
+						Selection.SelectedPolygons.Count > 0 &&
+						Gui.Widget == WidgetSelectionMode.PolygonEdgeTranslate)
+					) {
+						TransformWidget.SelectNextEdge(true);
 					}
 
 					ImGui.EndMenu();

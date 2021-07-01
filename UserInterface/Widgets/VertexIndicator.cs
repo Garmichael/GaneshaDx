@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using GaneshaDx.Common;
 using GaneshaDx.Environment;
 using GaneshaDx.Resources.ContentDataTypes.Polygons;
 using Microsoft.Xna.Framework;
@@ -126,10 +127,17 @@ namespace GaneshaDx.UserInterface.Widgets {
 
 				Matrix faceAzimuth = Matrix.CreateRotationY(MathHelper.ToRadians(-_vertex.NormalAzimuth));
 				vertPositions[index] = Vector3.Transform(vertPositions[index], faceAzimuth);
+				
+				bool inVertexSelectionMode = Gui.Widget == WidgetSelectionMode.PolygonVertexTranslate ||
+				                             Gui.Widget == WidgetSelectionMode.PolygonEdgeTranslate;
+
+				int vertexIndex = Selection.SelectedPolygons[0].Vertices.IndexOf(_vertex);
+				bool vertexIsSelected = inVertexSelectionMode &&
+				                        TransformWidget.SelectedVertexIndices.Contains(vertexIndex);
 
 				verts.Add(new VertexPositionColorTexture(
 					_vertex.AnimationAdjustedPosition + vertPositions[index],
-					_vertex.Color,
+					vertexIsSelected ? Color.Cyan : _vertex.Color,
 					new Vector2(0, 0))
 				);
 			}

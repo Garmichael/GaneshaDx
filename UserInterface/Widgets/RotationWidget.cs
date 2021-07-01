@@ -31,7 +31,7 @@ namespace GaneshaDx.UserInterface.Widgets {
 
 
 		public static void Update() {
-			if (Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonRotate &&
+			if (Gui.Widget == WidgetSelectionMode.PolygonRotate &&
 			    Selection.SelectedPolygons.Count > 0
 			) {
 				foreach (RotationWidgetAxis axis in AxesSet) {
@@ -43,7 +43,7 @@ namespace GaneshaDx.UserInterface.Widgets {
 		}
 
 		public static void Render() {
-			if (Gui.WidgetSelectionMode != WidgetSelectionMode.PolygonRotate ||
+			if (Gui.Widget != WidgetSelectionMode.PolygonRotate ||
 			    Selection.SelectedPolygons.Count == 0
 			) {
 				return;

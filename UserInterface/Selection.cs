@@ -39,14 +39,14 @@ namespace GaneshaDx.UserInterface {
 			HoveredTerrainTiles.Clear();
 			HoveredPolygons.Clear();
 
-			bool transformWidgetInUse = Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonTranslate &&
+			bool transformWidgetInUse = Gui.Widget == WidgetSelectionMode.PolygonTranslate &&
 			                            (TransformWidget.IsHovered || TransformWidget.IsActive) ||
-			                            Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonVertexTranslate &&
+			                            Gui.Widget == WidgetSelectionMode.PolygonVertexTranslate &&
 			                            (TransformWidget.IsHovered || TransformWidget.IsActive) ||
-			                            Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonEdgeTranslate &&
+			                            Gui.Widget == WidgetSelectionMode.PolygonEdgeTranslate &&
 			                            (TransformWidget.IsHovered || TransformWidget.IsActive);
 
-			bool rotationWidgetInUse = Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonRotate &&
+			bool rotationWidgetInUse = Gui.Widget == WidgetSelectionMode.PolygonRotate &&
 			                           RotationWidget.IsHovered;
 
 			if (AppInput.MouseIsWithinModelViewport && !transformWidgetInUse && !rotationWidgetInUse) {
@@ -64,16 +64,16 @@ namespace GaneshaDx.UserInterface {
 				} else {
 					int indexOfSelected = 0;
 
-					if (Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonVertexTranslate ||
-					    Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonEdgeTranslate
+					if (Gui.Widget == WidgetSelectionMode.PolygonVertexTranslate ||
+					    Gui.Widget == WidgetSelectionMode.PolygonEdgeTranslate
 					) {
 						if (AppInput.ControlHeld) {
-							Gui.WidgetSelectionMode = WidgetSelectionMode.PolygonTranslate;
+							Gui.Widget = WidgetSelectionMode.PolygonTranslate;
 						}
 					}
 
-					if (Gui.WidgetSelectionMode != WidgetSelectionMode.PolygonVertexTranslate &&
-					    Gui.WidgetSelectionMode != WidgetSelectionMode.PolygonEdgeTranslate
+					if (Gui.Widget != WidgetSelectionMode.PolygonVertexTranslate &&
+					    Gui.Widget != WidgetSelectionMode.PolygonEdgeTranslate
 					) {
 						if (!AppInput.ControlHeld && SelectedPolygons.Count == 1) {
 							for (int polyIndex = 0; polyIndex < HoveredPolygons.Count; polyIndex++) {
@@ -89,7 +89,7 @@ namespace GaneshaDx.UserInterface {
 
 						SelectPolygon(HoveredPolygons[indexOfSelected]);
 						SelectCompleteAnimatedMeshPolygons();
-					} else if (Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonVertexTranslate) {
+					} else if (Gui.Widget == WidgetSelectionMode.PolygonVertexTranslate) {
 						if (SelectedPolygons.Count == 0) {
 							SelectPolygon(HoveredPolygons[indexOfSelected]);
 							SelectCompleteAnimatedMeshPolygons();
@@ -114,7 +114,7 @@ namespace GaneshaDx.UserInterface {
 								SelectedPolygons[0].Vertices.IndexOf(closestVertex)
 							);
 						}
-					} else if (Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonEdgeTranslate) {
+					} else if (Gui.Widget == WidgetSelectionMode.PolygonEdgeTranslate) {
 						if (SelectedPolygons.Count == 0) {
 							SelectPolygon(HoveredPolygons[indexOfSelected]);
 							SelectCompleteAnimatedMeshPolygons();
@@ -136,7 +136,7 @@ namespace GaneshaDx.UserInterface {
 				}
 			}
 
-			if (Gui.WidgetSelectionMode == WidgetSelectionMode.Select && AppInput.LeftMouseHeld) {
+			if (Gui.Widget == WidgetSelectionMode.Select && AppInput.LeftMouseHeld) {
 				if (HoveredPolygons.Count > 0) {
 					if (!SelectedPolygons.Contains(HoveredPolygons[0])) {
 						SelectedPolygons.Add(HoveredPolygons[0]);
@@ -226,10 +226,10 @@ namespace GaneshaDx.UserInterface {
 			}
 
 			if (selectedMeshTypes.Count > 0) {
-				if (Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonVertexTranslate ||
-				    Gui.WidgetSelectionMode == WidgetSelectionMode.PolygonEdgeTranslate
+				if (Gui.Widget == WidgetSelectionMode.PolygonVertexTranslate ||
+				    Gui.Widget == WidgetSelectionMode.PolygonEdgeTranslate
 				) {
-					Gui.WidgetSelectionMode = WidgetSelectionMode.PolygonTranslate;
+					Gui.Widget = WidgetSelectionMode.PolygonTranslate;
 				}
 			}
 

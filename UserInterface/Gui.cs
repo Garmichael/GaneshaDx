@@ -13,7 +13,7 @@ using Vector2 = System.Numerics.Vector2;
 namespace GaneshaDx.UserInterface {
 	public static class Gui {
 		public static RightPanelTab SelectedTab = RightPanelTab.Map;
-		public static WidgetSelectionMode WidgetSelectionMode = WidgetSelectionMode.PolygonTranslate;
+		public static WidgetSelectionMode Widget = WidgetSelectionMode.PolygonTranslate;
 
 		private static bool _showDebugPanel;
 		public static bool ShowCameraControlWindow;
