@@ -27,7 +27,8 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			("\nTerrain", 100),
 			("Texture\nAnimations", 100),
 			("Palette\nAnimations", 100),
-			("Animated\nMeshes", 100),
+			("Animated\nMesh Frames", 100),
+			("\nAnimated Meshes", 170),
 			("", 100)
 		};
 
@@ -36,12 +37,12 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 			GuiStyle.SetNewUiToDefaultStyle();
 			ImGui.GetStyle().WindowRounding = 3;
-			ImGui.GetStyle().FrameRounding = 0;
 			ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[2]);
-			const ImGuiWindowFlags flags = ImGuiWindowFlags.NoCollapse;
+			const ImGuiWindowFlags flags = ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.HorizontalScrollbar;
 
 			ImGui.Begin("Manage Mesh Resources", ref windowIsOpen, flags);
 			{
+				ImGui.BeginChild("fdasfdas", new Vector2(1475, MapData.MeshResources.Count * 30),false);
 				ImGui.PopFont();
 				ImGui.Columns(Columns.Count, "ManageResourcesGrid", false);
 
@@ -60,6 +61,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				}
 
 				ImGui.Columns(1);
+				ImGui.EndChild();
 			}
 			ImGui.End();
 
@@ -84,9 +86,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			                     CurrentMapState.StateData.MapTime == mapResource.MapTime &&
 			                     CurrentMapState.StateData.MapWeather == mapResource.MapWeather;
 
-			bool shouldHighlightRow = index == 0 || stateSelected;
-
-			ImGui.GetStyle().Colors[(int) ImGuiCol.Text] = shouldHighlightRow
+			ImGui.GetStyle().Colors[(int) ImGuiCol.Text] = stateSelected
 				? GuiStyle.ColorPalette[ColorName.Highlighted]
 				: GuiStyle.ColorPalette[ColorName.Lightest];
 
@@ -114,7 +114,8 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 			ImGui.GetStyle().Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.Lightest];
 			ImGui.GetStyle().Colors[(int) ImGuiCol.Button] = GuiStyle.ColorPalette[ColorName.Transparent];
-
+			ImGui.GetStyle().FrameRounding = 0;
+			
 			BuildColumnPrimaryMesh(index, meshResourceData, isInitialState);
 			ImGui.NextColumn();
 			BuildColumnPalettes(index, meshResourceData, isInitialState);
@@ -127,12 +128,15 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			ImGui.NextColumn();
 			BuildColumnPaletteAnimationFrames(index, meshResourceData);
 			ImGui.NextColumn();
+			BuildColumnHasAnimatedMeshInstructions(index, meshResourceData);
+			ImGui.NextColumn();
 			BuildColumnHasAnimatedMeshes(index, meshResourceData);
 			ImGui.NextColumn();
-
+			
 			ImGui.GetStyle().ItemSpacing = new Vector2(8, 4);
 			GuiStyle.SetNewUiToDefaultStyle();
-
+			ImGui.GetStyle().FrameRounding = 0;
+			
 			if (stateSelected) {
 				GuiStyle.SetElementStyle(ElementStyle.ButtonDisabled);
 			}
@@ -377,7 +381,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			}
 		}
 
-		private static void BuildColumnHasAnimatedMeshes(int index, MeshResourceData data) {
+		private static void BuildColumnHasAnimatedMeshInstructions(int index, MeshResourceData data) {
 			ImGui.GetStyle().ItemSpacing = new Vector2(1, 0);
 			bool beforeAnimatedMeshes = data.HasAnimatedMeshInstructions;
 			ImGui.Checkbox("###hasAnimatedMeshes" + index, ref data.HasAnimatedMeshInstructions);
@@ -392,6 +396,46 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 			if (beforeAnimatedMeshes != data.HasAnimatedMeshInstructions) {
 				data.HasAnimatedMeshInstructions = beforeAnimatedMeshes;
+				CurrentMapState.ResetState();
+			}
+		}
+
+		private static void BuildColumnHasAnimatedMeshes(int index, MeshResourceData data) {
+			ImGui.GetStyle().ItemSpacing = new Vector2(1, 0);
+			bool beforeAnimatedMesh1 = data.HasAnimatedMesh1;
+			bool beforeAnimatedMesh2 = data.HasAnimatedMesh2;
+			bool beforeAnimatedMesh3 = data.HasAnimatedMesh3;
+			bool beforeAnimatedMesh4 = data.HasAnimatedMesh4;
+			bool beforeAnimatedMesh5 = data.HasAnimatedMesh5;
+			bool beforeAnimatedMesh6 = data.HasAnimatedMesh6;
+			bool beforeAnimatedMesh7 = data.HasAnimatedMesh7;
+			bool beforeAnimatedMesh8 = data.HasAnimatedMesh8;
+
+			ImGui.Checkbox("###hasAnimatedMesh1_" + index, ref data.HasAnimatedMesh1);
+			ImGui.SameLine();
+			ImGui.Checkbox("###hasAnimatedMesh2_" + index, ref data.HasAnimatedMesh2);
+			ImGui.SameLine();
+			ImGui.Checkbox("###hasAnimatedMesh3_" + index, ref data.HasAnimatedMesh3);
+			ImGui.SameLine();
+			ImGui.Checkbox("###hasAnimatedMesh4_" + index, ref data.HasAnimatedMesh4);
+			ImGui.SameLine();
+			ImGui.Checkbox("###hasAnimatedMesh5_" + index, ref data.HasAnimatedMesh5);
+			ImGui.SameLine();
+			ImGui.Checkbox("###hasAnimatedMesh6_" + index, ref data.HasAnimatedMesh6);
+			ImGui.SameLine();
+			ImGui.Checkbox("###hasAnimatedMesh7_" + index, ref data.HasAnimatedMesh7);
+			ImGui.SameLine();
+			ImGui.Checkbox("###hasAnimatedMesh8_" + index, ref data.HasAnimatedMesh8);
+
+			if (beforeAnimatedMesh1 != data.HasAnimatedMesh1 ||
+			    beforeAnimatedMesh2 != data.HasAnimatedMesh2 ||
+			    beforeAnimatedMesh3 != data.HasAnimatedMesh3 ||
+			    beforeAnimatedMesh4 != data.HasAnimatedMesh4 ||
+			    beforeAnimatedMesh5 != data.HasAnimatedMesh5 ||
+			    beforeAnimatedMesh6 != data.HasAnimatedMesh6 ||
+			    beforeAnimatedMesh7 != data.HasAnimatedMesh7 ||
+			    beforeAnimatedMesh8 != data.HasAnimatedMesh8
+			) {
 				CurrentMapState.ResetState();
 			}
 		}
