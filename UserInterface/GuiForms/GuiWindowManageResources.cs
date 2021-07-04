@@ -42,7 +42,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 			ImGui.Begin("Manage Mesh Resources", ref windowIsOpen, flags);
 			{
-				ImGui.BeginChild("ScrollWindowMMR", new Vector2(1475, (MapData.MeshResources.Count + 1) * 30),false);
+				ImGui.BeginChild("ScrollWindowMMR", new Vector2(1475, (MapData.MeshResources.Count + 1) * 30), false);
 				ImGui.PopFont();
 				ImGui.Columns(Columns.Count, "ManageResourcesGrid", false);
 
@@ -115,7 +115,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			ImGui.GetStyle().Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.Lightest];
 			ImGui.GetStyle().Colors[(int) ImGuiCol.Button] = GuiStyle.ColorPalette[ColorName.Transparent];
 			ImGui.GetStyle().FrameRounding = 0;
-			
+
 			BuildColumnPrimaryMesh(index, meshResourceData, isInitialState);
 			ImGui.NextColumn();
 			BuildColumnPalettes(index, meshResourceData, isInitialState);
@@ -132,11 +132,11 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			ImGui.NextColumn();
 			BuildColumnHasAnimatedMeshes(index, meshResourceData);
 			ImGui.NextColumn();
-			
+
 			ImGui.GetStyle().ItemSpacing = new Vector2(8, 4);
 			GuiStyle.SetNewUiToDefaultStyle();
 			ImGui.GetStyle().FrameRounding = 0;
-			
+
 			if (stateSelected) {
 				GuiStyle.SetElementStyle(ElementStyle.ButtonDisabled);
 			}
@@ -339,24 +339,35 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					const int totalPalettes = 16;
 					const int totalColors = 16;
 
+					Palette sourcePalette = new Palette();
+
+					for (int colorIndex = 0; colorIndex < totalColors; colorIndex++) {
+						int color = colorIndex * 17 / 8;
+						PaletteColor newColor = new PaletteColor(color, color, color, false);
+						sourcePalette.Colors.Add(newColor);
+					}
+
 					for (int paletteIndex = 0; paletteIndex < totalPalettes; paletteIndex++) {
 						Palette newPalette = new Palette();
 
-						for (int colorIndex = totalColors - paletteIndex; colorIndex < totalColors; colorIndex++) {
-							int color = colorIndex * 2;
-							PaletteColor newColor = new PaletteColor(color, color, color, false);
-							newPalette.Colors.Add(newColor);
-						}
-
-						for (int colorIndex = paletteIndex; colorIndex < totalColors; colorIndex++) {
-							int color = colorIndex * 2;
-							PaletteColor newColor = new PaletteColor(color, color, color, false);
-							newPalette.Colors.Add(newColor);
+						for (int sourceIndex = 0; sourceIndex < sourcePalette.Colors.Count; sourceIndex++) {
+							int offsetIndex = sourceIndex + paletteIndex;
+							if (offsetIndex > totalColors - 1) {
+								offsetIndex -= totalColors;
+							}
+							
+							PaletteColor paletteColor = sourcePalette.Colors[offsetIndex];
+							newPalette.Colors.Add(new PaletteColor(
+								paletteColor.Red,
+								paletteColor.Green,
+								paletteColor.Red,
+								false
+							));
 						}
 
 						data.PaletteAnimationFrames.Add(newPalette);
 					}
-
+					
 					if (!data.HasTextureAnimations) {
 						data.HasTextureAnimations = true;
 						const int totalAnimations = 32;

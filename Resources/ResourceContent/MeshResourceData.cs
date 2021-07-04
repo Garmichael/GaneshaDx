@@ -1373,7 +1373,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 					RawData.Add(0);
 					RawData.Add(0);
 					RawData.Add(0);
-					RawData.Add(0);
+					RawData.Add(3);
 					RawData.Add((byte) instructions.FrameCount);
 					RawData.Add(0);
 					RawData.Add((byte) instructions.FrameDuration);
