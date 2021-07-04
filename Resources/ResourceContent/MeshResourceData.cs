@@ -1447,7 +1447,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 
 			RawData.AddRange(MeshAnimationInstructions.InstructionsHeader);
 
-			foreach (MeshAnimationInstruction instruction in MeshAnimationInstructions.Instructions) {
+			foreach (MeshAnimationFrameState instruction in MeshAnimationInstructions.FrameStates) {
 				foreach (int property in instruction.Properties) {
 					(byte high, byte low) = Utilities.GetLittleEndianFromInt(property);
 					RawData.Add(high);
@@ -1457,7 +1457,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 
 			RawData.AddRange(MeshAnimationInstructions.LinksHeader);
 
-			foreach (MeshAnimationLink link in MeshAnimationInstructions.Links) {
+			foreach (MeshAnimation link in MeshAnimationInstructions.Links) {
 				link.GenerateRawData();
 				RawData.AddRange(link.RawData);
 			}

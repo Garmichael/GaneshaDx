@@ -145,4 +145,14 @@
 		ConcaveSouthwest,
 		ConcaveNorthwest,
 	}
+
+	public enum MeshAnimationKeyFrameType {
+		ChangeTo,
+		ChangeBy,
+		Unknown9,
+		Unknown10,
+		Unknown17,
+		Unknown18,
+		Other
+	}
 }

@@ -79,6 +79,11 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 			ImGui.SetNextItemWidth(GuiStyle.WidgetWidth + 20);
 			ImGui.Combo("##SelectedMeshType", ref _selectedComboId, labels.ToArray(), meshTypes.Count);
+			
+			if (_selectedComboId > meshTypes.Count - 1) {
+				_selectedComboId = 0;
+			}
+			
 			SelectedMesh = meshTypes[_selectedComboId];
 
 			if (SelectedMesh != MeshType.PrimaryMesh) {

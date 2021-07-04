@@ -42,7 +42,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 			ImGui.Begin("Manage Mesh Resources", ref windowIsOpen, flags);
 			{
-				ImGui.BeginChild("fdasfdas", new Vector2(1475, MapData.MeshResources.Count * 30),false);
+				ImGui.BeginChild("ScrollWindowMMR", new Vector2(1475, (MapData.MeshResources.Count + 1) * 30),false);
 				ImGui.PopFont();
 				ImGui.Columns(Columns.Count, "ManageResourcesGrid", false);
 

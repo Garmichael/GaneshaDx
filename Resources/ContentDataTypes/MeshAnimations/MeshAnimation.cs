@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 
 namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
-	public class MeshAnimationLink {
+	public class MeshAnimation {
 		public List<byte> RawData;
 
-		public MeshAnimationLink(List<byte> rawData) {
+		public MeshAnimation(List<byte> rawData) {
 			RawData = rawData;
 		}
 
