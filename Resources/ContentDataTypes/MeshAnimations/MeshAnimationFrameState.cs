@@ -19,31 +19,47 @@ namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 			}
 
 			Rotation = new Vector3(Properties[0] / 4096f, Properties[1] / 4096f, Properties[2] / 4096f);
-			Position = new Vector3(Properties[4] / 4096f, Properties[5] / 4096f, Properties[6] / 4096f);
+			Position = new Vector3(Properties[4], Properties[5], Properties[6]);
 			Scale = new Vector3(Properties[8] / 4096f, Properties[9] / 4096f, Properties[10] / 4096f);
 
-			RotationKeyFrameTypes.Add(GetKeyFrameType(Properties[30]));
-			RotationKeyFrameTypes.Add(GetKeyFrameType(Properties[31]));
-			RotationKeyFrameTypes.Add(GetKeyFrameType(Properties[32]));
+			RotationKeyFrameTypes.Add(ConvertKeyFrameType(Properties[30]));
+			RotationKeyFrameTypes.Add(ConvertKeyFrameType(Properties[31]));
+			RotationKeyFrameTypes.Add(ConvertKeyFrameType(Properties[32]));
 
-			PositionKeyFrameTypes.Add(GetKeyFrameType(Properties[33]));
-			PositionKeyFrameTypes.Add(GetKeyFrameType(Properties[34]));
-			PositionKeyFrameTypes.Add(GetKeyFrameType(Properties[35]));
+			PositionKeyFrameTypes.Add(ConvertKeyFrameType(Properties[33]));
+			PositionKeyFrameTypes.Add(ConvertKeyFrameType(Properties[34]));
+			PositionKeyFrameTypes.Add(ConvertKeyFrameType(Properties[35]));
 
-			ScaleKeyFrameTypes.Add(GetKeyFrameType(Properties[36]));
-			ScaleKeyFrameTypes.Add(GetKeyFrameType(Properties[37]));
-			ScaleKeyFrameTypes.Add(GetKeyFrameType(Properties[38]));
+			ScaleKeyFrameTypes.Add(ConvertKeyFrameType(Properties[36]));
+			ScaleKeyFrameTypes.Add(ConvertKeyFrameType(Properties[37]));
+			ScaleKeyFrameTypes.Add(ConvertKeyFrameType(Properties[38]));
 		}
 
-		private MeshAnimationKeyFrameType GetKeyFrameType(int value) {
+		private MeshAnimationKeyFrameType ConvertKeyFrameType(int value) {
 			MeshAnimationKeyFrameType type = value switch {
-				5 => MeshAnimationKeyFrameType.ChangeTo,
-				6 => MeshAnimationKeyFrameType.ChangeBy,
+				0 => MeshAnimationKeyFrameType.None,
+				5 => MeshAnimationKeyFrameType.TweenTo,
+				6 => MeshAnimationKeyFrameType.TweenBy,
 				9 => MeshAnimationKeyFrameType.Unknown9,
 				10 => MeshAnimationKeyFrameType.Unknown10,
 				17 => MeshAnimationKeyFrameType.Unknown17,
 				18 => MeshAnimationKeyFrameType.Unknown18,
 				_ => MeshAnimationKeyFrameType.Other
+			};
+
+			return type;
+		}
+
+		private int ConvertKeyFrameType(MeshAnimationKeyFrameType value) {
+			int type = value switch {
+				 MeshAnimationKeyFrameType.None=> 0,
+				 MeshAnimationKeyFrameType.TweenTo=> 5,
+				 MeshAnimationKeyFrameType.TweenBy=> 6,
+				 MeshAnimationKeyFrameType.Unknown9=> 9,
+				 MeshAnimationKeyFrameType.Unknown10=> 10,
+				 MeshAnimationKeyFrameType.Unknown17=> 17,
+				 MeshAnimationKeyFrameType.Unknown18=> 18,
+				_ => 99
 			};
 
 			return type;

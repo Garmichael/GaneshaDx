@@ -147,8 +147,9 @@
 	}
 
 	public enum MeshAnimationKeyFrameType {
-		ChangeTo,
-		ChangeBy,
+		None,
+		TweenTo,
+		TweenBy,
 		Unknown9,
 		Unknown10,
 		Unknown17,
