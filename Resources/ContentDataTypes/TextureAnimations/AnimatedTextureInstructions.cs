@@ -13,7 +13,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.TextureAnimations {
 		
 		public AnimatedTextureInstructions(List<byte> rawData) {
 			bool isUvAnimation = rawData[1] == 3 && rawData[9] == 3;
-			bool isPaletteAnimation = rawData[1] == 0 && rawData[2] == 224 && rawData[3] == 1 && rawData[14] == 3;
+			bool isPaletteAnimation = rawData[1] == 0 && rawData[2] == 224 && rawData[3] == 1 && rawData[14] > 0;
 
 			if (isUvAnimation) {
 				TextureAnimationType = TextureAnimationType.UvAnimation;
