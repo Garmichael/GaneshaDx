@@ -8,6 +8,8 @@
     [2] [5] Undo
     [2] [2] Export UV Overlay PNG 
     [4] [2] Warning if Sector Size increases
+    [1] [1] Alt + Holding Right Mouse = Rotate
+    [1] [1] Config: Allow Swapping of Rotate and Panning
 
 ### Animated Meshes
 
@@ -52,4 +54,8 @@
 
 ## Investigation
 
-    - Map 41. Overridden Mesh File possibly linked to Removeable Objects 
+    - Map 41. Overridden Mesh File possibly linked to Removeable Objects
+
+## Consideration
+
+    - Make Grid snapping the default with a config?

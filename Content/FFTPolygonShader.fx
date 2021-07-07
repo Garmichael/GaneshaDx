@@ -566,7 +566,7 @@ float4 PixelShaderFunction(VertexToPixel input) : COLOR0 {
     textureColor = saturate(textureColor);
     
     if (textureColor.a > MaxAlpha){
-        textureColor.a = MaxAlpha;
+        textureColor.a *= MaxAlpha;
     }
     
     return textureColor;

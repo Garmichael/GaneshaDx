@@ -741,7 +741,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 			ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
 			ImGui.InputInt("PA_StartIndex", ref selectedAnimation.AnimationStartIndex, 1);
-			selectedAnimation.AnimationStartIndex = Utilities.Clamp(selectedAnimation.AnimationStartIndex, 0, 14);
+			selectedAnimation.AnimationStartIndex = Utilities.Clamp(selectedAnimation.AnimationStartIndex, 0, 15);
 			ImGui.NextColumn();
 
 			ImGui.Text("Total Frames");
@@ -750,7 +750,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
 			ImGui.InputInt("PA_FrameCount", ref selectedAnimation.FrameCount, 1);
 			selectedAnimation.FrameCount = Utilities.Clamp(
-				selectedAnimation.FrameCount, 0, 15 - selectedAnimation.AnimationStartIndex
+				selectedAnimation.FrameCount, 1, 16 - selectedAnimation.AnimationStartIndex
 			);
 			ImGui.NextColumn();
 
@@ -889,7 +889,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				ImGui.NextColumn();
 
 				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
-				ImGui.InputInt("PA_FrameTexturePage", ref selectedAnimation.FirstFrameTexturePage, 1);
+				ImGui.InputInt("UVA_FrameTexturePage", ref selectedAnimation.FirstFrameTexturePage, 1);
 				selectedAnimation.FirstFrameTexturePage =
 					Utilities.Clamp(selectedAnimation.FirstFrameTexturePage, 0, 3);
 				ImGui.NextColumn();
@@ -900,7 +900,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 				GuiStyle.AddSpace();
 				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
-				ImGui.InputInt("PA_FramePositionX", ref selectedAnimation.FirstFrameX, 4);
+				ImGui.InputInt("UVA_FramePositionX", ref selectedAnimation.FirstFrameX, 4);
 				selectedAnimation.FirstFrameX = Utilities.Clamp(selectedAnimation.FirstFrameX, 0, 252);
 				selectedAnimation.FirstFrameX = Utilities.SnapIntToInterval(selectedAnimation.FirstFrameX, 4);
 				ImGui.NextColumn();
@@ -909,7 +909,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				ImGui.NextColumn();
 
 				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
-				ImGui.InputInt("PA_FramePositionY", ref selectedAnimation.FirstFrameY, 1);
+				ImGui.InputInt("UVA_FramePositionY", ref selectedAnimation.FirstFrameY, 1);
 				selectedAnimation.FirstFrameY = Utilities.Clamp(selectedAnimation.FirstFrameY, 0, 252);
 				ImGui.NextColumn();
 
@@ -919,7 +919,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 				GuiStyle.AddSpace();
 				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
-				ImGui.InputInt("PA_FrameCount", ref selectedAnimation.FrameCount, 1);
+				ImGui.InputInt("UVA_FrameCount", ref selectedAnimation.FrameCount, 1);
 				selectedAnimation.FrameCount = Utilities.Clamp(selectedAnimation.FrameCount, 1, 252);
 				ImGui.NextColumn();
 
@@ -927,7 +927,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				ImGui.NextColumn();
 
 				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
-				ImGui.InputInt("PA_FrameDuration", ref selectedAnimation.FrameDuration, 1);
+				ImGui.InputInt("UVA_FrameDuration", ref selectedAnimation.FrameDuration, 1);
 				selectedAnimation.FrameDuration = Utilities.Min(selectedAnimation.FrameDuration, 1);
 				ImGui.NextColumn();
 
