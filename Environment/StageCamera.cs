@@ -54,12 +54,22 @@ namespace GaneshaDx.Environment {
 				HandleZooming();
 			}
 
-			if (AppInput.ThisMouseState.RightButton == ButtonState.Pressed) {
-				HandlePanning();
-			}
+			bool swappedControls = Configuration.Properties.SwapCameraControls;
 
-			if (AppInput.ThisMouseState.MiddleButton == ButtonState.Pressed) {
+			bool handleRotation = !swappedControls && AppInput.MiddleMouseHeld ||
+			                      swappedControls && AppInput.RightMouseHeld ||
+			                      AppInput.AltHeld && !swappedControls && AppInput.RightMouseHeld ||
+			                      AppInput.AltHeld && swappedControls && AppInput.MiddleMouseHeld;
+
+			bool handlePanning = !swappedControls && AppInput.RightMouseHeld ||
+			                     swappedControls && AppInput.MiddleMouseHeld ||
+			                     AppInput.AltHeld && !swappedControls && AppInput.MiddleMouseHeld ||
+			                     AppInput.AltHeld && swappedControls && AppInput.RightMouseHeld;
+
+			if (handleRotation) {
 				HandleRotation();
+			} else if (handlePanning) {
+				HandlePanning();
 			}
 		}
 

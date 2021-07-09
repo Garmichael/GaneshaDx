@@ -30,6 +30,14 @@ namespace GaneshaDx.UserInterface.Input {
 		public static bool LeftMouseReleased;
 		public static bool LeftMouseHeld;
 
+		public static bool RightMouseClicked;
+		public static bool RightMouseReleased;
+		public static bool RightMouseHeld;
+
+		public static bool MiddleMouseClicked;
+		public static bool MiddleMouseReleased;
+		public static bool MiddleMouseHeld;
+
 		public static bool MouseScrolledUp;
 		public static bool MouseScrolledDown;
 		public static Vector2 MousePositionChange;
@@ -53,6 +61,18 @@ namespace GaneshaDx.UserInterface.Input {
 			LeftMouseReleased = ThisMouseState.LeftButton == ButtonState.Released &&
 			                    _lastMouseState.LeftButton == ButtonState.Pressed;
 			LeftMouseHeld = ThisMouseState.LeftButton == ButtonState.Pressed;
+			
+			RightMouseClicked = ThisMouseState.RightButton == ButtonState.Pressed &&
+			                   _lastMouseState.RightButton == ButtonState.Released;
+			RightMouseReleased = ThisMouseState.RightButton == ButtonState.Released &&
+			                    _lastMouseState.RightButton == ButtonState.Pressed;
+			RightMouseHeld = ThisMouseState.RightButton == ButtonState.Pressed;
+			
+			MiddleMouseClicked = ThisMouseState.MiddleButton == ButtonState.Pressed &&
+			                   _lastMouseState.MiddleButton == ButtonState.Released;
+			MiddleMouseReleased = ThisMouseState.MiddleButton == ButtonState.Released &&
+			                    _lastMouseState.MiddleButton == ButtonState.Pressed;
+			MiddleMouseHeld = ThisMouseState.MiddleButton == ButtonState.Pressed;
 			
 			MouseIsWithinModelViewport =
 				ThisMousePosition.Y > Stage.ModelingViewport.Y &&

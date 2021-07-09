@@ -100,6 +100,13 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				ImGui.Checkbox("###PreferencesShowFPS", ref Configuration.Properties.ShowFps);
 				ImGui.NextColumn();
 
+				ImGui.Text("Swap Camera Buttons");
+				ImGui.NextColumn();
+
+				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+				ImGui.Checkbox("###PreferencesSwapCameraControls", ref Configuration.Properties.SwapCameraControls);
+				ImGui.NextColumn();
+
 				ImGui.Columns(1);
 
 				GuiStyle.AddSpace();
