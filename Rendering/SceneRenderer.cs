@@ -230,7 +230,10 @@ namespace GaneshaDx.Rendering {
 				if (polygon.IsSelected && polygon != Selection.SelectedPolygons[0]) {
 					polygon.RenderVertexIndicators();
 				}
+			
+			}
 
+			if (Selection.SelectedPolygons.Count > 0) {
 				Selection.SelectedPolygons[0].RenderVertexIndicators();
 			}
 		}

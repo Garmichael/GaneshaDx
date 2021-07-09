@@ -55,6 +55,7 @@
 		ForwardAndReverseLooping,
 		ForwardOnceOnTrigger,
 		ReverseOnceOnTrigger,
+		Disabled,
 		Unknown
 	}
 

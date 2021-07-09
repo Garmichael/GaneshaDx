@@ -50,7 +50,13 @@ namespace GaneshaDx.Resources.ContentDataTypes.TextureAnimations {
 				1 => UvAnimationMode.ForwardLooping,
 				2 => UvAnimationMode.ForwardAndReverseLooping,
 				5 => UvAnimationMode.ForwardOnceOnTrigger,
+				6 => UvAnimationMode.ForwardOnceOnTrigger,
+				7 => UvAnimationMode.ForwardOnceOnTrigger,
+				8 => UvAnimationMode.ForwardOnceOnTrigger,
 				21 => UvAnimationMode.ReverseOnceOnTrigger,
+				23 => UvAnimationMode.ReverseOnceOnTrigger,
+				24 => UvAnimationMode.ReverseOnceOnTrigger,
+				0 => UvAnimationMode.Disabled,
 				_ => UvAnimationMode.Unknown
 			};
 

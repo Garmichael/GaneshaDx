@@ -36,6 +36,12 @@
     [5] [2] Game View shadow overlay
     [2] [3] Accurate rendering of Invisibility Angles when using camera controls
     [3] [2] Build Number-Border for Terrain
+    [1] [1] Make Terrain Tiles Semi-Transparent with a Slider
+    [2] [2] Uv Animations Wrap Around (Map 101)
+
+### Terrain
+
+    [1] [1] Allow Alt-Click to change First Terrain Tile
 
 ### Polygons
 
@@ -55,6 +61,8 @@
 ## Investigation
 
     - Map 41. Overridden Mesh File possibly linked to Removeable Objects
+    - Figure out polygon max count and add it to the UI
+    - Map 92 & 104. Palette Animation only plays once in game
 
 ## Consideration
 

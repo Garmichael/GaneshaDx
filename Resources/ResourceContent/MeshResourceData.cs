@@ -8,6 +8,7 @@ using GaneshaDx.Resources.ContentDataTypes.Polygons;
 using GaneshaDx.Resources.ContentDataTypes.Terrains;
 using GaneshaDx.Resources.ContentDataTypes.TextureAnimations;
 using Microsoft.Xna.Framework;
+using TextCopy;
 
 namespace GaneshaDx.Resources.ResourceContent {
 	public class MeshResourceData : ResourceData {
@@ -1345,8 +1346,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 						UvAnimationMode.ForwardAndReverseLooping => 2,
 						UvAnimationMode.ForwardOnceOnTrigger => 5,
 						UvAnimationMode.ReverseOnceOnTrigger => 21,
-						UvAnimationMode.Unknown => 1,
-						_ => 1
+						_ => 0
 					};
 
 					RawData.Add((byte) animationMode);
@@ -1388,7 +1388,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 		}
 
 		private void BuildRawDataPaletteAnimationFrames() {
-			if (!HasTextureAnimations) {
+			if (!HasTextureAnimations || !HasPaletteAnimationFrames) {
 				return;
 			}
 
