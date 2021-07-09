@@ -50,12 +50,14 @@ namespace GaneshaDx.Resources.ContentDataTypes.Terrains {
 			Stage.GraphicsDevice.SetVertexBuffer(Stage.UntexturedVertexBuffer);
 			Stage.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
-			float alpha = 1f;
+			float alpha;
 
 			if (Gui.SelectedTab == RightPanelTab.Polygon) {
 				alpha = Configuration.Properties.TerrainTransparencyForPolygonEditing / 100f;
 			} else if (Gui.SelectedTab != RightPanelTab.Terrain) {
 				alpha = 0;
+			} else {
+				alpha = Configuration.Properties.TerrainTransparencyForTerrainEditing / 100f;
 			}
 
 			Stage.BasicEffect.Alpha = alpha;

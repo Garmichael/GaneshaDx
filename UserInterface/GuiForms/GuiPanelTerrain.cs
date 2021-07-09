@@ -299,6 +299,27 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				ImGui.SetColumnWidth(0, GuiStyle.LabelWidth);
 				ImGui.SetColumnWidth(1, GuiStyle.WidgetWidth + 10);
 
+				ImGui.Text("Terrain Transparency");
+				ImGui.NextColumn();
+
+				ImGui.PushItemWidth(GuiStyle.WidgetWidth);
+				int beforeTerrainTransparency = Configuration.Properties.TerrainTransparencyForTerrainEditing;
+				ImGui.SliderInt(
+					"###terrainTransparency",
+					ref Configuration.Properties.TerrainTransparencyForTerrainEditing,
+					0, 100
+				);
+
+				if (beforeTerrainTransparency != Configuration.Properties.TerrainTransparencyForTerrainEditing) {
+					if (Configuration.Properties.TerrainTransparencyForTerrainEditing < 100) {
+						Configuration.Properties.PolygonTransparencyForTerrainEditing = 100;
+					}
+					
+					Configuration.SaveConfiguration();
+				}
+				
+				ImGui.NextColumn();
+				
 				ImGui.Text("Polygon Transparency");
 				ImGui.NextColumn();
 
@@ -311,6 +332,10 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				);
 
 				if (beforeTransparency != Configuration.Properties.PolygonTransparencyForTerrainEditing) {
+					if (Configuration.Properties.PolygonTransparencyForTerrainEditing < 100) {
+						Configuration.Properties.TerrainTransparencyForTerrainEditing = 100;
+					}
+
 					Configuration.SaveConfiguration();
 				}
 

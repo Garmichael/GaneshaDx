@@ -43,6 +43,7 @@ namespace GaneshaDx.Common {
 			public int TexturePreviewShiftArrowDistance = 20;
 			public float TranslateAxisControlSpeed = 0.33f;
 			public int PolygonTransparencyForTerrainEditing = 0;
+			public int TerrainTransparencyForTerrainEditing = 100;
 			public int TerrainTransparencyForPolygonEditing = 0;
 			public Vector3 TerrainColorForPolygonEditing = Utilities.ConvertVector3(Color.Cyan.ToVector3());
 			public bool RenderPolygonsInLightingMode = false;

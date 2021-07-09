@@ -181,8 +181,13 @@ namespace GaneshaDx.Rendering {
 			SetGraphicsDeviceProperties();
 
 			if (Gui.SelectedTab == RightPanelTab.Terrain) {
-				CurrentMapState.StateData.Terrain.Render();
-				RenderPolygons();
+				if (Configuration.Properties.TerrainTransparencyForTerrainEditing < 100) {
+					RenderPolygons();
+					CurrentMapState.StateData.Terrain.Render();
+				} else {
+					CurrentMapState.StateData.Terrain.Render();
+					RenderPolygons();
+				}
 			} else {
 				RenderPolygons();
 				CurrentMapState.StateData.Terrain.Render();
@@ -230,7 +235,6 @@ namespace GaneshaDx.Rendering {
 				if (polygon.IsSelected && polygon != Selection.SelectedPolygons[0]) {
 					polygon.RenderVertexIndicators();
 				}
-			
 			}
 
 			if (Selection.SelectedPolygons.Count > 0) {
