@@ -226,6 +226,60 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 					ImGui.NextColumn();
 
+
+					ImGui.Columns(1);
+
+					GuiStyle.AddSpace();
+					ImGui.Text("Auto-Rotates When Viewed From: ");
+					GuiStyle.AddSpace();
+					
+					ImGui.Columns(5, "TerrainPropertiesRotationAnglesColumns", false);
+					
+					const int mainLabelWidth = 80;
+					const int checkboxWidth = 20;
+
+					ImGui.Indent();
+
+					ImGui.SetColumnWidth(0, mainLabelWidth);
+					ImGui.SetColumnWidth(1, checkboxWidth + 10);
+					ImGui.SetColumnWidth(2, checkboxWidth + 10);
+					ImGui.SetColumnWidth(3, checkboxWidth + 10);
+					ImGui.SetColumnWidth(4, checkboxWidth + 10);
+
+					ImGui.NextColumn();
+
+					ImGui.Text("NW");
+					ImGui.NextColumn();
+					ImGui.Text("NE");
+					ImGui.NextColumn();
+					ImGui.Text("SW");
+					ImGui.NextColumn();
+					ImGui.Text("SE");
+					ImGui.NextColumn();
+
+					ImGui.Text("Top");
+					ImGui.NextColumn();
+					ImGui.Checkbox("##rotationTopNW" + tileIndex, ref tiles[tileIndex].RotatesNorthwestTop);
+					ImGui.NextColumn();
+					ImGui.Checkbox("##rotationTopNE" + tileIndex, ref tiles[tileIndex].RotatesNortheastTop);
+					ImGui.NextColumn();
+					ImGui.Checkbox("##rotationTopSW" + tileIndex, ref tiles[tileIndex].RotatesSouthwestTop);
+					ImGui.NextColumn();
+					ImGui.Checkbox("##rotationTopSE" + tileIndex, ref tiles[tileIndex].RotatesSoutheastTop);
+					ImGui.NextColumn();
+
+					ImGui.Text("Bottom");
+					ImGui.NextColumn();
+					ImGui.Checkbox("##rotationBottomNW" + tileIndex, ref tiles[tileIndex].RotatesNorthwestBottom);
+					ImGui.NextColumn();
+					ImGui.Checkbox("##rotationBottomNE" + tileIndex, ref tiles[tileIndex].RotatesNortheastBottom);
+					ImGui.NextColumn();
+					ImGui.Checkbox("##rotationBottomSW" + tileIndex, ref tiles[tileIndex].RotatesSouthwestBottom);
+					ImGui.NextColumn();
+					ImGui.Checkbox("##rotationBottomSE" + tileIndex, ref tiles[tileIndex].RotatesSoutheastBottom);
+					ImGui.NextColumn();
+					ImGui.Unindent();
+
 					ImGui.Columns(1);
 					ImGui.Unindent();
 					GuiStyle.AddSpace();

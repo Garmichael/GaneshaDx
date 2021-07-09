@@ -19,6 +19,14 @@ namespace GaneshaDx.Resources.ContentDataTypes.Terrains {
 		public int IndexX;
 		public int Level;
 		public List<Vector3> Vertices = new List<Vector3> {Vector3.Zero, Vector3.Zero, Vector3.Zero, Vector3.Zero};
+		public bool RotatesNorthwestTop;
+		public bool RotatesSouthwestTop;
+		public bool RotatesSoutheastTop;
+		public bool RotatesNortheastTop;
+		public bool RotatesNorthwestBottom;
+		public bool RotatesSouthwestBottom;
+		public bool RotatesSoutheastBottom;
+		public bool RotatesNortheastBottom;
 
 		public Vector3 AveragePoint {
 			get {
