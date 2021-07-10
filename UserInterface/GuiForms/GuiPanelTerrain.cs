@@ -232,9 +232,9 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					GuiStyle.AddSpace();
 					ImGui.Text("Auto-Rotates When Viewed From: ");
 					GuiStyle.AddSpace();
-					
+
 					ImGui.Columns(5, "TerrainPropertiesRotationAnglesColumns", false);
-					
+
 					const int mainLabelWidth = 80;
 					const int checkboxWidth = 20;
 
@@ -259,25 +259,114 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 					ImGui.Text("Top");
 					ImGui.NextColumn();
+
+					bool beforeValue = tiles[tileIndex].RotatesNorthwestTop;
 					ImGui.Checkbox("##rotationTopNW" + tileIndex, ref tiles[tileIndex].RotatesNorthwestTop);
+
+					if (beforeValue != tiles[tileIndex].RotatesNorthwestTop) {
+						foreach (TerrainTile selectedTerrainTile in Selection.SelectedTerrainTiles) {
+							if (selectedTerrainTile.Level == tiles[tileIndex].Level) {
+								selectedTerrainTile.RotatesNorthwestTop = tiles[tileIndex].RotatesNorthwestTop;
+							}
+						}
+					}
+
 					ImGui.NextColumn();
+
+					beforeValue = tiles[tileIndex].RotatesNortheastTop;
 					ImGui.Checkbox("##rotationTopNE" + tileIndex, ref tiles[tileIndex].RotatesNortheastTop);
+
+					if (beforeValue != tiles[tileIndex].RotatesNortheastTop) {
+						foreach (TerrainTile selectedTerrainTile in Selection.SelectedTerrainTiles) {
+							if (selectedTerrainTile.Level == tiles[tileIndex].Level) {
+								selectedTerrainTile.RotatesNortheastTop = tiles[tileIndex].RotatesNortheastTop;
+							}
+						}
+					}
+
 					ImGui.NextColumn();
+
+					beforeValue = tiles[tileIndex].RotatesSouthwestTop;
 					ImGui.Checkbox("##rotationTopSW" + tileIndex, ref tiles[tileIndex].RotatesSouthwestTop);
+
+					if (beforeValue != tiles[tileIndex].RotatesSouthwestTop) {
+						foreach (TerrainTile selectedTerrainTile in Selection.SelectedTerrainTiles) {
+							if (selectedTerrainTile.Level == tiles[tileIndex].Level) {
+								selectedTerrainTile.RotatesSouthwestTop = tiles[tileIndex].RotatesSouthwestTop;
+							}
+						}
+					}
+
 					ImGui.NextColumn();
+
+					beforeValue = tiles[tileIndex].RotatesSoutheastTop;
 					ImGui.Checkbox("##rotationTopSE" + tileIndex, ref tiles[tileIndex].RotatesSoutheastTop);
+
+					if (beforeValue != tiles[tileIndex].RotatesSoutheastTop) {
+						foreach (TerrainTile selectedTerrainTile in Selection.SelectedTerrainTiles) {
+							if (selectedTerrainTile.Level == tiles[tileIndex].Level) {
+								selectedTerrainTile.RotatesSoutheastTop = tiles[tileIndex].RotatesSoutheastTop;
+							}
+						}
+					}
+
 					ImGui.NextColumn();
 
 					ImGui.Text("Bottom");
 					ImGui.NextColumn();
+
+					beforeValue = tiles[tileIndex].RotatesNorthwestBottom;
 					ImGui.Checkbox("##rotationBottomNW" + tileIndex, ref tiles[tileIndex].RotatesNorthwestBottom);
+
+					if (beforeValue != tiles[tileIndex].RotatesNorthwestBottom) {
+						foreach (TerrainTile selectedTerrainTile in Selection.SelectedTerrainTiles) {
+							if (selectedTerrainTile.Level == tiles[tileIndex].Level) {
+								selectedTerrainTile.RotatesNorthwestBottom = tiles[tileIndex].RotatesNorthwestBottom;
+							}
+						}
+					}
+
 					ImGui.NextColumn();
+
+					beforeValue = tiles[tileIndex].RotatesNortheastBottom;
 					ImGui.Checkbox("##rotationBottomNE" + tileIndex, ref tiles[tileIndex].RotatesNortheastBottom);
+
+					if (beforeValue != tiles[tileIndex].RotatesNortheastBottom) {
+						foreach (TerrainTile selectedTerrainTile in Selection.SelectedTerrainTiles) {
+							if (selectedTerrainTile.Level == tiles[tileIndex].Level) {
+								selectedTerrainTile.RotatesNortheastBottom = tiles[tileIndex].RotatesNortheastBottom;
+							}
+						}
+					}
+
 					ImGui.NextColumn();
+
+					beforeValue = tiles[tileIndex].RotatesSouthwestBottom;
 					ImGui.Checkbox("##rotationBottomSW" + tileIndex, ref tiles[tileIndex].RotatesSouthwestBottom);
+
+					if (beforeValue != tiles[tileIndex].RotatesSouthwestBottom) {
+						foreach (TerrainTile selectedTerrainTile in Selection.SelectedTerrainTiles) {
+							if (selectedTerrainTile.Level == tiles[tileIndex].Level) {
+								selectedTerrainTile.RotatesSouthwestBottom = tiles[tileIndex].RotatesSouthwestBottom;
+							}
+						}
+					}
+
 					ImGui.NextColumn();
+
+					beforeValue = tiles[tileIndex].RotatesSoutheastBottom;
 					ImGui.Checkbox("##rotationBottomSE" + tileIndex, ref tiles[tileIndex].RotatesSoutheastBottom);
+
+					if (beforeValue != tiles[tileIndex].RotatesSoutheastBottom) {
+						foreach (TerrainTile selectedTerrainTile in Selection.SelectedTerrainTiles) {
+							if (selectedTerrainTile.Level == tiles[tileIndex].Level) {
+								selectedTerrainTile.RotatesSoutheastBottom = tiles[tileIndex].RotatesSoutheastBottom;
+							}
+						}
+					}
+
 					ImGui.NextColumn();
+
 					ImGui.Unindent();
 
 					ImGui.Columns(1);
@@ -314,12 +403,12 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					if (Configuration.Properties.TerrainTransparencyForTerrainEditing < 100) {
 						Configuration.Properties.PolygonTransparencyForTerrainEditing = 100;
 					}
-					
+
 					Configuration.SaveConfiguration();
 				}
-				
+
 				ImGui.NextColumn();
-				
+
 				ImGui.Text("Polygon Transparency");
 				ImGui.NextColumn();
 
