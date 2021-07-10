@@ -8,7 +8,6 @@ using GaneshaDx.Resources.ContentDataTypes.Polygons;
 using GaneshaDx.Resources.ContentDataTypes.Terrains;
 using GaneshaDx.Resources.ContentDataTypes.TextureAnimations;
 using Microsoft.Xna.Framework;
-using TextCopy;
 
 namespace GaneshaDx.Resources.ResourceContent {
 	public class MeshResourceData : ResourceData {
@@ -49,6 +48,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 		public bool HasTextureAnimations;
 		public bool HasTerrain;
 		public bool HasPaletteAnimationFrames;
+		public bool HasPolygonRenderProperties;
 
 		public readonly List<byte> RawData;
 
@@ -814,6 +814,8 @@ namespace GaneshaDx.Resources.ResourceContent {
 				return;
 			}
 
+			HasPolygonRenderProperties = true;
+			
 			const int unknownDataLength = 896;
 			const int totalTexturedTriangles = 512;
 			const int totalTexturedQuads = 768;
@@ -1595,7 +1597,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 		}
 
 		private void BuildRawDataRenderProperties() {
-			if (!HasPrimaryMesh) {
+			if (!HasPrimaryMesh || !HasPolygonRenderProperties) {
 				return;
 			}
 
