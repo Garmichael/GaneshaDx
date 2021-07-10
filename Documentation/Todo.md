@@ -34,8 +34,8 @@
     [5] [2] Game View shadow overlay
     [2] [3] Accurate rendering of Invisibility Angles when using camera controls
     [3] [2] Build Number-Border for Terrain
-    [1] [1] Make Terrain Tiles Semi-Transparent with a Slider
     [2] [2] Uv Animations Wrap Around (Map 101)
+    [5] [2] Compass Rose with N-E-S-W on it
 
 ### Terrain
 
