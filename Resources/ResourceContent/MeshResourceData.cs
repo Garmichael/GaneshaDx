@@ -660,13 +660,13 @@ namespace GaneshaDx.Resources.ResourceContent {
 
 						string rotationAngles = Utilities.GetBinaryFromInt(RawData[_currentByteIndex + 7]);
 						bool rotatesNorthwestTop = rotationAngles.Substring(0, 1) == "1";
-						bool rotatesSoutheastTop = rotationAngles.Substring(1, 1) == "1";
-						bool rotatesSouthwestTop = rotationAngles.Substring(2, 1) == "1";
+						bool rotatesSouthwestTop = rotationAngles.Substring(1, 1) == "1";
+						bool rotatesSoutheastTop = rotationAngles.Substring(2, 1) == "1";
 						bool rotatesNortheastTop = rotationAngles.Substring(3, 1) == "1";
 
 						bool rotatesNorthwestBottom = rotationAngles.Substring(4, 1) == "1";
-						bool rotatesSoutheastBottom = rotationAngles.Substring(5, 1) == "1";
-						bool rotatesSouthwestBottom = rotationAngles.Substring(6, 1) == "1";
+						bool rotatesSouthwestBottom = rotationAngles.Substring(5, 1) == "1";
+						bool rotatesSoutheastBottom = rotationAngles.Substring(6, 1) == "1";
 						bool rotatesNortheastBottom = rotationAngles.Substring(7, 1) == "1";
 
 						TerrainTile terrainTile = new TerrainTile {
@@ -1320,12 +1320,12 @@ namespace GaneshaDx.Resources.ResourceContent {
 
 						binary = "";
 						binary += terrainTile.RotatesNorthwestTop ? "1" : "0";
-						binary += terrainTile.RotatesSoutheastTop ? "1" : "0";
 						binary += terrainTile.RotatesSouthwestTop ? "1" : "0";
+						binary += terrainTile.RotatesSoutheastTop ? "1" : "0";
 						binary += terrainTile.RotatesNortheastTop ? "1" : "0";
 						binary += terrainTile.RotatesNorthwestBottom ? "1" : "0";
-						binary += terrainTile.RotatesSoutheastBottom ? "1" : "0";
 						binary += terrainTile.RotatesSouthwestBottom ? "1" : "0";
+						binary += terrainTile.RotatesSoutheastBottom ? "1" : "0";
 						binary += terrainTile.RotatesNortheastBottom ? "1" : "0";
 						
 						RawData.Add((byte) Utilities.GetIntFromBinary(binary));
