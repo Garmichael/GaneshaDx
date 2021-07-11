@@ -19,8 +19,39 @@ namespace GaneshaDx.Environment {
 		public static double ZoomLevel = 1;
 		public const float TopElevation = 90f - 39.37f;
 		public const float BottomElevation = 90f - 26.54f;
+		public const float CameraSpinSpeed = 10;
+		private static bool _cameraIsSpinningHorizontally;
+		private static bool _cameraIsSpinningVertically;
+		private static CameraView _cameraSpinningDestinationAngle;
+		private static CameraElevation _cameraSpinningDestinationElevation;
+		private static RotationDirection _cameraSpinningRotationDirection;
+
+		private static readonly Dictionary<CameraView, float> CameraValues = new Dictionary<CameraView, float> {
+			{CameraView.Northwest, 225},
+			{CameraView.Northeast, 315},
+			{CameraView.Southwest, 135},
+			{CameraView.Southeast, 45},
+		};
+
+		public enum CameraView {
+			Northwest,
+			Northeast,
+			Southwest,
+			Southeast
+		}
+
+		public enum CameraElevation {
+			Top,
+			Bottom
+		}
+
+		public enum RotationDirection {
+			Left,
+			Right
+		}
 
 		public static void Update() {
+			AnimateSpinningCamera();
 			HandleInput();
 			SetCameraState();
 		}
@@ -42,6 +73,85 @@ namespace GaneshaDx.Environment {
 				}
 
 				CamTarget = Utilities.GetAveragePoint(averagePoints);
+			}
+		}
+
+		public static void SpinCameraTo(CameraView cameraView, CameraElevation cameraElevation) {
+			SpinCameraTo(cameraView);
+			SpinCameraTo(cameraElevation);
+		}
+
+		public static void SpinCameraTo(CameraView cameraView) {
+			_cameraSpinningDestinationAngle = cameraView;
+			_cameraIsSpinningHorizontally = true;
+			_cameraSpinningRotationDirection = cameraView switch {
+				CameraView.Northwest => CameraHorizontalAngle > CameraValues[CameraView.Southeast] &&
+				                        CameraHorizontalAngle < CameraValues[CameraView.Northwest]
+					? RotationDirection.Left
+					: RotationDirection.Right,
+				CameraView.Northeast => CameraHorizontalAngle > CameraValues[CameraView.Southwest] &&
+				                        CameraHorizontalAngle < CameraValues[CameraView.Northeast]
+					? RotationDirection.Left
+					: RotationDirection.Right,
+				CameraView.Southwest => CameraHorizontalAngle > CameraValues[CameraView.Northeast] ||
+				                        CameraHorizontalAngle < CameraValues[CameraView.Southwest]
+					? RotationDirection.Left
+					: RotationDirection.Right,
+				CameraView.Southeast => CameraHorizontalAngle > CameraValues[CameraView.Northwest] ||
+				                        CameraHorizontalAngle < CameraValues[CameraView.Southeast]
+					? RotationDirection.Left
+					: RotationDirection.Right,
+				_ => _cameraSpinningRotationDirection
+			};
+		}
+
+		public static void SpinCameraTo(CameraElevation cameraElevation) {
+			_cameraSpinningDestinationElevation = cameraElevation;
+			_cameraIsSpinningVertically = true;
+		}
+
+		private static void AnimateSpinningCamera() {
+			while (CameraHorizontalAngle > 360) {
+				CameraHorizontalAngle -= 360;
+			}
+
+			while (CameraHorizontalAngle < 0) {
+				CameraHorizontalAngle += 360;
+			}
+
+			if (_cameraIsSpinningHorizontally) {
+				double distanceToHorizontalDestination =
+					Math.Abs(CameraHorizontalAngle - CameraValues[_cameraSpinningDestinationAngle]);
+
+				if (_cameraSpinningRotationDirection == RotationDirection.Left) {
+					CameraHorizontalAngle += CameraSpinSpeed;
+					if (distanceToHorizontalDestination <= CameraSpinSpeed) {
+						CameraHorizontalAngle = CameraValues[_cameraSpinningDestinationAngle];
+						_cameraIsSpinningHorizontally = false;
+					}
+				} else {
+					CameraHorizontalAngle -= CameraSpinSpeed;
+					if (distanceToHorizontalDestination <= CameraSpinSpeed) {
+						CameraHorizontalAngle = CameraValues[_cameraSpinningDestinationAngle];
+						_cameraIsSpinningHorizontally = false;
+					}
+				}
+			}
+
+			if (_cameraIsSpinningVertically) {
+				float destinationElevation = _cameraSpinningDestinationElevation == CameraElevation.Top
+					? TopElevation
+					: BottomElevation;
+				double distanceToVerticalDestination = Math.Abs(CameraHeightAngle - destinationElevation);
+
+				if (distanceToVerticalDestination <= CameraSpinSpeed) {
+					CameraHeightAngle = destinationElevation;
+					_cameraIsSpinningVertically = false;
+				} else if (CameraHeightAngle < destinationElevation) {
+					CameraHeightAngle += CameraSpinSpeed;
+				} else {
+					CameraHeightAngle -= CameraSpinSpeed;
+				}
 			}
 		}
 
@@ -70,6 +180,50 @@ namespace GaneshaDx.Environment {
 				HandleRotation();
 			} else if (handlePanning) {
 				HandlePanning();
+			}
+
+			if (AppInput.KeyJustPressed(Keys.Up)) {
+				SpinCameraTo(CameraElevation.Top);
+			}
+
+			if (AppInput.KeyJustPressed(Keys.Down)) {
+				SpinCameraTo(CameraElevation.Bottom);
+			}
+
+			if (AppInput.KeyJustPressed(Keys.Left)) {
+				if (CameraHorizontalAngle >= CameraValues[CameraView.Southwest] &&
+				    CameraHorizontalAngle < CameraValues[CameraView.Northwest]
+				) {
+					SpinCameraTo(CameraView.Northwest);
+				} else if (CameraHorizontalAngle >= CameraValues[CameraView.Northwest] &&
+				           CameraHorizontalAngle < CameraValues[CameraView.Northeast]
+				) {
+					SpinCameraTo(CameraView.Northeast);
+				} else if (CameraHorizontalAngle >= CameraValues[CameraView.Northeast] ||
+				           CameraHorizontalAngle < CameraValues[CameraView.Southeast]
+				) {
+					SpinCameraTo(CameraView.Southeast);
+				} else {
+					SpinCameraTo(CameraView.Southwest);
+				}
+			}
+
+			if (AppInput.KeyJustPressed(Keys.Right)) {
+				if (CameraHorizontalAngle <= CameraValues[CameraView.Northwest] &&
+				    CameraHorizontalAngle > CameraValues[CameraView.Southwest]
+				) {
+					SpinCameraTo(CameraView.Southwest);
+				} else if (CameraHorizontalAngle <= CameraValues[CameraView.Southwest] &&
+				           CameraHorizontalAngle > CameraValues[CameraView.Southeast]
+				) {
+					SpinCameraTo(CameraView.Southeast);
+				} else if (CameraHorizontalAngle <= CameraValues[CameraView.Southeast] ||
+				           CameraHorizontalAngle > CameraValues[CameraView.Northeast]
+				) {
+					SpinCameraTo(CameraView.Northeast);
+				} else {
+					SpinCameraTo(CameraView.Northwest);
+				}
 			}
 		}
 
@@ -116,6 +270,9 @@ namespace GaneshaDx.Environment {
 		}
 
 		private static void HandleRotation() {
+			_cameraIsSpinningHorizontally = false;
+			_cameraIsSpinningVertically = false;
+
 			int direction = Configuration.Properties.InvertedRotation
 				? -1
 				: 1;

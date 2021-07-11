@@ -815,7 +815,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 			}
 
 			HasPolygonRenderProperties = true;
-			
+
 			const int unknownDataLength = 896;
 			const int totalTexturedTriangles = 512;
 			const int totalTexturedQuads = 768;
@@ -914,9 +914,6 @@ namespace GaneshaDx.Resources.ResourceContent {
 			BuildRawDataMeshTextureProperties(MeshType.PrimaryMesh);
 			BuildRawDataMeshUnknownData(MeshType.PrimaryMesh);
 			BuildRawDataMeshTerrainDefinitions(MeshType.PrimaryMesh);
-
-			RawData.Add(0);
-			RawData.Add(0);
 		}
 
 		private void BuildRawDataMeshHeader(MeshType meshType) {
@@ -1177,9 +1174,6 @@ namespace GaneshaDx.Resources.ResourceContent {
 			BuildRawDataDirectionalLights();
 			BuildRawDataAmbientLight();
 			BuildRawDataBackgroundColors();
-			RawData.Add(0);
-			RawData.Add(0);
-			RawData.Add(0);
 		}
 
 		private void BuildRawDataDirectionalLights() {
@@ -1267,8 +1261,6 @@ namespace GaneshaDx.Resources.ResourceContent {
 
 			BuildRawDataTerrainHeader();
 			BuildRawDataTerrainMain();
-			RawData.Add(0);
-			RawData.Add(0);
 		}
 
 		private void BuildRawDataTerrainHeader() {
@@ -1327,7 +1319,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 						binary += terrainTile.RotatesSouthwestBottom ? "1" : "0";
 						binary += terrainTile.RotatesSoutheastBottom ? "1" : "0";
 						binary += terrainTile.RotatesNortheastBottom ? "1" : "0";
-						
+
 						RawData.Add((byte) Utilities.GetIntFromBinary(binary));
 					}
 				}
