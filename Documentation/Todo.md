@@ -63,7 +63,3 @@
     - Map 41. Overridden Mesh File possibly linked to Removeable Objects
     - Figure out polygon max count and add it to the UI
     - Map 92 & 104. Palette Animation only plays once in game
-
-## Consideration
-
-    - Make Grid snapping the default with a config?

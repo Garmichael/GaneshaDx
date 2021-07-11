@@ -230,7 +230,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					ImGui.Columns(1);
 
 					GuiStyle.AddSpace();
-					ImGui.Text("Auto-Rotates When Viewed From: ");
+					ImGui.Text("Auto-Rotates When Camera Facing: ");
 					GuiStyle.AddSpace();
 
 					ImGui.Columns(5, "TerrainPropertiesRotationAnglesColumns", false);

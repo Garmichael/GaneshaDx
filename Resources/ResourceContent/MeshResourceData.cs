@@ -1664,22 +1664,22 @@ namespace GaneshaDx.Resources.ResourceContent {
 		}
 
 		private List<byte> BuildRawDataRenderPropertiesPerPolygon(Polygon polygon) {
-			string highBinary = (polygon.RenderingProperties.InvisibleWestNorthWest ? "1" : "0") +
-			                    (polygon.RenderingProperties.InvisibleNorthNorthwest ? "1" : "0") +
-			                    (polygon.RenderingProperties.InvisibleNorthNortheast ? "1" : "0") +
-			                    (polygon.RenderingProperties.InvisibleEastNortheast ? "1" : "0") +
-			                    (polygon.RenderingProperties.InvisibleEastSoutheast ? "1" : "0") +
+			string highBinary = (polygon.RenderingProperties.InvisibleEastSoutheast ? "1" : "0") +
 			                    (polygon.RenderingProperties.InvisibleSouthSoutheast ? "1" : "0") +
+			                    (polygon.RenderingProperties.InvisibleSouthSouthwest ? "1" : "0") +
+			                    (polygon.RenderingProperties.InvisibleWestSouthwest ? "1" : "0") +
+			                    (polygon.RenderingProperties.InvisibleWestNorthWest ? "1" : "0") +
+			                    (polygon.RenderingProperties.InvisibleNorthNorthwest ? "1" : "0") +
 			                    "00";
 
 			string lowBinary = (polygon.RenderingProperties.LitTexture ? "1" : "0") +
 			                   "0" +
-			                   (polygon.RenderingProperties.InvisibleSouthwest ? "1" : "0") +
-			                   (polygon.RenderingProperties.InvisibleNorthwest ? "1" : "0") +
 			                   (polygon.RenderingProperties.InvisibleNortheast ? "1" : "0") +
 			                   (polygon.RenderingProperties.InvisibleSoutheast ? "1" : "0") +
-			                   (polygon.RenderingProperties.InvisibleSouthSouthwest ? "1" : "0") +
-			                   (polygon.RenderingProperties.InvisibleWestSouthwest ? "1" : "0");
+			                   (polygon.RenderingProperties.InvisibleSouthwest ? "1" : "0") +
+			                   (polygon.RenderingProperties.InvisibleNorthwest ? "1" : "0") +
+			                   (polygon.RenderingProperties.InvisibleNorthNortheast ? "1" : "0") +
+			                   (polygon.RenderingProperties.InvisibleEastNortheast ? "1" : "0");
 
 			return new List<byte> {
 				(byte) Utilities.GetIntFromBinary(highBinary),

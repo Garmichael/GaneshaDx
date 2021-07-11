@@ -516,6 +516,10 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			if (ImGui.CollapsingHeader("Invisibility Angles", ImGuiTreeNodeFlags.DefaultOpen)) {
 				GuiStyle.SetNewUiToDefaultStyle();
 				ImGui.Indent();
+				
+				ImGui.Text("Hide Polygon when Camera Facing:");
+				GuiStyle.AddSpace();
+				
 				ImGui.Columns(5, "InvisibilityAnglesColumns", false);
 
 				ImGui.SetColumnWidth(0, GuiStyle.CheckBoxWidth);
