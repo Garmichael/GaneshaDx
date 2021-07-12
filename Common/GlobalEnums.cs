@@ -148,13 +148,13 @@
 	}
 
 	public enum MeshAnimationKeyFrameType {
-		None,
 		TweenTo,
 		TweenBy,
-		Unknown9,
-		Unknown10,
-		Unknown17,
-		Unknown18,
-		Other
+		Oscillate,
+		SnapTo,
+		OscillateOffset,
+		Ignore,
+		IgnoreAlt,
+		Unknown
 	}
 }

@@ -42,6 +42,7 @@
 ### Terrain
 
     [1] [1] Allow Alt-Click to change First Terrain Tile
+    [2] [2] Render non-red tiles on top when both are the same
 
 ### Polygons
 

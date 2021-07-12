@@ -37,14 +37,14 @@ namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 
 		private MeshAnimationKeyFrameType ConvertKeyFrameType(int value) {
 			MeshAnimationKeyFrameType type = value switch {
-				0 => MeshAnimationKeyFrameType.None,
+				0 => MeshAnimationKeyFrameType.IgnoreAlt,
 				5 => MeshAnimationKeyFrameType.TweenTo,
 				6 => MeshAnimationKeyFrameType.TweenBy,
-				9 => MeshAnimationKeyFrameType.Unknown9,
-				10 => MeshAnimationKeyFrameType.Unknown10,
-				17 => MeshAnimationKeyFrameType.Unknown17,
-				18 => MeshAnimationKeyFrameType.Unknown18,
-				_ => MeshAnimationKeyFrameType.Other
+				9 => MeshAnimationKeyFrameType.Ignore,
+				10 => MeshAnimationKeyFrameType.Oscillate,
+				17 => MeshAnimationKeyFrameType.SnapTo,
+				18 => MeshAnimationKeyFrameType.OscillateOffset,
+				_ => MeshAnimationKeyFrameType.Unknown
 			};
 
 			return type;
@@ -52,13 +52,13 @@ namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 
 		private int ConvertKeyFrameType(MeshAnimationKeyFrameType value) {
 			int type = value switch {
-				 MeshAnimationKeyFrameType.None=> 0,
+				 MeshAnimationKeyFrameType.IgnoreAlt=> 0,
 				 MeshAnimationKeyFrameType.TweenTo=> 5,
 				 MeshAnimationKeyFrameType.TweenBy=> 6,
-				 MeshAnimationKeyFrameType.Unknown9=> 9,
-				 MeshAnimationKeyFrameType.Unknown10=> 10,
-				 MeshAnimationKeyFrameType.Unknown17=> 17,
-				 MeshAnimationKeyFrameType.Unknown18=> 18,
+				 MeshAnimationKeyFrameType.Ignore=> 9,
+				 MeshAnimationKeyFrameType.Oscillate=> 10,
+				 MeshAnimationKeyFrameType.SnapTo=> 17,
+				 MeshAnimationKeyFrameType.OscillateOffset=> 18,
 				_ => 99
 			};
 
