@@ -172,5 +172,57 @@ namespace GaneshaDx.Resources.ContentDataTypes.Terrains {
 
 			return returnColor;
 		}
+
+		public List<byte> GetRawData() {
+			List<byte> rawData = new List<byte>();
+			int surfaceTypeId = 0;
+
+			foreach (KeyValuePair<int, TerrainSurfaceType> surfaceType in CommonLists.TerrainSurfaceTypes) {
+				if (surfaceType.Value == SurfaceType) {
+					surfaceTypeId = surfaceType.Key;
+					break;
+				}
+			}
+
+			string binary = "00" + Utilities.GetBinaryFromInt(surfaceTypeId, 6);
+			rawData.Add((byte) Utilities.GetIntFromBinary(binary));
+			rawData.Add(0);
+			rawData.Add((byte) Height);
+
+			binary = Utilities.GetBinaryFromInt(Depth, 3) +
+			         Utilities.GetBinaryFromInt(SlopeHeight, 5);
+			rawData.Add((byte) Utilities.GetIntFromBinary(binary));
+
+			int slopeTypeId = 0;
+			foreach (KeyValuePair<int, TerrainSlopeType> slopeType in CommonLists.TerrainSlopeTypes) {
+				if (slopeType.Value == SlopeType) {
+					slopeTypeId = slopeType.Key;
+					break;
+				}
+			}
+
+			rawData.Add((byte) slopeTypeId);
+
+			rawData.Add(0);
+
+			binary = "00000000000000" +
+			         (Impassable ? "1" : "0") +
+			         (Unselectable ? "1" : "0");
+			rawData.Add((byte) Utilities.GetIntFromBinary(binary));
+
+			binary = "";
+			binary += RotatesNorthwestTop ? "1" : "0";
+			binary += RotatesSouthwestTop ? "1" : "0";
+			binary += RotatesSoutheastTop ? "1" : "0";
+			binary += RotatesNortheastTop ? "1" : "0";
+			binary += RotatesNorthwestBottom ? "1" : "0";
+			binary += RotatesSouthwestBottom ? "1" : "0";
+			binary += RotatesSoutheastBottom ? "1" : "0";
+			binary += RotatesNortheastBottom ? "1" : "0";
+
+			rawData.Add((byte) Utilities.GetIntFromBinary(binary));
+
+			return rawData;
+		}
 	}
 }

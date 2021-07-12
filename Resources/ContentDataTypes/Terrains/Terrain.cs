@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using GaneshaDx.Common;
 
 namespace GaneshaDx.Resources.ContentDataTypes.Terrains {
 	public class Terrain {
@@ -106,6 +107,33 @@ namespace GaneshaDx.Resources.ContentDataTypes.Terrains {
 			return terrainTile.Level == 0
 				? Level1Tiles[terrainTile.IndexZ][terrainTile.IndexX]
 				: Level0Tiles[terrainTile.IndexZ][terrainTile.IndexX];
+		}
+
+		public List<byte> GetRawData() {
+			List<byte> rawData = new List<byte>();
+			List<List<List<TerrainTile>>> allLevels = new List<List<List<TerrainTile>>> {Level0Tiles, Level1Tiles};
+
+			foreach (List<List<TerrainTile>> terrainLevel in allLevels) {
+				foreach (List<TerrainTile> row in terrainLevel) {
+					foreach (TerrainTile terrainTile in row) {
+						rawData.AddRange(terrainTile.GetRawData());
+					}
+				}
+
+				int totalTiles = SizeX * SizeZ;
+				const int totalSpaceForTiles = 256;
+				const int totalBytesPerTile = 8;
+
+				while (totalTiles < totalSpaceForTiles) {
+					for (int i = 0; i < totalBytesPerTile; i++) {
+						rawData.Add(0);
+					}
+
+					totalTiles++;
+				}
+			}
+
+			return rawData;
 		}
 	}
 }

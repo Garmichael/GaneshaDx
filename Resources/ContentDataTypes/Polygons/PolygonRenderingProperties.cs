@@ -1,4 +1,7 @@
-﻿namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
+﻿using System.Collections.Generic;
+using GaneshaDx.Common;
+
+namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 	public class PolygonRenderingProperties {
 		public readonly string RawData;
 		public bool InvisibleNorthwest;
@@ -41,6 +44,30 @@
 			InvisibleNorthNorthwest = RawData.Substring(13, 1) == "1";
 			_unknownB = RawData.Substring(14, 1) == "1";
 			_unknownC = RawData.Substring(15, 1) == "1";
+		}
+
+		public List<byte> GetRawData() {
+			string highBinary = (InvisibleEastSoutheast ? "1" : "0") +
+			                    (InvisibleSouthSoutheast ? "1" : "0") +
+			                    (InvisibleSouthSouthwest ? "1" : "0") +
+			                    (InvisibleWestSouthwest ? "1" : "0") +
+			                    (InvisibleWestNorthWest ? "1" : "0") +
+			                    (InvisibleNorthNorthwest ? "1" : "0") +
+			                    "00";
+
+			string lowBinary = (LitTexture ? "1" : "0") +
+			                   "0" +
+			                   (InvisibleNortheast ? "1" : "0") +
+			                   (InvisibleSoutheast ? "1" : "0") +
+			                   (InvisibleSouthwest ? "1" : "0") +
+			                   (InvisibleNorthwest ? "1" : "0") +
+			                   (InvisibleNorthNortheast ? "1" : "0") +
+			                   (InvisibleEastNortheast ? "1" : "0");
+
+			return new List<byte> {
+				(byte) Utilities.GetIntFromBinary(highBinary),
+				(byte) Utilities.GetIntFromBinary(lowBinary)
+			};
 		}
 	}
 }

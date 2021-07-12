@@ -76,5 +76,38 @@ namespace GaneshaDx.Resources.ContentDataTypes.TextureAnimations {
 				FirstFrameTexturePage++;
 			}
 		}
+
+		public List<byte> GetRawData() {
+			int animationMode = UvAnimationMode switch {
+				UvAnimationMode.ForwardLooping => 1,
+				UvAnimationMode.ForwardAndReverseLooping => 2,
+				UvAnimationMode.ForwardOnceOnTrigger => 5,
+				UvAnimationMode.ReverseOnceOnTrigger => 21,
+				_ => 0
+			};
+
+			return new List<byte> {
+				(byte) ((CanvasX + CanvasTexturePage * 256) / 4f),
+				3,
+				(byte) CanvasY,
+				0,
+				(byte) (SizeWidth / 4f),
+				0,
+				(byte) SizeHeight,
+				0,
+				(byte) ((FirstFrameX + FirstFrameTexturePage * 256) / 4f),
+				3,
+				(byte) FirstFrameY,
+				0,
+				0,
+				0,
+				(byte) animationMode,
+				(byte) FrameCount,
+				0,
+				(byte) FrameDuration,
+				0,
+				0
+			};
+		}
 	}
 }

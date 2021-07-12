@@ -1146,20 +1146,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 				Utilities.GetLittleEndianFromInt(RawData.Count);
 
 			foreach (Palette palette in Palettes) {
-				foreach (PaletteColor color in palette.Colors) {
-					string binary = "";
-
-					binary += color.IsTransparent ? "0" : "1";
-					binary += Utilities.GetBinaryFromInt(color.Blue, 5);
-					binary += Utilities.GetBinaryFromInt(color.Green, 5);
-					binary += Utilities.GetBinaryFromInt(color.Red, 5);
-
-					byte high = (byte) Utilities.GetIntFromBinary(binary.Substring(0, 8));
-					byte low = (byte) Utilities.GetIntFromBinary(binary.Substring(8, 8));
-
-					RawData.Add(low);
-					RawData.Add(high);
-				}
+				RawData.AddRange(palette.GetRawData());
 			}
 		}
 
@@ -1259,83 +1246,9 @@ namespace GaneshaDx.Resources.ResourceContent {
 			(RawData[TerrainPointer], RawData[TerrainPointer + 1]) =
 				Utilities.GetLittleEndianFromInt(RawData.Count);
 
-			BuildRawDataTerrainHeader();
-			BuildRawDataTerrainMain();
-		}
-
-		private void BuildRawDataTerrainHeader() {
 			RawData.Add((byte) Terrain.SizeX);
 			RawData.Add((byte) Terrain.SizeZ);
-		}
-
-		private void BuildRawDataTerrainMain() {
-			List<List<List<TerrainTile>>> allLevels =
-				new List<List<List<TerrainTile>>> {Terrain.Level0Tiles, Terrain.Level1Tiles};
-
-			foreach (List<List<TerrainTile>> terrainLevel in allLevels) {
-				foreach (List<TerrainTile> row in terrainLevel) {
-					foreach (TerrainTile terrainTile in row) {
-						int surfaceTypeId = 0;
-
-						foreach (KeyValuePair<int, TerrainSurfaceType> surfaceType in CommonLists.TerrainSurfaceTypes) {
-							if (surfaceType.Value == terrainTile.SurfaceType) {
-								surfaceTypeId = surfaceType.Key;
-								break;
-							}
-						}
-
-						string binary = "00" + Utilities.GetBinaryFromInt(surfaceTypeId, 6);
-						RawData.Add((byte) Utilities.GetIntFromBinary(binary));
-						RawData.Add(0);
-						RawData.Add((byte) terrainTile.Height);
-
-						binary = Utilities.GetBinaryFromInt(terrainTile.Depth, 3) +
-						         Utilities.GetBinaryFromInt(terrainTile.SlopeHeight, 5);
-						RawData.Add((byte) Utilities.GetIntFromBinary(binary));
-
-						int slopeTypeId = 0;
-						foreach (KeyValuePair<int, TerrainSlopeType> slopeType in CommonLists.TerrainSlopeTypes) {
-							if (slopeType.Value == terrainTile.SlopeType) {
-								slopeTypeId = slopeType.Key;
-								break;
-							}
-						}
-
-						RawData.Add((byte) slopeTypeId);
-
-						RawData.Add(0);
-
-						binary = "00000000000000" +
-						         (terrainTile.Impassable ? "1" : "0") +
-						         (terrainTile.Unselectable ? "1" : "0");
-						RawData.Add((byte) Utilities.GetIntFromBinary(binary));
-
-						binary = "";
-						binary += terrainTile.RotatesNorthwestTop ? "1" : "0";
-						binary += terrainTile.RotatesSouthwestTop ? "1" : "0";
-						binary += terrainTile.RotatesSoutheastTop ? "1" : "0";
-						binary += terrainTile.RotatesNortheastTop ? "1" : "0";
-						binary += terrainTile.RotatesNorthwestBottom ? "1" : "0";
-						binary += terrainTile.RotatesSouthwestBottom ? "1" : "0";
-						binary += terrainTile.RotatesSoutheastBottom ? "1" : "0";
-						binary += terrainTile.RotatesNortheastBottom ? "1" : "0";
-
-						RawData.Add((byte) Utilities.GetIntFromBinary(binary));
-					}
-				}
-
-				int totalTiles = Terrain.SizeX * Terrain.SizeZ;
-				const int totalSpaceForTiles = 256;
-				const int totalBytesPerTile = 8;
-
-				while (totalTiles < totalSpaceForTiles) {
-					for (int i = 0; i < totalBytesPerTile; i++) {
-						RawData.Add(0);
-					}
-
-					totalTiles++;
-				}
-			}
+			RawData.AddRange(Terrain.GetRawData());
 		}
 
 		private void BuildRawDataTextureAnimations() {
@@ -1347,72 +1260,12 @@ namespace GaneshaDx.Resources.ResourceContent {
 				Utilities.GetLittleEndianFromInt(RawData.Count);
 
 			foreach (AnimatedTextureInstructions textureAnimation in AnimatedTextureInstructions) {
-				if (textureAnimation.TextureAnimationType == TextureAnimationType.UvAnimation) {
-					UvAnimation instructions = (UvAnimation) textureAnimation.Instructions;
-
-					RawData.Add((byte) ((instructions.CanvasX + instructions.CanvasTexturePage * 256) / 4f));
-					RawData.Add(3);
-					RawData.Add((byte) instructions.CanvasY);
-					RawData.Add(0);
-					RawData.Add((byte) (instructions.SizeWidth / 4f));
-					RawData.Add(0);
-					RawData.Add((byte) instructions.SizeHeight);
-					RawData.Add(0);
-					RawData.Add((byte) ((instructions.FirstFrameX + instructions.FirstFrameTexturePage * 256) / 4f));
-					RawData.Add(3);
-					RawData.Add((byte) instructions.FirstFrameY);
-					RawData.Add(0);
-					RawData.Add(0);
-					RawData.Add(0);
-
-					int animationMode = instructions.UvAnimationMode switch {
-						UvAnimationMode.ForwardLooping => 1,
-						UvAnimationMode.ForwardAndReverseLooping => 2,
-						UvAnimationMode.ForwardOnceOnTrigger => 5,
-						UvAnimationMode.ReverseOnceOnTrigger => 21,
-						_ => 0
-					};
-
-					RawData.Add((byte) animationMode);
-					RawData.Add((byte) instructions.FrameCount);
-					RawData.Add(0);
-					RawData.Add((byte) instructions.FrameDuration);
-					RawData.Add(0);
-					RawData.Add(0);
-				} else if (textureAnimation.TextureAnimationType == TextureAnimationType.PaletteAnimation) {
-					PaletteAnimation instructions = (PaletteAnimation) textureAnimation.Instructions;
-
-					string binary = Utilities.GetBinaryFromInt(instructions.OverriddenPaletteId, 4) + "0000";
-					RawData.Add((byte) Utilities.GetIntFromBinary(binary));
-					RawData.Add(0);
-					RawData.Add(224);
-					RawData.Add(1);
-					RawData.Add(0);
-					RawData.Add(0);
-					RawData.Add(0);
-					RawData.Add(0);
-					RawData.Add((byte) instructions.AnimationStartIndex);
-					RawData.Add(0);
-					RawData.Add(0);
-					RawData.Add(0);
-					RawData.Add(0);
-					RawData.Add(0);
-					RawData.Add(3);
-					RawData.Add((byte) instructions.FrameCount);
-					RawData.Add(0);
-					RawData.Add((byte) instructions.FrameDuration);
-					RawData.Add(0);
-					RawData.Add(0);
-				} else {
-					for (int i = 0; i < 20; i++) {
-						RawData.Add(0);
-					}
-				}
+				RawData.AddRange(textureAnimation.GetRawData());
 			}
 		}
 
 		private void BuildRawDataPaletteAnimationFrames() {
-			if (!HasTextureAnimations || !HasPaletteAnimationFrames) {
+			if (!HasPaletteAnimationFrames) {
 				return;
 			}
 
@@ -1420,20 +1273,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 				Utilities.GetLittleEndianFromInt(RawData.Count);
 
 			foreach (Palette palette in PaletteAnimationFrames) {
-				foreach (PaletteColor color in palette.Colors) {
-					string binary = "";
-
-					binary += color.IsTransparent ? "0" : "1";
-					binary += Utilities.GetBinaryFromInt(color.Blue, 5);
-					binary += Utilities.GetBinaryFromInt(color.Green, 5);
-					binary += Utilities.GetBinaryFromInt(color.Red, 5);
-
-					byte high = (byte) Utilities.GetIntFromBinary(binary.Substring(0, 8));
-					byte low = (byte) Utilities.GetIntFromBinary(binary.Substring(8, 8));
-
-					RawData.Add(low);
-					RawData.Add(high);
-				}
+				RawData.AddRange(palette.GetRawData());
 			}
 		}
 
@@ -1491,100 +1331,33 @@ namespace GaneshaDx.Resources.ResourceContent {
 		}
 
 		private void BuildRawDataAnimatedMeshes() {
-			if (HasAnimatedMesh1) {
-				(RawData[AnimatedMesh1Pointer], RawData[AnimatedMesh1Pointer + 1]) =
-					Utilities.GetLittleEndianFromInt(RawData.Count);
+			List<bool> hasMeshes = new List<bool> {
+				HasAnimatedMesh1, HasAnimatedMesh2, HasAnimatedMesh3, HasAnimatedMesh4,
+				HasAnimatedMesh5, HasAnimatedMesh6, HasAnimatedMesh7, HasAnimatedMesh8,
+			};
 
-				BuildRawDataMeshHeader(MeshType.AnimatedMesh1);
-				BuildRawDataMeshPosition(MeshType.AnimatedMesh1);
-				BuildRawDataMeshNormals(MeshType.AnimatedMesh1);
-				BuildRawDataMeshTextureProperties(MeshType.AnimatedMesh1);
-				BuildRawDataMeshUnknownData(MeshType.AnimatedMesh1);
-				BuildRawDataMeshTerrainDefinitions(MeshType.AnimatedMesh1);
-			}
+			List<int> pointers = new List<int> {
+				AnimatedMesh1Pointer, AnimatedMesh2Pointer, AnimatedMesh3Pointer, AnimatedMesh4Pointer,
+				AnimatedMesh5Pointer, AnimatedMesh6Pointer, AnimatedMesh7Pointer, AnimatedMesh8Pointer
+			};
 
-			if (HasAnimatedMesh2) {
-				(RawData[AnimatedMesh2Pointer], RawData[AnimatedMesh2Pointer + 1]) =
-					Utilities.GetLittleEndianFromInt(RawData.Count);
+			List<MeshType> meshTypes = new List<MeshType> {
+				MeshType.AnimatedMesh1, MeshType.AnimatedMesh2, MeshType.AnimatedMesh3, MeshType.AnimatedMesh4,
+				MeshType.AnimatedMesh5, MeshType.AnimatedMesh6, MeshType.AnimatedMesh7, MeshType.AnimatedMesh8
+			};
 
-				BuildRawDataMeshHeader(MeshType.AnimatedMesh2);
-				BuildRawDataMeshPosition(MeshType.AnimatedMesh2);
-				BuildRawDataMeshNormals(MeshType.AnimatedMesh2);
-				BuildRawDataMeshTextureProperties(MeshType.AnimatedMesh2);
-				BuildRawDataMeshUnknownData(MeshType.AnimatedMesh2);
-				BuildRawDataMeshTerrainDefinitions(MeshType.AnimatedMesh2);
-			}
+			for (int index = 0; index < hasMeshes.Count; index++) {
+				if (hasMeshes[index]) {
+					(RawData[pointers[index]], RawData[pointers[index] + 1]) =
+						Utilities.GetLittleEndianFromInt(RawData.Count);
 
-			if (HasAnimatedMesh3) {
-				(RawData[AnimatedMesh3Pointer], RawData[AnimatedMesh3Pointer + 1]) =
-					Utilities.GetLittleEndianFromInt(RawData.Count);
-
-				BuildRawDataMeshHeader(MeshType.AnimatedMesh3);
-				BuildRawDataMeshPosition(MeshType.AnimatedMesh3);
-				BuildRawDataMeshNormals(MeshType.AnimatedMesh3);
-				BuildRawDataMeshTextureProperties(MeshType.AnimatedMesh3);
-				BuildRawDataMeshUnknownData(MeshType.AnimatedMesh3);
-				BuildRawDataMeshTerrainDefinitions(MeshType.AnimatedMesh3);
-			}
-
-			if (HasAnimatedMesh4) {
-				(RawData[AnimatedMesh4Pointer], RawData[AnimatedMesh4Pointer + 1]) =
-					Utilities.GetLittleEndianFromInt(RawData.Count);
-
-				BuildRawDataMeshHeader(MeshType.AnimatedMesh4);
-				BuildRawDataMeshPosition(MeshType.AnimatedMesh4);
-				BuildRawDataMeshNormals(MeshType.AnimatedMesh4);
-				BuildRawDataMeshTextureProperties(MeshType.AnimatedMesh4);
-				BuildRawDataMeshUnknownData(MeshType.AnimatedMesh4);
-				BuildRawDataMeshTerrainDefinitions(MeshType.AnimatedMesh4);
-			}
-
-			if (HasAnimatedMesh5) {
-				(RawData[AnimatedMesh5Pointer], RawData[AnimatedMesh5Pointer + 1]) =
-					Utilities.GetLittleEndianFromInt(RawData.Count);
-
-				BuildRawDataMeshHeader(MeshType.AnimatedMesh5);
-				BuildRawDataMeshPosition(MeshType.AnimatedMesh5);
-				BuildRawDataMeshNormals(MeshType.AnimatedMesh5);
-				BuildRawDataMeshTextureProperties(MeshType.AnimatedMesh5);
-				BuildRawDataMeshUnknownData(MeshType.AnimatedMesh5);
-				BuildRawDataMeshTerrainDefinitions(MeshType.AnimatedMesh5);
-			}
-
-			if (HasAnimatedMesh6) {
-				(RawData[AnimatedMesh6Pointer], RawData[AnimatedMesh6Pointer + 1]) =
-					Utilities.GetLittleEndianFromInt(RawData.Count);
-
-				BuildRawDataMeshHeader(MeshType.AnimatedMesh6);
-				BuildRawDataMeshPosition(MeshType.AnimatedMesh6);
-				BuildRawDataMeshNormals(MeshType.AnimatedMesh6);
-				BuildRawDataMeshTextureProperties(MeshType.AnimatedMesh6);
-				BuildRawDataMeshUnknownData(MeshType.AnimatedMesh6);
-				BuildRawDataMeshTerrainDefinitions(MeshType.AnimatedMesh6);
-			}
-
-			if (HasAnimatedMesh7) {
-				(RawData[AnimatedMesh7Pointer], RawData[AnimatedMesh7Pointer + 1]) =
-					Utilities.GetLittleEndianFromInt(RawData.Count);
-
-				BuildRawDataMeshHeader(MeshType.AnimatedMesh7);
-				BuildRawDataMeshPosition(MeshType.AnimatedMesh7);
-				BuildRawDataMeshNormals(MeshType.AnimatedMesh7);
-				BuildRawDataMeshTextureProperties(MeshType.AnimatedMesh7);
-				BuildRawDataMeshUnknownData(MeshType.AnimatedMesh7);
-				BuildRawDataMeshTerrainDefinitions(MeshType.AnimatedMesh7);
-			}
-
-			if (HasAnimatedMesh8) {
-				(RawData[AnimatedMesh8Pointer], RawData[AnimatedMesh8Pointer + 1]) =
-					Utilities.GetLittleEndianFromInt(RawData.Count);
-
-				BuildRawDataMeshHeader(MeshType.AnimatedMesh8);
-				BuildRawDataMeshPosition(MeshType.AnimatedMesh8);
-				BuildRawDataMeshNormals(MeshType.AnimatedMesh8);
-				BuildRawDataMeshTextureProperties(MeshType.AnimatedMesh8);
-				BuildRawDataMeshUnknownData(MeshType.AnimatedMesh8);
-				BuildRawDataMeshTerrainDefinitions(MeshType.AnimatedMesh8);
+					BuildRawDataMeshHeader(meshTypes[index]);
+					BuildRawDataMeshPosition(meshTypes[index]);
+					BuildRawDataMeshNormals(meshTypes[index]);
+					BuildRawDataMeshTextureProperties(meshTypes[index]);
+					BuildRawDataMeshUnknownData(meshTypes[index]);
+					BuildRawDataMeshTerrainDefinitions(meshTypes[index]);
+				}
 			}
 		}
 
@@ -1607,8 +1380,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 			}
 
 			foreach (Polygon polygon in PolygonCollection[MeshType.PrimaryMesh][PolygonType.TexturedTriangle]) {
-				List<byte> bytes = BuildRawDataRenderPropertiesPerPolygon(polygon);
-				RawData.AddRange(bytes);
+				RawData.AddRange(polygon.RenderingProperties.GetRawData());
 			}
 
 			for (int i = 0;
@@ -1621,8 +1393,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 			}
 
 			foreach (Polygon polygon in PolygonCollection[MeshType.PrimaryMesh][PolygonType.TexturedQuad]) {
-				List<byte> bytes = BuildRawDataRenderPropertiesPerPolygon(polygon);
-				RawData.AddRange(bytes);
+				RawData.AddRange(polygon.RenderingProperties.GetRawData());
 			}
 
 			for (int i = 0;
@@ -1635,8 +1406,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 			}
 
 			foreach (Polygon polygon in PolygonCollection[MeshType.PrimaryMesh][PolygonType.UntexturedTriangle]) {
-				List<byte> bytes = BuildRawDataRenderPropertiesPerPolygon(polygon);
-				RawData.AddRange(bytes);
+				RawData.AddRange(polygon.RenderingProperties.GetRawData());
 			}
 
 			for (int i = 0;
@@ -1649,8 +1419,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 			}
 
 			foreach (Polygon polygon in PolygonCollection[MeshType.PrimaryMesh][PolygonType.UntexturedQuad]) {
-				List<byte> bytes = BuildRawDataRenderPropertiesPerPolygon(polygon);
-				RawData.AddRange(bytes);
+				RawData.AddRange(polygon.RenderingProperties.GetRawData());
 			}
 
 			for (int i = 0;
@@ -1661,30 +1430,6 @@ namespace GaneshaDx.Resources.ResourceContent {
 				RawData.Add(0);
 				RawData.Add(128);
 			}
-		}
-
-		private List<byte> BuildRawDataRenderPropertiesPerPolygon(Polygon polygon) {
-			string highBinary = (polygon.RenderingProperties.InvisibleEastSoutheast ? "1" : "0") +
-			                    (polygon.RenderingProperties.InvisibleSouthSoutheast ? "1" : "0") +
-			                    (polygon.RenderingProperties.InvisibleSouthSouthwest ? "1" : "0") +
-			                    (polygon.RenderingProperties.InvisibleWestSouthwest ? "1" : "0") +
-			                    (polygon.RenderingProperties.InvisibleWestNorthWest ? "1" : "0") +
-			                    (polygon.RenderingProperties.InvisibleNorthNorthwest ? "1" : "0") +
-			                    "00";
-
-			string lowBinary = (polygon.RenderingProperties.LitTexture ? "1" : "0") +
-			                   "0" +
-			                   (polygon.RenderingProperties.InvisibleNortheast ? "1" : "0") +
-			                   (polygon.RenderingProperties.InvisibleSoutheast ? "1" : "0") +
-			                   (polygon.RenderingProperties.InvisibleSouthwest ? "1" : "0") +
-			                   (polygon.RenderingProperties.InvisibleNorthwest ? "1" : "0") +
-			                   (polygon.RenderingProperties.InvisibleNorthNortheast ? "1" : "0") +
-			                   (polygon.RenderingProperties.InvisibleEastNortheast ? "1" : "0");
-
-			return new List<byte> {
-				(byte) Utilities.GetIntFromBinary(highBinary),
-				(byte) Utilities.GetIntFromBinary(lowBinary)
-			};
 		}
 	}
 }

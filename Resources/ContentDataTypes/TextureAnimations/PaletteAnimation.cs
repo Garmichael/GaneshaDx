@@ -18,5 +18,32 @@ namespace GaneshaDx.Resources.ContentDataTypes.TextureAnimations {
 			FrameCount = rawData[15];
 			FrameDuration = rawData[17];
 		}
+
+		public List<byte> GetRawData() {
+			string binary = Utilities.GetBinaryFromInt(OverriddenPaletteId, 4) + "0000";
+
+			return new List<byte> {
+				(byte) Utilities.GetIntFromBinary(binary),
+				0,
+				224,
+				1,
+				0,
+				0,
+				0,
+				0,
+				(byte) AnimationStartIndex,
+				0,
+				0,
+				0,
+				0,
+				0,
+				3,
+				(byte) FrameCount,
+				0,
+				(byte) FrameDuration,
+				0,
+				0
+			};
+		}
 	}
 }
