@@ -69,6 +69,14 @@ namespace GaneshaDx.UserInterface.GuiForms {
 						MapData.ImportTexture(MyraGui.LastImportedTextureFile);
 					}
 
+					ImGui.Separator();
+
+					bool canEditMeshAnimations = MapData.MapIsLoaded &&
+					                             CurrentMapState.StateData.MeshAnimationInstructions != null;
+
+					if (ImGui.MenuItem("Edit Mesh Animations", "", Gui.ShowMeshAnimationsWindow, canEditMeshAnimations)) {
+						Gui.ShowMeshAnimationsWindow = !Gui.ShowMeshAnimationsWindow;
+					}
 
 					ImGui.EndMenu();
 				}

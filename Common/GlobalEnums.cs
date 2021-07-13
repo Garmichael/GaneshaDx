@@ -154,7 +154,7 @@
 		SnapTo,
 		OscillateOffset,
 		Ignore,
-		IgnoreAlt,
+		Unused,
 		Unknown
 	}
 }

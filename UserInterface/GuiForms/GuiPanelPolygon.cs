@@ -16,7 +16,6 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			RenderWidgetSelection();
 			
 			if (Selection.SelectedPolygons.Count > 0) {
-				RenderMeshType();
 				RenderPositionValues();
 				RenderNormalValues();
 				RenderTerrainValues();
@@ -24,17 +23,6 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			}
 
 			RenderRenderOptions();
-		}
-
-		private static void RenderMeshType() {
-			if (Selection.SelectedPolygons[0].MeshType != MeshType.PrimaryMesh) {
-				string text = Selection.SelectedPolygons[0].MeshType.ToString();
-				text = Regex.Replace(text, "(\\B[A-Z0-9])", " $1");
-				float textWidth = ImGui.CalcTextSize(text).X;
-				ImGui.SetCursorPosX((GuiStyle.RightPanelWidth - textWidth) * 0.5f);
-				ImGui.Text(text);
-				GuiStyle.AddSpace(5);
-			}
 		}
 
 		private static void RenderWidgetSelection() {

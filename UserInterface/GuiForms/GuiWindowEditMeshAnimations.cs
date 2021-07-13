@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
 using System.Text.RegularExpressions;
 using GaneshaDx.Common;
@@ -11,25 +10,47 @@ using ImGuiNET;
 
 namespace GaneshaDx.UserInterface.GuiForms {
 	public static class GuiWindowEditMeshAnimations {
+		private const int LeftPanelWidth = 280;
+		private const int RightPanelWidth = 490;
+		private const int WindowWidth = LeftPanelWidth + RightPanelWidth;
+		private const int WindowHeight = 550;
+		private const int FooterHeight = 70;
+		
 		private static int _selectedFrameState;
 		private static int _selectedMeshId;
 		private static int _selectedStateId;
 
 		public static void Render() {
-			const int windowHeight = 700;
-			const int windowWidth = 550;
+			
 			bool windowIsOpen = true;
 
 			GuiStyle.SetNewUiToDefaultStyle();
 			ImGui.GetStyle().WindowRounding = 3;
 			ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[2]);
-			ImGui.SetNextWindowSize(new Vector2(windowWidth, windowHeight));
+			ImGui.SetNextWindowSize(new Vector2(WindowWidth, WindowHeight));
 
 			ImGui.Begin("Mesh Animations", ref windowIsOpen, ImGuiWindowFlags.NoResize);
 			{
 				GuiStyle.SetNewUiToDefaultStyle();
-				RenderFrameStatePanel();
+				ImGui.GetStyle().FrameRounding = 0;
+
+				ImGui.Columns(2, "MeshAnimationsMainLayout", false);
+				ImGui.SetColumnWidth(0, LeftPanelWidth);
+				ImGui.SetColumnWidth(1, RightPanelWidth);
+
+				ImGui.BeginChild("KeyFrames", new Vector2(LeftPanelWidth, WindowHeight - FooterHeight));
 				RenderKeyFrames();
+				ImGui.EndChild();
+
+				ImGui.NextColumn();
+
+				ImGui.BeginChild("KeyFrameStates", new Vector2(RightPanelWidth, WindowHeight - FooterHeight));
+				RenderFrameStatePanel();
+				ImGui.EndChild();
+
+				ImGui.Columns(1);
+
+				RenderControlsPanel();
 			}
 			ImGui.End();
 
@@ -38,185 +59,10 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			}
 		}
 
-		private static void RenderFrameStatePanel() {
-			ImGui.Columns(2, "PreferencesControls", false);
-			ImGui.SetColumnWidth(0, 194);
-			ImGui.SetColumnWidth(1, GuiStyle.WidgetWidth + 10);
-
-			ImGui.Text("Frame State");
-			ImGui.NextColumn();
-
-			ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
-			ImGui.InputInt("##FrameStateId", ref _selectedFrameState);
-			_selectedFrameState = Utilities.Clamp(_selectedFrameState, 1, 128);
-			ImGui.NextColumn();
-
-			ImGui.Separator();
-
-			MeshAnimationFrameState selectedFrameState =
-				CurrentMapState.StateData.MeshAnimationInstructions.FrameStates[_selectedFrameState - 1];
-
-			List<string> keyFrameTypes = Enum.GetNames(typeof(MeshAnimationKeyFrameType)).ToList();
-			for (int keyframeTypeIndex = 0; keyframeTypeIndex < keyFrameTypes.Count; keyframeTypeIndex++) {
-				keyFrameTypes[keyframeTypeIndex] = Regex.Replace(keyFrameTypes[keyframeTypeIndex], "(\\B[A-Z])", " $1");
-			}
-
-			const int comboWidth = 90;
-			const int inputWidth = 60;
-
-			ImGui.Columns(6, "AnimationStatePropertiesColumns", false);
-			ImGui.SetColumnWidth(0, comboWidth + 10);
-			ImGui.SetColumnWidth(1, inputWidth + 20);
-			ImGui.SetColumnWidth(2, comboWidth + 10);
-			ImGui.SetColumnWidth(3, inputWidth + 20);
-			ImGui.SetColumnWidth(4, comboWidth + 10);
-			ImGui.SetColumnWidth(5, inputWidth + 20);
-
-			ImGui.Text("Position (X, Y, Z)");
-			ImGui.NextColumn();
-			ImGui.NextColumn();
-			ImGui.NextColumn();
-			ImGui.NextColumn();
-			ImGui.NextColumn();
-			ImGui.NextColumn();
-
-
-			ImGui.SetNextItemWidth(comboWidth);
-			int dropDownValue = (int) selectedFrameState.PositionKeyFrameTypes[0];
-			ImGui.Combo("##FrameStatePositionXTween", ref dropDownValue, keyFrameTypes.ToArray(), keyFrameTypes.Count);
-			selectedFrameState.PositionKeyFrameTypes[0] = (MeshAnimationKeyFrameType) dropDownValue;
-			ImGui.NextColumn();
-
-			ImGui.SetNextItemWidth(inputWidth);
-			int positionX = (int) selectedFrameState.Position.X;
-			ImGui.DragInt("##FrameStatePositionX", ref positionX, 0.1f);
-			selectedFrameState.Position.X = positionX;
-			ImGui.NextColumn();
-
-			ImGui.SetNextItemWidth(comboWidth);
-			dropDownValue = (int) selectedFrameState.PositionKeyFrameTypes[1];
-			ImGui.Combo("##FrameStatePositionYTween", ref dropDownValue, keyFrameTypes.ToArray(), keyFrameTypes.Count);
-			selectedFrameState.PositionKeyFrameTypes[1] = (MeshAnimationKeyFrameType) dropDownValue;
-			ImGui.NextColumn();
-
-			ImGui.SetNextItemWidth(inputWidth);
-			int positionY = (int) selectedFrameState.Position.Y;
-			ImGui.DragInt("##FrameStatePositionY", ref positionY, 0.1f);
-			selectedFrameState.Position.Y = positionY;
-			ImGui.NextColumn();
-
-			ImGui.SetNextItemWidth(comboWidth);
-			dropDownValue = (int) selectedFrameState.PositionKeyFrameTypes[2];
-			ImGui.Combo("##FrameStatePositionZTween", ref dropDownValue, keyFrameTypes.ToArray(), keyFrameTypes.Count);
-			selectedFrameState.PositionKeyFrameTypes[2] = (MeshAnimationKeyFrameType) dropDownValue;
-			ImGui.NextColumn();
-
-			ImGui.SetNextItemWidth(inputWidth);
-			int positionZ = (int) selectedFrameState.Position.Z;
-			ImGui.DragInt("##FrameStatePositionZ", ref positionZ, 0.1f);
-			selectedFrameState.Position.Z = positionZ;
-			ImGui.NextColumn();
-
-			GuiStyle.AddSpace();
-			ImGui.Text("Rotation (X, Y, Z)");
-			ImGui.NextColumn();
-			ImGui.NextColumn();
-			ImGui.NextColumn();
-			ImGui.NextColumn();
-			ImGui.NextColumn();
-			ImGui.NextColumn();
-
-			ImGui.SetNextItemWidth(comboWidth);
-			dropDownValue = (int) selectedFrameState.RotationKeyFrameTypes[0];
-			ImGui.Combo("##FrameStateRotationXTween", ref dropDownValue, keyFrameTypes.ToArray(), keyFrameTypes.Count);
-			selectedFrameState.RotationKeyFrameTypes[0] = (MeshAnimationKeyFrameType) dropDownValue;
-			ImGui.NextColumn();
-
-			ImGui.SetNextItemWidth(inputWidth);
-			double rotationX = selectedFrameState.Rotation.X;
-			float degreesX = (float) (rotationX * 360);
-			ImGui.DragFloat("##FrameStateRotationX", ref degreesX, 0.1f);
-			rotationX = degreesX / 360;
-			selectedFrameState.Rotation.X = (float) rotationX;
-			ImGui.NextColumn();
-
-			ImGui.SetNextItemWidth(comboWidth);
-			dropDownValue = (int) selectedFrameState.RotationKeyFrameTypes[1];
-			ImGui.Combo("##FrameStateRotationYTween", ref dropDownValue, keyFrameTypes.ToArray(), keyFrameTypes.Count);
-			selectedFrameState.RotationKeyFrameTypes[1] = (MeshAnimationKeyFrameType) dropDownValue;
-			ImGui.NextColumn();
-
-			ImGui.SetNextItemWidth(inputWidth);
-			double rotationY = selectedFrameState.Rotation.Y;
-			float degreesY = (float) (rotationY * 360);
-			ImGui.DragFloat("##FrameStateRotationY", ref degreesY, 0.1f);
-			rotationY = degreesY / 360;
-			selectedFrameState.Rotation.Y = (float) rotationY;
-			ImGui.NextColumn();
-
-			ImGui.SetNextItemWidth(comboWidth);
-			dropDownValue = (int) selectedFrameState.RotationKeyFrameTypes[2];
-			ImGui.Combo("##FrameStateRotationZTween", ref dropDownValue, keyFrameTypes.ToArray(), keyFrameTypes.Count);
-			selectedFrameState.RotationKeyFrameTypes[2] = (MeshAnimationKeyFrameType) dropDownValue;
-			ImGui.NextColumn();
-
-			ImGui.SetNextItemWidth(inputWidth);
-			double rotationZ = selectedFrameState.Rotation.Z;
-			float degreesZ = (float) (rotationZ * 360);
-			ImGui.DragFloat("##FrameStateRotationZ", ref degreesZ, 0.1f);
-			rotationZ = degreesZ / 360;
-			selectedFrameState.Rotation.Z = (float) rotationZ;
-			ImGui.NextColumn();
-
-			GuiStyle.AddSpace();
-			ImGui.Text("Scale (X, Y, Z)");
-			ImGui.NextColumn();
-			ImGui.NextColumn();
-			ImGui.NextColumn();
-			ImGui.NextColumn();
-			ImGui.NextColumn();
-			ImGui.NextColumn();
-
-			ImGui.SetNextItemWidth(comboWidth);
-			dropDownValue = (int) selectedFrameState.ScaleKeyFrameTypes[0];
-			ImGui.Combo("##FrameStateScaleXTween", ref dropDownValue, keyFrameTypes.ToArray(), keyFrameTypes.Count);
-			selectedFrameState.ScaleKeyFrameTypes[0] = (MeshAnimationKeyFrameType) dropDownValue;
-			ImGui.NextColumn();
-
-			ImGui.SetNextItemWidth(inputWidth);
-			ImGui.DragFloat("##FrameStateScaleX", ref selectedFrameState.Scale.X, 0.1f);
-			ImGui.NextColumn();
-
-			ImGui.SetNextItemWidth(comboWidth);
-			dropDownValue = (int) selectedFrameState.ScaleKeyFrameTypes[1];
-			ImGui.Combo("##FrameStateScaleYTween", ref dropDownValue, keyFrameTypes.ToArray(), keyFrameTypes.Count);
-			selectedFrameState.ScaleKeyFrameTypes[1] = (MeshAnimationKeyFrameType) dropDownValue;
-			ImGui.NextColumn();
-
-			ImGui.SetNextItemWidth(inputWidth);
-			ImGui.DragFloat("##FrameStateScaleY", ref selectedFrameState.Scale.Y, 0.1f);
-			ImGui.NextColumn();
-
-			ImGui.SetNextItemWidth(comboWidth);
-			dropDownValue = (int) selectedFrameState.ScaleKeyFrameTypes[2];
-			ImGui.Combo("##FrameStateScaleZTween", ref dropDownValue, keyFrameTypes.ToArray(), keyFrameTypes.Count);
-			selectedFrameState.ScaleKeyFrameTypes[2] = (MeshAnimationKeyFrameType) dropDownValue;
-			ImGui.NextColumn();
-
-			ImGui.SetNextItemWidth(inputWidth);
-			ImGui.DragFloat("##FrameStateScaleZ", ref selectedFrameState.Scale.Z, 0.1f);
-			ImGui.NextColumn();
-
-			ImGui.Columns(1);
-			ImGui.Separator();
-			GuiStyle.AddSpace();
-		}
-
-
 		private static void RenderKeyFrames() {
 			const int optionsLabelWidth = 40;
-			const int optionsInputWidth = 90;
-			const int spacing = 35;
+			const int optionsInputWidth = 75;
+			const int spacing = 10;
 			ImGui.Columns(5, "KeyframeTableHeader", false);
 			ImGui.SetColumnWidth(0, optionsLabelWidth);
 			ImGui.SetColumnWidth(1, optionsInputWidth + 10);
@@ -292,7 +138,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				if (ImGui.Button(">##MeshAnimationGoToFrameState" + i, new Vector2(buttonWidth, 20))) {
 					_selectedFrameState = meshAnimation.Frames[i].FrameStateId;
 				}
-				
+
 				ImGui.NextColumn();
 
 				ImGui.SetNextItemWidth(inputWidth);
@@ -303,6 +149,245 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				ImGui.DragInt("##MeshAnimationFrameNextFrameId" + i, ref meshAnimation.Frames[i].NextFrameId);
 				ImGui.NextColumn();
 			}
+		}
+
+		private static void RenderFrameStatePanel() {
+			RenderFrameStatePanelHeader();
+
+			MeshAnimationFrameState selectedFrameState =
+				CurrentMapState.StateData.MeshAnimationInstructions.FrameStates[_selectedFrameState - 1];
+
+			RenderFrameStatePanelValueSet(
+				"Position",
+				selectedFrameState.PositionKeyFrameTypes,
+				selectedFrameState.Position,
+				true,
+				selectedFrameState.PositionStartPercents,
+				selectedFrameState.PositionEndPercents
+			);
+			GuiStyle.AddSpace();
+
+			RenderFrameStatePanelValueSet(
+				"Rotation",
+				selectedFrameState.RotationKeyFrameTypes,
+				selectedFrameState.Rotation,
+				false,
+				selectedFrameState.RotationStartPercents,
+				selectedFrameState.RotationEndPercents
+			);
+			GuiStyle.AddSpace();
+
+			RenderFrameStatePanelValueSet(
+				"Scale",
+				selectedFrameState.ScaleKeyFrameTypes,
+				selectedFrameState.Scale,
+				false,
+				selectedFrameState.ScaleStartPercents,
+				selectedFrameState.ScaleEndPercents
+			);
+			GuiStyle.AddSpace();
+		}
+
+		private static void RenderFrameStatePanelHeader() {
+			const int labelWidth = 80;
+			const int inputWidth = 85;
+			ImGui.Columns(3, "FrameStateTable", false);
+			ImGui.SetColumnWidth(0, RightPanelWidth - inputWidth - 40 - labelWidth - 10);
+			ImGui.SetColumnWidth(1, labelWidth + 10);
+			ImGui.SetColumnWidth(2, inputWidth + 10);
+
+			ImGui.NextColumn();
+			
+			ImGui.Text("Frame State");
+			ImGui.NextColumn();
+
+			ImGui.SetNextItemWidth(inputWidth);
+			ImGui.InputInt("##FrameStateId", ref _selectedFrameState);
+			_selectedFrameState = Utilities.Clamp(_selectedFrameState, 1, 128);
+			ImGui.NextColumn();
+			GuiStyle.AddSpace();
+		}
+
+		private static void RenderFrameStatePanelValueSet(
+			string type,
+			List<MeshAnimationKeyFrameType> sourceKeyFrameTypes,
+			List<double> values,
+			bool valueIsInt,
+			List<double> startIndexes,
+			List<double> endIndexes
+		) {
+			string[] keyFrameTypes = Enum.GetNames(typeof(MeshAnimationKeyFrameType));
+			for (int keyframeTypeIndex = 0; keyframeTypeIndex < keyFrameTypes.Length; keyframeTypeIndex++) {
+				keyFrameTypes[keyframeTypeIndex] = Regex.Replace(keyFrameTypes[keyframeTypeIndex], "(\\B[A-Z])", " $1");
+			}
+
+			const int inputWidth = 100;
+			const int labelWidth = 60;
+
+			ImGui.Columns(4, "AnimationStatePropertiesColumns" + type, false);
+			ImGui.SetColumnWidth(0, labelWidth + 30);
+			ImGui.SetColumnWidth(1, inputWidth + 30);
+			ImGui.SetColumnWidth(2, inputWidth + 30);
+			ImGui.SetColumnWidth(3, inputWidth + 30);
+
+			ImGui.PushStyleColor(ImGuiCol.Text, GuiStyle.ColorPalette[ColorName.HighlightedText]);
+			ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[2]);
+			ImGui.Text(type);
+			
+			ImGui.NextColumn();
+
+			ImGui.Text("                X");
+			ImGui.NextColumn();
+
+			ImGui.Text("                Y");
+			ImGui.NextColumn();
+
+			ImGui.Text("                Z");
+			ImGui.NextColumn();
+
+			ImGui.PopFont();
+			ImGui.PopStyleColor();
+			
+			ImGui.Text("Tween Type");
+			ImGui.NextColumn();
+
+			ImGui.SetNextItemWidth(inputWidth);
+
+			int dropDownValue = (int) sourceKeyFrameTypes[0];
+			ImGui.Combo("##FrameState" + type + "XTween", ref dropDownValue, keyFrameTypes, keyFrameTypes.Length);
+			sourceKeyFrameTypes[0] = (MeshAnimationKeyFrameType) dropDownValue;
+			ImGui.NextColumn();
+
+			ImGui.SetNextItemWidth(inputWidth);
+			dropDownValue = (int) sourceKeyFrameTypes[1];
+			ImGui.Combo("##FrameState" + type + "YTween", ref dropDownValue, keyFrameTypes, keyFrameTypes.Length);
+			sourceKeyFrameTypes[1] = (MeshAnimationKeyFrameType) dropDownValue;
+			ImGui.NextColumn();
+
+			ImGui.SetNextItemWidth(inputWidth);
+			dropDownValue = (int) sourceKeyFrameTypes[2];
+			ImGui.Combo("##FrameState" + type + "ZTween", ref dropDownValue, keyFrameTypes, keyFrameTypes.Length);
+			sourceKeyFrameTypes[2] = (MeshAnimationKeyFrameType) dropDownValue;
+			ImGui.NextColumn();
+
+			ImGui.Text("Values");
+			ImGui.NextColumn();
+
+			ImGui.SetNextItemWidth(inputWidth);
+			if (valueIsInt) {
+				int valueX = (int) values[0];
+				ImGui.InputInt("##FrameState" + type + "XValueInt", ref valueX);
+				values[0] = valueX;
+			} else {
+				float valueX = (float) values[0];
+				ImGui.InputFloat("##FrameState" + type + "XValueFloat", ref valueX, 0.1f);
+				values[0] = valueX;
+			}
+
+			ImGui.NextColumn();
+
+			ImGui.SetNextItemWidth(inputWidth);
+			if (valueIsInt) {
+				int valueY = (int) values[1];
+				ImGui.InputInt("##FrameState" + type + "YValue", ref valueY);
+				values[1] = valueY;
+			} else {
+				float valueY = (float) values[1];
+				ImGui.InputFloat("##FrameState" + type + "YValue", ref valueY, 0.1f);
+				values[1] = valueY;
+			}
+
+			ImGui.NextColumn();
+
+			ImGui.SetNextItemWidth(inputWidth);
+			if (valueIsInt) {
+				int valueZ = (int) values[2];
+				ImGui.InputInt("##FrameState" + type + "ZValue", ref valueZ);
+				values[2] = valueZ;
+			} else {
+				float valueZ = (float) values[2];
+				ImGui.InputFloat("##FrameState" + type + "ZValue", ref valueZ, 0.1f);
+				values[2] = valueZ;
+			}
+
+			ImGui.NextColumn();
+
+
+			ImGui.Text("Start Percent");
+			ImGui.NextColumn();
+
+			ImGui.SetNextItemWidth(inputWidth);
+			float startX = (float) startIndexes[0];
+			ImGui.InputFloat("##FrameState" + type + "XStart", ref startX, 0.1f);
+			startIndexes[0] = startX;
+			ImGui.NextColumn();
+
+			ImGui.SetNextItemWidth(inputWidth);
+			float startY = (float) startIndexes[1];
+			ImGui.InputFloat("##FrameState" + type + "YStart", ref startY, 0.1f);
+			startIndexes[1] = startY;
+			ImGui.NextColumn();
+
+			ImGui.SetNextItemWidth(inputWidth);
+			float startZ = (float) startIndexes[2];
+			ImGui.InputFloat("##FrameState" + type + "ZStart", ref startZ, 0.1f);
+			startIndexes[2] = startZ;
+			ImGui.NextColumn();
+
+			ImGui.Text("End Percent");
+			ImGui.NextColumn();
+
+			ImGui.SetNextItemWidth(inputWidth);
+			float endX = (float) endIndexes[0];
+			ImGui.InputFloat("##FrameState" + type + "XEnd", ref endX, 0.1f);
+			endIndexes[0] = endX;
+			ImGui.NextColumn();
+
+			ImGui.SetNextItemWidth(inputWidth);
+			float endY = (float) endIndexes[1];
+			ImGui.InputFloat("##FrameState" + type + "YEnd", ref endY, 0.1f);
+			endIndexes[1] = endY;
+			ImGui.NextColumn();
+
+			ImGui.SetNextItemWidth(inputWidth);
+			float endZ = (float) endIndexes[2];
+			ImGui.InputFloat("##FrameState" + type + "ZEnd", ref endZ, 0.1f);
+			endIndexes[2] = endZ;
+			ImGui.NextColumn();
+
+			ImGui.Columns(1);
+			GuiStyle.AddSpace();
+		}
+
+		private static void RenderControlsPanel() {
+			ImGui.SetCursorPosX(WindowWidth / 2 - 40);
+			GuiStyle.SetNewUiToDefaultStyle();
+			
+			if (!Configuration.Properties.AnimateMeshes) {
+				GuiStyle.SetElementStyle(ElementStyle.ButtonSelected);
+			} else {
+				GuiStyle.SetNewUiToDefaultStyle();
+			}
+
+			ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
+			if (ImGui.Button("O##MeshAnimationStop")) {
+				Configuration.Properties.AnimateMeshes = false;
+			}
+			ImGui.PopFont();
+			
+			ImGui.SameLine();
+			
+			if (Configuration.Properties.AnimateMeshes) {
+				GuiStyle.SetElementStyle(ElementStyle.ButtonSelected);
+			} else {
+				GuiStyle.SetNewUiToDefaultStyle();
+			}
+			
+			ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
+			if (ImGui.Button("P##MeshAnimationPlay")) {
+				Configuration.Properties.AnimateMeshes = true;
+			}
+			ImGui.PopFont();
 		}
 	}
 }

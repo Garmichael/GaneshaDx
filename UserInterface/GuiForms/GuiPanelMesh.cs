@@ -79,31 +79,29 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 			ImGui.SetNextItemWidth(GuiStyle.WidgetWidth + 20);
 			ImGui.Combo("##SelectedMeshType", ref _selectedComboId, labels.ToArray(), meshTypes.Count);
+
+			
+			ImGui.NextColumn();
+			ImGui.NextColumn();
+				
+			if (ImGui.Button("Edit Mesh Animations", new Vector2(GuiStyle.WidgetWidth + 20, 20))) {
+				Gui.ShowMeshAnimationsWindow = true;
+			}
+				
+			ImGui.NextColumn();
 			
 			if (_selectedComboId > meshTypes.Count - 1) {
 				_selectedComboId = 0;
 			}
-			
+
 			SelectedMesh = meshTypes[_selectedComboId];
 
 			if (SelectedMesh != MeshType.PrimaryMesh) {
-				ImGui.NextColumn();
-
-				ImGui.Text("Animate Meshes");
-				ImGui.NextColumn();
-				ImGui.Checkbox("##ShouldAnimateMeshes", ref Configuration.Properties.AnimateMeshes);
-				ImGui.NextColumn();
-
 				ImGui.Text("Isolate Mesh");
 				ImGui.NextColumn();
+
 				ImGui.Checkbox("##ShouldIsolateMesh", ref Configuration.Properties.IsolateMeshes);
-
 				ImGui.NextColumn();
-				ImGui.NextColumn();
-
-				if (ImGui.Button("Edit Mesh Animations", new Vector2(GuiStyle.WidgetWidth + 20, 20))) {
-					Gui.ShowMeshAnimationsWindow = true;
-				}
 			}
 
 			ImGui.Columns(1);
