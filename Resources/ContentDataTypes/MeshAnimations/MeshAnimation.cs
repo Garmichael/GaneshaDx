@@ -19,6 +19,17 @@ namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 			}
 		}
 
-		public void GenerateRawData() { }
+		public List<byte> GetRawData() {
+			List<byte> rawData = new List<byte>();
+
+			foreach (MeshAnimationFrame frame in Frames) {
+				rawData.Add((byte) frame.FrameStateId);
+				rawData.Add((byte) frame.NextFrameId);
+				rawData.Add(Utilities.GetLittleEndianFromInt(frame.Duration).high);
+				rawData.Add(Utilities.GetLittleEndianFromInt(frame.Duration).low);
+			}
+
+			return rawData;
+		}
 	}
 }

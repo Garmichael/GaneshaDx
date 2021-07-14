@@ -125,7 +125,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			ImGui.NextColumn();
 
 			int linkIndex = (_selectedMeshId - 1) + (_selectedStateId * 8);
-			MeshAnimation meshAnimation = CurrentMapState.StateData.MeshAnimationInstructions.Links[linkIndex];
+			MeshAnimation meshAnimation = CurrentMapState.StateData.MeshAnimationInstructions.MeshAnimations[linkIndex];
 
 			for (int i = 0; i < 16; i++) {
 				ImGui.Text((i + 1).ToString());

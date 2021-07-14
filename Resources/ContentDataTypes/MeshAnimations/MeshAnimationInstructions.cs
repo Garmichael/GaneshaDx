@@ -5,8 +5,8 @@ namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 		public readonly List<byte> InstructionsHeader = new List<byte>();
 		public readonly List<MeshAnimationFrameState> FrameStates = new List<MeshAnimationFrameState>();
 		
-		public readonly List<byte> LinksHeader = new List<byte>();
-		public readonly List<MeshAnimation> Links = new List<MeshAnimation>();
+		public readonly List<byte> MeshAnimationsHeader = new List<byte>();
+		public readonly List<MeshAnimation> MeshAnimations = new List<MeshAnimation>();
 		
 		public readonly List<byte> UnknownChunkHeader = new List<byte>();
 		public readonly MeshAnimationUnknown UnknownChunk;
@@ -36,8 +36,8 @@ namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 				FrameStates.Add(newFrameState);
 			}
 
-			while (LinksHeader.Count < headerLength) {
-				LinksHeader.Add(rawData[currentByteIndex]);
+			while (MeshAnimationsHeader.Count < headerLength) {
+				MeshAnimationsHeader.Add(rawData[currentByteIndex]);
 				currentByteIndex++;
 			}
 
@@ -48,7 +48,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 					currentByteIndex++;
 				}
 
-				Links.Add(new MeshAnimation(data));
+				MeshAnimations.Add(new MeshAnimation(data));
 			}
 
 			while (UnknownChunkHeader.Count < headerLength) {

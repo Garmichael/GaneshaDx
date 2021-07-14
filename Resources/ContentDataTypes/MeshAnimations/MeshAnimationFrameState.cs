@@ -74,9 +74,99 @@ namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 		}
 
 		public List<byte> GetRawData() {
-			List<byte> rawData = new List<byte>();
+			return new List<byte> {
+				Utilities.GetLittleEndianFromInt((int) (Rotation[0] / 360f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt((int) (Rotation[0] / 360f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt((int) (Rotation[1] / 360f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt((int) (Rotation[1] / 360f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt((int) (Rotation[2] / 360f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt((int) (Rotation[2] / 360f * 4096f)).low,
 
-			return rawData;
+				0, 0,
+
+				Utilities.GetLittleEndianFromInt((int) Position[0]).high,
+				Utilities.GetLittleEndianFromInt((int) Position[0]).low,
+				Utilities.GetLittleEndianFromInt((int) -Position[1]).high,
+				Utilities.GetLittleEndianFromInt((int) -Position[1]).low,
+				Utilities.GetLittleEndianFromInt((int) Position[2]).high,
+				Utilities.GetLittleEndianFromInt((int) Position[2]).low,
+
+				0, 0,
+
+				Utilities.GetLittleEndianFromInt((int) (Scale[0] * 4096f)).high,
+				Utilities.GetLittleEndianFromInt((int) (Scale[0] * 4096f)).low,
+				Utilities.GetLittleEndianFromInt((int) (Scale[1] * 4096f)).high,
+				Utilities.GetLittleEndianFromInt((int) (Scale[1] * 4096f)).low,
+				Utilities.GetLittleEndianFromInt((int) (Scale[2] * 4096f)).high,
+				Utilities.GetLittleEndianFromInt((int) (Scale[2] * 4096f)).low,
+
+				0, 0,
+
+				Utilities.GetLittleEndianFromInt((int) (RotationStartPercents[0] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt((int) (RotationStartPercents[0] / 100f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt((int) (RotationStartPercents[1] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt((int) (RotationStartPercents[1] / 100f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt((int) (RotationStartPercents[2] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt((int) (RotationStartPercents[2] / 100f * 4096f)).low,
+
+				Utilities.GetLittleEndianFromInt((int) (PositionStartPercents[0] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt((int) (PositionStartPercents[0] / 100f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt((int) (PositionStartPercents[1] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt((int) (PositionStartPercents[1] / 100f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt((int) (PositionStartPercents[2] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt((int) (PositionStartPercents[2] / 100f * 4096f)).low,
+
+				Utilities.GetLittleEndianFromInt((int) (ScaleStartPercents[0] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt((int) (ScaleStartPercents[0] / 100f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt((int) (ScaleStartPercents[1] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt((int) (ScaleStartPercents[1] / 100f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt((int) (ScaleStartPercents[2] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt((int) (ScaleStartPercents[2] / 100f * 4096f)).low,
+
+				Utilities.GetLittleEndianFromInt((int) (RotationEndPercents[0] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt((int) (RotationEndPercents[0] / 100f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt((int) (RotationEndPercents[1] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt((int) (RotationEndPercents[1] / 100f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt((int) (RotationEndPercents[2] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt((int) (RotationEndPercents[2] / 100f * 4096f)).low,
+
+				Utilities.GetLittleEndianFromInt((int) (PositionEndPercents[0] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt((int) (PositionEndPercents[0] / 100f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt((int) (PositionEndPercents[1] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt((int) (PositionEndPercents[1] / 100f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt((int) (PositionEndPercents[2] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt((int) (PositionEndPercents[2] / 100f * 4096f)).low,
+
+				Utilities.GetLittleEndianFromInt((int) (ScaleEndPercents[0] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt((int) (ScaleEndPercents[0] / 100f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt((int) (ScaleEndPercents[1] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt((int) (ScaleEndPercents[1] / 100f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt((int) (ScaleEndPercents[2] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt((int) (ScaleEndPercents[2] / 100f * 4096f)).low,
+
+				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(RotationKeyFrameTypes[0])).high,
+				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(RotationKeyFrameTypes[0])).low,
+				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(RotationKeyFrameTypes[1])).high,
+				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(RotationKeyFrameTypes[1])).low,
+				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(RotationKeyFrameTypes[2])).high,
+				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(RotationKeyFrameTypes[2])).low,
+
+				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(PositionKeyFrameTypes[0])).high,
+				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(PositionKeyFrameTypes[0])).low,
+				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(PositionKeyFrameTypes[1])).high,
+				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(PositionKeyFrameTypes[1])).low,
+				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(PositionKeyFrameTypes[2])).high,
+				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(PositionKeyFrameTypes[2])).low,
+
+				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(ScaleKeyFrameTypes[0])).high,
+				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(ScaleKeyFrameTypes[0])).low,
+				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(ScaleKeyFrameTypes[1])).high,
+				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(ScaleKeyFrameTypes[1])).low,
+				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(ScaleKeyFrameTypes[2])).high,
+				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(ScaleKeyFrameTypes[2])).low,
+
+				0, 0
+			};
 		}
 
 		private MeshAnimationKeyFrameType ConvertKeyFrameType(int value) {

@@ -101,8 +101,8 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					ImGui.Indent();
 
 					const int inputWidth = 40;
-					for (int setIndex = 0; setIndex < set.Links.Count; setIndex++) {
-						MeshAnimation link = set.Links[setIndex];
+					for (int setIndex = 0; setIndex < set.MeshAnimations.Count; setIndex++) {
+						MeshAnimation link = set.MeshAnimations[setIndex];
 
 						GuiStyle.SetNewUiToDefaultStyle();
 
