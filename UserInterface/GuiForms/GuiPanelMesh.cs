@@ -78,8 +78,12 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			}
 
 			ImGui.SetNextItemWidth(GuiStyle.WidgetWidth + 20);
+			int beforeSelectedId = _selectedComboId;
 			ImGui.Combo("##SelectedMeshType", ref _selectedComboId, labels.ToArray(), meshTypes.Count);
 
+			if (beforeSelectedId != _selectedComboId) {
+				Selection.SelectedPolygons.Clear();
+			}
 			
 			ImGui.NextColumn();
 			ImGui.NextColumn();

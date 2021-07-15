@@ -111,19 +111,19 @@ namespace GaneshaDx.Resources {
 			foreach (Polygon polygon in Selection.SelectedPolygons) {
 				Polygon newPolygon = polygon.CreateClone();
 
-				Dictionary<PolygonType, List<Polygon>> primaryMesh = StateData.PolygonCollection[MeshType.PrimaryMesh];
+				Dictionary<PolygonType, List<Polygon>> meshBucket = StateData.PolygonCollection[polygon.MeshType];
 
 				if (newPolygon.IsQuad) {
 					if (newPolygon.IsTextured) {
-						primaryMesh[PolygonType.TexturedQuad].Add(newPolygon);
+						meshBucket[PolygonType.TexturedQuad].Add(newPolygon);
 					} else {
-						primaryMesh[PolygonType.UntexturedQuad].Add(newPolygon);
+						meshBucket[PolygonType.UntexturedQuad].Add(newPolygon);
 					}
 				} else {
 					if (newPolygon.IsTextured) {
-						primaryMesh[PolygonType.TexturedTriangle].Add(newPolygon);
+						meshBucket[PolygonType.TexturedTriangle].Add(newPolygon);
 					} else {
-						primaryMesh[PolygonType.UntexturedTriangle].Add(newPolygon);
+						meshBucket[PolygonType.UntexturedTriangle].Add(newPolygon);
 					}
 				}
 

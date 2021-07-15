@@ -6,6 +6,7 @@ using GaneshaDx.Resources;
 using GaneshaDx.Resources.ContentDataTypes.Polygons;
 using GaneshaDx.Resources.ContentDataTypes.Terrains;
 using GaneshaDx.UserInterface.GuiDefinitions;
+using GaneshaDx.UserInterface.GuiForms;
 using GaneshaDx.UserInterface.Input;
 using GaneshaDx.UserInterface.Widgets;
 using Microsoft.Xna.Framework;
@@ -88,11 +89,9 @@ namespace GaneshaDx.UserInterface {
 						}
 
 						SelectPolygon(HoveredPolygons[indexOfSelected]);
-						SelectCompleteAnimatedMeshPolygons();
 					} else if (Gui.Widget == WidgetSelectionMode.PolygonVertexTranslate) {
 						if (SelectedPolygons.Count == 0) {
 							SelectPolygon(HoveredPolygons[indexOfSelected]);
-							SelectCompleteAnimatedMeshPolygons();
 						} else {
 							if (HoveredPolygons.First() != SelectedPolygons.First()) {
 								SelectPolygon(HoveredPolygons[0]);
@@ -117,7 +116,6 @@ namespace GaneshaDx.UserInterface {
 					} else if (Gui.Widget == WidgetSelectionMode.PolygonEdgeTranslate) {
 						if (SelectedPolygons.Count == 0) {
 							SelectPolygon(HoveredPolygons[indexOfSelected]);
-							SelectCompleteAnimatedMeshPolygons();
 						} else {
 							if (HoveredPolygons.First() != SelectedPolygons.First()) {
 								SelectPolygon(HoveredPolygons[0]);
@@ -146,35 +144,40 @@ namespace GaneshaDx.UserInterface {
 		}
 
 		private static void CollectHoveredPolygons() {
-			foreach (Polygon polygon in CurrentMapState.StateData.PolygonCollectionBucket) {
-				CameraRayResults triangleAIntersects = CameraRay.GetResults(
-					new List<Vector3> {
-						polygon.Vertices[0].AnimationAdjustedPosition,
-						polygon.Vertices[1].AnimationAdjustedPosition,
-						polygon.Vertices[2].AnimationAdjustedPosition
-					}
-				);
+			Dictionary<PolygonType, List<Polygon>> allPolygons =
+				CurrentMapState.StateData.PolygonCollection[GuiPanelMesh.SelectedMesh];
 
-				CameraRayResults triangleBIntersects = polygon.IsQuad
-					? CameraRay.GetResults(
+			foreach (KeyValuePair<PolygonType, List<Polygon>> polygonCollection in allPolygons) {
+				foreach (Polygon polygon in polygonCollection.Value) {
+					CameraRayResults triangleAIntersects = CameraRay.GetResults(
 						new List<Vector3> {
-							polygon.Vertices[3].AnimationAdjustedPosition,
-							polygon.Vertices[2].AnimationAdjustedPosition,
-							polygon.Vertices[1].AnimationAdjustedPosition
+							polygon.Vertices[0].Position,
+							polygon.Vertices[1].Position,
+							polygon.Vertices[2].Position
 						}
-					)
-					: new CameraRayResults {HasHit = false};
+					);
 
-				if (triangleAIntersects.HasHit) {
-					_hoverPosition = triangleAIntersects.HitPoint;
-				}
+					CameraRayResults triangleBIntersects = polygon.IsQuad
+						? CameraRay.GetResults(
+							new List<Vector3> {
+								polygon.Vertices[3].Position,
+								polygon.Vertices[2].Position,
+								polygon.Vertices[1].Position
+							}
+						)
+						: new CameraRayResults {HasHit = false};
 
-				if (triangleBIntersects.HasHit) {
-					_hoverPosition = triangleBIntersects.HitPoint;
-				}
+					if (triangleAIntersects.HasHit) {
+						_hoverPosition = triangleAIntersects.HitPoint;
+					}
 
-				if (triangleAIntersects.HasHit || triangleBIntersects.HasHit) {
-					HoveredPolygons.Add(polygon);
+					if (triangleBIntersects.HasHit) {
+						_hoverPosition = triangleBIntersects.HitPoint;
+					}
+
+					if (triangleAIntersects.HasHit || triangleBIntersects.HasHit) {
+						HoveredPolygons.Add(polygon);
+					}
 				}
 			}
 
@@ -216,34 +219,6 @@ namespace GaneshaDx.UserInterface {
 			}
 		}
 
-		private static void SelectCompleteAnimatedMeshPolygons() {
-			List<MeshType> selectedMeshTypes = new List<MeshType>();
-
-			foreach (Polygon polygon in SelectedPolygons) {
-				if (polygon.MeshType != MeshType.PrimaryMesh && !selectedMeshTypes.Contains(polygon.MeshType)) {
-					selectedMeshTypes.Add(polygon.MeshType);
-				}
-			}
-
-			if (selectedMeshTypes.Count > 0) {
-				if (Gui.Widget == WidgetSelectionMode.PolygonVertexTranslate ||
-				    Gui.Widget == WidgetSelectionMode.PolygonEdgeTranslate
-				) {
-					Gui.Widget = WidgetSelectionMode.PolygonTranslate;
-				}
-			}
-
-			foreach (MeshType meshType in selectedMeshTypes) {
-				foreach (PolygonType polygonType in CommonLists.PolygonTypes) {
-					foreach (Polygon polygon in CurrentMapState.StateData.PolygonCollection[meshType][polygonType]) {
-						if (!SelectedPolygons.Contains(polygon)) {
-							AddPolyToSelection(polygon);
-						}
-					}
-				}
-			}
-		}
-
 		public static void SelectAllPolygons() {
 			Polygon firstPolygon = null;
 			if (SelectedPolygons.Count > 0) {
@@ -251,7 +226,13 @@ namespace GaneshaDx.UserInterface {
 			}
 
 			SelectedPolygons.Clear();
-			SelectedPolygons.AddRange(CurrentMapState.StateData.PolygonCollectionBucket);
+
+			Dictionary<PolygonType, List<Polygon>> allPolygons =
+				CurrentMapState.StateData.PolygonCollection[GuiPanelMesh.SelectedMesh];
+
+			foreach (KeyValuePair<PolygonType, List<Polygon>> polygonList in allPolygons) {
+				SelectedPolygons.AddRange(polygonList.Value);
+			}
 
 			if (firstPolygon != null) {
 				SelectedPolygons.Remove(firstPolygon);
@@ -463,37 +444,37 @@ namespace GaneshaDx.UserInterface {
 				return;
 			}
 
-			float minX = SelectedPolygons[0].Vertices[0].AnimationAdjustedPosition.X;
-			float maxX = SelectedPolygons[0].Vertices[0].AnimationAdjustedPosition.X;
-			float minY = SelectedPolygons[0].Vertices[0].AnimationAdjustedPosition.Y;
-			float maxY = SelectedPolygons[0].Vertices[0].AnimationAdjustedPosition.Y;
-			float minZ = SelectedPolygons[0].Vertices[0].AnimationAdjustedPosition.Z;
-			float maxZ = SelectedPolygons[0].Vertices[0].AnimationAdjustedPosition.Z;
+			float minX = SelectedPolygons[0].Vertices[0].Position.X;
+			float maxX = SelectedPolygons[0].Vertices[0].Position.X;
+			float minY = SelectedPolygons[0].Vertices[0].Position.Y;
+			float maxY = SelectedPolygons[0].Vertices[0].Position.Y;
+			float minZ = SelectedPolygons[0].Vertices[0].Position.Z;
+			float maxZ = SelectedPolygons[0].Vertices[0].Position.Z;
 
 			foreach (Polygon polygon in SelectedPolygons) {
 				foreach (Vertex vertex in polygon.Vertices) {
-					if (vertex.AnimationAdjustedPosition.X < minX) {
-						minX = vertex.AnimationAdjustedPosition.X;
+					if (vertex.Position.X < minX) {
+						minX = vertex.Position.X;
 					}
 
-					if (vertex.AnimationAdjustedPosition.X > maxX) {
-						maxX = vertex.AnimationAdjustedPosition.X;
+					if (vertex.Position.X > maxX) {
+						maxX = vertex.Position.X;
 					}
 
-					if (vertex.AnimationAdjustedPosition.Y < minY) {
-						minY = vertex.AnimationAdjustedPosition.Y;
+					if (vertex.Position.Y < minY) {
+						minY = vertex.Position.Y;
 					}
 
-					if (vertex.AnimationAdjustedPosition.Y > maxY) {
-						maxY = vertex.AnimationAdjustedPosition.Y;
+					if (vertex.Position.Y > maxY) {
+						maxY = vertex.Position.Y;
 					}
 
-					if (vertex.AnimationAdjustedPosition.Z < minZ) {
-						minZ = vertex.AnimationAdjustedPosition.Z;
+					if (vertex.Position.Z < minZ) {
+						minZ = vertex.Position.Z;
 					}
 
-					if (vertex.AnimationAdjustedPosition.Z > maxZ) {
-						maxZ = vertex.AnimationAdjustedPosition.Z;
+					if (vertex.Position.Z > maxZ) {
+						maxZ = vertex.Position.Z;
 					}
 				}
 			}

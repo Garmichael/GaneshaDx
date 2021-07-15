@@ -33,12 +33,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 
 		public bool IsSelected => Selection.SelectedPolygons.Contains(this);
 
-		public bool IsHovered =>
-			Selection.HoveredPolygons.Count > 0 &&
-			(
-				Selection.HoveredPolygons[0] == this ||
-				Selection.HoveredPolygons[0].MeshType == MeshType && MeshType != MeshType.PrimaryMesh
-			);
+		public bool IsHovered => Selection.HoveredPolygons.Count > 0 && Selection.HoveredPolygons[0] == this;
 
 		public Vector3 AveragePoint {
 			get {
@@ -229,7 +224,9 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 				MeshType = MeshType,
 				PaletteId = PaletteId,
 				PolygonType = PolygonType,
-				RenderingProperties = new PolygonRenderingProperties(RenderingProperties.RawData),
+				RenderingProperties = RenderingProperties == null
+					? null
+					: new PolygonRenderingProperties(RenderingProperties.RawData),
 				TerrainLevel = TerrainLevel,
 				TerrainX = TerrainX,
 				TerrainZ = TerrainZ,
