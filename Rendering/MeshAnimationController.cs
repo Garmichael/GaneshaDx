@@ -62,26 +62,26 @@ namespace GaneshaDx.Rendering {
 			}
 
 			foreach (MeshType meshType in AnimatedMeshTypes) {
-				if (Animations[meshType] != null) {
+				if (Animations[meshType] != null && Animations[meshType].IsFinished()) {
 					MeshAnimationInstructions allInstructions = CurrentMapState.StateData.MeshAnimationInstructions;
 					MeshAnimation thisMeshAnimation = allInstructions.MeshAnimations[(int) meshType - 1];
 
-					if (Animations[meshType].IsFinished()) {
-						MeshAnimationRoutine currentRoutine = Animations[meshType];
-						int nextFrameId = currentRoutine.CurrentFrame.NextFrameId - 1;
-						bool nextFrameIdIsValid = nextFrameId >= 0 &&
-						                          thisMeshAnimation.Frames[nextFrameId].FrameStateId > 0;
+					MeshAnimationRoutine currentRoutine = Animations[meshType];
+					int nextFrameId = currentRoutine.CurrentFrame.NextFrameId - 1;
+					bool nextFrameIdIsValid = nextFrameId >= 0 &&
+					                          thisMeshAnimation.Frames[nextFrameId].FrameStateId > 0;
 
-						Animations[meshType] = !nextFrameIdIsValid
-							? null
-							: new MeshAnimationRoutine(
-								thisMeshAnimation.Frames[nextFrameId],
-								currentRoutine.CurrentPosition,
-								currentRoutine.CurrentRotation,
-								currentRoutine.CurrentScale,
-								false);
-					}
+					Animations[meshType] = !nextFrameIdIsValid
+						? null
+						: new MeshAnimationRoutine(
+							thisMeshAnimation.Frames[nextFrameId],
+							currentRoutine.CurrentPosition,
+							currentRoutine.CurrentRotation,
+							currentRoutine.CurrentScale,
+							false);
+				}
 
+				if (Animations[meshType] != null) {
 					Animations[meshType].Animate();
 				}
 			}
