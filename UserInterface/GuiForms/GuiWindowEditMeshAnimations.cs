@@ -155,36 +155,36 @@ namespace GaneshaDx.UserInterface.GuiForms {
 		private static void RenderFrameStatePanel() {
 			RenderFrameStatePanelHeader();
 
-			MeshAnimationFrameState selectedFrameState =
-				CurrentMapState.StateData.MeshAnimationInstructions.FrameStates[_selectedFrameState - 1];
+			MeshAnimationKeyFrame selectedKeyFrame =
+				CurrentMapState.StateData.MeshAnimationInstructions.KeyFrames[_selectedFrameState - 1];
 
 			RenderFrameStatePanelValueSet(
 				"Position",
-				selectedFrameState.PositionKeyFrameTypes,
-				selectedFrameState.Position,
+				selectedKeyFrame.PositionTweenTypes,
+				selectedKeyFrame.Position,
 				true,
-				selectedFrameState.PositionStartPercents,
-				selectedFrameState.PositionEndPercents
+				selectedKeyFrame.PositionStartPercents,
+				selectedKeyFrame.PositionEndPercents
 			);
 			GuiStyle.AddSpace();
 
 			RenderFrameStatePanelValueSet(
 				"Rotation",
-				selectedFrameState.RotationKeyFrameTypes,
-				selectedFrameState.Rotation,
+				selectedKeyFrame.RotationTweenTypes,
+				selectedKeyFrame.Rotation,
 				false,
-				selectedFrameState.RotationStartPercents,
-				selectedFrameState.RotationEndPercents
+				selectedKeyFrame.RotationStartPercents,
+				selectedKeyFrame.RotationEndPercents
 			);
 			GuiStyle.AddSpace();
 
 			RenderFrameStatePanelValueSet(
 				"Scale",
-				selectedFrameState.ScaleKeyFrameTypes,
-				selectedFrameState.Scale,
+				selectedKeyFrame.ScaleTweenTypes,
+				selectedKeyFrame.Scale,
 				false,
-				selectedFrameState.ScaleStartPercents,
-				selectedFrameState.ScaleEndPercents
+				selectedKeyFrame.ScaleStartPercents,
+				selectedKeyFrame.ScaleEndPercents
 			);
 			GuiStyle.AddSpace();
 		}
@@ -211,13 +211,13 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 		private static void RenderFrameStatePanelValueSet(
 			string type,
-			List<MeshAnimationKeyFrameType> sourceKeyFrameTypes,
+			List<MeshAnimationTweenType> sourceKeyFrameTypes,
 			List<double> values,
 			bool valueIsInt,
 			List<double> startIndexes,
 			List<double> endIndexes
 		) {
-			string[] keyFrameTypes = Enum.GetNames(typeof(MeshAnimationKeyFrameType));
+			string[] keyFrameTypes = Enum.GetNames(typeof(MeshAnimationTweenType));
 			for (int keyframeTypeIndex = 0; keyframeTypeIndex < keyFrameTypes.Length; keyframeTypeIndex++) {
 				keyFrameTypes[keyframeTypeIndex] = Regex.Replace(keyFrameTypes[keyframeTypeIndex], "(\\B[A-Z])", " $1");
 			}
@@ -256,19 +256,19 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 			int dropDownValue = (int) sourceKeyFrameTypes[0];
 			ImGui.Combo("##FrameState" + type + "XTween", ref dropDownValue, keyFrameTypes, keyFrameTypes.Length);
-			sourceKeyFrameTypes[0] = (MeshAnimationKeyFrameType) dropDownValue;
+			sourceKeyFrameTypes[0] = (MeshAnimationTweenType) dropDownValue;
 			ImGui.NextColumn();
 
 			ImGui.SetNextItemWidth(inputWidth);
 			dropDownValue = (int) sourceKeyFrameTypes[1];
 			ImGui.Combo("##FrameState" + type + "YTween", ref dropDownValue, keyFrameTypes, keyFrameTypes.Length);
-			sourceKeyFrameTypes[1] = (MeshAnimationKeyFrameType) dropDownValue;
+			sourceKeyFrameTypes[1] = (MeshAnimationTweenType) dropDownValue;
 			ImGui.NextColumn();
 
 			ImGui.SetNextItemWidth(inputWidth);
 			dropDownValue = (int) sourceKeyFrameTypes[2];
 			ImGui.Combo("##FrameState" + type + "ZTween", ref dropDownValue, keyFrameTypes, keyFrameTypes.Length);
-			sourceKeyFrameTypes[2] = (MeshAnimationKeyFrameType) dropDownValue;
+			sourceKeyFrameTypes[2] = (MeshAnimationTweenType) dropDownValue;
 			ImGui.NextColumn();
 
 			ImGui.Text("Values");

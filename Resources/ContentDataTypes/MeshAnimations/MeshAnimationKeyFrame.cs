@@ -3,15 +3,15 @@ using GaneshaDx.Common;
 using Microsoft.Xna.Framework;
 
 namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
-	public class MeshAnimationFrameState {
+	public class MeshAnimationKeyFrame {
 		public readonly List<int> Properties = new List<int>();
 
 		public readonly List<double> Position = new List<double>();
 		public readonly List<double> Rotation = new List<double>();
 		public readonly List<double> Scale = new List<double>();
-		public readonly List<MeshAnimationKeyFrameType> PositionKeyFrameTypes = new List<MeshAnimationKeyFrameType>();
-		public readonly List<MeshAnimationKeyFrameType> RotationKeyFrameTypes = new List<MeshAnimationKeyFrameType>();
-		public readonly List<MeshAnimationKeyFrameType> ScaleKeyFrameTypes = new List<MeshAnimationKeyFrameType>();
+		public readonly List<MeshAnimationTweenType> PositionTweenTypes = new List<MeshAnimationTweenType>();
+		public readonly List<MeshAnimationTweenType> RotationTweenTypes = new List<MeshAnimationTweenType>();
+		public readonly List<MeshAnimationTweenType> ScaleTweenTypes = new List<MeshAnimationTweenType>();
 		public readonly List<double> PositionStartPercents = new List<double>();
 		public readonly List<double> RotationStartPercents = new List<double>();
 		public readonly List<double> ScaleStartPercents = new List<double>();
@@ -19,7 +19,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 		public readonly List<double> RotationEndPercents = new List<double>();
 		public readonly List<double> ScaleEndPercents = new List<double>();
 
-		public MeshAnimationFrameState(List<byte> rawData) {
+		public MeshAnimationKeyFrame(List<byte> rawData) {
 			for (int byteIndex = 0; byteIndex < rawData.Count; byteIndex += 2) {
 				Properties.Add(Utilities.GetIntFromLittleEndian(rawData[byteIndex], rawData[byteIndex + 1]));
 			}
@@ -60,17 +60,17 @@ namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 			ScaleEndPercents.Add(Properties[28] / 4096f * 100f);
 			ScaleEndPercents.Add(Properties[29] / 4096f * 100f);
 
-			RotationKeyFrameTypes.Add(ConvertKeyFrameType(Properties[30]));
-			RotationKeyFrameTypes.Add(ConvertKeyFrameType(Properties[31]));
-			RotationKeyFrameTypes.Add(ConvertKeyFrameType(Properties[32]));
+			RotationTweenTypes.Add(ConvertTweenType(Properties[30]));
+			RotationTweenTypes.Add(ConvertTweenType(Properties[31]));
+			RotationTweenTypes.Add(ConvertTweenType(Properties[32]));
 
-			PositionKeyFrameTypes.Add(ConvertKeyFrameType(Properties[33]));
-			PositionKeyFrameTypes.Add(ConvertKeyFrameType(Properties[34]));
-			PositionKeyFrameTypes.Add(ConvertKeyFrameType(Properties[35]));
+			PositionTweenTypes.Add(ConvertTweenType(Properties[33]));
+			PositionTweenTypes.Add(ConvertTweenType(Properties[34]));
+			PositionTweenTypes.Add(ConvertTweenType(Properties[35]));
 
-			ScaleKeyFrameTypes.Add(ConvertKeyFrameType(Properties[36]));
-			ScaleKeyFrameTypes.Add(ConvertKeyFrameType(Properties[37]));
-			ScaleKeyFrameTypes.Add(ConvertKeyFrameType(Properties[38]));
+			ScaleTweenTypes.Add(ConvertTweenType(Properties[36]));
+			ScaleTweenTypes.Add(ConvertTweenType(Properties[37]));
+			ScaleTweenTypes.Add(ConvertTweenType(Properties[38]));
 		}
 
 		public List<byte> GetRawData() {
@@ -144,55 +144,55 @@ namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 				Utilities.GetLittleEndianFromInt((int) (ScaleEndPercents[2] / 100f * 4096f)).high,
 				Utilities.GetLittleEndianFromInt((int) (ScaleEndPercents[2] / 100f * 4096f)).low,
 
-				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(RotationKeyFrameTypes[0])).high,
-				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(RotationKeyFrameTypes[0])).low,
-				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(RotationKeyFrameTypes[1])).high,
-				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(RotationKeyFrameTypes[1])).low,
-				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(RotationKeyFrameTypes[2])).high,
-				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(RotationKeyFrameTypes[2])).low,
+				Utilities.GetLittleEndianFromInt(ConvertTweenType(RotationTweenTypes[0])).high,
+				Utilities.GetLittleEndianFromInt(ConvertTweenType(RotationTweenTypes[0])).low,
+				Utilities.GetLittleEndianFromInt(ConvertTweenType(RotationTweenTypes[1])).high,
+				Utilities.GetLittleEndianFromInt(ConvertTweenType(RotationTweenTypes[1])).low,
+				Utilities.GetLittleEndianFromInt(ConvertTweenType(RotationTweenTypes[2])).high,
+				Utilities.GetLittleEndianFromInt(ConvertTweenType(RotationTweenTypes[2])).low,
 
-				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(PositionKeyFrameTypes[0])).high,
-				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(PositionKeyFrameTypes[0])).low,
-				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(PositionKeyFrameTypes[1])).high,
-				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(PositionKeyFrameTypes[1])).low,
-				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(PositionKeyFrameTypes[2])).high,
-				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(PositionKeyFrameTypes[2])).low,
+				Utilities.GetLittleEndianFromInt(ConvertTweenType(PositionTweenTypes[0])).high,
+				Utilities.GetLittleEndianFromInt(ConvertTweenType(PositionTweenTypes[0])).low,
+				Utilities.GetLittleEndianFromInt(ConvertTweenType(PositionTweenTypes[1])).high,
+				Utilities.GetLittleEndianFromInt(ConvertTweenType(PositionTweenTypes[1])).low,
+				Utilities.GetLittleEndianFromInt(ConvertTweenType(PositionTweenTypes[2])).high,
+				Utilities.GetLittleEndianFromInt(ConvertTweenType(PositionTweenTypes[2])).low,
 
-				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(ScaleKeyFrameTypes[0])).high,
-				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(ScaleKeyFrameTypes[0])).low,
-				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(ScaleKeyFrameTypes[1])).high,
-				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(ScaleKeyFrameTypes[1])).low,
-				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(ScaleKeyFrameTypes[2])).high,
-				Utilities.GetLittleEndianFromInt(ConvertKeyFrameType(ScaleKeyFrameTypes[2])).low,
+				Utilities.GetLittleEndianFromInt(ConvertTweenType(ScaleTweenTypes[0])).high,
+				Utilities.GetLittleEndianFromInt(ConvertTweenType(ScaleTweenTypes[0])).low,
+				Utilities.GetLittleEndianFromInt(ConvertTweenType(ScaleTweenTypes[1])).high,
+				Utilities.GetLittleEndianFromInt(ConvertTweenType(ScaleTweenTypes[1])).low,
+				Utilities.GetLittleEndianFromInt(ConvertTweenType(ScaleTweenTypes[2])).high,
+				Utilities.GetLittleEndianFromInt(ConvertTweenType(ScaleTweenTypes[2])).low,
 
 				0, 0
 			};
 		}
 
-		private MeshAnimationKeyFrameType ConvertKeyFrameType(int value) {
-			MeshAnimationKeyFrameType type = value switch {
-				0 => MeshAnimationKeyFrameType.Unused,
-				5 => MeshAnimationKeyFrameType.TweenTo,
-				6 => MeshAnimationKeyFrameType.TweenBy,
-				9 => MeshAnimationKeyFrameType.Ignore,
-				10 => MeshAnimationKeyFrameType.Oscillate,
-				17 => MeshAnimationKeyFrameType.SnapTo,
-				18 => MeshAnimationKeyFrameType.OscillateOffset,
-				_ => MeshAnimationKeyFrameType.Unknown
+		private MeshAnimationTweenType ConvertTweenType(int value) {
+			MeshAnimationTweenType type = value switch {
+				0 => MeshAnimationTweenType.Unused,
+				5 => MeshAnimationTweenType.TweenTo,
+				6 => MeshAnimationTweenType.TweenBy,
+				9 => MeshAnimationTweenType.Ignore,
+				10 => MeshAnimationTweenType.Oscillate,
+				17 => MeshAnimationTweenType.SnapTo,
+				18 => MeshAnimationTweenType.OscillateOffset,
+				_ => MeshAnimationTweenType.Unknown
 			};
 
 			return type;
 		}
 
-		private int ConvertKeyFrameType(MeshAnimationKeyFrameType value) {
+		private int ConvertTweenType(MeshAnimationTweenType value) {
 			int type = value switch {
-				MeshAnimationKeyFrameType.Unused => 0,
-				MeshAnimationKeyFrameType.TweenTo => 5,
-				MeshAnimationKeyFrameType.TweenBy => 6,
-				MeshAnimationKeyFrameType.Ignore => 9,
-				MeshAnimationKeyFrameType.Oscillate => 10,
-				MeshAnimationKeyFrameType.SnapTo => 17,
-				MeshAnimationKeyFrameType.OscillateOffset => 18,
+				MeshAnimationTweenType.Unused => 0,
+				MeshAnimationTweenType.TweenTo => 5,
+				MeshAnimationTweenType.TweenBy => 6,
+				MeshAnimationTweenType.Ignore => 9,
+				MeshAnimationTweenType.Oscillate => 10,
+				MeshAnimationTweenType.SnapTo => 17,
+				MeshAnimationTweenType.OscillateOffset => 18,
 				_ => 99
 			};
 

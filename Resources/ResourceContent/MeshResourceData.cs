@@ -1301,8 +1301,8 @@ namespace GaneshaDx.Resources.ResourceContent {
 
 			RawData.AddRange(MeshAnimationInstructions.InstructionsHeader);
 
-			foreach (MeshAnimationFrameState instruction in MeshAnimationInstructions.FrameStates) {
-				RawData.AddRange(instruction.GetRawData());
+			foreach (MeshAnimationKeyFrame keyFrame in MeshAnimationInstructions.KeyFrames) {
+				RawData.AddRange(keyFrame.GetRawData());
 			}
 
 			RawData.AddRange(MeshAnimationInstructions.MeshAnimationsHeader);

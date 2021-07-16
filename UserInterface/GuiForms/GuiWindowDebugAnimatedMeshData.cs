@@ -27,14 +27,14 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					ImGui.Indent();
 
 					const int inputWidth = 40;
-					for (int setIndex = 0; setIndex < set.FrameStates.Count; setIndex++) {
-						MeshAnimationFrameState frameState = set.FrameStates[setIndex];
+					for (int setIndex = 0; setIndex < set.KeyFrames.Count; setIndex++) {
+						MeshAnimationKeyFrame keyFrame = set.KeyFrames[setIndex];
 
 						GuiStyle.SetNewUiToDefaultStyle();
 
 						bool highlightHeader = false;
 
-						foreach (int data in frameState.Properties) {
+						foreach (int data in keyFrame.Properties) {
 							if (data != 0) {
 								highlightHeader = true;
 								break;
@@ -55,15 +55,15 @@ namespace GaneshaDx.UserInterface.GuiForms {
 							ImGui.SetColumnWidth(3, inputWidth + 10);
 							ImGui.SetColumnWidth(4, inputWidth + 10);
 
-							for (int dataIndex = 0; dataIndex < frameState.Properties.Count;) {
+							for (int dataIndex = 0; dataIndex < keyFrame.Properties.Count;) {
 								ImGui.Text(dataIndex + ": ");
 								ImGui.NextColumn();
 
 								for (int field = 0; field < 4; field++) {
-									int value = frameState.Properties[dataIndex];
+									int value = keyFrame.Properties[dataIndex];
 									ImGui.SetNextItemWidth(inputWidth);
 									ImGui.DragInt("###instruction_" + setIndex + "_" + dataIndex, ref value);
-									frameState.Properties[dataIndex] = value;
+									keyFrame.Properties[dataIndex] = value;
 									ImGui.NextColumn();
 									dataIndex++;
 								}
@@ -73,7 +73,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 							if (ImGui.Button("Copy##instructionSet_" + setIndex)) {
 								List<string> bytes = new List<string>();
-								foreach (int x in frameState.Properties) {
+								foreach (int x in keyFrame.Properties) {
 									bytes.Add(x.ToString());
 								}
 
@@ -88,7 +88,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 								for (int index = 0; index < byteArray.Length; index++) {
 									string entry = byteArray[index];
 									byte byteValue = (byte) int.Parse(entry);
-									frameState.Properties[index] = byteValue;
+									keyFrame.Properties[index] = byteValue;
 								}
 							}
 						}

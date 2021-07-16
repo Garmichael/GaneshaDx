@@ -3,7 +3,7 @@
 namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 	public class MeshAnimationInstructions {
 		public readonly List<byte> InstructionsHeader = new List<byte>();
-		public readonly List<MeshAnimationFrameState> FrameStates = new List<MeshAnimationFrameState>();
+		public readonly List<MeshAnimationKeyFrame> KeyFrames = new List<MeshAnimationKeyFrame>();
 		
 		public readonly List<byte> MeshAnimationsHeader = new List<byte>();
 		public readonly List<MeshAnimation> MeshAnimations = new List<MeshAnimation>();
@@ -32,8 +32,8 @@ namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 					currentByteIndex++;
 				}
 
-				MeshAnimationFrameState newFrameState = new MeshAnimationFrameState(instructionData);
-				FrameStates.Add(newFrameState);
+				MeshAnimationKeyFrame newKeyFrame = new MeshAnimationKeyFrame(instructionData);
+				KeyFrames.Add(newKeyFrame);
 			}
 
 			while (MeshAnimationsHeader.Count < headerLength) {

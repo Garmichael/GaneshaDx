@@ -147,7 +147,7 @@
 		ConcaveNorthwest,
 	}
 
-	public enum MeshAnimationKeyFrameType {
+	public enum MeshAnimationTweenType {
 		TweenTo,
 		TweenBy,
 		Oscillate,
