@@ -263,38 +263,29 @@ namespace GaneshaDx.Resources.ResourceContent {
 			ProcessMeshPositionDataPerPoly(
 				_texturedTriangleCount[meshType],
 				PolygonCollection[meshType][PolygonType.TexturedTriangle],
-				3,
-				meshType == MeshType.PrimaryMesh
+				3
 			);
 
 			ProcessMeshPositionDataPerPoly(
 				_texturedQuadCount[meshType],
 				PolygonCollection[meshType][PolygonType.TexturedQuad],
-				4,
-				meshType == MeshType.PrimaryMesh
+				4
 			);
 
 			ProcessMeshPositionDataPerPoly(
 				_unTexturedTriangleCount[meshType],
 				PolygonCollection[meshType][PolygonType.UntexturedTriangle],
-				3,
-				meshType == MeshType.PrimaryMesh
+				3
 			);
 
 			ProcessMeshPositionDataPerPoly(
 				_unTexturedQuadCount[meshType],
 				PolygonCollection[meshType][PolygonType.UntexturedQuad],
-				4,
-				meshType == MeshType.PrimaryMesh
+				4
 			);
 		}
 
-		private void ProcessMeshPositionDataPerPoly(
-			int totalCount,
-			List<Polygon> polyContainer,
-			int totalVerts,
-			bool isPrimary
-		) {
+		private void ProcessMeshPositionDataPerPoly(int totalCount, List<Polygon> polyContainer, int totalVerts) {
 			List<Color> vertexColors = new List<Color> {Color.Red, Color.Green, Color.Blue, Color.Yellow};
 
 			for (int index = 0; index < totalCount; index++) {
@@ -318,7 +309,6 @@ namespace GaneshaDx.Resources.ResourceContent {
 
 					polyContainer[index].Vertices.Add(new Vertex {
 						Position = coordinates,
-						AnimationAdjustedPosition = coordinates,
 						Color = vertexColors[vertexCount]
 					});
 

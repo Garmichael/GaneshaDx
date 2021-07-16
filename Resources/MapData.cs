@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using GaneshaDx.Common;
 using GaneshaDx.Environment;
+using GaneshaDx.Rendering;
 using GaneshaDx.Resources.ContentDataTypes.Palettes;
 using GaneshaDx.Resources.ResourceContent;
 using GaneshaDx.UserInterface;
@@ -39,8 +40,8 @@ namespace GaneshaDx.Resources {
 			if (AllResourcesLoaded()) {
 				Stage.Window.Title = "GaneshaDx - " + MapName;
 				MapIsLoaded = true;
-				
 				CurrentMapState.SetState(MapArrangementState.Primary, MapTime.Day, MapWeather.None);
+				MeshAnimationController.PlayAnimations();
 			}
 		}
 

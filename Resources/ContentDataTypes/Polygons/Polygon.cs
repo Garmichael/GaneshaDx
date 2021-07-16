@@ -2,6 +2,7 @@
 using GaneshaDx.Common;
 using GaneshaDx.Environment;
 using GaneshaDx.Rendering;
+using GaneshaDx.Resources.ContentDataTypes.MeshAnimations;
 using GaneshaDx.UserInterface;
 using GaneshaDx.UserInterface.GuiDefinitions;
 using GaneshaDx.UserInterface.Widgets;
@@ -39,7 +40,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 			get {
 				List<Vector3> adjustedVerts = new List<Vector3>();
 				foreach (Vertex vertex in Vertices) {
-					adjustedVerts.Add(vertex.AnimationAdjustedPosition);
+					adjustedVerts.Add(vertex.Position);
 				}
 
 				return Utilities.GetAveragePoint(adjustedVerts);
@@ -237,7 +238,6 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 			foreach (Vertex vertex in Vertices) {
 				Vertex newVertex = new Vertex {
 					Position = new Vector3(vertex.Position.X, vertex.Position.Y, vertex.Position.Z),
-					AnimationAdjustedPosition = new Vector3(vertex.Position.X, vertex.Position.Y, vertex.Position.Z),
 					Color = vertex.Color,
 					NormalElevation = vertex.NormalElevation,
 					NormalAzimuth = vertex.NormalAzimuth,
@@ -326,11 +326,6 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 					Vertices[vertexIndex].Position.Y,
 					Vertices[vertexIndex].Position.Z
 				),
-				AnimationAdjustedPosition = new Vector3(
-					Vertices[vertexIndex].Position.X,
-					Vertices[vertexIndex].Position.Y,
-					Vertices[vertexIndex].Position.Z
-				),
 				Color = newColor,
 				NormalElevation = Vertices[vertexIndex].NormalElevation,
 				NormalAzimuth = Vertices[vertexIndex].NormalAzimuth,
@@ -381,45 +376,9 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 				Vertices[vertexIndex].NormalAzimuth
 			);
 
-			// if (MeshType != MeshType.PrimaryMesh && CurrentMapState.StateData.MeshAnimationInstructions != null) {
-			// 	MeshAnimationInstruction meshAnimationInstruction =
-			// 		CurrentMapState.StateData.MeshAnimationInstructions[MeshType];
-			//
-			// 	int frame = (int) Stage.GameTime.TotalGameTime.TotalMilliseconds % (360 * 5);
-			//
-			// 	frame /= 5;
-			//
-			// 	if (meshAnimationInstruction.Rotation[Axis.X] > 0) {
-			// 		Matrix rotation = Matrix.CreateRotationX(MathHelper.ToRadians(0 + frame));
-			// 		vertexPosition = Vector3.Transform(vertexPosition, rotation);
-			// 	}
-			//
-			// 	if (meshAnimationInstruction.Rotation[Axis.Y] > 0) {
-			// 		Matrix rotation = Matrix.CreateRotationY(MathHelper.ToRadians(0 + frame));
-			// 		vertexPosition = Vector3.Transform(vertexPosition, rotation);
-			// 	}
-			//
-			// 	if (meshAnimationInstruction.Rotation[Axis.Z] > 0) {
-			// 		Matrix rotation = Matrix.CreateRotationZ(MathHelper.ToRadians(0 + frame));
-			// 		vertexPosition = Vector3.Transform(vertexPosition, rotation);
-			// 	}
-			//
-			// 	Matrix scale = Matrix.CreateScale(new Vector3(
-			// 		meshAnimationInstruction.Scale[Axis.X],
-			// 		meshAnimationInstruction.Scale[Axis.Y],
-			// 		meshAnimationInstruction.Scale[Axis.Z]
-			// 	));
-			//
-			// 	vertexPosition = Vector3.Transform(vertexPosition, scale);
-			//
-			// 	vertexPosition += new Vector3(
-			// 		meshAnimationInstruction.Position[Axis.X],
-			// 		meshAnimationInstruction.Position[Axis.Y],
-			// 		meshAnimationInstruction.Position[Axis.Z]
-			// 	);
-			// }
-
-			Vertices[vertexIndex].AnimationAdjustedPosition = vertexPosition;
+			if (MeshType != MeshType.PrimaryMesh) {
+				vertexPosition = MeshAnimationController.GetAnimatedVertexOffset(MeshType, vertexPosition);
+			}
 
 			if (IsTextured) {
 				double adjustedX = UvCoordinates[vertexIndex].X / 256f;

@@ -38,6 +38,7 @@ namespace GaneshaDx {
 			AppInput.Update();
 			AppShortcuts.Update();
 			StageCamera.Update();
+			MeshAnimationController.Update();
 			SceneRenderer.Update();
 			TransformWidget.Update();
 			RotationWidget.Update();

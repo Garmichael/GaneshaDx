@@ -62,7 +62,6 @@ namespace GaneshaDx.UserInterface.GuiForms {
 						Vertices = new List<Vertex> {
 							new Vertex {
 								Position = spawnPoint,
-								AnimationAdjustedPosition = spawnPoint,
 								Color = Color.Red,
 								NormalElevation = 90,
 								NormalAzimuth = 0,
@@ -70,7 +69,6 @@ namespace GaneshaDx.UserInterface.GuiForms {
 							},
 							new Vertex {
 								Position = spawnPoint + new Vector3(28, 0, 0),
-								AnimationAdjustedPosition = spawnPoint + new Vector3(28, 0, 0),
 								Color = Color.Green,
 								NormalElevation = 90,
 								NormalAzimuth = 0,
@@ -78,7 +76,6 @@ namespace GaneshaDx.UserInterface.GuiForms {
 							},
 							new Vertex {
 								Position = spawnPoint + new Vector3(0, 0, 28),
-								AnimationAdjustedPosition = spawnPoint + new Vector3(0, 0, 28),
 								Color = Color.Blue,
 								NormalElevation = 90,
 								NormalAzimuth = 0,
@@ -110,7 +107,6 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					if (newPolygon.IsQuad) {
 						newPolygon.Vertices.Add(new Vertex {
 							Position = spawnPoint + new Vector3(27, 0, 27),
-							AnimationAdjustedPosition = spawnPoint + new Vector3(27, 0, 27),
 							Color = Color.Yellow,
 							NormalElevation = 90,
 							NormalAzimuth = 0,

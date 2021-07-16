@@ -90,7 +90,7 @@ namespace GaneshaDx.UserInterface.Widgets {
 
 			foreach (Vector3 position in vertPositions) {
 				verts.Add(new VertexPositionColorTexture(
-					_vertex.AnimationAdjustedPosition + position,
+					_vertex.Position + position,
 					_vertex.Color,
 					new Vector2(0, 0))
 				);
@@ -136,7 +136,7 @@ namespace GaneshaDx.UserInterface.Widgets {
 				                        TransformWidget.SelectedVertexIndices.Contains(vertexIndex);
 
 				verts.Add(new VertexPositionColorTexture(
-					_vertex.AnimationAdjustedPosition + vertPositions[index],
+					_vertex.Position + vertPositions[index],
 					vertexIsSelected ? Color.Cyan : _vertex.Color,
 					new Vector2(0, 0))
 				);

@@ -47,7 +47,6 @@ namespace GaneshaDx.Common {
 			public int TerrainTransparencyForPolygonEditing = 0;
 			public Vector3 TerrainColorForPolygonEditing = Utilities.ConvertVector3(Color.Cyan.ToVector3());
 			public bool RenderPolygonsInLightingMode = false;
-			public bool AnimateMeshes = true;
 			public bool IsolateMeshes = false;
 			public bool SwapCameraControls = false;
 		}

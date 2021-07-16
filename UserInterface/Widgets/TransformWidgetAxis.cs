@@ -67,13 +67,10 @@ namespace GaneshaDx.UserInterface.Widgets {
 		public void Update() {
 			_center = Gui.Widget switch {
 				WidgetSelectionMode.PolygonVertexTranslate => Selection.SelectedPolygons[0]
-					.Vertices[TransformWidget.SelectedVertexIndices[0]]
-					.AnimationAdjustedPosition,
+					.Vertices[TransformWidget.SelectedVertexIndices[0]].Position,
 				WidgetSelectionMode.PolygonEdgeTranslate => Utilities.GetAveragePoint(new List<Vector3> {
-					Selection.SelectedPolygons[0].Vertices[TransformWidget.SelectedVertexIndices[0]]
-						.AnimationAdjustedPosition,
-					Selection.SelectedPolygons[0].Vertices[TransformWidget.SelectedVertexIndices[1]]
-						.AnimationAdjustedPosition,
+					Selection.SelectedPolygons[0].Vertices[TransformWidget.SelectedVertexIndices[0]].Position,
+					Selection.SelectedPolygons[0].Vertices[TransformWidget.SelectedVertexIndices[1]].Position,
 				}),
 				_ => Selection.CenterOfSelection
 			};

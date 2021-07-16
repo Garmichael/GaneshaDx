@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text.RegularExpressions;
 using GaneshaDx.Common;
+using GaneshaDx.Rendering;
 using GaneshaDx.Resources;
 using GaneshaDx.Resources.ContentDataTypes.MeshAnimations;
 using GaneshaDx.UserInterface.GuiDefinitions;
@@ -15,13 +16,12 @@ namespace GaneshaDx.UserInterface.GuiForms {
 		private const int WindowWidth = LeftPanelWidth + RightPanelWidth;
 		private const int WindowHeight = 550;
 		private const int FooterHeight = 70;
-		
+
 		private static int _selectedFrameState;
 		private static int _selectedMeshId;
 		private static int _selectedStateId;
 
 		public static void Render() {
-			
 			bool windowIsOpen = true;
 
 			GuiStyle.SetNewUiToDefaultStyle();
@@ -143,6 +143,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 				ImGui.SetNextItemWidth(inputWidth);
 				ImGui.DragInt("##MeshAnimationFrameDuration" + i, ref meshAnimation.Frames[i].Duration);
+				meshAnimation.Frames[i].Duration = Utilities.Min(meshAnimation.Frames[i].Duration, 1);
 				ImGui.NextColumn();
 
 				ImGui.SetNextItemWidth(inputWidth);
@@ -197,7 +198,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			ImGui.SetColumnWidth(2, inputWidth + 10);
 
 			ImGui.NextColumn();
-			
+
 			ImGui.Text("Frame State");
 			ImGui.NextColumn();
 
@@ -233,7 +234,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			ImGui.PushStyleColor(ImGuiCol.Text, GuiStyle.ColorPalette[ColorName.HighlightedText]);
 			ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[2]);
 			ImGui.Text(type);
-			
+
 			ImGui.NextColumn();
 
 			ImGui.Text("                X");
@@ -247,7 +248,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 			ImGui.PopFont();
 			ImGui.PopStyleColor();
-			
+
 			ImGui.Text("Tween Type");
 			ImGui.NextColumn();
 
@@ -362,8 +363,8 @@ namespace GaneshaDx.UserInterface.GuiForms {
 		private static void RenderControlsPanel() {
 			ImGui.SetCursorPosX(WindowWidth / 2 - 40);
 			GuiStyle.SetNewUiToDefaultStyle();
-			
-			if (!Configuration.Properties.AnimateMeshes) {
+
+			if (!MeshAnimationController.AnimationsPlaying) {
 				GuiStyle.SetElementStyle(ElementStyle.ButtonSelected);
 			} else {
 				GuiStyle.SetNewUiToDefaultStyle();
@@ -371,22 +372,24 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 			ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
 			if (ImGui.Button("O##MeshAnimationStop")) {
-				Configuration.Properties.AnimateMeshes = false;
+				MeshAnimationController.StopAnimations();
 			}
+
 			ImGui.PopFont();
-			
+
 			ImGui.SameLine();
-			
-			if (Configuration.Properties.AnimateMeshes) {
+
+			if (MeshAnimationController.AnimationsPlaying) {
 				GuiStyle.SetElementStyle(ElementStyle.ButtonSelected);
 			} else {
 				GuiStyle.SetNewUiToDefaultStyle();
 			}
-			
+
 			ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
 			if (ImGui.Button("P##MeshAnimationPlay")) {
-				Configuration.Properties.AnimateMeshes = true;
+				MeshAnimationController.PlayAnimations();
 			}
+
 			ImGui.PopFont();
 		}
 	}
