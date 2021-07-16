@@ -90,9 +90,11 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			ImGui.NextColumn();
 
 			const int idWidth = 30;
-			const int inputWidth = 50;
+			const int inputWidth = 55;
 			const int buttonWidth = 25;
 
+			GuiStyle.AddSpace();
+			
 			ImGui.Columns(1);
 			ImGui.Columns(5, "KeyframeTable", false);
 			ImGui.SetColumnWidth(0, idWidth);
@@ -102,12 +104,12 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			ImGui.SetColumnWidth(4, inputWidth + 10);
 
 
-			ImGui.Text("\n\nId");
+			ImGui.Text("Id");
 			GuiStyle.AddSpace(5);
 
 			ImGui.NextColumn();
 
-			ImGui.Text("\nFrame\nState Id");
+			ImGui.Text("KeyFrame");
 			GuiStyle.AddSpace(5);
 
 			ImGui.NextColumn();
@@ -116,11 +118,11 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			GuiStyle.AddSpace(5);
 			ImGui.NextColumn();
 
-			ImGui.Text("\n\nDuration");
+			ImGui.Text("Duration");
 			GuiStyle.AddSpace(5);
 			ImGui.NextColumn();
 
-			ImGui.Text("\n\nNext Id");
+			ImGui.Text("Next Id");
 			GuiStyle.AddSpace(5);
 			ImGui.NextColumn();
 
@@ -199,7 +201,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 			ImGui.NextColumn();
 
-			ImGui.Text("Frame State");
+			ImGui.Text("KeyFrame Id");
 			ImGui.NextColumn();
 
 			ImGui.SetNextItemWidth(inputWidth);
