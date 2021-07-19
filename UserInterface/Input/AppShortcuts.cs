@@ -113,9 +113,21 @@ namespace GaneshaDx.UserInterface.Input {
 						MapData.ImportTexture(MyraGui.LastImportedTextureFile);
 					}
 				}
-				
+
 				if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.G)) {
-					Gui.ShowDebugAnimatedMeshWindow = !Gui.ShowDebugAnimatedMeshWindow;
+					bool canEditMeshAnimations = MapData.MapIsLoaded &&
+					                             CurrentMapState.StateData.MeshAnimationInstructions != null;
+					if (canEditMeshAnimations) {
+						Gui.ShowMeshAnimationsWindow = !Gui.ShowMeshAnimationsWindow;
+					}
+				}
+
+				if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.H)) {
+					bool canEditMeshAnimations = MapData.MapIsLoaded &&
+					                             CurrentMapState.StateData.MeshAnimationInstructions != null;
+					if (canEditMeshAnimations) {
+						Gui.ShowDebugAnimatedMeshWindow = !Gui.ShowDebugAnimatedMeshWindow;
+					}
 				}
 			}
 		}

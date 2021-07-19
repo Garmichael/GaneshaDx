@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using GaneshaDx.Common;
 using GaneshaDx.Environment;
 using GaneshaDx.Resources;
@@ -34,7 +35,9 @@ namespace GaneshaDx.Rendering {
 			bool isInitialFrame
 		) {
 			MeshAnimationInstructions instructions = CurrentMapState.StateData.MeshAnimationInstructions;
-			_currentKeyFrame = instructions.KeyFrames[currentFrame.FrameStateId - 1];
+			_currentKeyFrame = currentFrame == null || currentFrame.FrameStateId == 0
+				? null
+				: instructions.KeyFrames[currentFrame.FrameStateId - 1];
 			CurrentFrame = currentFrame;
 			_startTime = Stage.GameTime.TotalGameTime.TotalSeconds;
 			_isInitialFrame = isInitialFrame;
@@ -51,6 +54,10 @@ namespace GaneshaDx.Rendering {
 		}
 
 		public void Animate() {
+			if (CurrentFrame == null || _currentKeyFrame == null) {
+				return;
+			}
+
 			_timeIntoAnimation = Stage.GameTime.TotalGameTime.TotalSeconds - _startTime;
 			double totalDurationInSeconds = CurrentFrame.Duration / 60f;
 			_percentIntoAnimation = _timeIntoAnimation / totalDurationInSeconds;
@@ -75,6 +82,9 @@ namespace GaneshaDx.Rendering {
 				CurrentPosition.X = _endPosition.X;
 				CurrentPosition.Y = _endPosition.Y;
 				CurrentPosition.Z = _endPosition.Z;
+				CurrentRotation.X = _endRotation.X;
+				CurrentRotation.Y = _endRotation.Y;
+				CurrentRotation.Z = _endRotation.Z;
 				CurrentScale.X = _endScale.X;
 				CurrentScale.Y = _endScale.Y;
 				CurrentScale.Z = _endScale.Z;
@@ -82,57 +92,90 @@ namespace GaneshaDx.Rendering {
 				CurrentPosition.X = _currentKeyFrame.PositionTweenTypes[0] switch {
 					MeshAnimationTweenType.TweenTo => TweenTo(_startPosition.X, _endPosition.X),
 					MeshAnimationTweenType.TweenBy => TweenBy(_startPosition.X, _endPosition.X),
+					MeshAnimationTweenType.Oscillate => Oscillate(_startPosition.X, _endPosition.X),
 					_ => _startPosition.X
 				};
 
 				CurrentPosition.Y = _currentKeyFrame.PositionTweenTypes[1] switch {
 					MeshAnimationTweenType.TweenTo => TweenTo(_startPosition.Y, _endPosition.Y),
 					MeshAnimationTweenType.TweenBy => TweenBy(_startPosition.Y, _endPosition.Y),
+					MeshAnimationTweenType.Oscillate => Oscillate(_startPosition.Y, _endPosition.Y),
 					_ => _startPosition.Y
 				};
 
 				CurrentPosition.Z = _currentKeyFrame.PositionTweenTypes[2] switch {
 					MeshAnimationTweenType.TweenTo => TweenTo(_startPosition.Z, _endPosition.Z),
 					MeshAnimationTweenType.TweenBy => TweenBy(_startPosition.Z, _endPosition.Z),
+					MeshAnimationTweenType.Oscillate => Oscillate(_startPosition.Z, _endPosition.Z),
 					_ => _startPosition.Z
 				};
 
+				CurrentRotation.X = _currentKeyFrame.RotationTweenTypes[0] switch {
+					MeshAnimationTweenType.TweenTo => TweenTo(_startRotation.X, _endRotation.X),
+					MeshAnimationTweenType.TweenBy => TweenBy(_startRotation.X, _endRotation.X),
+					MeshAnimationTweenType.Oscillate => Oscillate(_startRotation.X, _endRotation.X),
+					_ => _startRotation.X
+				};
+
+				CurrentRotation.Y = _currentKeyFrame.RotationTweenTypes[1] switch {
+					MeshAnimationTweenType.TweenTo => TweenTo(_startRotation.Y, _endRotation.Y),
+					MeshAnimationTweenType.TweenBy => TweenBy(_startRotation.Y, _endRotation.Y),
+					MeshAnimationTweenType.Oscillate => Oscillate(_startRotation.Y, _endRotation.Y),
+					_ => _startRotation.Y
+				};
+
+				CurrentRotation.Z = _currentKeyFrame.RotationTweenTypes[2] switch {
+					MeshAnimationTweenType.TweenTo => TweenTo(_startRotation.Z, _endRotation.Z),
+					MeshAnimationTweenType.TweenBy => TweenBy(_startRotation.Z, _endRotation.Z),
+					MeshAnimationTweenType.Oscillate => Oscillate(_startRotation.Z, _endRotation.Z),
+					_ => _startRotation.Z
+				};
+				
 				CurrentScale.X = _currentKeyFrame.ScaleTweenTypes[0] switch {
 					MeshAnimationTweenType.TweenTo => TweenTo(_startScale.X, _endScale.X),
 					MeshAnimationTweenType.TweenBy => TweenBy(_startScale.X, _endScale.X),
+					MeshAnimationTweenType.Oscillate => Oscillate(_startScale.X, _endScale.X),
 					_ => _startScale.X
 				};
 
 				CurrentScale.Y = _currentKeyFrame.ScaleTweenTypes[1] switch {
 					MeshAnimationTweenType.TweenTo => TweenTo(_startScale.Y, _endScale.Y),
 					MeshAnimationTweenType.TweenBy => TweenBy(_startScale.Y, _endScale.Y),
+					MeshAnimationTweenType.Oscillate => Oscillate(_startScale.Y, _endScale.Y),
 					_ => _startScale.Y
 				};
 
 				CurrentScale.Z = _currentKeyFrame.ScaleTweenTypes[2] switch {
 					MeshAnimationTweenType.TweenTo => TweenTo(_startScale.Z, _endScale.Z),
 					MeshAnimationTweenType.TweenBy => TweenBy(_startScale.Z, _endScale.Z),
+					MeshAnimationTweenType.Oscillate => Oscillate(_startScale.Z, _endScale.Z),
 					_ => _startScale.Z
 				};
+
+				while (CurrentRotation.X < 0) {
+					CurrentRotation.X += 360;
+				}
+
+				while (CurrentRotation.Y < 0) {
+					CurrentRotation.Y += 360;
+				}
+
+				while (CurrentRotation.Z < 0) {
+					CurrentRotation.Z += 360;
+				}
+
+				while (CurrentRotation.X > 360) {
+					CurrentRotation.X -= 360;
+				}
+
+				while (CurrentRotation.Y > 360) {
+					CurrentRotation.Y -= 360;
+				}
+
+				while (CurrentRotation.Z > 360) {
+					CurrentRotation.Z -= 360;
+				}
 			}
-
-			CurrentRotation.X = _currentKeyFrame.RotationTweenTypes[0] switch {
-				MeshAnimationTweenType.TweenTo => TweenTo(_startRotation.X, _endRotation.X),
-				MeshAnimationTweenType.TweenBy => TweenBy(_startRotation.X, _endRotation.X),
-				_ => _startRotation.X
-			};
-
-			CurrentRotation.Y = _currentKeyFrame.RotationTweenTypes[1] switch {
-				MeshAnimationTweenType.TweenTo => TweenTo(_startRotation.Y, _endRotation.Y),
-				MeshAnimationTweenType.TweenBy => TweenBy(_startRotation.Y, _endRotation.Y),
-				_ => _startRotation.Y
-			};
-
-			CurrentRotation.Z = _currentKeyFrame.RotationTweenTypes[2] switch {
-				MeshAnimationTweenType.TweenTo => TweenTo(_startRotation.Z, _endRotation.Z),
-				MeshAnimationTweenType.TweenBy => TweenBy(_startRotation.Z, _endRotation.Z),
-				_ => _startRotation.Z
-			};
 		}
 
 		private float TweenTo(float start, float end) {
@@ -142,6 +185,10 @@ namespace GaneshaDx.Rendering {
 		private float TweenBy(float start, float end) {
 			end += start;
 			return (float) ((end - start) * _percentIntoAnimation + start);
+		}
+
+		private float Oscillate(float start, float end) {
+			return (float) (end  * Math.Sin(2 * Math.PI * _percentIntoAnimation) + start);
 		}
 	}
 }

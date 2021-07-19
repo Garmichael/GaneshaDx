@@ -11,12 +11,12 @@ using ImGuiNET;
 
 namespace GaneshaDx.UserInterface.GuiForms {
 	public static class GuiPanelTerrain {
-		private static bool _resizeTerrainMode;
+		public static bool ResizeTerrainMode;
 		private static int _resizeXSize;
 		private static int _resizeZSize;
 
 		public static void Render() {
-			if (Selection.SelectedTerrainTiles.Count > 0 && !_resizeTerrainMode) {
+			if (Selection.SelectedTerrainTiles.Count > 0 && !ResizeTerrainMode) {
 				RenderTerrainTileProperties();
 			}
 
@@ -444,9 +444,9 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				GuiStyle.SetNewUiToDefaultStyle();
 				ImGui.Indent();
 
-				if (!_resizeTerrainMode) {
+				if (!ResizeTerrainMode) {
 					if (ImGui.Button("Resize Terrain###ToResizeTerrainMode")) {
-						_resizeTerrainMode = true;
+						ResizeTerrainMode = true;
 						_resizeXSize = CurrentMapState.StateData.Terrain.SizeX;
 						_resizeZSize = CurrentMapState.StateData.Terrain.SizeZ;
 					}
@@ -483,14 +483,14 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 					GuiStyle.AddSpace();
 					if (ImGui.Button("Cancel")) {
-						_resizeTerrainMode = false;
+						ResizeTerrainMode = false;
 					}
 
 					ImGui.NextColumn();
 
 					GuiStyle.AddSpace();
 					if (ImGui.Button("Resize", new Vector2(GuiStyle.WidgetWidth, 20))) {
-						_resizeTerrainMode = false;
+						ResizeTerrainMode = false;
 						Selection.SelectedTerrainTiles.Clear();
 						CurrentMapState.StateData.Terrain.ResizeTerrain(_resizeXSize, _resizeZSize);
 					}

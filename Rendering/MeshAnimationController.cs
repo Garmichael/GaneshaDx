@@ -68,17 +68,14 @@ namespace GaneshaDx.Rendering {
 
 					MeshAnimationRoutine currentRoutine = Animations[meshType];
 					int nextFrameId = currentRoutine.CurrentFrame.NextFrameId - 1;
-					bool nextFrameIdIsValid = nextFrameId >= 0 &&
-					                          thisMeshAnimation.Frames[nextFrameId].FrameStateId > 0;
 
-					Animations[meshType] = !nextFrameIdIsValid
-						? null
-						: new MeshAnimationRoutine(
-							thisMeshAnimation.Frames[nextFrameId],
-							currentRoutine.CurrentPosition,
-							currentRoutine.CurrentRotation,
-							currentRoutine.CurrentScale,
-							false);
+					Animations[meshType] = new MeshAnimationRoutine(
+						nextFrameId >= 0 ? thisMeshAnimation.Frames[nextFrameId] : null,
+						currentRoutine.CurrentPosition,
+						currentRoutine.CurrentRotation,
+						currentRoutine.CurrentScale,
+						false
+					);
 				}
 
 				if (Animations[meshType] != null) {
@@ -96,9 +93,7 @@ namespace GaneshaDx.Rendering {
 			Matrix rotationY = Matrix.CreateRotationY(MathHelper.ToRadians(Animations[meshType].CurrentRotation.Y));
 			Matrix rotationZ = Matrix.CreateRotationZ(MathHelper.ToRadians(Animations[meshType].CurrentRotation.Z));
 
-			vertexPosition = Vector3.Transform(vertexPosition, rotationX);
-			vertexPosition = Vector3.Transform(vertexPosition, rotationY);
-			vertexPosition = Vector3.Transform(vertexPosition, rotationZ);
+			vertexPosition = Vector3.Transform(vertexPosition, rotationX * rotationY * rotationZ);
 
 			Matrix scale = Matrix.CreateScale(
 				Animations[meshType].CurrentScale.X,

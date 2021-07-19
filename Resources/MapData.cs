@@ -9,6 +9,7 @@ using GaneshaDx.Resources.ContentDataTypes.Palettes;
 using GaneshaDx.Resources.ResourceContent;
 using GaneshaDx.UserInterface;
 using GaneshaDx.UserInterface.GuiDefinitions;
+using GaneshaDx.UserInterface.GuiForms;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace GaneshaDx.Resources {
@@ -25,7 +26,6 @@ namespace GaneshaDx.Resources {
 
 		public static void LoadMapDataFromFiles(string mapFolder, string mapName) {
 			MapIsLoaded = false;
-			Gui.SelectedTab = RightPanelTab.Map;
 			AllResources = new List<MapResource>();
 			MeshResources = new List<MapResource>();
 			TextureResources = new List<MapResource>();
@@ -41,10 +41,18 @@ namespace GaneshaDx.Resources {
 				Stage.Window.Title = "GaneshaDx - " + MapName;
 				MapIsLoaded = true;
 				CurrentMapState.SetState(MapArrangementState.Primary, MapTime.Day, MapWeather.None);
+				ResetEditorState();
 				MeshAnimationController.PlayAnimations();
 			}
 		}
 
+		private static void ResetEditorState() {
+			Gui.SelectedTab = RightPanelTab.Map;
+			Gui.ShowMeshAnimationsWindow = false;
+			Gui.ShowDebugAnimatedMeshWindow = false;
+			GuiPanelTerrain.ResizeTerrainMode = false;
+		}
+		
 		private static void ProcessAllResources() {
 			for (int index = 0; index < _rawGnsData.Count; index++) {
 				List<byte> resourceRawData = new List<byte>();

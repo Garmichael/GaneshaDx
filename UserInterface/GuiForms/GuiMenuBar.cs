@@ -74,7 +74,12 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					bool canEditMeshAnimations = MapData.MapIsLoaded &&
 					                             CurrentMapState.StateData.MeshAnimationInstructions != null;
 
-					if (ImGui.MenuItem("Edit Mesh Animations", "", Gui.ShowMeshAnimationsWindow, canEditMeshAnimations)) {
+					if (ImGui.MenuItem(
+						"Edit Mesh Animations",
+						"Ctrl + G",
+						Gui.ShowMeshAnimationsWindow,
+						canEditMeshAnimations)
+					) {
 						Gui.ShowMeshAnimationsWindow = !Gui.ShowMeshAnimationsWindow;
 					}
 

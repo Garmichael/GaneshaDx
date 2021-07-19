@@ -151,10 +151,10 @@
 		TweenTo,
 		TweenBy,
 		Oscillate,
-		SnapTo,
 		OscillateOffset,
-		Ignore,
-		Unused,
+		Unk9,
+		Unk17,
+		Invalid,
 		Unknown
 	}
 }

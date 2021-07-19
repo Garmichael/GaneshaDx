@@ -24,8 +24,8 @@ namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 				Properties.Add(Utilities.GetIntFromLittleEndian(rawData[byteIndex], rawData[byteIndex + 1]));
 			}
 
-			Rotation.Add(Properties[0] / 4096f * 360);
-			Rotation.Add(Properties[1] / 4096f * 360);
+			Rotation.Add(-Properties[0] / 4096f * 360);
+			Rotation.Add(-Properties[1] / 4096f * 360);
 			Rotation.Add(Properties[2] / 4096f * 360);
 
 			Position.Add(Properties[4]);
@@ -75,10 +75,10 @@ namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 
 		public List<byte> GetRawData() {
 			return new List<byte> {
-				Utilities.GetLittleEndianFromInt((int) (Rotation[0] / 360f * 4096f)).high,
-				Utilities.GetLittleEndianFromInt((int) (Rotation[0] / 360f * 4096f)).low,
-				Utilities.GetLittleEndianFromInt((int) (Rotation[1] / 360f * 4096f)).high,
-				Utilities.GetLittleEndianFromInt((int) (Rotation[1] / 360f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt((int) (-Rotation[0] / 360f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt((int) (-Rotation[0] / 360f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt((int) (-Rotation[1] / 360f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt((int) (-Rotation[1] / 360f * 4096f)).low,
 				Utilities.GetLittleEndianFromInt((int) (Rotation[2] / 360f * 4096f)).high,
 				Utilities.GetLittleEndianFromInt((int) (Rotation[2] / 360f * 4096f)).low,
 
@@ -171,12 +171,12 @@ namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 
 		private MeshAnimationTweenType ConvertTweenType(int value) {
 			MeshAnimationTweenType type = value switch {
-				0 => MeshAnimationTweenType.Unused,
+				0 => MeshAnimationTweenType.Invalid,
 				5 => MeshAnimationTweenType.TweenTo,
 				6 => MeshAnimationTweenType.TweenBy,
-				9 => MeshAnimationTweenType.Ignore,
+				9 => MeshAnimationTweenType.Unk9,
 				10 => MeshAnimationTweenType.Oscillate,
-				17 => MeshAnimationTweenType.SnapTo,
+				17 => MeshAnimationTweenType.Unk17,
 				18 => MeshAnimationTweenType.OscillateOffset,
 				_ => MeshAnimationTweenType.Unknown
 			};
@@ -186,12 +186,12 @@ namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 
 		private int ConvertTweenType(MeshAnimationTweenType value) {
 			int type = value switch {
-				MeshAnimationTweenType.Unused => 0,
+				MeshAnimationTweenType.Invalid => 0,
 				MeshAnimationTweenType.TweenTo => 5,
 				MeshAnimationTweenType.TweenBy => 6,
-				MeshAnimationTweenType.Ignore => 9,
+				MeshAnimationTweenType.Unk9 => 9,
 				MeshAnimationTweenType.Oscillate => 10,
-				MeshAnimationTweenType.SnapTo => 17,
+				MeshAnimationTweenType.Unk17 => 17,
 				MeshAnimationTweenType.OscillateOffset => 18,
 				_ => 99
 			};

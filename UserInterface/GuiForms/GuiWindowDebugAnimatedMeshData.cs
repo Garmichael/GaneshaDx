@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using GaneshaDx.Resources;
 using GaneshaDx.Resources.ContentDataTypes.MeshAnimations;
 using GaneshaDx.UserInterface.GuiDefinitions;
@@ -8,7 +9,7 @@ using TextCopy;
 namespace GaneshaDx.UserInterface.GuiForms {
 	public static class GuiWindowDebugAnimatedMeshData {
 		private static bool _showUnused = false;
-		
+
 		public static void Render() {
 			GuiStyle.SetNewUiToDefaultStyle();
 			ImGui.GetStyle().WindowRounding = 3;
@@ -19,11 +20,11 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			ImGui.Begin("Animation Bytes", ref windowIsOpen);
 			{
 				ImGui.Checkbox("Show Unused? ", ref _showUnused);
-				
+
 				MeshAnimationInstructions set = CurrentMapState.StateData.MeshAnimationInstructions;
 				ImGui.PopFont();
 
-				if (ImGui.CollapsingHeader("Instructions")) {
+				if (ImGui.CollapsingHeader("Keyframes")) {
 					ImGui.Indent();
 
 					const int inputWidth = 40;
@@ -46,7 +47,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 							ImGui.GetStyle().Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.Dark];
 						}
 
-						if ((highlightHeader || _showUnused) && ImGui.CollapsingHeader("Set " + (setIndex + 1))) {
+						if ((highlightHeader || _showUnused) && ImGui.CollapsingHeader("Keyframe " + (setIndex + 1))) {
 							GuiStyle.SetNewUiToDefaultStyle();
 							ImGui.Columns(5, "InstructionSetData", false);
 							ImGui.SetColumnWidth(0, 30);
@@ -97,7 +98,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					ImGui.Unindent();
 				}
 
-				if (ImGui.CollapsingHeader("Links")) {
+				if (ImGui.CollapsingHeader("Mesh Animations")) {
 					ImGui.Indent();
 
 					const int inputWidth = 40;
@@ -120,7 +121,11 @@ namespace GaneshaDx.UserInterface.GuiForms {
 							ImGui.GetStyle().Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.Dark];
 						}
 
-						if ((highlightHeader || _showUnused) && ImGui.CollapsingHeader("Link " + (setIndex + 1))) {
+						int meshId = setIndex % 8 + 1;
+						int stateId = (int) Math.Floor(setIndex / 8f);
+						if ((highlightHeader || _showUnused) &&
+						    ImGui.CollapsingHeader("Mesh " + meshId + " | State " + stateId)
+						) {
 							GuiStyle.SetNewUiToDefaultStyle();
 							ImGui.Columns(6, "LinkSetData", false);
 							ImGui.SetColumnWidth(0, 30);
@@ -195,22 +200,18 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 					const int inputWidth = 40;
 
-					ImGui.Columns(9, "Data", false);
+					ImGui.Columns(5, "Data", false);
 					ImGui.SetColumnWidth(0, 30);
 					ImGui.SetColumnWidth(1, inputWidth + 10);
 					ImGui.SetColumnWidth(2, inputWidth + 10);
 					ImGui.SetColumnWidth(3, inputWidth + 10);
 					ImGui.SetColumnWidth(4, inputWidth + 10);
-					ImGui.SetColumnWidth(5, inputWidth + 10);
-					ImGui.SetColumnWidth(6, inputWidth + 10);
-					ImGui.SetColumnWidth(7, inputWidth + 10);
-					ImGui.SetColumnWidth(8, inputWidth + 10);
 
 					for (int dataIndex = 0; dataIndex < set.UnknownChunk.Data.Count;) {
 						ImGui.Text(dataIndex + ": ");
 						ImGui.NextColumn();
 
-						for (int field = 0; field < 8; field++) {
+						for (int field = 0; field < 4; field++) {
 							int value = set.UnknownChunk.Data[dataIndex];
 							ImGui.SetNextItemWidth(inputWidth);
 							ImGui.DragInt("###linkUnknownChunk" + dataIndex, ref value);
