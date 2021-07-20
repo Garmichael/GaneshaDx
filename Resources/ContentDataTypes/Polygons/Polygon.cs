@@ -2,7 +2,6 @@
 using GaneshaDx.Common;
 using GaneshaDx.Environment;
 using GaneshaDx.Rendering;
-using GaneshaDx.Resources.ContentDataTypes.MeshAnimations;
 using GaneshaDx.UserInterface;
 using GaneshaDx.UserInterface.GuiDefinitions;
 using GaneshaDx.UserInterface.Widgets;
@@ -40,7 +39,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 			get {
 				List<Vector3> adjustedVerts = new List<Vector3>();
 				foreach (Vertex vertex in Vertices) {
-					adjustedVerts.Add(vertex.Position);
+					adjustedVerts.Add(vertex.CurrentAnimatedPosition);
 				}
 
 				return Utilities.GetAveragePoint(adjustedVerts);
@@ -236,14 +235,13 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 			};
 
 			foreach (Vertex vertex in Vertices) {
-				Vertex newVertex = new Vertex {
-					Position = new Vector3(vertex.Position.X, vertex.Position.Y, vertex.Position.Z),
-					Color = vertex.Color,
-					NormalElevation = vertex.NormalElevation,
-					NormalAzimuth = vertex.NormalAzimuth,
-					UsesNormal = vertex.UsesNormal
-				};
-				newPolygon.Vertices.Add(newVertex);
+				newPolygon.Vertices.Add(new Vertex(
+					new Vector3(vertex.Position.X, vertex.Position.Y, vertex.Position.Z),
+					vertex.Color,
+					vertex.UsesNormal,
+					vertex.NormalAzimuth,
+					vertex.NormalElevation
+				));
 			}
 
 			if (IsTextured) {
@@ -319,18 +317,28 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 			return new List<Polygon> {newPolygonA, newPolygonB};
 		}
 
+		public void SetLastAnimatedPositionsForVertices(Vector3 newRotation) {
+			Matrix totalRotation = Matrix.CreateRotationX(MathHelper.ToRadians(newRotation.X)) *
+			                       Matrix.CreateRotationY(MathHelper.ToRadians(newRotation.Y)) *
+			                       Matrix.CreateRotationZ(MathHelper.ToRadians(newRotation.Z));
+
+			foreach (Vertex vertex in Vertices) {
+				vertex.LastAnimatedStartPosition = Vector3.Transform(vertex.LastAnimatedStartPosition, totalRotation);
+			}
+		}
+
 		private Vertex CloneVertex(int vertexIndex, Color newColor) {
-			return new Vertex {
-				Position = new Vector3(
+			return new Vertex(
+				new Vector3(
 					Vertices[vertexIndex].Position.X,
 					Vertices[vertexIndex].Position.Y,
 					Vertices[vertexIndex].Position.Z
 				),
-				Color = newColor,
-				NormalElevation = Vertices[vertexIndex].NormalElevation,
-				NormalAzimuth = Vertices[vertexIndex].NormalAzimuth,
-				UsesNormal = Vertices[vertexIndex].UsesNormal
-			};
+				newColor,
+				Vertices[vertexIndex].UsesNormal,
+				Vertices[vertexIndex].NormalAzimuth,
+				Vertices[vertexIndex].NormalElevation
+			);
 		}
 
 		private void SetTexture() {
@@ -370,7 +378,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 		}
 
 		private VertexPositionNormalTexture BuildVertex(int vertexIndex) {
-			Vector3 vertexPosition = Vertices[vertexIndex].Position;
+			Vector3 vertexPosition = Vertices[vertexIndex].LastAnimatedStartPosition;
 			Vector3 normal = Utilities.SphereToVector(
 				Vertices[vertexIndex].NormalElevation,
 				Vertices[vertexIndex].NormalAzimuth
@@ -380,6 +388,8 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 				vertexPosition = MeshAnimationController.GetAnimatedVertexOffset(MeshType, vertexPosition);
 			}
 
+			Vertices[vertexIndex].CurrentAnimatedPosition = vertexPosition;
+			
 			if (IsTextured) {
 				double adjustedX = UvCoordinates[vertexIndex].X / 256f;
 				double adjustedY = (UvCoordinates[vertexIndex].Y + 256 * TexturePage) / 1024f;

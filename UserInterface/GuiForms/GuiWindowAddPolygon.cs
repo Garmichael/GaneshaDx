@@ -60,27 +60,9 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 					Polygon newPolygon = new Polygon {
 						Vertices = new List<Vertex> {
-							new Vertex {
-								Position = spawnPoint,
-								Color = Color.Red,
-								NormalElevation = 90,
-								NormalAzimuth = 0,
-								UsesNormal = true
-							},
-							new Vertex {
-								Position = spawnPoint + new Vector3(28, 0, 0),
-								Color = Color.Green,
-								NormalElevation = 90,
-								NormalAzimuth = 0,
-								UsesNormal = true
-							},
-							new Vertex {
-								Position = spawnPoint + new Vector3(0, 0, 28),
-								Color = Color.Blue,
-								NormalElevation = 90,
-								NormalAzimuth = 0,
-								UsesNormal = true
-							}
+							new Vertex(spawnPoint, Color.Red, true, 0, 90),
+							new Vertex(spawnPoint + new Vector3(28, 0, 0), Color.Green, true, 0, 90),
+							new Vertex(spawnPoint + new Vector3(0, 0, 28), Color.Blue, true, 0, 90)
 						},
 						MeshType = MeshType.PrimaryMesh,
 						RenderingProperties = new PolygonRenderingProperties(),
@@ -105,13 +87,9 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					}
 
 					if (newPolygon.IsQuad) {
-						newPolygon.Vertices.Add(new Vertex {
-							Position = spawnPoint + new Vector3(27, 0, 27),
-							Color = Color.Yellow,
-							NormalElevation = 90,
-							NormalAzimuth = 0,
-							UsesNormal = true
-						});
+						newPolygon.Vertices.Add(
+							new Vertex(spawnPoint + new Vector3(28, 0, 28), Color.Yellow, true, 0, 90)
+						);
 
 						if (newPolygon.IsTextured) {
 							newPolygon.UvCoordinates.Add(new Microsoft.Xna.Framework.Vector2(27, 27));

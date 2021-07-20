@@ -327,9 +327,11 @@ namespace GaneshaDx.UserInterface.Widgets {
 						);
 						vertex.Position += _center;
 
-						vertex.Position.X = (float) Math.Round(vertex.Position.X, MidpointRounding.AwayFromZero);
-						vertex.Position.Y = (float) Math.Round(vertex.Position.Y, MidpointRounding.AwayFromZero);
-						vertex.Position.Z = (float) Math.Round(vertex.Position.Z, MidpointRounding.AwayFromZero);
+						vertex.Position = new Vector3(
+							(float) Math.Round(vertex.Position.X, MidpointRounding.AwayFromZero),
+							(float) Math.Round(vertex.Position.Y, MidpointRounding.AwayFromZero),
+							(float) Math.Round(vertex.Position.Z, MidpointRounding.AwayFromZero)
+						);
 					}
 				}
 			} else if (shiftClicked) {

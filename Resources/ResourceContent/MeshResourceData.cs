@@ -307,10 +307,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 						)
 					};
 
-					polyContainer[index].Vertices.Add(new Vertex {
-						Position = coordinates,
-						Color = vertexColors[vertexCount]
-					});
+					polyContainer[index].Vertices.Add(new Vertex(coordinates, vertexColors[vertexCount]));
 
 					_currentByteIndex += 6;
 				}

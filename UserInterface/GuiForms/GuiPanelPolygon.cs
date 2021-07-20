@@ -14,7 +14,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 	public static class GuiPanelPolygon {
 		public static void Render() {
 			RenderWidgetSelection();
-			
+
 			if (Selection.SelectedPolygons.Count > 0) {
 				RenderPositionValues();
 				RenderNormalValues();
@@ -285,7 +285,12 @@ namespace GaneshaDx.UserInterface.GuiForms {
 						ref position,
 						0.1f
 					);
-					polygon.Vertices[vertexIndex].Position.X = -position;
+
+					polygon.Vertices[vertexIndex].Position = new Microsoft.Xna.Framework.Vector3(
+						-position,
+						polygon.Vertices[vertexIndex].Position.Y,
+						polygon.Vertices[vertexIndex].Position.Z
+					);
 					ImGui.NextColumn();
 
 					ImGui.PushItemWidth(valueWidth);
@@ -295,7 +300,13 @@ namespace GaneshaDx.UserInterface.GuiForms {
 						ref position,
 						0.1f
 					);
-					polygon.Vertices[vertexIndex].Position.Y = position;
+
+					polygon.Vertices[vertexIndex].Position = new Microsoft.Xna.Framework.Vector3(
+						polygon.Vertices[vertexIndex].Position.X,
+						position,
+						polygon.Vertices[vertexIndex].Position.Z
+					);
+
 					ImGui.NextColumn();
 
 					ImGui.PushItemWidth(valueWidth);
@@ -305,7 +316,13 @@ namespace GaneshaDx.UserInterface.GuiForms {
 						ref position,
 						0.1f
 					);
-					polygon.Vertices[vertexIndex].Position.Z = position;
+
+					polygon.Vertices[vertexIndex].Position = new Microsoft.Xna.Framework.Vector3(
+						polygon.Vertices[vertexIndex].Position.X,
+						polygon.Vertices[vertexIndex].Position.Y,
+						position
+					);
+
 					ImGui.NextColumn();
 				}
 
@@ -504,10 +521,10 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			if (ImGui.CollapsingHeader("Invisibility Angles", ImGuiTreeNodeFlags.DefaultOpen)) {
 				GuiStyle.SetNewUiToDefaultStyle();
 				ImGui.Indent();
-				
+
 				ImGui.Text("Hide Polygon when Camera Facing:");
 				GuiStyle.AddSpace();
-				
+
 				ImGui.Columns(5, "InvisibilityAnglesColumns", false);
 
 				ImGui.SetColumnWidth(0, GuiStyle.CheckBoxWidth);

@@ -2,6 +2,7 @@
 using GaneshaDx.Common;
 using GaneshaDx.Resources;
 using GaneshaDx.Resources.ContentDataTypes.MeshAnimations;
+using GaneshaDx.Resources.ContentDataTypes.Polygons;
 using Microsoft.Xna.Framework;
 
 namespace GaneshaDx.Rendering {
@@ -72,10 +73,19 @@ namespace GaneshaDx.Rendering {
 					Animations[meshType] = new MeshAnimationRoutine(
 						nextFrameId >= 0 ? thisMeshAnimation.Frames[nextFrameId] : null,
 						currentRoutine.CurrentPosition,
-						currentRoutine.CurrentRotation,
+						Vector3.Zero,
 						currentRoutine.CurrentScale,
 						false
 					);
+
+					foreach (
+						KeyValuePair<PolygonType, List<Polygon>> polygonBucket in
+						CurrentMapState.StateData.PolygonCollection[meshType]
+					) {
+						foreach (Polygon polygon in polygonBucket.Value) {
+							polygon.SetLastAnimatedPositionsForVertices(currentRoutine.CurrentRotation);
+						}
+					}
 				}
 
 				if (Animations[meshType] != null) {
