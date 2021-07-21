@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using GaneshaDx.Common;
+using GaneshaDx.Environment;
 using GaneshaDx.UserInterface.Input;
 using Microsoft.Xna.Framework.Input;
 
@@ -105,7 +106,8 @@ namespace GaneshaDx.UserInterface.Widgets {
 		}
 
 		public static void Render() {
-			if (Selection.SelectedPolygons.Count == 0 ||
+			if (Stage.ScreenshotMode ||
+				Selection.SelectedPolygons.Count == 0 ||
 			    Gui.Widget != WidgetSelectionMode.PolygonTranslate &&
 			    Gui.Widget != WidgetSelectionMode.PolygonVertexTranslate &&
 			    Gui.Widget != WidgetSelectionMode.PolygonEdgeTranslate

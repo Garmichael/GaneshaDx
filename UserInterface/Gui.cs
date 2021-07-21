@@ -43,6 +43,8 @@ namespace GaneshaDx.UserInterface {
 				if (_showManageResourcesWindow) {
 					GuiWindowManageResources.Render();
 					MyraGui.LockModeling = true;
+				} else if (Stage.ScreenshotMode) {
+					MyraGui.LockModeling = true;
 				} else {
 					GuiMenuBar.Render();
 					GuiWindowTexturePreview.Render();

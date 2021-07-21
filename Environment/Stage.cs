@@ -1,4 +1,5 @@
 ﻿using GaneshaDx.Common;
+using GaneshaDx.UserInterface;
 using GaneshaDx.UserInterface.GuiDefinitions;
 using ImGuiHandler.MonoGame;
 using ImGuiNET;
@@ -35,6 +36,7 @@ namespace GaneshaDx.Environment {
 		public static bool FullModelingViewportMode;
 		public static RenderTarget2D ImGuiRenderTarget;
 		public static RenderTarget2D UvPreviewRenderTarget;
+		public static bool ScreenshotMode;
 
 		public static void SetStage(
 			Ganesha ganesha,
@@ -106,7 +108,7 @@ namespace GaneshaDx.Environment {
 			WholeViewport.Width = Width;
 			WholeViewport.Height = Height;
 
-			if (FullModelingViewportMode) {
+			if (ScreenshotMode || FullModelingViewportMode) {
 				ModelingViewport.Width = Width;
 				ModelingViewport.Height = Height;
 				ModelingViewport.X = 0;
@@ -133,6 +135,12 @@ namespace GaneshaDx.Environment {
 			FftPolygonEffect.Parameters["WorldInverseTranspose"].SetValue(worldInverseTransposeMatrix);
 		}
 
+		public static void ToggleScreenshotMode() {
+			ScreenshotMode = !ScreenshotMode;
+			if (ScreenshotMode) {
+				Gui.SelectedTab = RightPanelTab.Polygon;
+			}
+		}
 
 		private static void WindowSizeChanged(object sender, System.EventArgs e) {
 			Window.ClientSizeChanged -= WindowSizeChanged;

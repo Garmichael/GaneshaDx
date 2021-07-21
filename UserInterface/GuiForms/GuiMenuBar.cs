@@ -198,6 +198,16 @@ namespace GaneshaDx.UserInterface.GuiForms {
 						Configuration.SaveConfiguration();
 					}
 
+					ImGui.Separator();
+
+					if (ImGui.MenuItem(
+						"Screenshot Mode",
+						"F12",
+						MapData.MapIsLoaded
+					)) {
+						Stage.ToggleScreenshotMode();
+					}
+
 					ImGui.EndMenu();
 				}
 

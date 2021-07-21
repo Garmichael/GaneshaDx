@@ -11,6 +11,10 @@ namespace GaneshaDx.UserInterface.Input {
 				MyraGui.OpenOpenFileDialog();
 			}
 
+			if (AppInput.KeyJustPressed(Keys.F12)) {
+				Stage.ToggleScreenshotMode();
+			}
+			
 			if (MapData.MapIsLoaded && !MyraGui.IsActive) {
 				if (AppInput.KeyJustPressed(Keys.F1)) {
 					Gui.ShowTipsWindow = !Gui.ShowTipsWindow;

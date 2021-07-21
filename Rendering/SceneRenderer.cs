@@ -191,11 +191,15 @@ namespace GaneshaDx.Rendering {
 			} else {
 				RenderPolygons();
 				CurrentMapState.StateData.Terrain.Render();
-				RenderVertexIndicators();
+				if (!Stage.ScreenshotMode) {
+					RenderVertexIndicators();
+				}
 			}
 
-			RenderLightIndicators();
-			RenderCompass();
+			if (!Stage.ScreenshotMode) {
+				RenderLightIndicators();
+				RenderCompass();
+			}
 		}
 
 		private static void SetCompass() {

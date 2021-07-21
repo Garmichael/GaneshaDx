@@ -389,7 +389,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 			}
 
 			Vertices[vertexIndex].CurrentAnimatedPosition = vertexPosition;
-			
+
 			if (IsTextured) {
 				double adjustedX = UvCoordinates[vertexIndex].X / 256f;
 				double adjustedY = (UvCoordinates[vertexIndex].Y + 256 * TexturePage) / 1024f;
@@ -433,13 +433,15 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 			Stage.FftPolygonEffect.Parameters["HighlightBright"].SetValue(false);
 			Stage.FftPolygonEffect.Parameters["HighlightDim"].SetValue(false);
 
-			if (IsSelected && this == Selection.SelectedPolygons[0]) {
-				bool shouldHighlight = Gui.SelectedTab != RightPanelTab.Texture ||
-				                       Configuration.Properties.HighlightSelectionOnTexturePage;
+			if (!Stage.ScreenshotMode) {
+				if (IsSelected && this == Selection.SelectedPolygons[0]) {
+					bool shouldHighlight = Gui.SelectedTab != RightPanelTab.Texture ||
+					                       Configuration.Properties.HighlightSelectionOnTexturePage;
 
-				Stage.FftPolygonEffect.Parameters["HighlightBright"].SetValue(shouldHighlight);
-			} else if (IsHovered || IsSelected && this != Selection.SelectedPolygons[0]) {
-				Stage.FftPolygonEffect.Parameters["HighlightDim"].SetValue(true);
+					Stage.FftPolygonEffect.Parameters["HighlightBright"].SetValue(shouldHighlight);
+				} else if (IsHovered || IsSelected && this != Selection.SelectedPolygons[0]) {
+					Stage.FftPolygonEffect.Parameters["HighlightDim"].SetValue(true);
+				}
 			}
 
 			float maxAlpha = Configuration.Properties.PolygonTransparencyForTerrainEditing / 100f;

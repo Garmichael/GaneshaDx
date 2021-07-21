@@ -11,7 +11,8 @@ using Microsoft.Xna.Framework.Input;
 
 namespace GaneshaDx.Environment {
 	public static class StageCamera {
-		private const int FrontViewSnapStrength = 5;
+		private const int VerticalSnapStrength = 5;
+		private const int HorizontalSnapStrength = 5;
 		public static Vector3 CamPosition;
 		public static Vector3 CamTarget = new Vector3(-200, 0, 200);
 		public static double CameraHorizontalAngle = -45f;
@@ -156,7 +157,7 @@ namespace GaneshaDx.Environment {
 		}
 
 		private static void HandleInput() {
-			if (MyraGui.IsActive || !AppInput.MouseIsWithinModelViewport) {
+			if (!Stage.ScreenshotMode && (MyraGui.IsActive || !AppInput.MouseIsWithinModelViewport)) {
 				return;
 			}
 
@@ -285,8 +286,8 @@ namespace GaneshaDx.Environment {
 			                     Configuration.Properties.RotationSensitivity *
 			                     direction;
 
-			if (CameraHeightAngle > 179) {
-				CameraHeightAngle = 179;
+			if (CameraHeightAngle > 180) {
+				CameraHeightAngle = 180;
 			}
 
 			if (CameraHeightAngle < 1) {
@@ -295,14 +296,28 @@ namespace GaneshaDx.Environment {
 		}
 
 		private static void SetCameraState() {
-			bool shouldSnapHeightAngle = CameraHeightAngle > 90 - FrontViewSnapStrength &&
-			                             CameraHeightAngle < 90 + FrontViewSnapStrength;
+			bool shouldSnapHeightAngle = Math.Abs(CameraHeightAngle - 90) < VerticalSnapStrength;
 
 			double heightAngleRads = shouldSnapHeightAngle
 				? MathHelper.ToRadians(90)
 				: MathHelper.ToRadians((float) CameraHeightAngle);
 
-			double horizontalAngleRads = MathHelper.ToRadians((float) CameraHorizontalAngle);
+
+			double horizontalAngleRads;
+
+			if (Math.Abs(CameraHorizontalAngle - 90) < HorizontalSnapStrength) {
+				horizontalAngleRads = MathHelper.ToRadians(90);
+			} else if (Math.Abs(CameraHorizontalAngle - 270) < HorizontalSnapStrength) {
+				horizontalAngleRads = MathHelper.ToRadians(270);
+			} else if (Math.Abs(CameraHorizontalAngle - 180) < HorizontalSnapStrength) {
+				horizontalAngleRads = MathHelper.ToRadians(180);
+			} else if (CameraHorizontalAngle > 360 - HorizontalSnapStrength / 2f ||
+			           CameraHorizontalAngle < HorizontalSnapStrength / 2f
+			) {
+				horizontalAngleRads = MathHelper.ToRadians(0);
+			} else {
+				horizontalAngleRads = MathHelper.ToRadians((float) CameraHorizontalAngle);
+			}
 
 			CamPosition = CamTarget + new Vector3(
 				(float) (1000 * Math.Cos(horizontalAngleRads) * Math.Sin(heightAngleRads)),

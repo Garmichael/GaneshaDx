@@ -43,7 +43,8 @@ namespace GaneshaDx.UserInterface.Widgets {
 		}
 
 		public static void Render() {
-			if (Gui.Widget != WidgetSelectionMode.PolygonRotate ||
+			if (Stage.ScreenshotMode ||
+			    Gui.Widget != WidgetSelectionMode.PolygonRotate ||
 			    Selection.SelectedPolygons.Count == 0
 			) {
 				return;
