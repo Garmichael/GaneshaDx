@@ -465,11 +465,6 @@ namespace GaneshaDx.UserInterface.GuiForms {
 						1,
 						(int) Math.Floor(256f / _resizeZSize)
 					);
-					_resizeXSize = Utilities.Clamp(
-						_resizeXSize,
-						1,
-						18
-					);
 
 					ImGui.NextColumn();
 
@@ -482,11 +477,6 @@ namespace GaneshaDx.UserInterface.GuiForms {
 						_resizeZSize,
 						1,
 						(int) Math.Floor(256f / _resizeXSize)
-					);
-					_resizeZSize = Utilities.Clamp(
-						_resizeZSize,
-						1,
-						18
 					);
 
 					ImGui.NextColumn();
@@ -506,6 +496,13 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					}
 
 					ImGui.Columns(1);
+
+					if (_resizeXSize > 18 || _resizeZSize > 18) {
+						GuiStyle.AddSpace();
+						ImGui.TextWrapped(
+							"Warning: The AI tends to break down on maps where either axis is greater than 18"
+						);
+					}
 				}
 
 				ImGui.Unindent();
