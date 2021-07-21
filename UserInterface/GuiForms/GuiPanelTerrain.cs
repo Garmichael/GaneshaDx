@@ -465,6 +465,11 @@ namespace GaneshaDx.UserInterface.GuiForms {
 						1,
 						(int) Math.Floor(256f / _resizeZSize)
 					);
+					_resizeXSize = Utilities.Clamp(
+						_resizeXSize,
+						1,
+						18
+					);
 
 					ImGui.NextColumn();
 
@@ -477,6 +482,11 @@ namespace GaneshaDx.UserInterface.GuiForms {
 						_resizeZSize,
 						1,
 						(int) Math.Floor(256f / _resizeXSize)
+					);
+					_resizeZSize = Utilities.Clamp(
+						_resizeZSize,
+						1,
+						18
 					);
 
 					ImGui.NextColumn();
