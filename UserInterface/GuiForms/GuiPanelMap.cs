@@ -482,6 +482,11 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				}
 
 				ImGui.Columns(1);
+				
+				if (ImGui.Button("Polygon List")) {
+					Gui.ShowPolygonListWindow = true;
+				}
+				
 				ImGui.Unindent();
 			}
 		}

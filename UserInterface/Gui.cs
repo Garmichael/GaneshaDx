@@ -19,6 +19,7 @@ namespace GaneshaDx.UserInterface {
 		public static bool ShowCameraControlWindow;
 		public static bool ShowPreferencesWindow;
 		public static bool ShowAddPolygonWindow;
+		public static bool ShowPolygonListWindow;
 		private static bool _showManageResourcesWindow;
 		public static bool ShowTipsWindow;
 		public static bool ShowDebugAnimatedMeshWindow;
@@ -63,6 +64,10 @@ namespace GaneshaDx.UserInterface {
 
 						if (ShowAddPolygonWindow) {
 							GuiWindowAddPolygon.Render();
+						}
+
+						if (ShowPolygonListWindow) {
+							GuiWindowPolygonList.Render();
 						}
 
 						if (ShowTipsWindow) {
