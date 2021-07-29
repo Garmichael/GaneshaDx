@@ -233,22 +233,17 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			if (beforeHasLightsBackground != data.HasLightsAndBackground) {
 				if (isInitialState) {
 					data.HasLightsAndBackground = true;
-				} else {
-					if (data.HasLightsAndBackground) {
-						data.BackgroundTopColor = Color.White;
-						data.BackgroundBottomColor = Color.Black;
-						data.AmbientLightColor = Color.Gray;
-						data.DirectionalLights.Clear();
-						data.DirectionalLights.Add(new DirectionalLight
-							{LightColor = Color.Gray, DirectionElevation = 45, DirectionAzimuth = 0}
-						);
-						data.DirectionalLights.Add(new DirectionalLight
-							{LightColor = Color.Gray, DirectionElevation = 45, DirectionAzimuth = 120}
-						);
-						data.DirectionalLights.Add(new DirectionalLight
-							{LightColor = Color.Gray, DirectionElevation = 45, DirectionAzimuth = 240}
-						);
-					}
+				}
+
+				if (data.HasLightsAndBackground) {
+					data.BackgroundTopColor = Color.White;
+					data.BackgroundBottomColor = Color.Black;
+					data.AmbientLightColor = Color.Gray;
+					data.DirectionalLights = new List<DirectionalLight> {
+						new DirectionalLight {LightColor = Color.Gray, DirectionElevation = 45, DirectionAzimuth = 0},
+						new DirectionalLight {LightColor = Color.Gray, DirectionElevation = 45, DirectionAzimuth = 120},
+						new DirectionalLight {LightColor = Color.Gray, DirectionElevation = 45, DirectionAzimuth = 240}
+					};
 				}
 
 				CurrentMapState.ResetState();
@@ -355,7 +350,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 							if (offsetIndex > totalColors - 1) {
 								offsetIndex -= totalColors;
 							}
-							
+
 							PaletteColor paletteColor = sourcePalette.Colors[offsetIndex];
 							newPalette.Colors.Add(new PaletteColor(
 								paletteColor.Red,
@@ -367,7 +362,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 						data.PaletteAnimationFrames.Add(newPalette);
 					}
-					
+
 					if (!data.HasTextureAnimations) {
 						data.HasTextureAnimations = true;
 						const int totalAnimations = 32;
