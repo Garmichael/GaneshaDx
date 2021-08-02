@@ -41,7 +41,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				if (ImGui.BeginMenu("Edit")) {
 					ImGui.MenuItem("Add Polygon", "Ctrl + N", ref Gui.ShowAddPolygonWindow, MapData.MapIsLoaded);
 
-					if (ImGui.MenuItem("Clone Selection", "Ctrl + J", false, MapData.MapIsLoaded)) {
+					if (ImGui.MenuItem("Clone Selection", "Ctrl + D", false, MapData.MapIsLoaded)) {
 						CurrentMapState.CloneSelection();
 					}
 
