@@ -123,7 +123,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 		}
 
 		private void SetFileSectorData() {
-			FileSector = Utilities.GetUIntFromLittleEndian(RawData[FileSectorIndex], RawData[FileSectorIndex + 1]);
+			FileSector = Utilities.GetUInt16FromLittleEndian(RawData[FileSectorIndex], RawData[FileSectorIndex + 1]);
 		}
 	}
 }

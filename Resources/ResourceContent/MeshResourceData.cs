@@ -129,9 +129,11 @@ namespace GaneshaDx.Resources.ResourceContent {
 				int pointer = pointers[meshIndex];
 				MeshType meshType = CommonLists.MeshTypes[meshIndex];
 
-				_currentByteIndex = Utilities.GetUIntFromLittleEndian(
+				_currentByteIndex = Utilities.GetInt32FromLittleEndian(
 					RawData[pointer],
-					RawData[pointer + 1]
+					RawData[pointer + 1],
+					RawData[pointer + 2],
+					RawData[pointer + 3]
 				);
 
 				if (_currentByteIndex == 0) {
@@ -186,33 +188,35 @@ namespace GaneshaDx.Resources.ResourceContent {
 			_unTexturedTriangleCount.Remove(meshType);
 			_unTexturedQuadCount.Remove(meshType);
 
-			_currentByteIndex = Utilities.GetUIntFromLittleEndian(
+			_currentByteIndex = Utilities.GetInt32FromLittleEndian(
 				RawData[pointer],
-				RawData[pointer + 1]
+				RawData[pointer + 1],
+				RawData[pointer + 2],
+				RawData[pointer + 3]
 			);
 
 			if (_currentByteIndex == 0) {
 				return;
 			}
 
-			_texturedTriangleCount.Add(meshType, Utilities.GetUIntFromLittleEndian(
+			_texturedTriangleCount.Add(meshType, Utilities.GetUInt16FromLittleEndian(
 				RawData[_currentByteIndex],
 				RawData[_currentByteIndex + 1]
 			));
 
 
-			_texturedQuadCount.Add(meshType, Utilities.GetUIntFromLittleEndian(
+			_texturedQuadCount.Add(meshType, Utilities.GetUInt16FromLittleEndian(
 				RawData[_currentByteIndex + 2],
 				RawData[_currentByteIndex + 3]
 			));
 
-			_unTexturedTriangleCount.Add(meshType, Utilities.GetUIntFromLittleEndian(
+			_unTexturedTriangleCount.Add(meshType, Utilities.GetUInt16FromLittleEndian(
 				RawData[_currentByteIndex + 4],
 				RawData[_currentByteIndex + 5]
 			));
 
 
-			_unTexturedQuadCount.Add(meshType, Utilities.GetUIntFromLittleEndian(
+			_unTexturedQuadCount.Add(meshType, Utilities.GetUInt16FromLittleEndian(
 				RawData[_currentByteIndex + 6],
 				RawData[_currentByteIndex + 7]
 			));
@@ -253,9 +257,11 @@ namespace GaneshaDx.Resources.ResourceContent {
 		}
 
 		private void ProcessMeshPositionData(MeshType meshType, int pointer) {
-			_currentByteIndex = Utilities.GetUIntFromLittleEndian(
+			_currentByteIndex = Utilities.GetInt32FromLittleEndian(
 				RawData[pointer],
-				RawData[pointer + 1]
+				RawData[pointer + 1],
+				RawData[pointer + 2],
+				RawData[pointer + 3]
 			);
 
 			_currentByteIndex += 8;
@@ -293,15 +299,15 @@ namespace GaneshaDx.Resources.ResourceContent {
 
 				for (int vertexCount = 0; vertexCount < totalVerts; vertexCount++) {
 					Vector3 coordinates = new Vector3 {
-						X = -Utilities.GetIntFromLittleEndian(
+						X = -Utilities.GetInt16FromLittleEndian(
 							RawData[_currentByteIndex],
 							RawData[_currentByteIndex + 1]
 						),
-						Y = -Utilities.GetIntFromLittleEndian(
+						Y = -Utilities.GetInt16FromLittleEndian(
 							RawData[_currentByteIndex + 2],
 							RawData[_currentByteIndex + 3]
 						),
-						Z = Utilities.GetIntFromLittleEndian(
+						Z = Utilities.GetInt16FromLittleEndian(
 							RawData[_currentByteIndex + 4],
 							RawData[_currentByteIndex + 5]
 						)
@@ -332,15 +338,15 @@ namespace GaneshaDx.Resources.ResourceContent {
 			for (int index = 0; index < totalCount; index++) {
 				for (int vertexCount = 0; vertexCount < totalVerts; vertexCount++) {
 					Vector3 normals = new Vector3 {
-						X = -Utilities.GetIntFromLittleEndian(
+						X = -Utilities.GetInt16FromLittleEndian(
 							RawData[_currentByteIndex],
 							RawData[_currentByteIndex + 1]
 						) / 4096.0f,
-						Y = -Utilities.GetIntFromLittleEndian(
+						Y = -Utilities.GetInt16FromLittleEndian(
 							RawData[_currentByteIndex + 2],
 							RawData[_currentByteIndex + 3]
 						) / 4096.0f,
-						Z = Utilities.GetIntFromLittleEndian(
+						Z = Utilities.GetInt16FromLittleEndian(
 							RawData[_currentByteIndex + 4],
 							RawData[_currentByteIndex + 5]
 						) / 4096.0f
@@ -441,9 +447,11 @@ namespace GaneshaDx.Resources.ResourceContent {
 		}
 
 		private void ProcessTexturePalettes() {
-			_currentByteIndex = Utilities.GetUIntFromLittleEndian(
+			_currentByteIndex = Utilities.GetInt32FromLittleEndian(
 				RawData[TexturePalettePointer],
-				RawData[TexturePalettePointer + 1]
+				RawData[TexturePalettePointer + 1],
+				RawData[TexturePalettePointer + 2],
+				RawData[TexturePalettePointer + 3]
 			);
 
 			if (_currentByteIndex == 0) {
@@ -479,9 +487,11 @@ namespace GaneshaDx.Resources.ResourceContent {
 		}
 
 		private void ProcessLightingAndBackground() {
-			_currentByteIndex = Utilities.GetUIntFromLittleEndian(
+			_currentByteIndex = Utilities.GetInt32FromLittleEndian(
 				RawData[LightingAndBackgroundPointer],
-				RawData[LightingAndBackgroundPointer + 1]
+				RawData[LightingAndBackgroundPointer + 1],
+				RawData[LightingAndBackgroundPointer + 2],
+				RawData[LightingAndBackgroundPointer + 3]
 			);
 
 			if (_currentByteIndex == 0) {
@@ -503,48 +513,48 @@ namespace GaneshaDx.Resources.ResourceContent {
 			};
 
 			DirectionalLights[0].LightColor = new Color(
-				(int) (Utilities.Clamp(Utilities.GetIntFromLittleEndian(
+				(int) (Utilities.Clamp(Utilities.GetInt16FromLittleEndian(
 						RawData[_currentByteIndex], RawData[_currentByteIndex + 1]), 0, 2040
 				) / 8f),
-				(int) (Utilities.Clamp(Utilities.GetIntFromLittleEndian(
+				(int) (Utilities.Clamp(Utilities.GetInt16FromLittleEndian(
 						RawData[_currentByteIndex + 6], RawData[_currentByteIndex + 7]), 0, 2040
 				) / 8f),
-				(int) (Utilities.Clamp(Utilities.GetIntFromLittleEndian(
+				(int) (Utilities.Clamp(Utilities.GetInt16FromLittleEndian(
 						RawData[_currentByteIndex + 12], RawData[_currentByteIndex + 13]), 0, 2040
 				) / 8f),
 				255
 			);
 
 			DirectionalLights[1].LightColor = new Color(
-				(int) (Utilities.Clamp(Utilities.GetIntFromLittleEndian(
+				(int) (Utilities.Clamp(Utilities.GetInt16FromLittleEndian(
 						RawData[_currentByteIndex + 2], RawData[_currentByteIndex + 3]), 0, 2040
 				) / 8f),
-				(int) (Utilities.Clamp(Utilities.GetIntFromLittleEndian(
+				(int) (Utilities.Clamp(Utilities.GetInt16FromLittleEndian(
 						RawData[_currentByteIndex + 8], RawData[_currentByteIndex + 9]), 0, 2040
 				) / 8f),
-				(int) (Utilities.Clamp(Utilities.GetIntFromLittleEndian(
+				(int) (Utilities.Clamp(Utilities.GetInt16FromLittleEndian(
 						RawData[_currentByteIndex + 14], RawData[_currentByteIndex + 15]), 0, 2040
 				) / 8f),
 				255
 			);
 
 			DirectionalLights[2].LightColor = new Color(
-				(int) (Utilities.Clamp(Utilities.GetIntFromLittleEndian(
+				(int) (Utilities.Clamp(Utilities.GetInt16FromLittleEndian(
 						RawData[_currentByteIndex + 4], RawData[_currentByteIndex + 5]), 0, 2040
 				) / 8f),
-				(int) (Utilities.Clamp(Utilities.GetIntFromLittleEndian(
+				(int) (Utilities.Clamp(Utilities.GetInt16FromLittleEndian(
 					       RawData[_currentByteIndex + 10], RawData[_currentByteIndex + 11]), 0, 2040)
 				       / 8f),
-				(int) (Utilities.Clamp(Utilities.GetIntFromLittleEndian(
+				(int) (Utilities.Clamp(Utilities.GetInt16FromLittleEndian(
 						RawData[_currentByteIndex + 16], RawData[_currentByteIndex + 17]), 0, 2040
 				) / 8f),
 				255
 			);
 
 			Vector3 direction = new Vector3(
-				-Utilities.GetIntFromLittleEndian(RawData[_currentByteIndex + 18], RawData[_currentByteIndex + 19]),
-				-Utilities.GetIntFromLittleEndian(RawData[_currentByteIndex + 20], RawData[_currentByteIndex + 21]),
-				Utilities.GetIntFromLittleEndian(RawData[_currentByteIndex + 22], RawData[_currentByteIndex + 23])
+				-Utilities.GetInt16FromLittleEndian(RawData[_currentByteIndex + 18], RawData[_currentByteIndex + 19]),
+				-Utilities.GetInt16FromLittleEndian(RawData[_currentByteIndex + 20], RawData[_currentByteIndex + 21]),
+				Utilities.GetInt16FromLittleEndian(RawData[_currentByteIndex + 22], RawData[_currentByteIndex + 23])
 			) / 4096.0f;
 
 			direction.Normalize();
@@ -553,9 +563,9 @@ namespace GaneshaDx.Resources.ResourceContent {
 				Utilities.VectorToSphere(direction);
 
 			direction = new Vector3(
-				-Utilities.GetIntFromLittleEndian(RawData[_currentByteIndex + 24], RawData[_currentByteIndex + 25]),
-				-Utilities.GetIntFromLittleEndian(RawData[_currentByteIndex + 26], RawData[_currentByteIndex + 27]),
-				Utilities.GetIntFromLittleEndian(RawData[_currentByteIndex + 28], RawData[_currentByteIndex + 29])
+				-Utilities.GetInt16FromLittleEndian(RawData[_currentByteIndex + 24], RawData[_currentByteIndex + 25]),
+				-Utilities.GetInt16FromLittleEndian(RawData[_currentByteIndex + 26], RawData[_currentByteIndex + 27]),
+				Utilities.GetInt16FromLittleEndian(RawData[_currentByteIndex + 28], RawData[_currentByteIndex + 29])
 			) / 4096.0f;
 
 			direction.Normalize();
@@ -564,9 +574,9 @@ namespace GaneshaDx.Resources.ResourceContent {
 				Utilities.VectorToSphere(direction);
 
 			direction = new Vector3(
-				-Utilities.GetIntFromLittleEndian(RawData[_currentByteIndex + 30], RawData[_currentByteIndex + 31]),
-				-Utilities.GetIntFromLittleEndian(RawData[_currentByteIndex + 32], RawData[_currentByteIndex + 33]),
-				Utilities.GetIntFromLittleEndian(RawData[_currentByteIndex + 34], RawData[_currentByteIndex + 35])
+				-Utilities.GetInt16FromLittleEndian(RawData[_currentByteIndex + 30], RawData[_currentByteIndex + 31]),
+				-Utilities.GetInt16FromLittleEndian(RawData[_currentByteIndex + 32], RawData[_currentByteIndex + 33]),
+				Utilities.GetInt16FromLittleEndian(RawData[_currentByteIndex + 34], RawData[_currentByteIndex + 35])
 			) / 4096.0f;
 
 			direction.Normalize();
@@ -601,11 +611,13 @@ namespace GaneshaDx.Resources.ResourceContent {
 		}
 
 		private void ProcessTerrain() {
-			_currentByteIndex = Utilities.GetUIntFromLittleEndian(
+			_currentByteIndex = Utilities.GetInt32FromLittleEndian(
 				RawData[TerrainPointer],
-				RawData[TerrainPointer + 1]
+				RawData[TerrainPointer + 1],
+				RawData[TerrainPointer + 2],
+				RawData[TerrainPointer + 3]
 			);
-
+			
 			if (_currentByteIndex == 0) {
 				return;
 			}
@@ -701,11 +713,13 @@ namespace GaneshaDx.Resources.ResourceContent {
 		}
 
 		private void ProcessTextureAnimations() {
-			_currentByteIndex = Utilities.GetUIntFromLittleEndian(
+			_currentByteIndex = Utilities.GetInt32FromLittleEndian(
 				RawData[TextureAnimationsPointer],
-				RawData[TextureAnimationsPointer + 1]
+				RawData[TextureAnimationsPointer + 1],
+				RawData[TextureAnimationsPointer + 2],
+				RawData[TextureAnimationsPointer + 3]
 			);
-
+			
 			if (_currentByteIndex == 0) {
 				return;
 			}
@@ -723,11 +737,13 @@ namespace GaneshaDx.Resources.ResourceContent {
 		}
 
 		private void ProcessPaletteAnimationFrames() {
-			_currentByteIndex = Utilities.GetUIntFromLittleEndian(
+			_currentByteIndex = Utilities.GetInt32FromLittleEndian(
 				RawData[PaletteAnimationsPointer],
-				RawData[PaletteAnimationsPointer + 1]
+				RawData[PaletteAnimationsPointer + 1],
+				RawData[PaletteAnimationsPointer + 2],
+				RawData[PaletteAnimationsPointer + 3]
 			);
-
+			
 			if (_currentByteIndex == 0) {
 				return;
 			}
@@ -767,11 +783,13 @@ namespace GaneshaDx.Resources.ResourceContent {
 		private void ProcessMeshAnimationInstructions() {
 			const int instructionChunkSize = 14620;
 
-			_currentByteIndex = Utilities.GetUIntFromLittleEndian(
+			_currentByteIndex = Utilities.GetInt32FromLittleEndian(
 				RawData[AnimatedMeshInstructionsPointer],
-				RawData[AnimatedMeshInstructionsPointer + 1]
+				RawData[AnimatedMeshInstructionsPointer + 1],
+				RawData[AnimatedMeshInstructionsPointer + 2],
+				RawData[AnimatedMeshInstructionsPointer + 3]
 			);
-
+			
 			if (_currentByteIndex == 0) {
 				return;
 			}
@@ -792,11 +810,13 @@ namespace GaneshaDx.Resources.ResourceContent {
 		}
 
 		private void ProcessPolygonRenderProperties() {
-			_currentByteIndex = Utilities.GetUIntFromLittleEndian(
+			_currentByteIndex = Utilities.GetInt32FromLittleEndian(
 				RawData[PolygonRenderPropertiesPointer],
-				RawData[PolygonRenderPropertiesPointer + 1]
+				RawData[PolygonRenderPropertiesPointer + 1],
+				RawData[PolygonRenderPropertiesPointer + 2],
+				RawData[PolygonRenderPropertiesPointer + 3]
 			);
-
+			
 			if (_currentByteIndex == 0) {
 				return;
 			}
@@ -892,8 +912,10 @@ namespace GaneshaDx.Resources.ResourceContent {
 				return;
 			}
 
-			(RawData[PrimaryMeshPointer], RawData[PrimaryMeshPointer + 1]) =
-				Utilities.GetLittleEndianFromInt(RawData.Count);
+			(RawData[PrimaryMeshPointer],
+				RawData[PrimaryMeshPointer + 1],
+				RawData[PrimaryMeshPointer + 2],
+				RawData[PrimaryMeshPointer + 3]) = Utilities.GetLittleEndianFromInt32(RawData.Count);
 
 			BuildRawDataMeshHeader(MeshType.PrimaryMesh);
 			BuildRawDataMeshPosition(MeshType.PrimaryMesh);
@@ -908,25 +930,25 @@ namespace GaneshaDx.Resources.ResourceContent {
 			byte low;
 
 			int count = PolygonCollection[meshType][PolygonType.TexturedTriangle].Count;
-			(high, low) = Utilities.GetLittleEndianFromInt(count);
+			(high, low) = Utilities.GetLittleEndianFromInt16(count);
 
 			RawData.Add(high);
 			RawData.Add(low);
 
 			count = PolygonCollection[meshType][PolygonType.TexturedQuad].Count;
-			(high, low) = Utilities.GetLittleEndianFromInt(count);
+			(high, low) = Utilities.GetLittleEndianFromInt16(count);
 
 			RawData.Add(high);
 			RawData.Add(low);
 
 			count = PolygonCollection[meshType][PolygonType.UntexturedTriangle].Count;
-			(high, low) = Utilities.GetLittleEndianFromInt(count);
+			(high, low) = Utilities.GetLittleEndianFromInt16(count);
 
 			RawData.Add(high);
 			RawData.Add(low);
 
 			count = PolygonCollection[meshType][PolygonType.UntexturedQuad].Count;
-			(high, low) = Utilities.GetLittleEndianFromInt(count);
+			(high, low) = Utilities.GetLittleEndianFromInt16(count);
 
 			RawData.Add(high);
 			RawData.Add(low);
@@ -938,15 +960,15 @@ namespace GaneshaDx.Resources.ResourceContent {
 					byte high;
 					byte low;
 
-					(high, low) = Utilities.GetLittleEndianFromInt((int) -polygon.Vertices[vertexIndex].Position.X);
+					(high, low) = Utilities.GetLittleEndianFromInt16((int) -polygon.Vertices[vertexIndex].Position.X);
 					RawData.Add(high);
 					RawData.Add(low);
 
-					(high, low) = Utilities.GetLittleEndianFromInt((int) -polygon.Vertices[vertexIndex].Position.Y);
+					(high, low) = Utilities.GetLittleEndianFromInt16((int) -polygon.Vertices[vertexIndex].Position.Y);
 					RawData.Add(high);
 					RawData.Add(low);
 
-					(high, low) = Utilities.GetLittleEndianFromInt((int) polygon.Vertices[vertexIndex].Position.Z);
+					(high, low) = Utilities.GetLittleEndianFromInt16((int) polygon.Vertices[vertexIndex].Position.Z);
 					RawData.Add(high);
 					RawData.Add(low);
 				}
@@ -957,15 +979,15 @@ namespace GaneshaDx.Resources.ResourceContent {
 					byte high;
 					byte low;
 
-					(high, low) = Utilities.GetLittleEndianFromInt((int) -polygon.Vertices[vertexIndex].Position.X);
+					(high, low) = Utilities.GetLittleEndianFromInt16((int) -polygon.Vertices[vertexIndex].Position.X);
 					RawData.Add(high);
 					RawData.Add(low);
 
-					(high, low) = Utilities.GetLittleEndianFromInt((int) -polygon.Vertices[vertexIndex].Position.Y);
+					(high, low) = Utilities.GetLittleEndianFromInt16((int) -polygon.Vertices[vertexIndex].Position.Y);
 					RawData.Add(high);
 					RawData.Add(low);
 
-					(high, low) = Utilities.GetLittleEndianFromInt((int) polygon.Vertices[vertexIndex].Position.Z);
+					(high, low) = Utilities.GetLittleEndianFromInt16((int) polygon.Vertices[vertexIndex].Position.Z);
 					RawData.Add(high);
 					RawData.Add(low);
 				}
@@ -976,15 +998,15 @@ namespace GaneshaDx.Resources.ResourceContent {
 					byte high;
 					byte low;
 
-					(high, low) = Utilities.GetLittleEndianFromInt((int) -polygon.Vertices[vertexIndex].Position.X);
+					(high, low) = Utilities.GetLittleEndianFromInt16((int) -polygon.Vertices[vertexIndex].Position.X);
 					RawData.Add(high);
 					RawData.Add(low);
 
-					(high, low) = Utilities.GetLittleEndianFromInt((int) -polygon.Vertices[vertexIndex].Position.Y);
+					(high, low) = Utilities.GetLittleEndianFromInt16((int) -polygon.Vertices[vertexIndex].Position.Y);
 					RawData.Add(high);
 					RawData.Add(low);
 
-					(high, low) = Utilities.GetLittleEndianFromInt((int) polygon.Vertices[vertexIndex].Position.Z);
+					(high, low) = Utilities.GetLittleEndianFromInt16((int) polygon.Vertices[vertexIndex].Position.Z);
 					RawData.Add(high);
 					RawData.Add(low);
 				}
@@ -995,15 +1017,15 @@ namespace GaneshaDx.Resources.ResourceContent {
 					byte high;
 					byte low;
 
-					(high, low) = Utilities.GetLittleEndianFromInt((int) -polygon.Vertices[vertexIndex].Position.X);
+					(high, low) = Utilities.GetLittleEndianFromInt16((int) -polygon.Vertices[vertexIndex].Position.X);
 					RawData.Add(high);
 					RawData.Add(low);
 
-					(high, low) = Utilities.GetLittleEndianFromInt((int) -polygon.Vertices[vertexIndex].Position.Y);
+					(high, low) = Utilities.GetLittleEndianFromInt16((int) -polygon.Vertices[vertexIndex].Position.Y);
 					RawData.Add(high);
 					RawData.Add(low);
 
-					(high, low) = Utilities.GetLittleEndianFromInt((int) polygon.Vertices[vertexIndex].Position.Z);
+					(high, low) = Utilities.GetLittleEndianFromInt16((int) polygon.Vertices[vertexIndex].Position.Z);
 					RawData.Add(high);
 					RawData.Add(low);
 				}
@@ -1021,15 +1043,15 @@ namespace GaneshaDx.Resources.ResourceContent {
 					byte high;
 					byte low;
 
-					(high, low) = Utilities.GetLittleEndianFromInt((int) -(normalData.X * 4096.0f));
+					(high, low) = Utilities.GetLittleEndianFromInt16((int) -(normalData.X * 4096.0f));
 					RawData.Add(high);
 					RawData.Add(low);
 
-					(high, low) = Utilities.GetLittleEndianFromInt((int) -(normalData.Y * 4096.0f));
+					(high, low) = Utilities.GetLittleEndianFromInt16((int) -(normalData.Y * 4096.0f));
 					RawData.Add(high);
 					RawData.Add(low);
 
-					(high, low) = Utilities.GetLittleEndianFromInt((int) -(normalData.Z * 4096.0f));
+					(high, low) = Utilities.GetLittleEndianFromInt16((int) -(normalData.Z * 4096.0f));
 					RawData.Add(high);
 					RawData.Add(low);
 				}
@@ -1045,15 +1067,15 @@ namespace GaneshaDx.Resources.ResourceContent {
 					byte high;
 					byte low;
 
-					(high, low) = Utilities.GetLittleEndianFromInt((int) -(normalData.X * 4096.0f));
+					(high, low) = Utilities.GetLittleEndianFromInt16((int) -(normalData.X * 4096.0f));
 					RawData.Add(high);
 					RawData.Add(low);
 
-					(high, low) = Utilities.GetLittleEndianFromInt((int) -(normalData.Y * 4096.0f));
+					(high, low) = Utilities.GetLittleEndianFromInt16((int) -(normalData.Y * 4096.0f));
 					RawData.Add(high);
 					RawData.Add(low);
 
-					(high, low) = Utilities.GetLittleEndianFromInt((int) -(normalData.Z * 4096.0f));
+					(high, low) = Utilities.GetLittleEndianFromInt16((int) -(normalData.Z * 4096.0f));
 					RawData.Add(high);
 					RawData.Add(low);
 				}
@@ -1129,8 +1151,10 @@ namespace GaneshaDx.Resources.ResourceContent {
 				return;
 			}
 
-			(RawData[TexturePalettePointer], RawData[TexturePalettePointer + 1]) =
-				Utilities.GetLittleEndianFromInt(RawData.Count);
+			(RawData[TexturePalettePointer],
+				RawData[TexturePalettePointer + 1],
+				RawData[TexturePalettePointer + 2],
+				RawData[TexturePalettePointer + 3]) = Utilities.GetLittleEndianFromInt32(RawData.Count);
 
 			foreach (Palette palette in Palettes) {
 				RawData.AddRange(palette.GetRawData());
@@ -1142,8 +1166,10 @@ namespace GaneshaDx.Resources.ResourceContent {
 				return;
 			}
 
-			(RawData[LightingAndBackgroundPointer], RawData[LightingAndBackgroundPointer + 1]) =
-				Utilities.GetLittleEndianFromInt(RawData.Count);
+			(RawData[LightingAndBackgroundPointer],
+				RawData[LightingAndBackgroundPointer + 1],
+				RawData[LightingAndBackgroundPointer + 2],
+				RawData[LightingAndBackgroundPointer + 3]) = Utilities.GetLittleEndianFromInt32(RawData.Count);
 
 			BuildRawDataDirectionalLights();
 			BuildRawDataAmbientLight();
@@ -1154,39 +1180,39 @@ namespace GaneshaDx.Resources.ResourceContent {
 			byte high;
 			byte low;
 
-			(high, low) = Utilities.GetLittleEndianFromInt(DirectionalLights[0].LightColor.R * 8);
+			(high, low) = Utilities.GetLittleEndianFromInt16(DirectionalLights[0].LightColor.R * 8);
 			RawData.Add(high);
 			RawData.Add(low);
 
-			(high, low) = Utilities.GetLittleEndianFromInt(DirectionalLights[1].LightColor.R * 8);
+			(high, low) = Utilities.GetLittleEndianFromInt16(DirectionalLights[1].LightColor.R * 8);
 			RawData.Add(high);
 			RawData.Add(low);
 
-			(high, low) = Utilities.GetLittleEndianFromInt(DirectionalLights[2].LightColor.R * 8);
+			(high, low) = Utilities.GetLittleEndianFromInt16(DirectionalLights[2].LightColor.R * 8);
 			RawData.Add(high);
 			RawData.Add(low);
 
-			(high, low) = Utilities.GetLittleEndianFromInt(DirectionalLights[0].LightColor.G * 8);
+			(high, low) = Utilities.GetLittleEndianFromInt16(DirectionalLights[0].LightColor.G * 8);
 			RawData.Add(high);
 			RawData.Add(low);
 
-			(high, low) = Utilities.GetLittleEndianFromInt(DirectionalLights[1].LightColor.G * 8);
+			(high, low) = Utilities.GetLittleEndianFromInt16(DirectionalLights[1].LightColor.G * 8);
 			RawData.Add(high);
 			RawData.Add(low);
 
-			(high, low) = Utilities.GetLittleEndianFromInt(DirectionalLights[2].LightColor.G * 8);
+			(high, low) = Utilities.GetLittleEndianFromInt16(DirectionalLights[2].LightColor.G * 8);
 			RawData.Add(high);
 			RawData.Add(low);
 
-			(high, low) = Utilities.GetLittleEndianFromInt(DirectionalLights[0].LightColor.B * 8);
+			(high, low) = Utilities.GetLittleEndianFromInt16(DirectionalLights[0].LightColor.B * 8);
 			RawData.Add(high);
 			RawData.Add(low);
 
-			(high, low) = Utilities.GetLittleEndianFromInt(DirectionalLights[1].LightColor.B * 8);
+			(high, low) = Utilities.GetLittleEndianFromInt16(DirectionalLights[1].LightColor.B * 8);
 			RawData.Add(high);
 			RawData.Add(low);
 
-			(high, low) = Utilities.GetLittleEndianFromInt(DirectionalLights[2].LightColor.B * 8);
+			(high, low) = Utilities.GetLittleEndianFromInt16(DirectionalLights[2].LightColor.B * 8);
 			RawData.Add(high);
 			RawData.Add(low);
 
@@ -1196,15 +1222,15 @@ namespace GaneshaDx.Resources.ResourceContent {
 					DirectionalLights[lightIndex].DirectionAzimuth
 				);
 
-				(high, low) = Utilities.GetLittleEndianFromInt((int) Math.Floor(-x * 4096.0f));
+				(high, low) = Utilities.GetLittleEndianFromInt16((int) Math.Floor(-x * 4096.0f));
 				RawData.Add(high);
 				RawData.Add(low);
 
-				(high, low) = Utilities.GetLittleEndianFromInt((int) Math.Floor(-y * 4096.0f));
+				(high, low) = Utilities.GetLittleEndianFromInt16((int) Math.Floor(-y * 4096.0f));
 				RawData.Add(high);
 				RawData.Add(low);
 
-				(high, low) = Utilities.GetLittleEndianFromInt((int) Math.Floor(-z * 4096.0f));
+				(high, low) = Utilities.GetLittleEndianFromInt16((int) Math.Floor(-z * 4096.0f));
 				RawData.Add(high);
 				RawData.Add(low);
 			}
@@ -1230,8 +1256,10 @@ namespace GaneshaDx.Resources.ResourceContent {
 				return;
 			}
 
-			(RawData[TerrainPointer], RawData[TerrainPointer + 1]) =
-				Utilities.GetLittleEndianFromInt(RawData.Count);
+			(RawData[TerrainPointer],
+				RawData[TerrainPointer + 1],
+				RawData[TerrainPointer + 2],
+				RawData[TerrainPointer + 3]) = Utilities.GetLittleEndianFromInt32(RawData.Count);
 
 			RawData.Add((byte) Terrain.SizeX);
 			RawData.Add((byte) Terrain.SizeZ);
@@ -1243,8 +1271,10 @@ namespace GaneshaDx.Resources.ResourceContent {
 				return;
 			}
 
-			(RawData[TextureAnimationsPointer], RawData[TextureAnimationsPointer + 1]) =
-				Utilities.GetLittleEndianFromInt(RawData.Count);
+			(RawData[TextureAnimationsPointer],
+				RawData[TextureAnimationsPointer + 1],
+				RawData[TextureAnimationsPointer + 2],
+				RawData[TextureAnimationsPointer + 3]) = Utilities.GetLittleEndianFromInt32(RawData.Count);
 
 			foreach (AnimatedTextureInstructions textureAnimation in AnimatedTextureInstructions) {
 				RawData.AddRange(textureAnimation.GetRawData());
@@ -1256,8 +1286,10 @@ namespace GaneshaDx.Resources.ResourceContent {
 				return;
 			}
 
-			(RawData[PaletteAnimationsPointer], RawData[PaletteAnimationsPointer + 1]) =
-				Utilities.GetLittleEndianFromInt(RawData.Count);
+			(RawData[PaletteAnimationsPointer],
+				RawData[PaletteAnimationsPointer + 1],
+				RawData[PaletteAnimationsPointer + 2],
+				RawData[PaletteAnimationsPointer + 3]) = Utilities.GetLittleEndianFromInt32(RawData.Count);
 
 			foreach (Palette palette in PaletteAnimationFrames) {
 				RawData.AddRange(palette.GetRawData());
@@ -1265,8 +1297,10 @@ namespace GaneshaDx.Resources.ResourceContent {
 		}
 
 		private void BuildRawDataGrayscalePalettes() {
-			(RawData[TexturePalettesGrayscalePointer], RawData[TexturePalettesGrayscalePointer + 1]) =
-				Utilities.GetLittleEndianFromInt(RawData.Count);
+			(RawData[TexturePalettesGrayscalePointer],
+				RawData[TexturePalettesGrayscalePointer + 1],
+				RawData[TexturePalettesGrayscalePointer + 2],
+				RawData[TexturePalettesGrayscalePointer + 3]) = Utilities.GetLittleEndianFromInt32(RawData.Count);
 
 			foreach (Palette palette in Palettes) {
 				foreach (PaletteColor color in palette.Colors) {
@@ -1293,8 +1327,10 @@ namespace GaneshaDx.Resources.ResourceContent {
 				return;
 			}
 
-			(RawData[AnimatedMeshInstructionsPointer], RawData[AnimatedMeshInstructionsPointer + 1]) =
-				Utilities.GetLittleEndianFromInt(RawData.Count);
+			(RawData[AnimatedMeshInstructionsPointer],
+				RawData[AnimatedMeshInstructionsPointer + 1],
+				RawData[AnimatedMeshInstructionsPointer + 2],
+				RawData[AnimatedMeshInstructionsPointer + 3]) = Utilities.GetLittleEndianFromInt32(RawData.Count);
 
 			RawData.AddRange(MeshAnimationInstructions.InstructionsHeader);
 
@@ -1330,8 +1366,10 @@ namespace GaneshaDx.Resources.ResourceContent {
 
 			for (int index = 0; index < hasMeshes.Count; index++) {
 				if (hasMeshes[index]) {
-					(RawData[pointers[index]], RawData[pointers[index] + 1]) =
-						Utilities.GetLittleEndianFromInt(RawData.Count);
+					(RawData[pointers[index]],
+						RawData[pointers[index] + 1],
+						RawData[pointers[index] + 2],
+						RawData[pointers[index] + 3]) = Utilities.GetLittleEndianFromInt32(RawData.Count);
 
 					BuildRawDataMeshHeader(meshTypes[index]);
 					BuildRawDataMeshPosition(meshTypes[index]);
@@ -1348,8 +1386,10 @@ namespace GaneshaDx.Resources.ResourceContent {
 				return;
 			}
 
-			(RawData[PolygonRenderPropertiesPointer], RawData[PolygonRenderPropertiesPointer + 1]) =
-				Utilities.GetLittleEndianFromInt(RawData.Count);
+			(RawData[PolygonRenderPropertiesPointer],
+				RawData[PolygonRenderPropertiesPointer + 1],
+				RawData[PolygonRenderPropertiesPointer + 2],
+				RawData[PolygonRenderPropertiesPointer + 3]) = Utilities.GetLittleEndianFromInt32(RawData.Count);
 
 			const int unknownDataLength = 896;
 			const int totalTexturedTriangles = 512;

@@ -13,7 +13,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 				Frames.Add(new MeshAnimationFrame {
 					FrameStateId = rawData[currentBye],
 					NextFrameId = rawData[currentBye + 1],
-					Duration = Utilities.GetIntFromLittleEndian(rawData[currentBye + 2], rawData[currentBye + 3])
+					Duration = Utilities.GetInt16FromLittleEndian(rawData[currentBye + 2], rawData[currentBye + 3])
 				});
 				currentBye += 4;
 			}
@@ -25,8 +25,8 @@ namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 			foreach (MeshAnimationFrame frame in Frames) {
 				rawData.Add((byte) frame.FrameStateId);
 				rawData.Add((byte) frame.NextFrameId);
-				rawData.Add(Utilities.GetLittleEndianFromInt(frame.Duration).high);
-				rawData.Add(Utilities.GetLittleEndianFromInt(frame.Duration).low);
+				rawData.Add(Utilities.GetLittleEndianFromInt16(frame.Duration).high);
+				rawData.Add(Utilities.GetLittleEndianFromInt16(frame.Duration).low);
 			}
 
 			return rawData;

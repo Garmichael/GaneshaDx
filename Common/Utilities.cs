@@ -41,17 +41,26 @@ namespace GaneshaDx.Common {
 			return GetHexFromBinary(GetBinaryFromInt(value));
 		}
 
-		public static int GetUIntFromLittleEndian(byte high, byte low) {
+		public static int GetUInt16FromLittleEndian(byte high, byte low) {
 			return BitConverter.ToUInt16(new[] {high, low}, 0);
 		}
 
-		public static int GetIntFromLittleEndian(byte high, byte low) {
+		public static int GetInt16FromLittleEndian(byte high, byte low) {
 			return BitConverter.ToInt16(new[] {high, low}, 0);
 		}
 
-		public static (byte high, byte low) GetLittleEndianFromInt(int value) {
+		public static (byte high, byte low) GetLittleEndianFromInt16(int value) {
 			byte[] bytes = BitConverter.GetBytes((short)value);
 			return (bytes[0], bytes[1]);
+		}
+
+		public static int GetInt32FromLittleEndian(byte highest, byte high, byte low, byte lowest) {
+			return BitConverter.ToInt32(new[] {highest, high, low, lowest}, 0);
+		}
+		
+		public static (byte highest, byte high, byte low, byte lowest) GetLittleEndianFromInt32(int value) {
+			byte[] bytes = BitConverter.GetBytes(value);
+			return (bytes[0], bytes[1], bytes[2], bytes[3]);
 		}
 
 		public static Color GetColorFromHex(string hex) {
