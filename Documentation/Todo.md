@@ -10,6 +10,7 @@
     [4] [2] Warning if Sector Size increases
     [1] [3] Auto-Export Screenshots (four angles, plus Top-down, hidden UI)
         mapname_bev.png, mapname_45.png, mapname_135.png, mapname_225.png, mapname_315.png
+    [3] [4] Figure out a color picker solution for the 32x32x32 color depth thing
 
 ### Animated Meshes
 
@@ -58,6 +59,7 @@
     [1] [1] Terrain, resizing after adding terrain to another state
     [1] [1] Turn off Resize Terrain Mode on tab switch / state switch / map load
     [1] [1] Copying a Triangle's UV to a Quad's UV causes a crash
+    [1] [1] Export blank colors for the rest of palettes
 
 ## Investigation
 
