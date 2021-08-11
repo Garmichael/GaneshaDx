@@ -89,6 +89,10 @@ namespace GaneshaDx.UserInterface.Widgets {
 			_center = Selection.CenterOfSelection;
 
 			if (RotationWidget.AnchoredToVertex) {
+				if (RotationWidget.AnchoredVertex > Selection.SelectedPolygons[0].Vertices.Count - 1) {
+					RotationWidget.AnchoredVertex = 0;
+				}
+				
 				_center = Selection.SelectedPolygons[0].Vertices[RotationWidget.AnchoredVertex].Position;
 			}
 		}
