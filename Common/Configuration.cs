@@ -49,6 +49,7 @@ namespace GaneshaDx.Common {
 			public bool RenderPolygonsInLightingMode = false;
 			public bool IsolateMeshes = false;
 			public bool SwapCameraControls = false;
+			public bool AddExtraBytes = false;
 		}
 	}
 }

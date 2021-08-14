@@ -617,7 +617,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 				RawData[TerrainPointer + 2],
 				RawData[TerrainPointer + 3]
 			);
-			
+
 			if (_currentByteIndex == 0) {
 				return;
 			}
@@ -719,7 +719,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 				RawData[TextureAnimationsPointer + 2],
 				RawData[TextureAnimationsPointer + 3]
 			);
-			
+
 			if (_currentByteIndex == 0) {
 				return;
 			}
@@ -743,7 +743,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 				RawData[PaletteAnimationsPointer + 2],
 				RawData[PaletteAnimationsPointer + 3]
 			);
-			
+
 			if (_currentByteIndex == 0) {
 				return;
 			}
@@ -789,7 +789,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 				RawData[AnimatedMeshInstructionsPointer + 2],
 				RawData[AnimatedMeshInstructionsPointer + 3]
 			);
-			
+
 			if (_currentByteIndex == 0) {
 				return;
 			}
@@ -816,7 +816,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 				RawData[PolygonRenderPropertiesPointer + 2],
 				RawData[PolygonRenderPropertiesPointer + 3]
 			);
-			
+
 			if (_currentByteIndex == 0) {
 				return;
 			}
@@ -923,6 +923,11 @@ namespace GaneshaDx.Resources.ResourceContent {
 			BuildRawDataMeshTextureProperties(MeshType.PrimaryMesh);
 			BuildRawDataMeshUnknownData(MeshType.PrimaryMesh);
 			BuildRawDataMeshTerrainDefinitions(MeshType.PrimaryMesh);
+
+			if (Configuration.Properties.AddExtraBytes) {
+				RawData.Add(0);
+				RawData.Add(0);
+			}
 		}
 
 		private void BuildRawDataMeshHeader(MeshType meshType) {
@@ -1174,6 +1179,12 @@ namespace GaneshaDx.Resources.ResourceContent {
 			BuildRawDataDirectionalLights();
 			BuildRawDataAmbientLight();
 			BuildRawDataBackgroundColors();
+
+			if (Configuration.Properties.AddExtraBytes) {
+				RawData.Add(0);
+				RawData.Add(0);
+				RawData.Add(0);
+			}
 		}
 
 		private void BuildRawDataDirectionalLights() {
@@ -1264,6 +1275,11 @@ namespace GaneshaDx.Resources.ResourceContent {
 			RawData.Add((byte) Terrain.SizeX);
 			RawData.Add((byte) Terrain.SizeZ);
 			RawData.AddRange(Terrain.GetRawData());
+
+			if (Configuration.Properties.AddExtraBytes) {
+				RawData.Add(0);
+				RawData.Add(0);
+			}
 		}
 
 		private void BuildRawDataTextureAnimations() {
