@@ -50,6 +50,8 @@ namespace GaneshaDx.Common {
 			public bool IsolateMeshes = false;
 			public bool SwapCameraControls = false;
 			public bool AddExtraBytes = false;
+			public bool AutoSaveEnabled = true;
+			public int AutoSaveDuration = 10;
 		}
 	}
 }

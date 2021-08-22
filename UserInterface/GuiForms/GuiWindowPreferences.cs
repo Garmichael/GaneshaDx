@@ -31,7 +31,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				Configuration.Properties.TranslateAxisControlSpeed =
 					Utilities.Min(Configuration.Properties.TranslateAxisControlSpeed, 0.1f);
 				ImGui.NextColumn();
-				
+
 				ImGui.Text("Panning Strength");
 				ImGui.NextColumn();
 
@@ -105,6 +105,24 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
 				ImGui.Checkbox("###PreferencesSwapCameraControls", ref Configuration.Properties.SwapCameraControls);
+				ImGui.NextColumn();
+
+
+				GuiStyle.AddSpace();
+				ImGui.Text("AutoSave");
+				ImGui.NextColumn();
+
+				GuiStyle.AddSpace();
+				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+				ImGui.Checkbox("###PreferencesAutoSave", ref Configuration.Properties.AutoSaveEnabled);
+				ImGui.NextColumn();
+
+				ImGui.Text("AutoSave Every X Minutes");
+				ImGui.NextColumn();
+				
+				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+				ImGui.InputInt("###PreferencesAutoSaveDuration", ref Configuration.Properties.AutoSaveDuration);
+				Configuration.Properties.AutoSaveDuration = Utilities.Min(Configuration.Properties.AutoSaveDuration, 1);
 				ImGui.NextColumn();
 
 				ImGui.Columns(1);

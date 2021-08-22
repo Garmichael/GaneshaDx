@@ -46,6 +46,7 @@ namespace GaneshaDx {
 			OverlayConsole.Update();
 			FpsCounter.Update();
 			GuiWindowTextureElement.Update();
+			AutoSaver.Update();
 
 			base.Update(gameTime);
 		}
