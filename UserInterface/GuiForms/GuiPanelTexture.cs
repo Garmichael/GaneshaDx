@@ -518,6 +518,13 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			}
 
 			ImGui.Columns(1);
+
+			GuiStyle.AddSpace();
+			GuiStyle.SetNewUiToDefaultStyle();
+			
+			if (ImGui.Button("Export Default Palette")) {
+				MyraGui.OpenExportPaletteFileDialog("default.act", -1, "main");
+			}
 		}
 
 		private static void RenderAnimationList() {

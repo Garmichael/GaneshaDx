@@ -197,14 +197,22 @@ namespace GaneshaDx.Resources {
 		public static void ExportPalette(string filePath, int paletteId, string paletteType) {
 			List<byte> actData = new List<byte>();
 
-			List<PaletteColor> sourcePalette = paletteType == "main"
-				? CurrentMapState.StateData.Palettes[paletteId].Colors
-				: CurrentMapState.StateData.PaletteAnimationFrames[paletteId].Colors;
+			if (paletteId == -1) {
+				for (int i = 0; i < 16; i++) {
+					actData.Add((byte) (i * 17));
+					actData.Add((byte) (i * 17));
+					actData.Add((byte) (i * 17));
+				}
+			} else {
+				List<PaletteColor> sourcePalette = paletteType == "main"
+					? CurrentMapState.StateData.Palettes[paletteId].Colors
+					: CurrentMapState.StateData.PaletteAnimationFrames[paletteId].Colors;
 
-			foreach (PaletteColor color in sourcePalette) {
-				actData.Add((byte) (color.Red * 8));
-				actData.Add((byte) (color.Green * 8));
-				actData.Add((byte) (color.Blue * 8));
+				foreach (PaletteColor color in sourcePalette) {
+					actData.Add((byte) (color.Red * 8));
+					actData.Add((byte) (color.Green * 8));
+					actData.Add((byte) (color.Blue * 8));
+				}
 			}
 
 			while (actData.Count < 256 * 3) {
@@ -228,7 +236,7 @@ namespace GaneshaDx.Resources {
 				                  time.Date.Year + "-" +
 				                  time.Hour + "-" +
 				                  time.Minute;
-				
+
 				if (!Directory.Exists(mapFolder)) {
 					Directory.CreateDirectory(mapFolder);
 				}
