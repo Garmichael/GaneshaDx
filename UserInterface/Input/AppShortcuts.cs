@@ -14,123 +14,132 @@ namespace GaneshaDx.UserInterface.Input {
 			if (AppInput.KeyJustPressed(Keys.F12)) {
 				Stage.ToggleScreenshotMode();
 			}
-			
+
 			if (MapData.MapIsLoaded && !MyraGui.IsActive) {
-				if (AppInput.KeyJustPressed(Keys.F1)) {
-					Gui.ShowTipsWindow = !Gui.ShowTipsWindow;
-				}
+				if (!AppInput.ControlHeld) {
+					if (AppInput.KeyJustPressed(Keys.F1)) {
+						Gui.ShowTipsWindow = !Gui.ShowTipsWindow;
+					}
 
-				if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.S)) {
-					MapData.SaveMap();
-				}
+					if (AppInput.KeyJustPressed(Keys.Z)) {
+						StageCamera.FocusOnSelection();
+					}
 
-				if (AppInput.KeyJustPressed(Keys.Z)) {
-					StageCamera.FocusOnSelection();
-				}
+					if (AppInput.KeyJustPressed(Keys.Q)) {
+						Gui.Widget = WidgetSelectionMode.Select;
+					}
 
-				if (AppInput.KeyJustPressed(Keys.Q)) {
-					Gui.Widget = WidgetSelectionMode.Select;
-				}
-
-				if (AppInput.KeyJustPressed(Keys.W)) {
-					Gui.Widget = WidgetSelectionMode.PolygonTranslate;
-				}
-
-				if (AppInput.KeyJustPressed(Keys.E)) {
-					Gui.Widget = WidgetSelectionMode.PolygonRotate;
-				}
-
-				if (AppInput.KeyJustPressed(Keys.R)) {
-					Gui.Widget = WidgetSelectionMode.PolygonVertexTranslate;
-				}
-
-				if (AppInput.KeyJustPressed(Keys.T)) {
-					Gui.Widget = WidgetSelectionMode.PolygonEdgeTranslate;
-				}
-
-				if (AppInput.KeyJustPressed(Keys.L)) {
-					Configuration.Properties.RenderPolygonsInLightingMode =
-						!Configuration.Properties.RenderPolygonsInLightingMode;
-					Configuration.SaveConfiguration();
-				}
-
-				if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.A)) {
-					if (Gui.SelectedTab == RightPanelTab.Terrain) {
-						Selection.SelectAllTerrainTiles();
-					} else {
+					if (AppInput.KeyJustPressed(Keys.W)) {
 						Gui.Widget = WidgetSelectionMode.PolygonTranslate;
-						Selection.SelectAllPolygons();
+					}
+
+					if (AppInput.KeyJustPressed(Keys.E)) {
+						Gui.Widget = WidgetSelectionMode.PolygonRotate;
+					}
+
+					if (AppInput.KeyJustPressed(Keys.T)) {
+						Gui.Widget = WidgetSelectionMode.PolygonEdgeTranslate;
+					}
+
+					if (AppInput.KeyJustPressed(Keys.L)) {
+						Configuration.Properties.RenderPolygonsInLightingMode =
+							!Configuration.Properties.RenderPolygonsInLightingMode;
+						Configuration.SaveConfiguration();
+					}
+
+					if (AppInput.KeyJustPressed(Keys.OemPlus) || AppInput.KeyJustPressed(Keys.Add)) {
+						if (Gui.SelectedTab == RightPanelTab.Terrain) {
+							Selection.GrowTerrainSelection();
+						} else {
+							Selection.GrowPolygonSelection();
+						}
+					}
+
+					if (AppInput.KeyJustPressed(Keys.P)) {
+						Gui.ShowPreferencesWindow = !Gui.ShowPreferencesWindow;
+					}
+
+					if (AppInput.KeyJustPressed(Keys.Delete)) {
+						CurrentMapState.DeleteSelection();
+					}
+
+					if (AppInput.KeyJustPressed(Keys.C)) {
+						Gui.ShowCameraControlWindow = !Gui.ShowCameraControlWindow;
+					}
+
+					if (AppInput.KeyJustPressed(Keys.M)) {
+						Gui.ToggleManageResourcesWindow();
 					}
 				}
 
-				if (AppInput.KeyJustPressed(Keys.OemPlus) || AppInput.KeyJustPressed(Keys.Add)) {
-					if (Gui.SelectedTab == RightPanelTab.Terrain) {
-						Selection.GrowTerrainSelection();
-					} else {
-						Selection.GrowPolygonSelection();
+				if (AppInput.ControlHeld) {
+					if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.S)) {
+						MapData.SaveMap();
 					}
-				}
-
-				if (AppInput.KeyJustPressed(Keys.P)) {
-					Gui.ShowPreferencesWindow = !Gui.ShowPreferencesWindow;
-				}
-
-				if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.D)) {
-					CurrentMapState.CloneSelection();
-				}
-
-				if (AppInput.KeyJustPressed(Keys.Delete)) {
-					CurrentMapState.DeleteSelection();
-				}
-
-				if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.N)) {
-					Gui.ShowAddPolygonWindow = !Gui.ShowAddPolygonWindow;
-				}
-
-				if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.Q)) {
-					Stage.Ganesha.Exit();
-				}
-
-				if (AppInput.KeyJustPressed(Keys.C)) {
-					Gui.ShowCameraControlWindow = !Gui.ShowCameraControlWindow;
-				}
-
-				if (AppInput.KeyJustPressed(Keys.M)) {
-					Gui.ToggleManageResourcesWindow();
-				}
-
-				if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.I)) {
-					MyraGui.OpenImportTextureFileDialog();
-				}
-
-				if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.E)) {
-					string fileName = MapData.MapName + "." +
-					                  CurrentMapState.StateData.StateTextureResource.XFile +
-					                  ".png";
-
-					MyraGui.OpenExportTextureFileDialog(fileName);
-				}
 
 
-				if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.R)) {
-					if (MyraGui.LastImportedTextureFile != "") {
-						MapData.ImportTexture(MyraGui.LastImportedTextureFile);
+					if (!AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.R)) {
+						Gui.Widget = WidgetSelectionMode.PolygonVertexTranslate;
 					}
-				}
 
-				if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.G)) {
-					bool canEditMeshAnimations = MapData.MapIsLoaded &&
-					                             CurrentMapState.StateData.MeshAnimationInstructions != null;
-					if (canEditMeshAnimations) {
-						Gui.ShowMeshAnimationsWindow = !Gui.ShowMeshAnimationsWindow;
+
+					if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.A)) {
+						if (Gui.SelectedTab == RightPanelTab.Terrain) {
+							Selection.SelectAllTerrainTiles();
+						} else {
+							Gui.Widget = WidgetSelectionMode.PolygonTranslate;
+							Selection.SelectAllPolygons();
+						}
 					}
-				}
 
-				if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.H)) {
-					bool canEditMeshAnimations = MapData.MapIsLoaded &&
-					                             CurrentMapState.StateData.MeshAnimationInstructions != null;
-					if (canEditMeshAnimations) {
-						Gui.ShowDebugAnimatedMeshWindow = !Gui.ShowDebugAnimatedMeshWindow;
+
+					if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.D)) {
+						CurrentMapState.CloneSelection();
+					}
+
+
+					if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.N)) {
+						Gui.ShowAddPolygonWindow = !Gui.ShowAddPolygonWindow;
+					}
+
+					if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.Q)) {
+						Stage.Ganesha.Exit();
+					}
+
+
+					if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.I)) {
+						MyraGui.OpenImportTextureFileDialog();
+					}
+
+					if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.E)) {
+						string fileName = MapData.MapName + "." +
+						                  CurrentMapState.StateData.StateTextureResource.XFile +
+						                  ".png";
+
+						MyraGui.OpenExportTextureFileDialog(fileName);
+					}
+
+
+					if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.R)) {
+						if (MyraGui.LastImportedTextureFile != "") {
+							MapData.ImportTexture(MyraGui.LastImportedTextureFile);
+						}
+					}
+
+					if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.G)) {
+						bool canEditMeshAnimations = MapData.MapIsLoaded &&
+						                             CurrentMapState.StateData.MeshAnimationInstructions != null;
+						if (canEditMeshAnimations) {
+							Gui.ShowMeshAnimationsWindow = !Gui.ShowMeshAnimationsWindow;
+						}
+					}
+
+					if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.H)) {
+						bool canEditMeshAnimations = MapData.MapIsLoaded &&
+						                             CurrentMapState.StateData.MeshAnimationInstructions != null;
+						if (canEditMeshAnimations) {
+							Gui.ShowDebugAnimatedMeshWindow = !Gui.ShowDebugAnimatedMeshWindow;
+						}
 					}
 				}
 			}
