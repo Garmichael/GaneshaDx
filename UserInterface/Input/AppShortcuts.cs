@@ -33,6 +33,10 @@ namespace GaneshaDx.UserInterface.Input {
 						Gui.Widget = WidgetSelectionMode.PolygonTranslate;
 					}
 
+					if (AppInput.KeyJustPressed(Keys.R)) {
+						Gui.Widget = WidgetSelectionMode.PolygonVertexTranslate;
+					}
+					
 					if (AppInput.KeyJustPressed(Keys.E)) {
 						Gui.Widget = WidgetSelectionMode.PolygonRotate;
 					}
@@ -73,17 +77,11 @@ namespace GaneshaDx.UserInterface.Input {
 				}
 
 				if (AppInput.ControlHeld) {
-					if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.S)) {
+					if (AppInput.KeyJustPressed(Keys.S)) {
 						MapData.SaveMap();
 					}
 
-
-					if (!AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.R)) {
-						Gui.Widget = WidgetSelectionMode.PolygonVertexTranslate;
-					}
-
-
-					if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.A)) {
+					if (AppInput.KeyJustPressed(Keys.A)) {
 						if (Gui.SelectedTab == RightPanelTab.Terrain) {
 							Selection.SelectAllTerrainTiles();
 						} else {
@@ -92,26 +90,23 @@ namespace GaneshaDx.UserInterface.Input {
 						}
 					}
 
-
-					if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.D)) {
+					if (AppInput.KeyJustPressed(Keys.D)) {
 						CurrentMapState.CloneSelection();
 					}
 
-
-					if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.N)) {
+					if (AppInput.KeyJustPressed(Keys.N)) {
 						Gui.ShowAddPolygonWindow = !Gui.ShowAddPolygonWindow;
 					}
 
-					if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.Q)) {
+					if (AppInput.KeyJustPressed(Keys.Q)) {
 						Stage.Ganesha.Exit();
 					}
 
-
-					if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.I)) {
+					if (AppInput.KeyJustPressed(Keys.I)) {
 						MyraGui.OpenImportTextureFileDialog();
 					}
 
-					if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.E)) {
+					if (AppInput.KeyJustPressed(Keys.E)) {
 						string fileName = MapData.MapName + "." +
 						                  CurrentMapState.StateData.StateTextureResource.XFile +
 						                  ".png";
@@ -119,14 +114,13 @@ namespace GaneshaDx.UserInterface.Input {
 						MyraGui.OpenExportTextureFileDialog(fileName);
 					}
 
-
-					if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.R)) {
+					if (AppInput.KeyJustPressed(Keys.R)) {
 						if (MyraGui.LastImportedTextureFile != "") {
 							MapData.ImportTexture(MyraGui.LastImportedTextureFile);
 						}
 					}
 
-					if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.G)) {
+					if (AppInput.KeyJustPressed(Keys.G)) {
 						bool canEditMeshAnimations = MapData.MapIsLoaded &&
 						                             CurrentMapState.StateData.MeshAnimationInstructions != null;
 						if (canEditMeshAnimations) {
@@ -134,7 +128,7 @@ namespace GaneshaDx.UserInterface.Input {
 						}
 					}
 
-					if (AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.H)) {
+					if (AppInput.KeyJustPressed(Keys.H)) {
 						bool canEditMeshAnimations = MapData.MapIsLoaded &&
 						                             CurrentMapState.StateData.MeshAnimationInstructions != null;
 						if (canEditMeshAnimations) {
