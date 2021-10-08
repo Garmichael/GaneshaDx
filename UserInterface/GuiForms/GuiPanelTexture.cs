@@ -78,7 +78,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				ImGui.Text("V");
 				ImGui.NextColumn();
 
-				string[] vertexLabels = {"A", "B", "C", "D"};
+				string[] vertexLabels = { "A", "B", "C", "D" };
 				Vector4[] vertexColors = {
 					Utilities.ConvertVector4(Color.Red.ToVector4()),
 					Utilities.ConvertVector4(Color.LightGreen.ToVector4()),
@@ -94,7 +94,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					GuiStyle.SetNewUiToDefaultStyle();
 
 					ImGui.PushItemWidth(valueWidth);
-					int uPosition = (int) polygon.UvCoordinates[vertexIndex].X;
+					int uPosition = (int)polygon.UvCoordinates[vertexIndex].X;
 					ImGui.DragInt(
 						vertexLabels[vertexIndex] + "U_Position",
 						ref uPosition,
@@ -103,7 +103,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					ImGui.NextColumn();
 
 					ImGui.PushItemWidth(valueWidth);
-					int vPosition = (int) polygon.UvCoordinates[vertexIndex].Y;
+					int vPosition = (int)polygon.UvCoordinates[vertexIndex].Y;
 					ImGui.DragInt(
 						vertexLabels[vertexIndex] + "V_Position",
 						ref vPosition,
@@ -244,10 +244,12 @@ namespace GaneshaDx.UserInterface.GuiForms {
 								_copiedPolygon.RenderingProperties.LitTexture;
 
 							for (int uvIndex = 0; uvIndex < selectedPolygon.UvCoordinates.Count; uvIndex++) {
-								selectedPolygon.UvCoordinates[uvIndex] = new Microsoft.Xna.Framework.Vector2(
-									_copiedPolygon.UvCoordinates[uvIndex].X,
-									_copiedPolygon.UvCoordinates[uvIndex].Y
-								);
+								if (_copiedPolygon.UvCoordinates.Count > uvIndex) {
+									selectedPolygon.UvCoordinates[uvIndex] = new Microsoft.Xna.Framework.Vector2(
+										_copiedPolygon.UvCoordinates[uvIndex].X,
+										_copiedPolygon.UvCoordinates[uvIndex].Y
+									);
+								}
 							}
 						}
 					}
@@ -281,8 +283,8 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					position = Vector3.Transform(position, rotation);
 					position += new Vector3(center, 0);
 
-					int newX = (int) Math.Round(position.X, MidpointRounding.AwayFromZero);
-					int newY = (int) Math.Round(position.Y, MidpointRounding.AwayFromZero);
+					int newX = (int)Math.Round(position.X, MidpointRounding.AwayFromZero);
+					int newY = (int)Math.Round(position.Y, MidpointRounding.AwayFromZero);
 
 					selectedPolygon.UvCoordinates[uvIndex] = new Microsoft.Xna.Framework.Vector2(newX, newY);
 				}
@@ -428,7 +430,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				style.FramePadding = Vector2.Zero;
 
 				if (Selection.SelectedPolygons.Count > 0 && Selection.SelectedPolygons[0].PaletteId == paletteIndex) {
-					style.Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.HighlightedText];
+					style.Colors[(int)ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.HighlightedText];
 				}
 
 				ImGui.Text(paletteIndex.ToString());
@@ -448,9 +450,9 @@ namespace GaneshaDx.UserInterface.GuiForms {
 						color.W = 0;
 					}
 
-					style.Colors[(int) ImGuiCol.Button] = color;
-					style.Colors[(int) ImGuiCol.ButtonHovered] = color + new Vector4(0.1f, 0.1f, 0.1f, 0);
-					style.Colors[(int) ImGuiCol.ButtonActive] = color;
+					style.Colors[(int)ImGuiCol.Button] = color;
+					style.Colors[(int)ImGuiCol.ButtonHovered] = color + new Vector4(0.1f, 0.1f, 0.1f, 0);
+					style.Colors[(int)ImGuiCol.ButtonActive] = color;
 
 					string id = "##COLOR" + paletteIndex + "_" + colorIndex;
 
@@ -473,7 +475,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				style.FrameBorderSize = 0;
 
 				ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
-				ImGui.GetStyle().Colors[(int) ImGuiCol.Button] =
+				ImGui.GetStyle().Colors[(int)ImGuiCol.Button] =
 					GuiStyle.ColorPalette[ColorName.Transparent];
 
 				if (ImGui.Button("Z##import" + paletteIndex)) {
@@ -521,7 +523,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 			GuiStyle.AddSpace();
 			GuiStyle.SetNewUiToDefaultStyle();
-			
+
 			if (ImGui.Button("Export Default Palette")) {
 				MyraGui.OpenExportPaletteFileDialog("default.act", -1, "main");
 			}
@@ -559,20 +561,20 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 				ImGui.NextColumn();
 
-				int animationType = (int) textureAnimations[index].TextureAnimationType;
+				int animationType = (int)textureAnimations[index].TextureAnimationType;
 				int beforeAnimationType = animationType;
 				ImGui.SetNextItemWidth(comboWidth);
 				ImGui.Combo("##animation" + index, ref animationType, animationTypes.ToArray(), animationTypes.Count);
 
 				if (beforeAnimationType != animationType) {
-					TextureAnimationType newType = (TextureAnimationType) animationType;
+					TextureAnimationType newType = (TextureAnimationType)animationType;
 					bool newTypeIsValid = !(newType == TextureAnimationType.PaletteAnimation &&
 					                        (CurrentMapState.StateData.PaletteAnimationFrames == null ||
 					                         CurrentMapState.StateData.PaletteAnimationFrames.Count == 0
 					                        ));
 
 					if (newTypeIsValid) {
-						textureAnimations[index].TextureAnimationType = (TextureAnimationType) animationType;
+						textureAnimations[index].TextureAnimationType = (TextureAnimationType)animationType;
 
 						textureAnimations[index].Instructions = textureAnimations[index].TextureAnimationType switch {
 							TextureAnimationType.PaletteAnimation => new PaletteAnimation(),
@@ -654,9 +656,9 @@ namespace GaneshaDx.UserInterface.GuiForms {
 						color.W = 0;
 					}
 
-					style.Colors[(int) ImGuiCol.Button] = color;
-					style.Colors[(int) ImGuiCol.ButtonHovered] = color + new Vector4(0.1f, 0.1f, 0.1f, 0);
-					style.Colors[(int) ImGuiCol.ButtonActive] = color;
+					style.Colors[(int)ImGuiCol.Button] = color;
+					style.Colors[(int)ImGuiCol.ButtonHovered] = color + new Vector4(0.1f, 0.1f, 0.1f, 0);
+					style.Colors[(int)ImGuiCol.ButtonActive] = color;
 
 					string id = "##COLOR" + paletteIndex + "_" + colorIndex;
 
@@ -679,7 +681,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				style.FrameBorderSize = 0;
 
 				ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
-				ImGui.GetStyle().Colors[(int) ImGuiCol.Button] = GuiStyle.ColorPalette[ColorName.Transparent];
+				ImGui.GetStyle().Colors[(int)ImGuiCol.Button] = GuiStyle.ColorPalette[ColorName.Transparent];
 
 				if (ImGui.Button("Z##importA" + paletteIndex)) {
 					MyraGui.OpenImportPaletteFileDialog(paletteIndex, "animation");
@@ -727,7 +729,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 			GuiStyle.AddSpace();
 
-			PaletteAnimation selectedAnimation = (PaletteAnimation) SelectedTextureAnimation;
+			PaletteAnimation selectedAnimation = (PaletteAnimation)SelectedTextureAnimation;
 
 			GuiStyle.SetNewUiToDefaultStyle();
 			ImGui.Indent();
@@ -774,7 +776,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 		}
 
 		private static void RenderUvAnimation() {
-			UvAnimation selectedAnimation = (UvAnimation) SelectedTextureAnimation;
+			UvAnimation selectedAnimation = (UvAnimation)SelectedTextureAnimation;
 
 			GuiStyle.SetNewUiToDefaultStyle();
 
@@ -793,7 +795,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			ImGui.NextColumn();
 
 			ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
-			int animationMode = (int) selectedAnimation.UvAnimationMode;
+			int animationMode = (int)selectedAnimation.UvAnimationMode;
 
 			List<string> animationModes = Enum.GetNames(typeof(UvAnimationMode)).ToList();
 			for (int animationModeIndex = 0; animationModeIndex < animationModes.Count; animationModeIndex++) {
@@ -803,14 +805,14 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			}
 
 			ImGui.Combo("UVA_AnimationMode", ref animationMode, animationModes.ToArray(), animationModes.Count);
-			selectedAnimation.UvAnimationMode = (UvAnimationMode) animationMode;
+			selectedAnimation.UvAnimationMode = (UvAnimationMode)animationMode;
 			ImGui.NextColumn();
 
 			ImGui.Text("Preview Page");
 			ImGui.NextColumn();
 
 			ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
-			string[] options = {"Canvas Page", "Frames Page"};
+			string[] options = { "Canvas Page", "Frames Page" };
 			ImGui.Combo("UVA_PreviewPage", ref TextureAnimationPreviewPageId, options, 2);
 			TextureAnimationPreviewPageId = Utilities.Clamp(TextureAnimationPreviewPageId, 0, 15);
 			ImGui.NextColumn();
