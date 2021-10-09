@@ -302,6 +302,10 @@ namespace GaneshaDx.UserInterface.GuiForms {
 						}
 					}
 				}
+
+				if (AppInput.KeyJustPressed(Keys.OemPlus) || AppInput.KeyJustPressed(Keys.Add)) {
+					Selection.GrowUvSelection();
+				}
 			}
 		}
 

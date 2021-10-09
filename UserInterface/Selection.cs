@@ -275,6 +275,36 @@ namespace GaneshaDx.UserInterface {
 
 			SelectedPolygons.AddRange(polygonsToAddToSelection);
 		}
+		
+		public static void GrowUvSelection() {
+			if (SelectedPolygons.Count == 0) {
+				return;
+			}
+
+			List<Polygon> polygonsToAddToSelection = new List<Polygon>();
+
+			foreach (Polygon otherPolygon in CurrentMapState.StateData.PolygonCollectionBucket) {
+				if (!SelectedPolygons.Contains(otherPolygon)) {
+					foreach (Polygon selectedPolygon in SelectedPolygons) {
+						foreach (Vector2 selectedVertex in selectedPolygon.UvCoordinates) {
+							foreach (Vector2 otherVertex in otherPolygon.UvCoordinates) {
+								bool sharesVertices = (int)selectedVertex.X == (int)otherVertex.X &&
+								                      (int)selectedVertex.Y == (int)otherVertex.Y &&
+								                      selectedPolygon.TexturePage == otherPolygon.TexturePage;
+
+								if (sharesVertices) {
+									if (!polygonsToAddToSelection.Contains(otherPolygon)) {
+										polygonsToAddToSelection.Add(otherPolygon);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			SelectedPolygons.AddRange(polygonsToAddToSelection);
+		}
 
 		private static void HandleInputForTerrain() {
 			HoveredPolygons.Clear();
