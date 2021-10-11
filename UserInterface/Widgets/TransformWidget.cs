@@ -62,10 +62,6 @@ namespace GaneshaDx.UserInterface.Widgets {
 							SelectedVertexIndices.Clear();
 							SelectedVertexIndices.Add(0);
 						}
-
-						if (AppInput.KeyJustPressed(Keys.F)) {
-							SelectNextVertex(AppInput.ShiftHeld);
-						}
 					}
 				}
 
@@ -84,10 +80,6 @@ namespace GaneshaDx.UserInterface.Widgets {
 							SelectedVertexIndices.Add(0);
 							SelectedVertexIndices.Add(1);
 						}
-					}
-
-					if (AppInput.KeyJustPressed(Keys.F)) {
-						SelectNextEdge(AppInput.ShiftHeld);
 					}
 				}
 
