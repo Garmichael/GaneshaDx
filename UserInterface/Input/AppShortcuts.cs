@@ -76,6 +76,11 @@ namespace GaneshaDx.UserInterface.Input {
 						Gui.ToggleManageResourcesWindow();
 					}
 
+					if (AppInput.KeyJustPressed(Keys.B)) {
+						Configuration.Properties.RenderFFTOrtho = !Configuration.Properties.RenderFFTOrtho;
+						Configuration.SaveConfiguration();
+					}
+					
 					if (AppInput.KeyJustPressed(Keys.F)) {
 						if (Gui.Widget == WidgetSelectionMode.PolygonEdgeTranslate) {
 							TransformWidget.SelectNextEdge(AppInput.ShiftHeld);
