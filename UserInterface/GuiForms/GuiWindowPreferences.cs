@@ -107,6 +107,15 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				ImGui.Checkbox("###PreferencesSwapCameraControls", ref Configuration.Properties.SwapCameraControls);
 				ImGui.NextColumn();
 
+				
+				GuiStyle.AddSpace();
+				ImGui.Text("Render Ortho Like FFT");
+				ImGui.NextColumn();
+
+				GuiStyle.AddSpace();
+				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+				ImGui.Checkbox("###PreferencesRenderFFTOrtho", ref Configuration.Properties.RenderFFTOrtho);
+				ImGui.NextColumn();
 
 				GuiStyle.AddSpace();
 				ImGui.Text("AutoSave");

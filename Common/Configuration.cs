@@ -52,6 +52,7 @@ namespace GaneshaDx.Common {
 			public bool AddExtraBytes = false;
 			public bool AutoSaveEnabled = true;
 			public int AutoSaveDuration = 10;
+			public bool RenderFFTOrtho = false;
 		}
 	}
 }

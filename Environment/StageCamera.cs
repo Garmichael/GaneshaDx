@@ -327,9 +327,13 @@ namespace GaneshaDx.Environment {
 
 			Stage.ViewMatrix = Matrix.CreateLookAt(CamPosition, CamTarget, Vector3.Up);
 
+			float orthoDistortion = Configuration.Properties.RenderFFTOrtho
+				? 5f / 4f
+				: 1;
+			
 			Stage.ProjectionMatrix = Matrix.CreateOrthographic(
 				Stage.ModelingViewport.Width * (float) ZoomLevel,
-				Stage.ModelingViewport.Height * (float) ZoomLevel,
+				Stage.ModelingViewport.Height * (float) ZoomLevel * orthoDistortion,
 				1f,
 				5000f
 			);
