@@ -44,16 +44,16 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 		private static Vector2 AdjustedMousePosition => new Vector2(
 			(AppInput.ThisMouseState.Position.X - GuiWindowTexturePreview.UvPreviewBounds.X) *
-			(TextureSize / (float) GuiWindowTexturePreview.UvPreviewBounds.Width) *
+			(TextureSize / (float)GuiWindowTexturePreview.UvPreviewBounds.Width) *
 			_zoomLevel + PanningOffset.X,
 			(AppInput.ThisMouseState.Position.Y - GuiWindowTexturePreview.UvPreviewBounds.Y) *
-			(TextureSize / (float) GuiWindowTexturePreview.UvPreviewBounds.Height) *
+			(TextureSize / (float)GuiWindowTexturePreview.UvPreviewBounds.Height) *
 			_zoomLevel + PanningOffset.Y
 		);
 
 		private static Vector2 PixelMousePosition => new Vector2(
-			(float) Math.Floor(AdjustedMousePosition.X),
-			(float) Math.Floor(AdjustedMousePosition.Y)
+			(float)Math.Floor(AdjustedMousePosition.X),
+			(float)Math.Floor(AdjustedMousePosition.Y)
 		);
 
 		private static Vector2 _mouseDownPoint;
@@ -76,7 +76,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				_texturePage = Selection.SelectedPolygons[0].TexturePage;
 				_paletteId = Selection.SelectedPolygons[0].PaletteId;
 			} else if (isUvAnimationMode) {
-				UvAnimation animation = (UvAnimation) GuiPanelTexture.SelectedTextureAnimation;
+				UvAnimation animation = (UvAnimation)GuiPanelTexture.SelectedTextureAnimation;
 				_texturePage = GuiPanelTexture.TextureAnimationPreviewPageId == 0
 					? animation.CanvasTexturePage
 					: animation.FirstFrameTexturePage;
@@ -374,10 +374,10 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 			double top = _texturePage / 4f;
 			double bottom = _texturePage / 4f + 1 / 4f;
-			textureVerts[0].TextureCoordinate = new Vector2(0, (float) top);
-			textureVerts[1].TextureCoordinate = new Vector2(1, (float) top);
-			textureVerts[3].TextureCoordinate = new Vector2(1, (float) bottom);
-			textureVerts[2].TextureCoordinate = new Vector2(0, (float) bottom);
+			textureVerts[0].TextureCoordinate = new Vector2(0, (float)top);
+			textureVerts[1].TextureCoordinate = new Vector2(1, (float)top);
+			textureVerts[3].TextureCoordinate = new Vector2(1, (float)bottom);
+			textureVerts[2].TextureCoordinate = new Vector2(0, (float)bottom);
 
 			return textureVerts;
 		}
@@ -468,16 +468,25 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			VertexPositionNormalTexture[] polyVerts = new VertexPositionNormalTexture[polygon.IsQuad ? 5 : 4];
 
 			if (polygon.IsQuad) {
-				polyVerts[0] = new VertexPositionNormalTexture {Position = new Vector3(polygon.UvCoordinates[0], 0.9f)};
-				polyVerts[1] = new VertexPositionNormalTexture {Position = new Vector3(polygon.UvCoordinates[2], 0.9f)};
-				polyVerts[2] = new VertexPositionNormalTexture {Position = new Vector3(polygon.UvCoordinates[3], 0.9f)};
-				polyVerts[3] = new VertexPositionNormalTexture {Position = new Vector3(polygon.UvCoordinates[1], 0.9f)};
-				polyVerts[4] = new VertexPositionNormalTexture {Position = new Vector3(polygon.UvCoordinates[0], 0.9f)};
+				polyVerts[0] = new VertexPositionNormalTexture
+					{ Position = new Vector3(polygon.UvCoordinates[0], 0.9f) };
+				polyVerts[1] = new VertexPositionNormalTexture
+					{ Position = new Vector3(polygon.UvCoordinates[2], 0.9f) };
+				polyVerts[2] = new VertexPositionNormalTexture
+					{ Position = new Vector3(polygon.UvCoordinates[3], 0.9f) };
+				polyVerts[3] = new VertexPositionNormalTexture
+					{ Position = new Vector3(polygon.UvCoordinates[1], 0.9f) };
+				polyVerts[4] = new VertexPositionNormalTexture
+					{ Position = new Vector3(polygon.UvCoordinates[0], 0.9f) };
 			} else {
-				polyVerts[0] = new VertexPositionNormalTexture {Position = new Vector3(polygon.UvCoordinates[0], 0.9f)};
-				polyVerts[1] = new VertexPositionNormalTexture {Position = new Vector3(polygon.UvCoordinates[1], 0.9f)};
-				polyVerts[2] = new VertexPositionNormalTexture {Position = new Vector3(polygon.UvCoordinates[2], 0.9f)};
-				polyVerts[3] = new VertexPositionNormalTexture {Position = new Vector3(polygon.UvCoordinates[0], 0.9f)};
+				polyVerts[0] = new VertexPositionNormalTexture
+					{ Position = new Vector3(polygon.UvCoordinates[0], 0.9f) };
+				polyVerts[1] = new VertexPositionNormalTexture
+					{ Position = new Vector3(polygon.UvCoordinates[1], 0.9f) };
+				polyVerts[2] = new VertexPositionNormalTexture
+					{ Position = new Vector3(polygon.UvCoordinates[2], 0.9f) };
+				polyVerts[3] = new VertexPositionNormalTexture
+					{ Position = new Vector3(polygon.UvCoordinates[0], 0.9f) };
 			}
 
 			return polyVerts;
@@ -574,7 +583,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 		}
 
 		private static void RenderAnimation() {
-			UvAnimation selectedAnimation = (UvAnimation) GuiPanelTexture.SelectedTextureAnimation;
+			UvAnimation selectedAnimation = (UvAnimation)GuiPanelTexture.SelectedTextureAnimation;
 
 			if (selectedAnimation.CanvasTexturePage == _texturePage) {
 				SetAnimationFrameBasicEffectProperties(selectedAnimation, "canvas", 0);
@@ -619,20 +628,44 @@ namespace GaneshaDx.UserInterface.GuiForms {
 		) {
 			VertexPositionNormalTexture[] polyVerts = new VertexPositionNormalTexture[5];
 
-			Vector3 topLeft = new Vector3(
-				(type == "canvas" ? animation.CanvasX : animation.FirstFrameX) + frameId * animation.SizeWidth,
-				type == "canvas" ? animation.CanvasY : animation.FirstFrameY,
-				0.9f
-			);
-			Vector3 topRight = topLeft + new Vector3(animation.SizeWidth, 0, 0);
-			Vector3 bottomRight = topLeft + new Vector3(animation.SizeWidth, animation.SizeHeight, 0);
-			Vector3 bottomLeft = topLeft + new Vector3(0, animation.SizeHeight, 0);
+			Vector3 topLeft;
+			Vector3 topRight;
+			Vector3 bottomLeft;
+			Vector3 bottomRight;
 
-			polyVerts[0] = new VertexPositionNormalTexture {Position = topLeft};
-			polyVerts[1] = new VertexPositionNormalTexture {Position = topRight};
-			polyVerts[2] = new VertexPositionNormalTexture {Position = bottomRight};
-			polyVerts[3] = new VertexPositionNormalTexture {Position = bottomLeft};
-			polyVerts[4] = new VertexPositionNormalTexture {Position = topLeft};
+			int totalFramesForTopRow = (int)Math.Floor((float)(256 - animation.FirstFrameX) / animation.SizeWidth);
+			int totalFramesForNextRows = (int)Math.Floor((float)256 / animation.SizeWidth);
+
+			int row = frameId < totalFramesForTopRow
+				? 0
+				: (int)Math.Floor((float)(frameId - totalFramesForTopRow) / totalFramesForNextRows) + 1;
+
+			if (row == 0) {
+				topLeft = new Vector3(
+					(type == "canvas" ? animation.CanvasX : animation.FirstFrameX) + frameId * animation.SizeWidth,
+					type == "canvas" ? animation.CanvasY : animation.FirstFrameY,
+					0.9f
+				);
+				topRight = topLeft + new Vector3(animation.SizeWidth, 0, 0);
+				bottomRight = topLeft + new Vector3(animation.SizeWidth, animation.SizeHeight, 0);
+				bottomLeft = topLeft + new Vector3(0, animation.SizeHeight, 0);
+			} else {
+				int col = (frameId - totalFramesForTopRow) % totalFramesForNextRows;
+				topLeft = new Vector3(
+					8 + col * animation.SizeWidth,
+					type == "canvas" ? animation.CanvasY : animation.FirstFrameY + row * animation.SizeHeight,
+					0.9f
+				);
+				topRight = topLeft + new Vector3(animation.SizeWidth, 0, 0);
+				bottomRight = topLeft + new Vector3(animation.SizeWidth, animation.SizeHeight, 0);
+				bottomLeft = topLeft + new Vector3(0, animation.SizeHeight, 0);
+			}
+
+			polyVerts[0] = new VertexPositionNormalTexture { Position = topLeft };
+			polyVerts[1] = new VertexPositionNormalTexture { Position = topRight };
+			polyVerts[2] = new VertexPositionNormalTexture { Position = bottomRight };
+			polyVerts[3] = new VertexPositionNormalTexture { Position = bottomLeft };
+			polyVerts[4] = new VertexPositionNormalTexture { Position = topLeft };
 
 			return polyVerts;
 		}
