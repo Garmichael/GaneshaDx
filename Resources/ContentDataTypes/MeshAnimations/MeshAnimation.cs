@@ -6,6 +6,14 @@ namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 		public readonly List<byte> RawData;
 		public readonly List<MeshAnimationFrame> Frames = new List<MeshAnimationFrame>();
 
+		public MeshAnimation() {
+			const int totalFrames = 16;
+
+			for (int i = 0; i < totalFrames; i++) {
+				Frames.Add(new MeshAnimationFrame());
+			}
+		}
+
 		public MeshAnimation(List<byte> rawData) {
 			RawData = rawData;
 			int currentBye = 0;
@@ -23,8 +31,8 @@ namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 			List<byte> rawData = new List<byte>();
 
 			foreach (MeshAnimationFrame frame in Frames) {
-				rawData.Add((byte) frame.FrameStateId);
-				rawData.Add((byte) frame.NextFrameId);
+				rawData.Add((byte)frame.FrameStateId);
+				rawData.Add((byte)frame.NextFrameId);
 				rawData.Add(Utilities.GetLittleEndianFromInt16(frame.Duration).high);
 				rawData.Add(Utilities.GetLittleEndianFromInt16(frame.Duration).low);
 			}

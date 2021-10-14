@@ -53,6 +53,7 @@ namespace GaneshaDx.Resources {
 			Gui.ShowMeshAnimationsWindow = false;
 			Gui.ShowDebugAnimatedMeshWindow = false;
 			GuiPanelTerrain.ResizeTerrainMode = false;
+			GuiPanelMeshSelector.SelectedMesh = MeshType.PrimaryMesh;
 		}
 
 		private static void ProcessAllResources() {

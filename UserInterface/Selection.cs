@@ -145,7 +145,7 @@ namespace GaneshaDx.UserInterface {
 
 		private static void CollectHoveredPolygons() {
 			Dictionary<PolygonType, List<Polygon>> allPolygons =
-				CurrentMapState.StateData.PolygonCollection[GuiPanelMesh.SelectedMesh];
+				CurrentMapState.StateData.PolygonCollection[GuiPanelMeshSelector.SelectedMesh];
 
 			foreach (KeyValuePair<PolygonType, List<Polygon>> polygonCollection in allPolygons) {
 				foreach (Polygon polygon in polygonCollection.Value) {
@@ -228,7 +228,7 @@ namespace GaneshaDx.UserInterface {
 			SelectedPolygons.Clear();
 
 			Dictionary<PolygonType, List<Polygon>> allPolygons =
-				CurrentMapState.StateData.PolygonCollection[GuiPanelMesh.SelectedMesh];
+				CurrentMapState.StateData.PolygonCollection[GuiPanelMeshSelector.SelectedMesh];
 
 			foreach (KeyValuePair<PolygonType, List<Polygon>> polygonList in allPolygons) {
 				SelectedPolygons.AddRange(polygonList.Value);

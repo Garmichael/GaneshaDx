@@ -166,11 +166,11 @@ namespace GaneshaDx.UserInterface {
 			{
 				switch (SelectedTab) {
 					case RightPanelTab.Polygon:
-						GuiPanelMesh.Render();
+						GuiPanelMeshSelector.Render();
 						GuiPanelPolygon.Render();
 						break;
 					case RightPanelTab.Texture:
-						GuiPanelMesh.Render();
+						GuiPanelMeshSelector.Render();
 						GuiPanelTexture.Render();
 						break;
 					case RightPanelTab.Terrain:

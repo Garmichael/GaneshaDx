@@ -6,7 +6,7 @@ using GaneshaDx.UserInterface.GuiDefinitions;
 using ImGuiNET;
 
 namespace GaneshaDx.UserInterface.GuiForms {
-	public static class GuiPanelMesh {
+	public static class GuiPanelMeshSelector {
 		public static MeshType SelectedMesh;
 		private static int _selectedComboId = 0;
 

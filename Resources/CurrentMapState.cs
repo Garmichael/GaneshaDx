@@ -138,20 +138,21 @@ namespace GaneshaDx.Resources {
 		}
 
 		public static void DeleteSelection() {
-			Dictionary<PolygonType, List<Polygon>> primaryMesh = StateData.PolygonCollection[MeshType.PrimaryMesh];
+			
 
 			foreach (Polygon polygon in Selection.SelectedPolygons) {
+				Dictionary<PolygonType, List<Polygon>> meshContainer = StateData.PolygonCollection[polygon.MeshType];
 				if (polygon.IsQuad) {
 					if (polygon.IsTextured) {
-						primaryMesh[PolygonType.TexturedQuad].Remove(polygon);
+						meshContainer[PolygonType.TexturedQuad].Remove(polygon);
 					} else {
-						primaryMesh[PolygonType.UntexturedQuad].Remove(polygon);
+						meshContainer[PolygonType.UntexturedQuad].Remove(polygon);
 					}
 				} else {
 					if (polygon.IsTextured) {
-						primaryMesh[PolygonType.TexturedTriangle].Remove(polygon);
+						meshContainer[PolygonType.TexturedTriangle].Remove(polygon);
 					} else {
-						primaryMesh[PolygonType.UntexturedTriangle].Remove(polygon);
+						meshContainer[PolygonType.UntexturedTriangle].Remove(polygon);
 					}
 				}
 			}

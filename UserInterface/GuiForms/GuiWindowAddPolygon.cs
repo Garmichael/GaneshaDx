@@ -54,6 +54,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				const int addPolygonButtonHeight = 20;
 
 				if (ImGui.Button("Add Polygon", new Vector2(addPolygonButtonWidth, addPolygonButtonHeight))) {
+					MeshType selectedMeshType = GuiPanelMeshSelector.SelectedMesh;
 					Vector3 direction = StageCamera.CamPosition - StageCamera.CamTarget;
 					direction.Normalize();
 					Vector3 spawnPoint = StageCamera.CamTarget + direction * 50;
@@ -64,7 +65,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 							new Vertex(spawnPoint + new Vector3(28, 0, 0), Color.Green, true, 0, 90),
 							new Vertex(spawnPoint + new Vector3(0, 0, 28), Color.Blue, true, 0, 90)
 						},
-						MeshType = MeshType.PrimaryMesh,
+						MeshType = selectedMeshType,
 						RenderingProperties = new PolygonRenderingProperties(),
 						PolygonType = _newPolygonIsQuad
 							? _newPolygonIsTextured
@@ -95,21 +96,21 @@ namespace GaneshaDx.UserInterface.GuiForms {
 							newPolygon.UvCoordinates.Add(new Microsoft.Xna.Framework.Vector2(27, 27));
 						}
 					}
-
-					Dictionary<PolygonType, List<Polygon>> primaryMesh =
-						CurrentMapState.StateData.PolygonCollection[MeshType.PrimaryMesh];
+					
+					Dictionary<PolygonType, List<Polygon>> selectedMesh =
+						CurrentMapState.StateData.PolygonCollection[selectedMeshType];
 
 					if (newPolygon.IsQuad) {
 						if (newPolygon.IsTextured) {
-							primaryMesh[PolygonType.TexturedQuad].Add(newPolygon);
+							selectedMesh[PolygonType.TexturedQuad].Add(newPolygon);
 						} else {
-							primaryMesh[PolygonType.UntexturedQuad].Add(newPolygon);
+							selectedMesh[PolygonType.UntexturedQuad].Add(newPolygon);
 						}
 					} else {
 						if (newPolygon.IsTextured) {
-							primaryMesh[PolygonType.TexturedTriangle].Add(newPolygon);
+							selectedMesh[PolygonType.TexturedTriangle].Add(newPolygon);
 						} else {
-							primaryMesh[PolygonType.UntexturedTriangle].Add(newPolygon);
+							selectedMesh[PolygonType.UntexturedTriangle].Add(newPolygon);
 						}
 					}
 

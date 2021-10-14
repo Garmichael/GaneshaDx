@@ -8,8 +8,6 @@ using Vector2 = System.Numerics.Vector2;
 
 namespace GaneshaDx.UserInterface.GuiForms {
 	public static class GuiWindowPolygonList {
-		private static int _selectedIndex = 0;
-
 		public static void Render() {
 			bool windowIsOpen = true;
 			GuiStyle.SetNewUiToDefaultStyle();
@@ -26,19 +24,20 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				ImGui.PopFont();
 
 				List<Polygon> untexturedTriangles =
-					CurrentMapState.StateData.PolygonCollection[GuiPanelMesh.SelectedMesh][
-						PolygonType.UntexturedTriangle];
+					CurrentMapState.StateData.PolygonCollection
+							[GuiPanelMeshSelector.SelectedMesh][PolygonType.UntexturedTriangle];
 
 				List<Polygon> untexturedQuads =
-					CurrentMapState.StateData.PolygonCollection[GuiPanelMesh.SelectedMesh][PolygonType.UntexturedQuad];
+					CurrentMapState.StateData.PolygonCollection
+							[GuiPanelMeshSelector.SelectedMesh][PolygonType.UntexturedQuad];
 
 				List<Polygon> texturedTriangles =
-					CurrentMapState.StateData.PolygonCollection[GuiPanelMesh.SelectedMesh][
-						PolygonType.TexturedTriangle];
+					CurrentMapState.StateData.PolygonCollection
+							[GuiPanelMeshSelector.SelectedMesh][PolygonType.TexturedTriangle];
 
 				List<Polygon> texturedQuads =
-					CurrentMapState.StateData.PolygonCollection[GuiPanelMesh.SelectedMesh][PolygonType.TexturedQuad];
-
+					CurrentMapState.StateData.PolygonCollection
+							[GuiPanelMeshSelector.SelectedMesh][PolygonType.TexturedQuad];
 
 				GuiStyle.SetNewUiToDefaultStyle();
 				GuiStyle.SetElementStyle(ElementStyle.Header);

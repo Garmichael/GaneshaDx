@@ -246,8 +246,8 @@ namespace GaneshaDx.Rendering {
 			foreach (Polygon polygon in CurrentMapState.StateData.PolygonCollectionBucket) {
 				if (
 					!Configuration.Properties.IsolateMeshes ||
-					polygon.MeshType == GuiPanelMesh.SelectedMesh ||
-					GuiPanelMesh.SelectedMesh == MeshType.PrimaryMesh
+					polygon.MeshType == GuiPanelMeshSelector.SelectedMesh ||
+					GuiPanelMeshSelector.SelectedMesh == MeshType.PrimaryMesh
 				) {
 					polygon.Render();
 				}

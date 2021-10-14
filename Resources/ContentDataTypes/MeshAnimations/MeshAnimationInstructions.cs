@@ -4,13 +4,39 @@ namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 	public class MeshAnimationInstructions {
 		public readonly List<byte> InstructionsHeader = new List<byte>();
 		public readonly List<MeshAnimationKeyFrame> KeyFrames = new List<MeshAnimationKeyFrame>();
-		
+
 		public readonly List<byte> MeshAnimationsHeader = new List<byte>();
 		public readonly List<MeshAnimation> MeshAnimations = new List<MeshAnimation>();
-		
+
 		public readonly List<byte> UnknownChunkHeader = new List<byte>();
 		public readonly MeshAnimationUnknown UnknownChunk;
-		
+
+		public MeshAnimationInstructions() {
+			InstructionsHeader = new List<byte> { 1, 0, 0, 0, 128, 0, 0, 0 };
+			MeshAnimationsHeader = new List<byte> { 2, 0, 0, 0, 16, 0, 64, 0 };
+			UnknownChunkHeader = new List<byte> { 3, 0, 0, 0, 64, 0, 0, 0 };
+			KeyFrames = new List<MeshAnimationKeyFrame>();
+
+			const int totalKeyFrames = 128;
+			for (int i = 0; i < totalKeyFrames; i++) {
+				KeyFrames.Add(new MeshAnimationKeyFrame());
+			}
+
+			MeshAnimations = new List<MeshAnimation>();
+
+			const int totalMeshAnimations = 64;
+			for (int i = 0; i < totalMeshAnimations; i++) {
+				MeshAnimations.Add(new MeshAnimation());
+			}
+
+
+			const int totalUnknownChunkBytes = 128;
+			UnknownChunk = new MeshAnimationUnknown();
+			for (int i = 0; i < totalUnknownChunkBytes; i++) {
+				UnknownChunk.Data.Add(0);
+			}
+		}
+
 		public MeshAnimationInstructions(List<byte> rawData) {
 			const int headerLength = 8;
 			const int totalInstructions = 128;

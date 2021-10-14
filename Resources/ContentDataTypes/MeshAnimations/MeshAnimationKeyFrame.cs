@@ -19,6 +19,38 @@ namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 		public readonly List<double> RotationEndPercents = new List<double>();
 		public readonly List<double> ScaleEndPercents = new List<double>();
 
+		public MeshAnimationKeyFrame() {
+			Position = new List<double> { 0, 0, 0 };
+			Rotation = new List<double> { 0, 0, 0 };
+			Scale = new List<double> { 0, 0, 0 };
+
+			PositionTweenTypes = new List<MeshAnimationTweenType> {
+				MeshAnimationTweenType.TweenBy,
+				MeshAnimationTweenType.TweenBy,
+				MeshAnimationTweenType.TweenBy
+			};
+
+			RotationTweenTypes = new List<MeshAnimationTweenType> {
+				MeshAnimationTweenType.TweenBy,
+				MeshAnimationTweenType.TweenBy,
+				MeshAnimationTweenType.TweenBy
+			};
+
+			ScaleTweenTypes = new List<MeshAnimationTweenType> {
+				MeshAnimationTweenType.TweenBy,
+				MeshAnimationTweenType.TweenBy,
+				MeshAnimationTweenType.TweenBy
+			};
+
+			PositionStartPercents = new List<double> { 0, 0, 0 };
+			RotationStartPercents = new List<double> { 100, 100, 100 };
+			ScaleStartPercents = new List<double> { 0, 0, 0 };
+			
+			PositionEndPercents = new List<double> { 100, 100, 100 };
+			RotationEndPercents = new List<double> { 0, 0, 0 };
+			ScaleEndPercents = new List<double> { 100, 100, 100 };
+		}
+
 		public MeshAnimationKeyFrame(List<byte> rawData) {
 			for (int byteIndex = 0; byteIndex < rawData.Count; byteIndex += 2) {
 				Properties.Add(Utilities.GetInt16FromLittleEndian(rawData[byteIndex], rawData[byteIndex + 1]));
@@ -75,74 +107,74 @@ namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 
 		public List<byte> GetRawData() {
 			return new List<byte> {
-				Utilities.GetLittleEndianFromInt16((int) (-Rotation[0] / 360f * 4096f)).high,
-				Utilities.GetLittleEndianFromInt16((int) (-Rotation[0] / 360f * 4096f)).low,
-				Utilities.GetLittleEndianFromInt16((int) (-Rotation[1] / 360f * 4096f)).high,
-				Utilities.GetLittleEndianFromInt16((int) (-Rotation[1] / 360f * 4096f)).low,
-				Utilities.GetLittleEndianFromInt16((int) (Rotation[2] / 360f * 4096f)).high,
-				Utilities.GetLittleEndianFromInt16((int) (Rotation[2] / 360f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt16((int)(-Rotation[0] / 360f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt16((int)(-Rotation[0] / 360f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt16((int)(-Rotation[1] / 360f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt16((int)(-Rotation[1] / 360f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt16((int)(Rotation[2] / 360f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt16((int)(Rotation[2] / 360f * 4096f)).low,
 
 				0, 0,
 
-				Utilities.GetLittleEndianFromInt16((int) Position[0]).high,
-				Utilities.GetLittleEndianFromInt16((int) Position[0]).low,
-				Utilities.GetLittleEndianFromInt16((int) -Position[1]).high,
-				Utilities.GetLittleEndianFromInt16((int) -Position[1]).low,
-				Utilities.GetLittleEndianFromInt16((int) Position[2]).high,
-				Utilities.GetLittleEndianFromInt16((int) Position[2]).low,
+				Utilities.GetLittleEndianFromInt16((int)Position[0]).high,
+				Utilities.GetLittleEndianFromInt16((int)Position[0]).low,
+				Utilities.GetLittleEndianFromInt16((int)-Position[1]).high,
+				Utilities.GetLittleEndianFromInt16((int)-Position[1]).low,
+				Utilities.GetLittleEndianFromInt16((int)Position[2]).high,
+				Utilities.GetLittleEndianFromInt16((int)Position[2]).low,
 
 				0, 0,
 
-				Utilities.GetLittleEndianFromInt16((int) (Scale[0] * 4096f)).high,
-				Utilities.GetLittleEndianFromInt16((int) (Scale[0] * 4096f)).low,
-				Utilities.GetLittleEndianFromInt16((int) (Scale[1] * 4096f)).high,
-				Utilities.GetLittleEndianFromInt16((int) (Scale[1] * 4096f)).low,
-				Utilities.GetLittleEndianFromInt16((int) (Scale[2] * 4096f)).high,
-				Utilities.GetLittleEndianFromInt16((int) (Scale[2] * 4096f)).low,
+				Utilities.GetLittleEndianFromInt16((int)(Scale[0] * 4096f)).high,
+				Utilities.GetLittleEndianFromInt16((int)(Scale[0] * 4096f)).low,
+				Utilities.GetLittleEndianFromInt16((int)(Scale[1] * 4096f)).high,
+				Utilities.GetLittleEndianFromInt16((int)(Scale[1] * 4096f)).low,
+				Utilities.GetLittleEndianFromInt16((int)(Scale[2] * 4096f)).high,
+				Utilities.GetLittleEndianFromInt16((int)(Scale[2] * 4096f)).low,
 
 				0, 0,
 
-				Utilities.GetLittleEndianFromInt16((int) (RotationStartPercents[0] / 100f * 4096f)).high,
-				Utilities.GetLittleEndianFromInt16((int) (RotationStartPercents[0] / 100f * 4096f)).low,
-				Utilities.GetLittleEndianFromInt16((int) (RotationStartPercents[1] / 100f * 4096f)).high,
-				Utilities.GetLittleEndianFromInt16((int) (RotationStartPercents[1] / 100f * 4096f)).low,
-				Utilities.GetLittleEndianFromInt16((int) (RotationStartPercents[2] / 100f * 4096f)).high,
-				Utilities.GetLittleEndianFromInt16((int) (RotationStartPercents[2] / 100f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt16((int)(RotationStartPercents[0] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt16((int)(RotationStartPercents[0] / 100f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt16((int)(RotationStartPercents[1] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt16((int)(RotationStartPercents[1] / 100f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt16((int)(RotationStartPercents[2] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt16((int)(RotationStartPercents[2] / 100f * 4096f)).low,
 
-				Utilities.GetLittleEndianFromInt16((int) (PositionStartPercents[0] / 100f * 4096f)).high,
-				Utilities.GetLittleEndianFromInt16((int) (PositionStartPercents[0] / 100f * 4096f)).low,
-				Utilities.GetLittleEndianFromInt16((int) (PositionStartPercents[1] / 100f * 4096f)).high,
-				Utilities.GetLittleEndianFromInt16((int) (PositionStartPercents[1] / 100f * 4096f)).low,
-				Utilities.GetLittleEndianFromInt16((int) (PositionStartPercents[2] / 100f * 4096f)).high,
-				Utilities.GetLittleEndianFromInt16((int) (PositionStartPercents[2] / 100f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt16((int)(PositionStartPercents[0] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt16((int)(PositionStartPercents[0] / 100f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt16((int)(PositionStartPercents[1] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt16((int)(PositionStartPercents[1] / 100f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt16((int)(PositionStartPercents[2] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt16((int)(PositionStartPercents[2] / 100f * 4096f)).low,
 
-				Utilities.GetLittleEndianFromInt16((int) (ScaleStartPercents[0] / 100f * 4096f)).high,
-				Utilities.GetLittleEndianFromInt16((int) (ScaleStartPercents[0] / 100f * 4096f)).low,
-				Utilities.GetLittleEndianFromInt16((int) (ScaleStartPercents[1] / 100f * 4096f)).high,
-				Utilities.GetLittleEndianFromInt16((int) (ScaleStartPercents[1] / 100f * 4096f)).low,
-				Utilities.GetLittleEndianFromInt16((int) (ScaleStartPercents[2] / 100f * 4096f)).high,
-				Utilities.GetLittleEndianFromInt16((int) (ScaleStartPercents[2] / 100f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt16((int)(ScaleStartPercents[0] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt16((int)(ScaleStartPercents[0] / 100f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt16((int)(ScaleStartPercents[1] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt16((int)(ScaleStartPercents[1] / 100f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt16((int)(ScaleStartPercents[2] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt16((int)(ScaleStartPercents[2] / 100f * 4096f)).low,
 
-				Utilities.GetLittleEndianFromInt16((int) (RotationEndPercents[0] / 100f * 4096f)).high,
-				Utilities.GetLittleEndianFromInt16((int) (RotationEndPercents[0] / 100f * 4096f)).low,
-				Utilities.GetLittleEndianFromInt16((int) (RotationEndPercents[1] / 100f * 4096f)).high,
-				Utilities.GetLittleEndianFromInt16((int) (RotationEndPercents[1] / 100f * 4096f)).low,
-				Utilities.GetLittleEndianFromInt16((int) (RotationEndPercents[2] / 100f * 4096f)).high,
-				Utilities.GetLittleEndianFromInt16((int) (RotationEndPercents[2] / 100f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt16((int)(RotationEndPercents[0] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt16((int)(RotationEndPercents[0] / 100f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt16((int)(RotationEndPercents[1] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt16((int)(RotationEndPercents[1] / 100f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt16((int)(RotationEndPercents[2] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt16((int)(RotationEndPercents[2] / 100f * 4096f)).low,
 
-				Utilities.GetLittleEndianFromInt16((int) (PositionEndPercents[0] / 100f * 4096f)).high,
-				Utilities.GetLittleEndianFromInt16((int) (PositionEndPercents[0] / 100f * 4096f)).low,
-				Utilities.GetLittleEndianFromInt16((int) (PositionEndPercents[1] / 100f * 4096f)).high,
-				Utilities.GetLittleEndianFromInt16((int) (PositionEndPercents[1] / 100f * 4096f)).low,
-				Utilities.GetLittleEndianFromInt16((int) (PositionEndPercents[2] / 100f * 4096f)).high,
-				Utilities.GetLittleEndianFromInt16((int) (PositionEndPercents[2] / 100f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt16((int)(PositionEndPercents[0] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt16((int)(PositionEndPercents[0] / 100f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt16((int)(PositionEndPercents[1] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt16((int)(PositionEndPercents[1] / 100f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt16((int)(PositionEndPercents[2] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt16((int)(PositionEndPercents[2] / 100f * 4096f)).low,
 
-				Utilities.GetLittleEndianFromInt16((int) (ScaleEndPercents[0] / 100f * 4096f)).high,
-				Utilities.GetLittleEndianFromInt16((int) (ScaleEndPercents[0] / 100f * 4096f)).low,
-				Utilities.GetLittleEndianFromInt16((int) (ScaleEndPercents[1] / 100f * 4096f)).high,
-				Utilities.GetLittleEndianFromInt16((int) (ScaleEndPercents[1] / 100f * 4096f)).low,
-				Utilities.GetLittleEndianFromInt16((int) (ScaleEndPercents[2] / 100f * 4096f)).high,
-				Utilities.GetLittleEndianFromInt16((int) (ScaleEndPercents[2] / 100f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt16((int)(ScaleEndPercents[0] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt16((int)(ScaleEndPercents[0] / 100f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt16((int)(ScaleEndPercents[1] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt16((int)(ScaleEndPercents[1] / 100f * 4096f)).low,
+				Utilities.GetLittleEndianFromInt16((int)(ScaleEndPercents[2] / 100f * 4096f)).high,
+				Utilities.GetLittleEndianFromInt16((int)(ScaleEndPercents[2] / 100f * 4096f)).low,
 
 				Utilities.GetLittleEndianFromInt16(ConvertTweenType(RotationTweenTypes[0])).high,
 				Utilities.GetLittleEndianFromInt16(ConvertTweenType(RotationTweenTypes[0])).low,

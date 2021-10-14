@@ -65,7 +65,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 		public Color BackgroundBottomColor;
 		public Color AmbientLightColor;
 
-		private readonly Dictionary<MeshType, List<byte>> UnknownChunks = new Dictionary<MeshType, List<byte>> {
+		private readonly Dictionary<MeshType, List<byte>> _unknownChunks = new Dictionary<MeshType, List<byte>> {
 			{MeshType.PrimaryMesh, new List<byte>()},
 			{MeshType.AnimatedMesh1, new List<byte>()},
 			{MeshType.AnimatedMesh2, new List<byte>()},
@@ -419,7 +419,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 		private void ProcessMeshUnknownChunk(MeshType meshType) {
 			int totalBytes = 4 * _unTexturedQuadCount[meshType] + 4 * _unTexturedTriangleCount[meshType];
 			for (int index = 0; index < totalBytes; index++) {
-				UnknownChunks[meshType].Add(RawData[_currentByteIndex]);
+				_unknownChunks[meshType].Add(RawData[_currentByteIndex]);
 				_currentByteIndex++;
 			}
 		}
