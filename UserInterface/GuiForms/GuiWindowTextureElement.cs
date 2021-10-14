@@ -44,16 +44,16 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 		private static Vector2 AdjustedMousePosition => new Vector2(
 			(AppInput.ThisMouseState.Position.X - GuiWindowTexturePreview.UvPreviewBounds.X) *
-			(TextureSize / (float)GuiWindowTexturePreview.UvPreviewBounds.Width) *
+			(TextureSize / (float) GuiWindowTexturePreview.UvPreviewBounds.Width) *
 			_zoomLevel + PanningOffset.X,
 			(AppInput.ThisMouseState.Position.Y - GuiWindowTexturePreview.UvPreviewBounds.Y) *
-			(TextureSize / (float)GuiWindowTexturePreview.UvPreviewBounds.Height) *
+			(TextureSize / (float) GuiWindowTexturePreview.UvPreviewBounds.Height) *
 			_zoomLevel + PanningOffset.Y
 		);
 
 		private static Vector2 PixelMousePosition => new Vector2(
-			(float)Math.Floor(AdjustedMousePosition.X),
-			(float)Math.Floor(AdjustedMousePosition.Y)
+			(float) Math.Floor(AdjustedMousePosition.X),
+			(float) Math.Floor(AdjustedMousePosition.Y)
 		);
 
 		private static Vector2 _mouseDownPoint;
@@ -76,7 +76,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				_texturePage = Selection.SelectedPolygons[0].TexturePage;
 				_paletteId = Selection.SelectedPolygons[0].PaletteId;
 			} else if (isUvAnimationMode) {
-				UvAnimation animation = (UvAnimation)GuiPanelTexture.SelectedTextureAnimation;
+				UvAnimation animation = (UvAnimation) GuiPanelTexture.SelectedTextureAnimation;
 				_texturePage = GuiPanelTexture.TextureAnimationPreviewPageId == 0
 					? animation.CanvasTexturePage
 					: animation.FirstFrameTexturePage;
@@ -374,10 +374,10 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 			double top = _texturePage / 4f;
 			double bottom = _texturePage / 4f + 1 / 4f;
-			textureVerts[0].TextureCoordinate = new Vector2(0, (float)top);
-			textureVerts[1].TextureCoordinate = new Vector2(1, (float)top);
-			textureVerts[3].TextureCoordinate = new Vector2(1, (float)bottom);
-			textureVerts[2].TextureCoordinate = new Vector2(0, (float)bottom);
+			textureVerts[0].TextureCoordinate = new Vector2(0, (float) top);
+			textureVerts[1].TextureCoordinate = new Vector2(1, (float) top);
+			textureVerts[3].TextureCoordinate = new Vector2(1, (float) bottom);
+			textureVerts[2].TextureCoordinate = new Vector2(0, (float) bottom);
 
 			return textureVerts;
 		}
@@ -583,7 +583,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 		}
 
 		private static void RenderAnimation() {
-			UvAnimation selectedAnimation = (UvAnimation)GuiPanelTexture.SelectedTextureAnimation;
+			UvAnimation selectedAnimation = (UvAnimation) GuiPanelTexture.SelectedTextureAnimation;
 
 			if (selectedAnimation.CanvasTexturePage == _texturePage) {
 				SetAnimationFrameBasicEffectProperties(selectedAnimation, "canvas", 0);
@@ -633,12 +633,12 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			Vector3 bottomLeft;
 			Vector3 bottomRight;
 
-			int totalFramesForTopRow = (int)Math.Floor((float)(256 - animation.FirstFrameX) / animation.SizeWidth);
-			int totalFramesForNextRows = (int)Math.Floor((float)256 / animation.SizeWidth);
+			int totalFramesForTopRow = (int) Math.Floor((float) (256 - animation.FirstFrameX) / animation.SizeWidth);
+			int totalFramesForNextRows = (int) Math.Floor((float) 256 / animation.SizeWidth);
 
 			int row = frameId < totalFramesForTopRow
 				? 0
-				: (int)Math.Floor((float)(frameId - totalFramesForTopRow) / totalFramesForNextRows) + 1;
+				: (int) Math.Floor((float) (frameId - totalFramesForTopRow) / totalFramesForNextRows) + 1;
 
 			if (row == 0) {
 				topLeft = new Vector3(

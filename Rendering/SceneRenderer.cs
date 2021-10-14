@@ -49,7 +49,7 @@ namespace GaneshaDx.Rendering {
 					continue;
 				}
 
-				UvAnimation uvAnimation = (UvAnimation)animatedTextureInstructions.Instructions;
+				UvAnimation uvAnimation = (UvAnimation) animatedTextureInstructions.Instructions;
 
 				if (uvAnimation == null) {
 					continue;
@@ -73,12 +73,12 @@ namespace GaneshaDx.Rendering {
 				Vector3 topLeft;
 
 				int totalFramesForTopRow =
-					(int)Math.Floor((float)(256 - uvAnimation.FirstFrameX) / uvAnimation.SizeWidth);
-				int totalFramesForNextRows = (int)Math.Floor((float)256 / uvAnimation.SizeWidth);
+					(int) Math.Floor((float) (256 - uvAnimation.FirstFrameX) / uvAnimation.SizeWidth);
+				int totalFramesForNextRows = (int) Math.Floor((float) 256 / uvAnimation.SizeWidth);
 
 				int row = frameId < totalFramesForTopRow
 					? 0
-					: (int)Math.Floor((float)(frameId - totalFramesForTopRow) / totalFramesForNextRows) + 1;
+					: (int) Math.Floor((float) (frameId - totalFramesForTopRow) / totalFramesForNextRows) + 1;
 
 				if (row == 0) {
 					topLeft = new Vector3(
@@ -90,13 +90,14 @@ namespace GaneshaDx.Rendering {
 					int col = (frameId - totalFramesForTopRow) % totalFramesForNextRows;
 					topLeft = new Vector3(
 						8 + col * uvAnimation.SizeWidth,
-						uvAnimation.FirstFrameY + row * uvAnimation.SizeHeight + uvAnimation.FirstFrameTexturePage * 256,
+						uvAnimation.FirstFrameY + row * uvAnimation.SizeHeight +
+						uvAnimation.FirstFrameTexturePage * 256,
 						0.9f
 					);
 				}
 
-				int frameX = (int)topLeft.X;
-				int frameY = (int)topLeft.Y;
+				int frameX = (int) topLeft.X;
+				int frameY = (int) topLeft.Y;
 
 				Stage.FftPolygonEffect.Parameters["UsesAnimatedUv" + animationIndex].SetValue(true);
 
@@ -147,7 +148,7 @@ namespace GaneshaDx.Rendering {
 					continue;
 				}
 
-				PaletteAnimation paletteAnimation = (PaletteAnimation)textureAnimationInstructions.Instructions;
+				PaletteAnimation paletteAnimation = (PaletteAnimation) textureAnimationInstructions.Instructions;
 
 				if (paletteAnimation == null) {
 					continue;
@@ -170,7 +171,7 @@ namespace GaneshaDx.Rendering {
 			double millisecondsPlayed = Stage.GameTime.TotalGameTime.TotalMilliseconds;
 			double timeIntoLoop = millisecondsPlayed % totalDuration;
 			double timesLoopPlayed = Math.Floor(millisecondsPlayed / totalDuration);
-			int frameId = (int)Math.Floor((float)timeIntoLoop / adjustedFrameDuration);
+			int frameId = (int) Math.Floor((float) timeIntoLoop / adjustedFrameDuration);
 
 			if (uvAnimation.UvAnimationMode == UvAnimationMode.ForwardAndReverseLooping &&
 			    timesLoopPlayed % 2 == 0
@@ -186,7 +187,7 @@ namespace GaneshaDx.Rendering {
 			double totalDuration = paletteAnimation.FrameCount * adjustedFrameDuration;
 			double millisecondsPlayed = Stage.GameTime.TotalGameTime.TotalMilliseconds;
 			double timeIntoLoop = millisecondsPlayed % totalDuration;
-			int frameId = (int)Math.Floor((float)timeIntoLoop / adjustedFrameDuration);
+			int frameId = (int) Math.Floor((float) timeIntoLoop / adjustedFrameDuration);
 
 			return frameId;
 		}

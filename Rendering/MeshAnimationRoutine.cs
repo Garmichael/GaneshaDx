@@ -59,6 +59,11 @@ namespace GaneshaDx.Rendering {
 
 			_timeIntoAnimation = Stage.GameTime.TotalGameTime.TotalSeconds - _startTime;
 			double totalDurationInSeconds = CurrentFrame.Duration / 60f;
+
+			if (CurrentFrame.Duration <= 0) {
+				totalDurationInSeconds = 1 / 60f;
+			}
+
 			_percentIntoAnimation = _timeIntoAnimation / totalDurationInSeconds;
 
 			_endPosition = new Vector3(

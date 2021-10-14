@@ -73,7 +73,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 		private static void BuildRow(int index) {
 			MapResource mapResource = MapData.MeshResources[index];
-			MeshResourceData meshResourceData = (MeshResourceData)mapResource.ResourceData;
+			MeshResourceData meshResourceData = (MeshResourceData) mapResource.ResourceData;
 
 			bool isInitialState = mapResource.MapArrangementState == MapArrangementState.Primary &&
 			                      mapResource.MapTime == MapTime.Day &&
@@ -87,7 +87,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			                     CurrentMapState.StateData.MapTime == mapResource.MapTime &&
 			                     CurrentMapState.StateData.MapWeather == mapResource.MapWeather;
 
-			ImGui.GetStyle().Colors[(int)ImGuiCol.Text] = stateSelected
+			ImGui.GetStyle().Colors[(int) ImGuiCol.Text] = stateSelected
 				? GuiStyle.ColorPalette[ColorName.Highlighted]
 				: GuiStyle.ColorPalette[ColorName.Lightest];
 
@@ -104,17 +104,17 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			ImGui.Text(meshType);
 			ImGui.NextColumn();
 
-			ImGui.Text(mapArrangementStates[(int)mapResource.MapArrangementState]);
+			ImGui.Text(mapArrangementStates[(int) mapResource.MapArrangementState]);
 			ImGui.NextColumn();
 
-			ImGui.Text(mapTimeStates[(int)mapResource.MapTime]);
+			ImGui.Text(mapTimeStates[(int) mapResource.MapTime]);
 			ImGui.NextColumn();
 
-			ImGui.Text(mapWeathers[(int)mapResource.MapWeather]);
+			ImGui.Text(mapWeathers[(int) mapResource.MapWeather]);
 			ImGui.NextColumn();
 
-			ImGui.GetStyle().Colors[(int)ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.Lightest];
-			ImGui.GetStyle().Colors[(int)ImGuiCol.Button] = GuiStyle.ColorPalette[ColorName.Transparent];
+			ImGui.GetStyle().Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.Lightest];
+			ImGui.GetStyle().Colors[(int) ImGuiCol.Button] = GuiStyle.ColorPalette[ColorName.Transparent];
 			ImGui.GetStyle().FrameRounding = 0;
 
 			BuildColumnPrimaryMesh(index, meshResourceData, isInitialState);

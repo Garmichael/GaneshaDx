@@ -165,7 +165,7 @@ namespace GaneshaDx.UserInterface {
 								polygon.Vertices[1].Position
 							}
 						)
-						: new CameraRayResults {HasHit = false};
+						: new CameraRayResults { HasHit = false };
 
 					if (triangleAIntersects.HasHit) {
 						_hoverPosition = triangleAIntersects.HitPoint;
@@ -275,7 +275,7 @@ namespace GaneshaDx.UserInterface {
 
 			SelectedPolygons.AddRange(polygonsToAddToSelection);
 		}
-		
+
 		public static void GrowUvSelection() {
 			if (SelectedPolygons.Count == 0) {
 				return;
@@ -288,8 +288,8 @@ namespace GaneshaDx.UserInterface {
 					foreach (Polygon selectedPolygon in SelectedPolygons) {
 						foreach (Vector2 selectedVertex in selectedPolygon.UvCoordinates) {
 							foreach (Vector2 otherVertex in otherPolygon.UvCoordinates) {
-								bool sharesVertices = (int)selectedVertex.X == (int)otherVertex.X &&
-								                      (int)selectedVertex.Y == (int)otherVertex.Y &&
+								bool sharesVertices = (int) selectedVertex.X == (int) otherVertex.X &&
+								                      (int) selectedVertex.Y == (int) otherVertex.Y &&
 								                      selectedPolygon.TexturePage == otherPolygon.TexturePage;
 
 								if (sharesVertices) {
@@ -511,7 +511,7 @@ namespace GaneshaDx.UserInterface {
 
 			MinOfSelection = new Vector3(minX, minY, minZ);
 			MaxOfSelection = new Vector3(maxX, maxY, maxZ);
-			CenterOfSelection = Utilities.GetAveragePoint(new List<Vector3> {MinOfSelection, MaxOfSelection});
+			CenterOfSelection = Utilities.GetAveragePoint(new List<Vector3> { MinOfSelection, MaxOfSelection });
 		}
 	}
 }
