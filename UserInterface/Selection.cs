@@ -2,6 +2,7 @@
 using System.Linq;
 using GaneshaDx.Common;
 using GaneshaDx.Environment;
+using GaneshaDx.Rendering;
 using GaneshaDx.Resources;
 using GaneshaDx.Resources.ContentDataTypes.Polygons;
 using GaneshaDx.Resources.ContentDataTypes.Terrains;
@@ -50,7 +51,12 @@ namespace GaneshaDx.UserInterface {
 			bool rotationWidgetInUse = Gui.Widget == WidgetSelectionMode.PolygonRotate &&
 			                           RotationWidget.IsHovered;
 
-			if (AppInput.MouseIsWithinModelViewport && !transformWidgetInUse && !rotationWidgetInUse) {
+			if (
+				AppInput.MouseIsWithinModelViewport &&
+				!transformWidgetInUse &&
+				!rotationWidgetInUse &&
+				(GuiPanelMeshSelector.SelectedMesh == MeshType.PrimaryMesh || !MeshAnimationController.AnimationsPlaying)
+			) {
 				CollectHoveredPolygons();
 				ClickPolygonSelection();
 			}
