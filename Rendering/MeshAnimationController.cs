@@ -55,6 +55,18 @@ namespace GaneshaDx.Rendering {
 		public static void StopAnimations() {
 			Reset();
 			AnimationsPlaying = false;
+			
+			foreach (MeshType meshType in AnimatedMeshTypes) {
+				foreach (KeyValuePair<PolygonType, List<Polygon>> polygons in CurrentMapState.StateData.PolygonCollection[meshType]) {
+					foreach (Polygon polygon in polygons.Value) {
+						foreach (Vertex vertex in polygon.Vertices) {
+							vertex.LastAnimatedStartPosition.X = vertex.Position.X;
+							vertex.LastAnimatedStartPosition.Y = vertex.Position.Y;
+							vertex.LastAnimatedStartPosition.Z = vertex.Position.Z;
+						}
+					}
+				}
+			}
 		}
 
 		public static void Update() {
