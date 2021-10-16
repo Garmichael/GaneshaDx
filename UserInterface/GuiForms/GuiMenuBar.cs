@@ -185,7 +185,19 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					}
 
 					ImGui.Separator();
+					
+					bool beforeOrthoModeChange = Configuration.Properties.RenderFFTOrtho;
+					ImGui.MenuItem(
+						"FFT Ortho Mode",
+						"B",
+						ref Configuration.Properties.RenderFFTOrtho,
+						MapData.MapIsLoaded
+					);
 
+					if (beforeOrthoModeChange != Configuration.Properties.RenderFFTOrtho) {
+						Configuration.SaveConfiguration();
+					}
+					
 					bool beforeLightingModeChange = Configuration.Properties.RenderPolygonsInLightingMode;
 					ImGui.MenuItem(
 						"Lighting Mode",
