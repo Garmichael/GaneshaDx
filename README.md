@@ -26,13 +26,13 @@ Check the [Releases Page](https://github.com/Garmichael/GaneshaDx/releases) for 
     The Polygon Properties panel shows the values for the First Polygon in the selection.
     Changing any property will set that value to all selected Polygons.
 
-### Shortcut Keys
+### Widget Shortcut Keys
 
-    Q: Translate Widget
-    W: Rotation Widget
-    E: Translate Vertex
-    R: Translate Edge
-    Z: Focus camera on selection
+    Q: Selection Widget
+    W: Translate Widget
+    E: Rotation Widget
+    R: Translate Vertex Widget
+    T: Translate Edge Widget
 
 ### Selection
 
@@ -51,7 +51,6 @@ Check the [Releases Page](https://github.com/Garmichael/GaneshaDx/releases) for 
 
     Shift + Click: Mirror on Axis
     Alt + Click: Rotate Face
-    Colored Boxes: 
 
 ### Panel Functions
 
@@ -69,7 +68,7 @@ Check the [Releases Page](https://github.com/Garmichael/GaneshaDx/releases) for 
     Click a polygon to select it
     Drag a selection of Polygons to move them
     Drag a Vertex to move it
-    
+    + Key: Grows selection by shared by UV verts
 ---
 
 # Todo List

@@ -7,7 +7,6 @@
     [4] [3] Build new File Browser in ImGui
     [2] [5] Undo
     [2] [2] Export UV Overlay PNG 
-    [4] [2] Warning if Sector Size increases
     [1] [3] Auto-Export Screenshots (four angles, plus Top-down, hidden UI)
         mapname_bev.png, mapname_45.png, mapname_135.png, mapname_225.png, mapname_315.png
     [3] [4] Figure out a color picker solution for the 32x32x32 color depth thing
@@ -37,7 +36,6 @@
     [5] [2] Game View shadow overlay
     [2] [3] Accurate rendering of Invisibility Angles when using camera controls
     [3] [2] Build Number-Border for Terrain
-    [2] [2] Uv Animations Wrap Around (Map 101)
     [5] [2] Compass Rose with N-E-S-W on it
 
 ### Terrain
@@ -58,8 +56,6 @@
 
     [1] [1] Terrain, resizing after adding terrain to another state
     [1] [1] Turn off Resize Terrain Mode on tab switch / state switch / map load
-    [1] [1] Copying a Triangle's UV to a Quad's UV causes a crash
-    [1] [1] Export blank colors for the rest of palettes
 
 ## Investigation
 
