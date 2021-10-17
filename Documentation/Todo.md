@@ -24,7 +24,6 @@
             Maybe manually define XFile?
     [1] [4] Copy / Paste
     [1] [1] Add Has Invisibility Angles to the Resource Management Window
-    [1] [1] Reformat so it can scroll horizontally better
 
 ### File Menu / Windows
 

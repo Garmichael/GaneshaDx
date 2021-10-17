@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using GaneshaDx.Common;
+using GaneshaDx.Environment;
 using GaneshaDx.Resources;
 using GaneshaDx.Resources.ContentDataTypes;
 using GaneshaDx.Resources.ContentDataTypes.MeshAnimations;
@@ -37,10 +38,15 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			bool windowIsOpen = true;
 
 			GuiStyle.SetNewUiToDefaultStyle();
-			ImGui.GetStyle().WindowRounding = 3;
+			ImGui.GetStyle().WindowRounding = 0;
 			ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[2]);
-			const ImGuiWindowFlags flags = ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.HorizontalScrollbar;
-
+			const ImGuiWindowFlags flags = ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.HorizontalScrollbar |
+			                               ImGuiWindowFlags.NoResize | 
+			                               ImGuiWindowFlags.NoMove;
+			
+			ImGui.SetNextWindowSize(new Vector2(Stage.Width, 300));
+			ImGui.SetNextWindowPos(new Vector2(0, Stage.Height - 300));
+			
 			ImGui.Begin("Manage Mesh Resources", ref windowIsOpen, flags);
 			{
 				ImGui.BeginChild("ScrollWindowMMR", new Vector2(1475, (MapData.MeshResources.Count + 1) * 30), false);
