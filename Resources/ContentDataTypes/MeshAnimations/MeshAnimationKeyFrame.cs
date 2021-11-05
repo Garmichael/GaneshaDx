@@ -25,30 +25,30 @@ namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 			Scale = new List<double> { 0, 0, 0 };
 
 			PositionTweenTypes = new List<MeshAnimationTweenType> {
-				MeshAnimationTweenType.TweenBy,
-				MeshAnimationTweenType.TweenBy,
-				MeshAnimationTweenType.TweenBy
+				MeshAnimationTweenType.Invalid,
+				MeshAnimationTweenType.Invalid,
+				MeshAnimationTweenType.Invalid
 			};
 
 			RotationTweenTypes = new List<MeshAnimationTweenType> {
-				MeshAnimationTweenType.TweenBy,
-				MeshAnimationTweenType.TweenBy,
-				MeshAnimationTweenType.TweenBy
+				MeshAnimationTweenType.Invalid,
+				MeshAnimationTweenType.Invalid,
+				MeshAnimationTweenType.Invalid
 			};
 
 			ScaleTweenTypes = new List<MeshAnimationTweenType> {
-				MeshAnimationTweenType.TweenBy,
-				MeshAnimationTweenType.TweenBy,
-				MeshAnimationTweenType.TweenBy
+				MeshAnimationTweenType.Invalid,
+				MeshAnimationTweenType.Invalid,
+				MeshAnimationTweenType.Invalid
 			};
 
 			PositionStartPercents = new List<double> { 0, 0, 0 };
-			RotationStartPercents = new List<double> { 100, 100, 100 };
+			RotationStartPercents = new List<double> { 0, 0, 0 };
 			ScaleStartPercents = new List<double> { 0, 0, 0 };
 
-			PositionEndPercents = new List<double> { 100, 100, 100 };
+			PositionEndPercents = new List<double> { 0, 0, 0 };
 			RotationEndPercents = new List<double> { 0, 0, 0 };
-			ScaleEndPercents = new List<double> { 100, 100, 100 };
+			ScaleEndPercents = new List<double> { 0, 0, 0 };
 		}
 
 		public MeshAnimationKeyFrame(List<byte> rawData) {

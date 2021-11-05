@@ -30,7 +30,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 			}
 
 
-			const int totalUnknownChunkBytes = 128;
+			const int totalUnknownChunkBytes = 240;
 			UnknownChunk = new MeshAnimationUnknown();
 			for (int i = 0; i < totalUnknownChunkBytes; i++) {
 				UnknownChunk.Data.Add(0);
