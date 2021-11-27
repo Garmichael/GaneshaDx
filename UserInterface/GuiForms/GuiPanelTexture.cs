@@ -240,8 +240,13 @@ namespace GaneshaDx.UserInterface.GuiForms {
 						if (selectedPolygon.IsTextured) {
 							selectedPolygon.TexturePage = _copiedPolygon.TexturePage;
 							selectedPolygon.PaletteId = _copiedPolygon.PaletteId;
-							selectedPolygon.RenderingProperties.LitTexture =
-								_copiedPolygon.RenderingProperties.LitTexture;
+
+							if (selectedPolygon.RenderingProperties != null &&
+							    _copiedPolygon.RenderingProperties != null
+							) {
+								selectedPolygon.RenderingProperties.LitTexture =
+									_copiedPolygon.RenderingProperties.LitTexture;
+							}
 
 							for (int uvIndex = 0; uvIndex < selectedPolygon.UvCoordinates.Count; uvIndex++) {
 								if (_copiedPolygon.UvCoordinates.Count > uvIndex) {
