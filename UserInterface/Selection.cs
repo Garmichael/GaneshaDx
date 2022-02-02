@@ -55,7 +55,8 @@ namespace GaneshaDx.UserInterface {
 				AppInput.MouseIsWithinModelViewport &&
 				!transformWidgetInUse &&
 				!rotationWidgetInUse &&
-				(GuiPanelMeshSelector.SelectedMesh == MeshType.PrimaryMesh || !MeshAnimationController.AnimationsPlaying)
+				(GuiPanelMeshSelector.SelectedMesh == MeshType.PrimaryMesh ||
+				 !MeshAnimationController.AnimationsPlaying)
 			) {
 				CollectHoveredPolygons();
 				ClickPolygonSelection();
@@ -292,15 +293,17 @@ namespace GaneshaDx.UserInterface {
 			foreach (Polygon otherPolygon in CurrentMapState.StateData.PolygonCollectionBucket) {
 				if (!SelectedPolygons.Contains(otherPolygon)) {
 					foreach (Polygon selectedPolygon in SelectedPolygons) {
-						foreach (Vector2 selectedVertex in selectedPolygon.UvCoordinates) {
-							foreach (Vector2 otherVertex in otherPolygon.UvCoordinates) {
-								bool sharesVertices = (int) selectedVertex.X == (int) otherVertex.X &&
-								                      (int) selectedVertex.Y == (int) otherVertex.Y &&
-								                      selectedPolygon.TexturePage == otherPolygon.TexturePage;
+						if (selectedPolygon.UvCoordinates != null && otherPolygon.UvCoordinates != null) {
+							foreach (Vector2 selectedVertex in selectedPolygon.UvCoordinates) {
+								foreach (Vector2 otherVertex in otherPolygon.UvCoordinates) {
+									bool sharesVertices = (int) selectedVertex.X == (int) otherVertex.X &&
+									                      (int) selectedVertex.Y == (int) otherVertex.Y &&
+									                      selectedPolygon.TexturePage == otherPolygon.TexturePage;
 
-								if (sharesVertices) {
-									if (!polygonsToAddToSelection.Contains(otherPolygon)) {
-										polygonsToAddToSelection.Add(otherPolygon);
+									if (sharesVertices) {
+										if (!polygonsToAddToSelection.Contains(otherPolygon)) {
+											polygonsToAddToSelection.Add(otherPolygon);
+										}
 									}
 								}
 							}
