@@ -403,6 +403,15 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					MyraGui.OpenExportTextureFileDialog(fileName);
 				}
 
+				if (ImGui.Button("Export Uv Map", new Vector2(buttonWidth, buttonHeight))) {
+					string fileName = MapData.MapName + "." +
+					                  CurrentMapState.StateData.StateTextureResource.XFile +
+					                  ".uvMap" +
+					                  ".png";
+
+					MyraGui.OpenExportUvMapFileDialog(fileName);
+				}
+
 				ImGui.Columns(1);
 				GuiStyle.AddSpace();
 				ImGui.Unindent();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using GaneshaDx.Common;
 using GaneshaDx.Environment;
 using GaneshaDx.Rendering;
@@ -405,20 +406,20 @@ namespace GaneshaDx.UserInterface.GuiForms {
 		}
 
 		private static bool RenderPolyAsUnselected(Polygon polygon) {
-			return PolygonIsOnThisPage(polygon) &&
+			return PolygonIsValidToRender(polygon) &&
 			       !PolygonIsSelected(polygon) &&
 			       (!PolygonIsHovered(polygon) || HoveredVertices.Count > 0);
 		}
 
 		private static bool RenderPolyAsHovered(Polygon polygon) {
-			return PolygonIsOnThisPage(polygon) &&
+			return PolygonIsValidToRender(polygon) &&
 			       !PolygonIsSelected(polygon) &&
 			       PolygonIsHovered(polygon) &&
 			       HoveredVertices.Count == 0;
 		}
 
 		private static bool RenderPolyAsSelected(Polygon polygon) {
-			return PolygonIsOnThisPage(polygon) &&
+			return PolygonIsValidToRender(polygon) &&
 			       polygon.IsSelected;
 		}
 
@@ -430,7 +431,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			return HoveredPolygons.Contains(polygon);
 		}
 
-		private static bool PolygonIsOnThisPage(Polygon polygon) {
+		private static bool PolygonIsValidToRender(Polygon polygon) {
 			return polygon.IsTextured && polygon.TexturePage == _texturePage;
 		}
 
@@ -668,6 +669,61 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			polyVerts[4] = new VertexPositionNormalTexture { Position = topLeft };
 
 			return polyVerts;
+		}
+
+		public static Texture2D GetUvMapTexture() {
+			Texture2D finalTexture = new Texture2D(Stage.GraphicsDevice, 256, 256 * 4, false, Stage.GraphicsDevice.PresentationParameters.BackBufferFormat);
+
+			List<RenderTarget2D> renderTargets = new List<RenderTarget2D>();
+
+			const int totalTexturePages = 4;
+			for (int i = 0; i < totalTexturePages; i++) {
+				renderTargets.Add(new RenderTarget2D(
+						Stage.GraphicsDevice,
+						256,
+						256,
+						false,
+						Stage.GraphicsDevice.PresentationParameters.BackBufferFormat,
+						DepthFormat.Depth24
+					)
+				);
+			}
+
+			for (int page = 0; page < renderTargets.Count; page++) {
+				Stage.GraphicsDevice.SetRenderTarget(renderTargets[page]);
+				Stage.GraphicsDevice.Clear(Color.Transparent);
+
+				foreach (Polygon polygon in CurrentMapState.StateData.PolygonCollectionBucket) {
+					if (polygon.IsTextured && polygon.TexturePage == page) {
+						Stage.BasicEffect.View = _viewMatrix;
+						Stage.BasicEffect.Projection = _projectionMatrix;
+						Stage.BasicEffect.Alpha = 1f;
+						Stage.BasicEffect.TextureEnabled = true;
+						Stage.BasicEffect.VertexColorEnabled = false;
+						Stage.BasicEffect.Texture = UniversalTextures.WhiteTexture;
+
+						Stage.PolygonVertexBuffer.SetData(BuildPolygonRenderVertices(polygon));
+						Stage.GraphicsDevice.SetVertexBuffer(Stage.PolygonVertexBuffer);
+						Stage.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+
+						foreach (EffectPass pass in Stage.BasicEffect.CurrentTechnique.Passes) {
+							pass.Apply();
+							Stage.GraphicsDevice.DrawPrimitives(PrimitiveType.LineStrip, 0, polygon.IsQuad ? 4 : 3);
+						}
+					}
+				}
+			}
+
+			List<Color> pixelData = new List<Color>();
+			for (int page = 0; page < totalTexturePages; page++) {
+				Color[] pixels = new Color[256 * 256];
+				renderTargets[page].GetData(0, new Rectangle(0, 0, 256, 256), pixels, 0, 256 * 256);
+				pixelData.AddRange(pixels.ToList());
+			}
+
+			finalTexture.SetData(pixelData.ToArray());
+			Stage.GraphicsDevice.SetRenderTarget(null);
+			return finalTexture;
 		}
 	}
 }

@@ -225,6 +225,14 @@ namespace GaneshaDx.Resources {
 			stream.Dispose();
 		}
 
+		public static void ExportUvMap(string filePath) {
+			Stream stream = File.Create(filePath);
+			Texture2D texture = GuiWindowTextureElement.GetUvMapTexture();
+			texture.SaveAsPng(stream, texture.Width, texture.Height);
+			OverlayConsole.AddMessage("Uv Map Exported as " + filePath);
+			stream.Dispose();
+		}
+		
 		public static void SaveMap(bool isAutoSave = false) {
 			string mapFolder = _mapFolder;
 			string backupExtension = "";

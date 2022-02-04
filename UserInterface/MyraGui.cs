@@ -15,6 +15,7 @@ namespace GaneshaDx.UserInterface {
 
 		private static FileDialog _importTextureDialog;
 		private static FileDialog _exportTextureDialog;
+		private static FileDialog _exportUvMapDialog;
 		private static string _lastTextureFileLocation;
 		public static string LastImportedTextureFile = "";
 
@@ -32,6 +33,7 @@ namespace GaneshaDx.UserInterface {
 
 			BuildImportTextureFileDialog();
 			BuildExportTextureFileDialog();
+			BuildExportUvMapFileDialog();
 
 			BuildImportPaletteFileDialog();
 			BuildExportPaletteFileDialog();
@@ -61,6 +63,12 @@ namespace GaneshaDx.UserInterface {
 		public static void OpenExportTextureFileDialog(string fileName) {
 			_exportTextureDialog.FilePath = fileName;
 			_exportTextureDialog.ShowModal(Desktop);
+			_modalIsOpen = true;
+		}
+
+		public static void OpenExportUvMapFileDialog(string fileName) {
+			_exportUvMapDialog.FilePath = fileName;
+			_exportUvMapDialog.ShowModal(Desktop);
 			_modalIsOpen = true;
 		}
 
@@ -158,6 +166,34 @@ namespace GaneshaDx.UserInterface {
 			};
 		}
 
+		private static void BuildExportUvMapFileDialog() {
+			_exportUvMapDialog = new FileDialog(FileDialogMode.SaveFile) {
+				Folder = _lastTextureFileLocation,
+				Filter = "*.png"
+			};
+
+			_exportUvMapDialog.Closed += (s, a) => {
+				if (_exportUvMapDialog.Result) {
+					string filePath = _exportUvMapDialog.FilePath;
+					_exportUvMapDialog.Folder = filePath;
+					_importTextureDialog.Folder = filePath;
+					_lastTextureFileLocation = filePath;
+
+					List<string> pathSegments = filePath.Split('\\').ToList();
+					string fileName = pathSegments.Last();
+					List<string> filenameSegments = fileName.Split('.').ToList();
+
+					if (filenameSegments.Last().ToLower() != "png") {
+						fileName += ".png";
+					}
+
+					MapData.ExportUvMap(_exportUvMapDialog.Folder + "\\" + fileName);
+				}
+
+				_modalIsOpen = false;
+			};
+		}
+		
 		private static void BuildImportPaletteFileDialog() {
 			_lastPaletteFileLocation = Configuration.Properties.LoadFolder;
 
