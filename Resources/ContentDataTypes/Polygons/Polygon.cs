@@ -314,7 +314,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 				CurrentMapState.StateData.PolygonCollection[MeshType][PolygonType.UntexturedTriangle].Add(newPolygonB);
 			}
 
-			return new List<Polygon> {newPolygonA, newPolygonB};
+			return new List<Polygon> { newPolygonA, newPolygonB };
 		}
 
 		public void SetLastAnimatedPositionsForVertices(Vector3 newRotation) {
@@ -405,7 +405,11 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 			Stage.FftPolygonEffect.Parameters["ModelTexture"].SetValue(_texture2D);
 
 			Color ambientColor = CurrentMapState.StateData.AmbientLightColor;
-			Stage.FftPolygonEffect.Parameters["AmbientColor"].SetValue(ambientColor.ToVector4());
+			Stage.FftPolygonEffect.Parameters["AmbientColor"].SetValue(
+				RenderingProperties is { LitTexture: false }
+					? new Vector4(0.5f, 0.5f, 0.5f, 1)
+					: ambientColor.ToVector4()
+			);
 
 			for (int lightIndex = 0; lightIndex < 3; lightIndex++) {
 				DirectionalLight light = CurrentMapState.StateData.DirectionalLights[lightIndex];
@@ -418,7 +422,11 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 				lightDirection.Normalize();
 
 				Stage.FftPolygonEffect.Parameters["DirectionalLightDirection" + lightIndex].SetValue(lightDirection);
-				Stage.FftPolygonEffect.Parameters["DirectionalLightColor" + lightIndex].SetValue(lightColor);
+				Stage.FftPolygonEffect.Parameters["DirectionalLightColor" + lightIndex].SetValue(
+					RenderingProperties is { LitTexture: false }
+						? new Vector4(0f, 0f, 0f, 1)
+						: lightColor
+				);
 			}
 
 			Vector4[] shaderColors = SceneRenderer.AnimationAdjustedPalettes[PaletteId].ShaderColors;
