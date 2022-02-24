@@ -436,6 +436,10 @@ namespace GaneshaDx.UserInterface.GuiForms {
 		}
 
 		private static void RenderTerrainValues() {
+			if (Selection.SelectedPolygons[0].MeshType != MeshType.PrimaryMesh) {
+				return;
+			}
+			
 			GuiStyle.SetNewUiToDefaultStyle();
 			GuiStyle.SetElementStyle(ElementStyle.Header);
 
