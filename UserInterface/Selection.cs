@@ -261,7 +261,7 @@ namespace GaneshaDx.UserInterface {
 			List<Polygon> polygonsToAddToSelection = new List<Polygon>();
 
 			foreach (Polygon otherPolygon in CurrentMapState.StateData.PolygonCollectionBucket) {
-				if (!SelectedPolygons.Contains(otherPolygon)) {
+				if (!SelectedPolygons.Contains(otherPolygon) && otherPolygon.MeshType == SelectedPolygons[0].MeshType) {
 					foreach (Polygon selectedPolygon in SelectedPolygons) {
 						foreach (Vertex selectedVertex in selectedPolygon.Vertices) {
 							foreach (Vertex otherVertex in otherPolygon.Vertices) {
