@@ -17,6 +17,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 		private const int TextureSize = 256;
 		private static Matrix _viewMatrix;
 		private static Matrix _projectionMatrix;
+		private static Matrix _projectionMatrixForExportedUvMap;
 		private static int _texturePage = 1;
 		private static int _paletteId = 2;
 		private static float _zoomLevel = 1;
@@ -316,6 +317,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			}
 
 			_projectionMatrix = Matrix.CreateOrthographic(TextureSize * _zoomLevel, TextureSize * _zoomLevel, -10f, 10);
+			_projectionMatrixForExportedUvMap = Matrix.CreateOrthographic(TextureSize, TextureSize, -10f, 10);
 			_viewMatrix = Matrix.CreateLookAt(CameraPosition, CameraTarget, new Vector3(0, -1, 0));
 
 			Stage.GraphicsDevice.Clear(Color.DarkCyan);
@@ -672,7 +674,12 @@ namespace GaneshaDx.UserInterface.GuiForms {
 		}
 
 		public static Texture2D GetUvMapTexture() {
-			Texture2D finalTexture = new Texture2D(Stage.GraphicsDevice, 256, 256 * 4, false, Stage.GraphicsDevice.PresentationParameters.BackBufferFormat);
+			Texture2D finalTexture = new Texture2D(
+				Stage.GraphicsDevice,
+				256, 256 * 4,
+				false,
+				Stage.GraphicsDevice.PresentationParameters.BackBufferFormat
+			);
 
 			List<RenderTarget2D> renderTargets = new List<RenderTarget2D>();
 
@@ -696,7 +703,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				foreach (Polygon polygon in CurrentMapState.StateData.PolygonCollectionBucket) {
 					if (polygon.IsTextured && polygon.TexturePage == page) {
 						Stage.BasicEffect.View = _viewMatrix;
-						Stage.BasicEffect.Projection = _projectionMatrix;
+						Stage.BasicEffect.Projection = _projectionMatrixForExportedUvMap;
 						Stage.BasicEffect.Alpha = 1f;
 						Stage.BasicEffect.TextureEnabled = true;
 						Stage.BasicEffect.VertexColorEnabled = false;
