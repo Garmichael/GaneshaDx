@@ -215,6 +215,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					if (ImGui.MenuItem(
 						"Screenshot Mode",
 						"F12",
+						false,
 						MapData.MapIsLoaded
 					)) {
 						Stage.ToggleScreenshotMode();
