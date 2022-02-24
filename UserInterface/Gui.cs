@@ -21,7 +21,7 @@ namespace GaneshaDx.UserInterface {
 		public static bool ShowAddPolygonWindow;
 		public static bool ShowPolygonListWindow;
 		private static bool _showManageResourcesWindow;
-		public static bool ShowTipsWindow;
+		public static bool ShowAboutWindow;
 		public static bool ShowDebugAnimatedMeshWindow;
 		public static bool ShowMeshAnimationsWindow;
 
@@ -70,10 +70,6 @@ namespace GaneshaDx.UserInterface {
 							GuiWindowPolygonList.Render();
 						}
 
-						if (ShowTipsWindow) {
-							GuiWindowTips.Render();
-						}
-
 						if (ShowDebugAnimatedMeshWindow &&
 						    MapData.MapIsLoaded && CurrentMapState.StateData.MeshAnimationInstructions != null
 						) {
@@ -85,6 +81,10 @@ namespace GaneshaDx.UserInterface {
 						}
 					}
 
+					if (ShowAboutWindow) {
+						GuiWindowAbout.Render();
+					}
+					
 					if (ImGui.GetIO().WantCaptureKeyboard || ImGui.GetIO().WantCaptureMouse) {
 						MyraGui.LockModeling = true;
 					}

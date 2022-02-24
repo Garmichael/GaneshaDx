@@ -18,10 +18,6 @@ namespace GaneshaDx.UserInterface.Input {
 
 			if (MapData.MapIsLoaded && !MyraGui.IsActive) {
 				if (!AppInput.ControlHeld) {
-					if (AppInput.KeyJustPressed(Keys.F1)) {
-						Gui.ShowTipsWindow = !Gui.ShowTipsWindow;
-					}
-
 					if (AppInput.KeyJustPressed(Keys.Z)) {
 						StageCamera.FocusOnSelection();
 					}

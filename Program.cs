@@ -3,6 +3,8 @@ using GaneshaDx.Common;
 
 namespace GaneshaDx {
 	public static class Program {
+		public static readonly string Version = "0.86 (alpha)";
+		
 		[STAThread]
 		private static void Main() {
 #if !DEBUG

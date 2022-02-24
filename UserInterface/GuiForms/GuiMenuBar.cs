@@ -1,4 +1,5 @@
-﻿using GaneshaDx.Common;
+﻿using System.Diagnostics;
+using GaneshaDx.Common;
 using GaneshaDx.Environment;
 using GaneshaDx.Resources;
 using GaneshaDx.UserInterface.GuiDefinitions;
@@ -185,7 +186,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					}
 
 					ImGui.Separator();
-					
+
 					bool beforeOrthoModeChange = Configuration.Properties.RenderFFTOrtho;
 					ImGui.MenuItem(
 						"FFT Ortho Mode",
@@ -197,7 +198,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					if (beforeOrthoModeChange != Configuration.Properties.RenderFFTOrtho) {
 						Configuration.SaveConfiguration();
 					}
-					
+
 					bool beforeLightingModeChange = Configuration.Properties.RenderPolygonsInLightingMode;
 					ImGui.MenuItem(
 						"Lighting Mode",
@@ -225,11 +226,16 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				}
 
 				if (ImGui.BeginMenu("Help")) {
-					ImGui.MenuItem("Tips", "F1", ref Gui.ShowTipsWindow, MapData.MapIsLoaded);
+					if (ImGui.MenuItem("Video Tutorial Series", "", false, true)) {
+						Process.Start(new ProcessStartInfo {
+							FileName = "https://www.youtube.com/playlist?list=PLh_iA7J_8dx3XcC5xZU3MkRoYFrsLOe0D",
+							UseShellExecute = true
+						});
+					}
 
 					ImGui.Separator();
 
-					if (ImGui.MenuItem("About", "F2", false, false)) { }
+					if (ImGui.MenuItem("About", "", ref Gui.ShowAboutWindow, true)) { }
 
 					ImGui.EndMenu();
 				}
