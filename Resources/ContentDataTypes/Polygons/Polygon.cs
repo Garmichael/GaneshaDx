@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using GaneshaDx.Common;
 using GaneshaDx.Environment;
 using GaneshaDx.Rendering;
@@ -224,9 +225,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 				MeshType = MeshType,
 				PaletteId = PaletteId,
 				PolygonType = PolygonType,
-				RenderingProperties = RenderingProperties == null
-					? null
-					: new PolygonRenderingProperties(RenderingProperties.RawData),
+				RenderingProperties = RenderingProperties?.Clone(),
 				TerrainLevel = TerrainLevel,
 				TerrainX = TerrainX,
 				TerrainZ = TerrainZ,

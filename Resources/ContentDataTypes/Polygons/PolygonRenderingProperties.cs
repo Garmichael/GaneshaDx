@@ -69,5 +69,23 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 				(byte) Utilities.GetIntFromBinary(lowBinary)
 			};
 		}
+
+		public PolygonRenderingProperties Clone() {
+			return new PolygonRenderingProperties {
+				InvisibleNorthwest = InvisibleNorthwest,
+				InvisibleNorthNorthwest = InvisibleNorthNorthwest,
+				InvisibleNorthNortheast = InvisibleNorthNortheast,
+				InvisibleNortheast = InvisibleNortheast,
+				InvisibleWestNorthWest = InvisibleWestNorthWest,
+				InvisibleEastNortheast = InvisibleEastNortheast,
+				InvisibleWestSouthwest = InvisibleWestSouthwest,
+				InvisibleEastSoutheast = InvisibleEastSoutheast,
+				InvisibleSouthwest = InvisibleSouthwest,
+				InvisibleSouthSouthwest = InvisibleSouthSouthwest,
+				InvisibleSouthSoutheast = InvisibleSouthSoutheast,
+				InvisibleSoutheast = InvisibleSoutheast,
+				LitTexture = LitTexture
+			};
+		}
 	}
 }
