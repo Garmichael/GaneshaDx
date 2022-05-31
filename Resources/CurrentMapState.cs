@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using GaneshaDx.Common;
 using GaneshaDx.Rendering;
 using GaneshaDx.Resources.ContentDataTypes;
@@ -22,7 +23,7 @@ namespace GaneshaDx.Resources {
 				MapWeather = mapWeather
 			};
 
-			GuiPanelTexture.CurrentPanelMode = GuiPanelTexture.PanelMode.UVs;  
+			GuiPanelTexture.CurrentPanelMode = GuiPanelTexture.PanelMode.UVs;
 			SetInitialMeshData();
 			SetInitialTextureData();
 			AssignStateResources();
@@ -35,7 +36,7 @@ namespace GaneshaDx.Resources {
 		public static void ResetState() {
 			SetState(StateData.MapArrangementState, StateData.MapTime, StateData.MapWeather);
 		}
-		
+
 		private static void SetInitialMeshData() {
 			InitialMeshMapResources.Clear();
 
@@ -138,8 +139,6 @@ namespace GaneshaDx.Resources {
 		}
 
 		public static void DeleteSelection() {
-			
-
 			foreach (Polygon polygon in Selection.SelectedPolygons) {
 				Dictionary<PolygonType, List<Polygon>> meshContainer = StateData.PolygonCollection[polygon.MeshType];
 				if (polygon.IsQuad) {
@@ -158,6 +157,48 @@ namespace GaneshaDx.Resources {
 			}
 
 			Selection.SelectedPolygons.Clear();
+		}
+
+		public static void SelectOverlappingPolygons() {
+			Selection.SelectedPolygons.Clear();
+
+
+			List<PolygonType> polygonTypes = new List<PolygonType> {
+				PolygonType.TexturedQuad,
+				PolygonType.UntexturedQuad,
+				PolygonType.TexturedTriangle,
+				PolygonType.UntexturedTriangle
+			};
+
+			foreach (PolygonType polygonType in polygonTypes) {
+				List<Polygon> currentBucket = StateData.PolygonCollection[GuiPanelMeshSelector.SelectedMesh][polygonType];
+
+				foreach (Polygon polygon in currentBucket) {
+					if (!Selection.SelectedPolygons.Contains(polygon)) {
+						foreach (Polygon otherPolygon in currentBucket) {
+							if (
+								polygon != otherPolygon &&
+								!Selection.SelectedPolygons.Contains(otherPolygon) &&
+								Math.Abs(polygon.Vertices[0].Position.X - otherPolygon.Vertices[0].Position.X) < .1 &&
+								Math.Abs(polygon.Vertices[0].Position.Y - otherPolygon.Vertices[0].Position.Y) < .1 &&
+								Math.Abs(polygon.Vertices[0].Position.Z - otherPolygon.Vertices[0].Position.Z) < .1 &&
+								Math.Abs(polygon.Vertices[1].Position.X - otherPolygon.Vertices[1].Position.X) < .1 &&
+								Math.Abs(polygon.Vertices[1].Position.Y - otherPolygon.Vertices[1].Position.Y) < .1 &&
+								Math.Abs(polygon.Vertices[1].Position.Z - otherPolygon.Vertices[1].Position.Z) < .1 &&
+								Math.Abs(polygon.Vertices[2].Position.X - otherPolygon.Vertices[2].Position.X) < .1 &&
+								Math.Abs(polygon.Vertices[2].Position.Y - otherPolygon.Vertices[2].Position.Y) < .1 &&
+								Math.Abs(polygon.Vertices[2].Position.Z - otherPolygon.Vertices[2].Position.Z) < .1 &&
+								polygon.Vertices.Count > 3 &&
+								Math.Abs(polygon.Vertices[3].Position.X - otherPolygon.Vertices[3].Position.X) < .1 &&
+								Math.Abs(polygon.Vertices[3].Position.Y - otherPolygon.Vertices[3].Position.Y) < .1 &&
+								Math.Abs(polygon.Vertices[3].Position.Z - otherPolygon.Vertices[3].Position.Z) < .1
+							) {
+								Selection.AddPolyToSelection(polygon);
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 }
