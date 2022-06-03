@@ -447,7 +447,10 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 
 					Stage.FftPolygonEffect.Parameters["HighlightBright"].SetValue(shouldHighlight);
 				} else if (IsHovered || IsSelected && this != Selection.SelectedPolygons[0]) {
-					Stage.FftPolygonEffect.Parameters["HighlightDim"].SetValue(true);
+					bool shouldHighlight = Gui.SelectedTab != RightPanelTab.Texture ||
+					                       Configuration.Properties.HighlightSelectionOnTexturePage;
+
+					Stage.FftPolygonEffect.Parameters["HighlightDim"].SetValue(shouldHighlight);
 				}
 			}
 
