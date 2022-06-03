@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using GaneshaDx.Common;
+using GaneshaDx.Environment;
 using GaneshaDx.Resources.ContentDataTypes.Polygons;
 using GaneshaDx.UserInterface.GuiDefinitions;
 using GaneshaDx.UserInterface.Widgets;
@@ -553,6 +554,8 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					InvisibleSoutheast = angles.InvisibleSoutheast
 				};
 
+				ImGuiStylePtr style = ImGui.GetStyle();
+
 				ImGui.Checkbox("NW", ref angles.InvisibleNorthwest);
 				ImGui.NextColumn();
 				ImGui.Checkbox("NNW", ref angles.InvisibleNorthNorthwest);
@@ -565,9 +568,23 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 				ImGui.Checkbox("WNW", ref angles.InvisibleWestNorthWest);
 				ImGui.NextColumn();
+				
+				if (StageCamera.FacingDirection == StageCamera.CameraView.Northwest) {
+					style.Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.HighlightedText];
+				} else {
+					style.Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.Lightest];
+				}
+				
 				ImGui.Text("NW");
 				ImGui.NextColumn();
 				ImGui.NextColumn();
+				
+				if (StageCamera.FacingDirection == StageCamera.CameraView.Northeast) {
+					style.Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.HighlightedText];
+				} else {
+					style.Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.Lightest];
+				}
+				
 				ImGui.Text("NE");
 				ImGui.NextColumn();
 				ImGui.Checkbox("ENE", ref angles.InvisibleEastNortheast);
@@ -586,9 +603,23 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 				ImGui.Checkbox("WSW", ref angles.InvisibleWestSouthwest);
 				ImGui.NextColumn();
+				
+				if (StageCamera.FacingDirection == StageCamera.CameraView.Southwest) {
+					style.Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.HighlightedText];
+				} else {
+					style.Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.Lightest];
+				}
+				
 				ImGui.Text("SW");
 				ImGui.NextColumn();
 				ImGui.NextColumn();
+				
+				if (StageCamera.FacingDirection == StageCamera.CameraView.Southeast) {
+					style.Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.HighlightedText];
+				} else {
+					style.Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.Lightest];
+				}
+				
 				ImGui.Text("SE");
 				ImGui.NextColumn();
 				ImGui.Checkbox("ESE", ref angles.InvisibleEastSoutheast);

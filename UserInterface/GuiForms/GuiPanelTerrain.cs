@@ -4,6 +4,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text.RegularExpressions;
 using GaneshaDx.Common;
+using GaneshaDx.Environment;
 using GaneshaDx.Resources;
 using GaneshaDx.Resources.ContentDataTypes.Terrains;
 using GaneshaDx.UserInterface.GuiDefinitions;
@@ -248,14 +249,45 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 					ImGui.NextColumn();
 
+					ImGuiStylePtr style = ImGui.GetStyle();
+
+					if (StageCamera.FacingDirection == StageCamera.CameraView.Northwest) {
+						style.Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.HighlightedText];
+					} else {
+						style.Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.Lightest];
+					}
+
 					ImGui.Text("NW");
 					ImGui.NextColumn();
+
+					if (StageCamera.FacingDirection == StageCamera.CameraView.Northeast) {
+						style.Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.HighlightedText];
+					} else {
+						style.Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.Lightest];
+					}
+
 					ImGui.Text("NE");
 					ImGui.NextColumn();
+
+					if (StageCamera.FacingDirection == StageCamera.CameraView.Southwest) {
+						style.Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.HighlightedText];
+					} else {
+						style.Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.Lightest];
+					}
+
 					ImGui.Text("SW");
 					ImGui.NextColumn();
+
+					if (StageCamera.FacingDirection == StageCamera.CameraView.Southeast) {
+						style.Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.HighlightedText];
+					} else {
+						style.Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.Lightest];
+					}
+
 					ImGui.Text("SE");
 					ImGui.NextColumn();
+
+					style.Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.Lightest];
 
 					ImGui.Text("Top");
 					ImGui.NextColumn();
