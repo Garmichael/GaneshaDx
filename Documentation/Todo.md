@@ -24,11 +24,6 @@
     [1] [4] Copy / Paste
     [1] [1] Add Has Invisibility Angles to the Resource Management Window
 
-### File Menu / Windows
-
-    [4] [1] Help -> About Window
-    [4] [2] Help -> Tips Window
-
 ### Rendering
 
     [5] [2] Game View shadow overlay
@@ -39,7 +34,7 @@
 ### Terrain
 
     [1] [1] Allow Alt-Click to change First Terrain Tile
-    [2] [2] Render non-red tiles on top when both are the same
+    [2] [2] Render non-red tiles on top when both are the same height
 
 ### Polygons
 
