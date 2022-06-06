@@ -82,7 +82,7 @@ namespace GaneshaDx.UserInterface.Input {
 						Configuration.Properties.RenderFftOrtho = !Configuration.Properties.RenderFftOrtho;
 						Configuration.SaveConfiguration();
 					}
-					
+
 					if (AppInput.KeyJustPressed(Keys.F)) {
 						if (Gui.Widget == WidgetSelectionMode.PolygonEdgeTranslate) {
 							TransformWidget.SelectNextEdge(AppInput.ShiftHeld);
@@ -107,6 +107,14 @@ namespace GaneshaDx.UserInterface.Input {
 								}
 							}
 						}
+					}
+
+					if (AppInput.KeyJustPressed(Keys.S)) {
+						TransformWidget.SelectSnappingVertex();
+					}
+
+					if (AppInput.KeyJustPressed(Keys.D)) {
+						TransformWidget.SnapSnappingVertex();
 					}
 				}
 
