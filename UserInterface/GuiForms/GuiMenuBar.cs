@@ -187,15 +187,15 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 					ImGui.Separator();
 
-					bool beforeOrthoModeChange = Configuration.Properties.RenderFFTOrtho;
+					bool beforeOrthoModeChange = Configuration.Properties.RenderFftOrtho;
 					ImGui.MenuItem(
 						"FFT Ortho Mode",
 						"B",
-						ref Configuration.Properties.RenderFFTOrtho,
+						ref Configuration.Properties.RenderFftOrtho,
 						MapData.MapIsLoaded
 					);
 
-					if (beforeOrthoModeChange != Configuration.Properties.RenderFFTOrtho) {
+					if (beforeOrthoModeChange != Configuration.Properties.RenderFftOrtho) {
 						Configuration.SaveConfiguration();
 					}
 
@@ -210,7 +210,18 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					if (beforeLightingModeChange != Configuration.Properties.RenderPolygonsInLightingMode) {
 						Configuration.SaveConfiguration();
 					}
+					
+					bool beforeHideInvisiblePolys = Configuration.Properties.HideHiddenPolysByFacing;
+					ImGui.MenuItem(
+						"Hide Invisible Polys",
+						"H",
+						ref Configuration.Properties.HideHiddenPolysByFacing,
+						MapData.MapIsLoaded
+					);
 
+					if (beforeHideInvisiblePolys != Configuration.Properties.HideHiddenPolysByFacing) {
+						Configuration.SaveConfiguration();
+					}
 					ImGui.Separator();
 
 					if (ImGui.MenuItem(

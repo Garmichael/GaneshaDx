@@ -27,7 +27,6 @@
 ### Rendering
 
     [5] [2] Game View shadow overlay
-    [2] [3] Accurate rendering of Invisibility Angles when using camera controls
     [3] [2] Build Number-Border for Terrain
     [5] [2] Compass Rose with N-E-S-W on it
 

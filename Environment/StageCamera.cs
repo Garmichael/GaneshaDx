@@ -351,7 +351,7 @@ namespace GaneshaDx.Environment {
 
 			Stage.ViewMatrix = Matrix.CreateLookAt(CamPosition, CamTarget, Vector3.Up);
 
-			float orthoDistortion = Configuration.Properties.RenderFFTOrtho
+			float orthoDistortion = Configuration.Properties.RenderFftOrtho
 				? 5f / 4f
 				: 1;
 

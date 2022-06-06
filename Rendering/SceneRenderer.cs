@@ -245,11 +245,25 @@ namespace GaneshaDx.Rendering {
 
 		private static void RenderPolygons() {
 			foreach (Polygon polygon in CurrentMapState.StateData.PolygonCollectionBucket) {
-				if (
-					!Configuration.Properties.IsolateMeshes ||
-					polygon.MeshType == GuiPanelMeshSelector.SelectedMesh ||
-					GuiPanelMeshSelector.SelectedMesh == MeshType.PrimaryMesh
-				) {
+				bool shouldHideWhenIsolated = Configuration.Properties.IsolateMeshes &&
+				                              polygon.MeshType != GuiPanelMeshSelector.SelectedMesh &&
+				                              GuiPanelMeshSelector.SelectedMesh != MeshType.PrimaryMesh;
+
+				bool shouldHideBasedOnVisibilityAngle =
+					polygon.RenderingProperties != null &&
+					Configuration.Properties.HideHiddenPolysByFacing &&
+					(
+						StageCamera.FacingDirection == StageCamera.CameraView.Northeast &&
+						polygon.RenderingProperties.InvisibleNortheast ||
+						StageCamera.FacingDirection == StageCamera.CameraView.Northwest &&
+						polygon.RenderingProperties.InvisibleNorthwest ||
+						StageCamera.FacingDirection == StageCamera.CameraView.Southeast &&
+						polygon.RenderingProperties.InvisibleSoutheast ||
+						StageCamera.FacingDirection == StageCamera.CameraView.Southwest &&
+						polygon.RenderingProperties.InvisibleSouthwest
+					);
+
+				if (!shouldHideWhenIsolated && !shouldHideBasedOnVisibilityAngle) {
 					polygon.Render();
 				}
 			}
