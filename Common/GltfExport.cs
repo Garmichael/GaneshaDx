@@ -22,6 +22,8 @@ namespace GaneshaDx.Common
 {
   public static class GltfExport {
 
+		private const float _reduceScaleFactor = 50;
+
 		private static List<Color> _greyPalette = new List<Color>();
 		public static List<Color> GreyPalette {
 			get {
@@ -70,17 +72,17 @@ namespace GaneshaDx.Common
 					if (polygon.IsTextured) {
 						// 0,1,3,2 is FFT vertex order, reversing here to correct facing/back-culling.
 						texturedPrimitives[polygon.PaletteId].AddQuadrangle(
-							(Utilities.ConvertVector3(vertices[2].Position), GetAdjustedUvCoordinates(uvs[2], polygon.TexturePage)),
-							(Utilities.ConvertVector3(vertices[3].Position), GetAdjustedUvCoordinates(uvs[3], polygon.TexturePage)),
-							(Utilities.ConvertVector3(vertices[1].Position), GetAdjustedUvCoordinates(uvs[1], polygon.TexturePage)),
-							(Utilities.ConvertVector3(vertices[0].Position), GetAdjustedUvCoordinates(uvs[0], polygon.TexturePage))
+							(ConvertAndScaleVector3(vertices[2].Position), GetAdjustedUvCoordinates(uvs[2], polygon.TexturePage)),
+							(ConvertAndScaleVector3(vertices[3].Position), GetAdjustedUvCoordinates(uvs[3], polygon.TexturePage)),
+							(ConvertAndScaleVector3(vertices[1].Position), GetAdjustedUvCoordinates(uvs[1], polygon.TexturePage)),
+							(ConvertAndScaleVector3(vertices[0].Position), GetAdjustedUvCoordinates(uvs[0], polygon.TexturePage))
 						);
 					} else {
 						blackPrimitive.AddQuadrangle(
-							ConvertVector3ToVertexPosition(vertices[2].Position), 
-							ConvertVector3ToVertexPosition(vertices[3].Position), 
-							ConvertVector3ToVertexPosition(vertices[1].Position), 
-							ConvertVector3ToVertexPosition(vertices[0].Position)
+							ConvertAndScaleVector3ToVertexPosition(vertices[2].Position), 
+							ConvertAndScaleVector3ToVertexPosition(vertices[3].Position), 
+							ConvertAndScaleVector3ToVertexPosition(vertices[1].Position), 
+							ConvertAndScaleVector3ToVertexPosition(vertices[0].Position)
 						);
 					}
 				} else {
@@ -88,15 +90,15 @@ namespace GaneshaDx.Common
 					List<Microsoft.Xna.Framework.Vector2> uvs = polygon.UvCoordinates;
 					if (polygon.IsTextured) {
 						texturedPrimitives[polygon.PaletteId].AddTriangle(
-							(Utilities.ConvertVector3(verts[2].Position), GetAdjustedUvCoordinates(uvs[2], polygon.TexturePage)),
-							(Utilities.ConvertVector3(verts[1].Position), GetAdjustedUvCoordinates(uvs[1], polygon.TexturePage)),
-							(Utilities.ConvertVector3(verts[0].Position), GetAdjustedUvCoordinates(uvs[0], polygon.TexturePage))
+							(ConvertAndScaleVector3(verts[2].Position), GetAdjustedUvCoordinates(uvs[2], polygon.TexturePage)),
+							(ConvertAndScaleVector3(verts[1].Position), GetAdjustedUvCoordinates(uvs[1], polygon.TexturePage)),
+							(ConvertAndScaleVector3(verts[0].Position), GetAdjustedUvCoordinates(uvs[0], polygon.TexturePage))
 						);
 					} else {
 						blackPrimitive.AddTriangle(
-							ConvertVector3ToVertexPosition(verts[2].Position), 
-							ConvertVector3ToVertexPosition(verts[1].Position), 
-							ConvertVector3ToVertexPosition(verts[0].Position)
+							ConvertAndScaleVector3ToVertexPosition(verts[2].Position), 
+							ConvertAndScaleVector3ToVertexPosition(verts[1].Position), 
+							ConvertAndScaleVector3ToVertexPosition(verts[0].Position)
 						);
 					}
 				}
@@ -118,8 +120,12 @@ namespace GaneshaDx.Common
 			model.SaveGLTF(filePath, settings);
 		}
 
-		private static VertexPosition ConvertVector3ToVertexPosition (Microsoft.Xna.Framework.Vector3 position) {
-			return new VertexPosition(position.X, position.Y, position.Z);
+		private static Vector3 ConvertAndScaleVector3(Microsoft.Xna.Framework.Vector3 vector3) {
+			return new Vector3(vector3.X / _reduceScaleFactor, vector3.Y / _reduceScaleFactor, vector3.Z / _reduceScaleFactor);
+		}
+
+		private static VertexPosition ConvertAndScaleVector3ToVertexPosition (Microsoft.Xna.Framework.Vector3 vector3) {
+			return new VertexPosition(vector3.X / _reduceScaleFactor, vector3.Y / _reduceScaleFactor, vector3.Z / _reduceScaleFactor);
 		}
 
 		private static Vector2 GetAdjustedUvCoordinates (Microsoft.Xna.Framework.Vector2 uv, int texturePage) {
