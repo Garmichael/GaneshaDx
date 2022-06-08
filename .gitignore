@@ -2,3 +2,6 @@
 .idea/
 bin/
 obj/
+imgui.ini
+Preferences.json
+.vscode/
