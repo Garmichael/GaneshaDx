@@ -28,14 +28,6 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 					ImGui.Separator();
 
-					if (ImGui.MenuItem("Export to GLTF", null, false, MapData.MapIsLoaded)) {
-						string fileName = MapData.MapName + ".gltf";
-
-						MyraGui.OpenExportGltfFileDialog(fileName);
-					}
-
-					ImGui.Separator();
-
 					ImGui.MenuItem("Preferences", "P", ref Gui.ShowPreferencesWindow, MapData.MapIsLoaded);
 
 					ImGui.Separator();
@@ -76,6 +68,14 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 					if (ImGui.MenuItem("Re-Import Texture", "Ctrl + R", false, canReimportTexture)) {
 						MapData.ImportTexture(MyraGui.LastImportedTextureFile);
+					}
+
+					ImGui.Separator();
+
+					if (ImGui.MenuItem("Export to GLTF", null, false, MapData.MapIsLoaded)) {
+						string fileName = MapData.MapName + ".gltf";
+
+						MyraGui.OpenExportGltfFileDialog(fileName);
 					}
 
 					ImGui.Separator();
