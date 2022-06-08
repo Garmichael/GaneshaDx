@@ -6,7 +6,6 @@
     [4] [1] File -> Save As
     [4] [3] Build new File Browser in ImGui
     [2] [5] Undo
-    [2] [2] Export UV Overlay PNG 
     [1] [3] Auto-Export Screenshots (four angles, plus Top-down, hidden UI)
         mapname_bev.png, mapname_45.png, mapname_135.png, mapname_225.png, mapname_315.png
     [3] [4] Figure out a color picker solution for the 32x32x32 color depth thing
@@ -25,30 +24,24 @@
     [1] [4] Copy / Paste
     [1] [1] Add Has Invisibility Angles to the Resource Management Window
 
-### File Menu / Windows
-
-    [4] [1] Help -> About Window
-    [4] [2] Help -> Tips Window
-
 ### Rendering
 
     [5] [2] Game View shadow overlay
-    [2] [3] Accurate rendering of Invisibility Angles when using camera controls
     [3] [2] Build Number-Border for Terrain
     [5] [2] Compass Rose with N-E-S-W on it
 
 ### Terrain
 
     [1] [1] Allow Alt-Click to change First Terrain Tile
-    [2] [2] Render non-red tiles on top when both are the same
+    [2] [2] Render non-red tiles on top when both are the same height
 
 ### Polygons
 
     [3] [1] Warn the user when more polys than the max are in the scene
     [4] [1] Snap Poly to Poly
     [4] [1] Snap Vertex to Vertex
-    [5] [3] Using the widget with Alt+drag the panel will drift away from the mouse
-    [5] [2] Import from OBJ
+    [5] [2] Import from FBX
+    [5] [2] Export from FBX
     [3] [2] Copy and Paste Polygon Selection 
 
 ### Bugs

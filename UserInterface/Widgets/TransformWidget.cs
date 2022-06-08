@@ -2,13 +2,14 @@
 using System.Linq;
 using GaneshaDx.Common;
 using GaneshaDx.Environment;
-using GaneshaDx.UserInterface.Input;
-using Microsoft.Xna.Framework.Input;
+using GaneshaDx.Resources.ContentDataTypes.Polygons;
+using Microsoft.Xna.Framework;
 
 namespace GaneshaDx.UserInterface.Widgets {
 	public static class TransformWidget {
 		private static readonly List<TransformWidgetAxis> AxesSet;
 		public static readonly List<int> SelectedVertexIndices = new List<int>();
+		public static Vertex SnappingVertex = null;
 
 		public static bool IsHovered {
 			get {
@@ -99,7 +100,7 @@ namespace GaneshaDx.UserInterface.Widgets {
 
 		public static void Render() {
 			if (Stage.ScreenshotMode ||
-				Selection.SelectedPolygons.Count == 0 ||
+			    Selection.SelectedPolygons.Count == 0 ||
 			    Gui.Widget != WidgetSelectionMode.PolygonTranslate &&
 			    Gui.Widget != WidgetSelectionMode.PolygonVertexTranslate &&
 			    Gui.Widget != WidgetSelectionMode.PolygonEdgeTranslate
@@ -126,14 +127,13 @@ namespace GaneshaDx.UserInterface.Widgets {
 			}
 
 			for (int axisIndex = 1; axisIndex < hoveredAxes.Count; axisIndex++) {
-				hoveredAxes[axisIndex].HoveredAxisResults = new CameraRayResults {HasHit = false};
+				hoveredAxes[axisIndex].HoveredAxisResults = new CameraRayResults { HasHit = false };
 			}
 		}
 
-
 		public static void SelectNextVertex(bool reverse) {
 			if (Selection.SelectedPolygons[0].IsQuad) {
-				List<int> vertexOrder = new List<int> {0, 1, 3, 2};
+				List<int> vertexOrder = new List<int> { 0, 1, 3, 2 };
 				int currentIndex = vertexOrder.IndexOf(SelectedVertexIndices[0]);
 
 				int newIndex = reverse
@@ -172,7 +172,7 @@ namespace GaneshaDx.UserInterface.Widgets {
 				SelectedVertexIndices.Sort();
 
 				List<int[]> coordinates = new List<int[]> {
-					new[] {0, 1}, new[] {1, 3}, new[] {2, 3}, new[] {0, 2}, new[] {0, 3}, new[] {1, 2}
+					new[] { 0, 1 }, new[] { 1, 3 }, new[] { 2, 3 }, new[] { 0, 2 }, new[] { 0, 3 }, new[] { 1, 2 }
 				};
 
 				int currentIndex = 0;
@@ -226,6 +226,32 @@ namespace GaneshaDx.UserInterface.Widgets {
 				if (SelectedVertexIndices[1] < 0) {
 					SelectedVertexIndices[1] = lastIndex;
 				}
+			}
+		}
+
+		public static void SelectSnappingVertex() {
+			if (Gui.Widget != WidgetSelectionMode.PolygonVertexTranslate ||
+			    Selection.SelectedPolygons.Count == 0
+			) {
+				SnappingVertex = null;
+			} else {
+				Vertex selectedVertex = Selection.SelectedPolygons[0].Vertices[SelectedVertexIndices[0]];
+				SnappingVertex = selectedVertex;
+			}
+		}
+
+		public static void SnapSnappingVertex() {
+			if (SnappingVertex != null &&
+			    Gui.Widget == WidgetSelectionMode.PolygonVertexTranslate &&
+			    Selection.SelectedPolygons.Count > 0
+			) {
+				Vertex selectedVertex = Selection.SelectedPolygons[0].Vertices[SelectedVertexIndices[0]];
+
+				SnappingVertex.Position = new Vector3(
+					selectedVertex.Position.X,
+					selectedVertex.Position.Y,
+					selectedVertex.Position.Z
+				);
 			}
 		}
 	}

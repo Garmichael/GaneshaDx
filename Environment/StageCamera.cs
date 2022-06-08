@@ -27,18 +27,42 @@ namespace GaneshaDx.Environment {
 		private static CameraElevation _cameraSpinningDestinationElevation;
 		private static RotationDirection _cameraSpinningRotationDirection;
 
+		public static CameraView FacingDirection {
+			get {
+				const int cornerWidth = 30;
+				if (Math.Abs(CameraHorizontalAngle - CameraValues[CameraView.Southwest]) < cornerWidth) {
+					return CameraView.Southwest;
+				}
+
+				if (Math.Abs(CameraHorizontalAngle - CameraValues[CameraView.Northwest]) < cornerWidth) {
+					return CameraView.Northwest;
+				}
+
+				if (Math.Abs(CameraHorizontalAngle - CameraValues[CameraView.Southeast]) < cornerWidth) {
+					return CameraView.Southeast;
+				}
+
+				if (Math.Abs(CameraHorizontalAngle - CameraValues[CameraView.Northeast]) < cornerWidth) {
+					return CameraView.Northeast;
+				}
+
+				return CameraView.Unset;
+			}
+		}
+
 		private static readonly Dictionary<CameraView, float> CameraValues = new Dictionary<CameraView, float> {
-			{CameraView.Northwest, 225},
-			{CameraView.Northeast, 315},
-			{CameraView.Southwest, 135},
-			{CameraView.Southeast, 45},
+			{ CameraView.Northwest, 225 },
+			{ CameraView.Northeast, 315 },
+			{ CameraView.Southwest, 135 },
+			{ CameraView.Southeast, 45 },
 		};
 
 		public enum CameraView {
 			Northwest,
 			Northeast,
 			Southwest,
-			Southeast
+			Southeast,
+			Unset
 		}
 
 		public enum CameraElevation {
@@ -327,10 +351,10 @@ namespace GaneshaDx.Environment {
 
 			Stage.ViewMatrix = Matrix.CreateLookAt(CamPosition, CamTarget, Vector3.Up);
 
-			float orthoDistortion = Configuration.Properties.RenderFFTOrtho
+			float orthoDistortion = Configuration.Properties.RenderFftOrtho
 				? 5f / 4f
 				: 1;
-			
+
 			Stage.ProjectionMatrix = Matrix.CreateOrthographic(
 				Stage.ModelingViewport.Width * (float) ZoomLevel,
 				Stage.ModelingViewport.Height * (float) ZoomLevel * orthoDistortion,

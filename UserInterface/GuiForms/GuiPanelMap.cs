@@ -486,6 +486,10 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				if (ImGui.Button("Polygon List")) {
 					Gui.ShowPolygonListWindow = true;
 				}
+
+				if (ImGui.Button("Select Overlapping Polygons")) {
+					CurrentMapState.SelectOverlappingPolygons();
+				}
 				
 				ImGui.Unindent();
 			}

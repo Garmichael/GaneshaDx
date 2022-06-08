@@ -437,6 +437,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			ImGui.SetColumnWidth(1, colorBoxWidth * totalColorsPerPalette + 2);
 
 			for (int paletteIndex = 0; paletteIndex < totalPalettes; paletteIndex++) {
+				ImGui.GetStyle().Colors[(int) ImGuiCol.Button] = GuiStyle.ColorPalette[ColorName.Transparent];
 				ImGuiStylePtr style = ImGui.GetStyle();
 				style.ItemSpacing = Vector2.Zero;
 				style.FrameRounding = 0;
@@ -447,7 +448,28 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					style.Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.HighlightedText];
 				}
 
-				ImGui.Text(paletteIndex.ToString());
+				if (ImGui.Button(paletteIndex.ToString())) {
+					Selection.SelectedPolygons.Clear();
+
+					foreach (
+						Polygon polygon
+						in CurrentMapState.StateData.PolygonCollection[GuiPanelMeshSelector.SelectedMesh][PolygonType.TexturedTriangle]
+					) {
+						if (polygon.PaletteId == paletteIndex) {
+							Selection.AddPolyToSelection(polygon);
+						}
+					}
+					
+					foreach (
+						Polygon polygon
+						in CurrentMapState.StateData.PolygonCollection[GuiPanelMeshSelector.SelectedMesh][PolygonType.TexturedQuad]
+					) {
+						if (polygon.PaletteId == paletteIndex) {
+							Selection.AddPolyToSelection(polygon);
+						}
+					}
+				}
+
 				ImGui.NextColumn();
 
 				Palette palette = CurrentMapState.StateData.Palettes[paletteIndex];
@@ -489,8 +511,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				style.FrameBorderSize = 0;
 
 				ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
-				ImGui.GetStyle().Colors[(int) ImGuiCol.Button] =
-					GuiStyle.ColorPalette[ColorName.Transparent];
+				ImGui.GetStyle().Colors[(int) ImGuiCol.Button] = GuiStyle.ColorPalette[ColorName.Transparent];
 
 				if (ImGui.Button("Z##import" + paletteIndex)) {
 					MyraGui.OpenImportPaletteFileDialog(paletteIndex, "main");

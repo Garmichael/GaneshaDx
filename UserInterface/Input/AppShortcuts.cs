@@ -48,6 +48,12 @@ namespace GaneshaDx.UserInterface.Input {
 						Configuration.SaveConfiguration();
 					}
 
+					if (AppInput.KeyJustPressed(Keys.H)) {
+						Configuration.Properties.HideHiddenPolysByFacing =
+							!Configuration.Properties.HideHiddenPolysByFacing;
+						Configuration.SaveConfiguration();
+					}
+
 					if (AppInput.KeyJustPressed(Keys.OemPlus) || AppInput.KeyJustPressed(Keys.Add)) {
 						if (Gui.SelectedTab == RightPanelTab.Terrain) {
 							Selection.GrowTerrainSelection();
@@ -73,10 +79,10 @@ namespace GaneshaDx.UserInterface.Input {
 					}
 
 					if (AppInput.KeyJustPressed(Keys.B)) {
-						Configuration.Properties.RenderFFTOrtho = !Configuration.Properties.RenderFFTOrtho;
+						Configuration.Properties.RenderFftOrtho = !Configuration.Properties.RenderFftOrtho;
 						Configuration.SaveConfiguration();
 					}
-					
+
 					if (AppInput.KeyJustPressed(Keys.F)) {
 						if (Gui.Widget == WidgetSelectionMode.PolygonEdgeTranslate) {
 							TransformWidget.SelectNextEdge(AppInput.ShiftHeld);
@@ -101,6 +107,14 @@ namespace GaneshaDx.UserInterface.Input {
 								}
 							}
 						}
+					}
+
+					if (AppInput.KeyJustPressed(Keys.S)) {
+						TransformWidget.SelectSnappingVertex();
+					}
+
+					if (AppInput.KeyJustPressed(Keys.D)) {
+						TransformWidget.SnapSnappingVertex();
 					}
 				}
 

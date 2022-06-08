@@ -224,9 +224,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 				MeshType = MeshType,
 				PaletteId = PaletteId,
 				PolygonType = PolygonType,
-				RenderingProperties = RenderingProperties == null
-					? null
-					: new PolygonRenderingProperties(RenderingProperties.RawData),
+				RenderingProperties = RenderingProperties?.Clone(),
 				TerrainLevel = TerrainLevel,
 				TerrainX = TerrainX,
 				TerrainZ = TerrainZ,
@@ -264,7 +262,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 				MeshType = MeshType,
 				PaletteId = PaletteId,
 				PolygonType = IsTextured ? PolygonType.TexturedTriangle : PolygonType.UntexturedTriangle,
-				RenderingProperties = new PolygonRenderingProperties(RenderingProperties.RawData),
+				RenderingProperties = RenderingProperties.Clone(),
 				TerrainLevel = TerrainLevel,
 				TerrainX = TerrainX,
 				TerrainZ = TerrainZ,
@@ -276,7 +274,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 				MeshType = MeshType,
 				PaletteId = PaletteId,
 				PolygonType = IsTextured ? PolygonType.TexturedTriangle : PolygonType.UntexturedTriangle,
-				RenderingProperties = new PolygonRenderingProperties(RenderingProperties.RawData),
+				RenderingProperties = RenderingProperties.Clone(),
 				TerrainLevel = TerrainLevel,
 				TerrainX = TerrainX,
 				TerrainZ = TerrainZ,
@@ -448,7 +446,10 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 
 					Stage.FftPolygonEffect.Parameters["HighlightBright"].SetValue(shouldHighlight);
 				} else if (IsHovered || IsSelected && this != Selection.SelectedPolygons[0]) {
-					Stage.FftPolygonEffect.Parameters["HighlightDim"].SetValue(true);
+					bool shouldHighlight = IsHovered || Gui.SelectedTab != RightPanelTab.Texture ||
+					                       Configuration.Properties.HighlightSelectionOnTexturePage;
+
+					Stage.FftPolygonEffect.Parameters["HighlightDim"].SetValue(shouldHighlight);
 				}
 			}
 
