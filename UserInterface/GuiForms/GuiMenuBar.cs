@@ -72,6 +72,14 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 					ImGui.Separator();
 
+					if (ImGui.MenuItem("Export to GLTF", null, false, MapData.MapIsLoaded)) {
+						string fileName = MapData.MapName + ".gltf";
+
+						MyraGui.OpenExportGltfFileDialog(fileName);
+					}
+
+					ImGui.Separator();
+
 					bool canEditMeshAnimations = MapData.MapIsLoaded &&
 					                             CurrentMapState.StateData.MeshAnimationInstructions != null;
 

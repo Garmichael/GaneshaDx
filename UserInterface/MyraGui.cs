@@ -12,6 +12,8 @@ namespace GaneshaDx.UserInterface {
 		public static Desktop Desktop;
 		private static bool _modalIsOpen;
 		private static FileDialog _openFileDialog;
+		private static FileDialog _exportGltfDialog;
+		private static string _lastGltfFileLocation;
 
 		private static FileDialog _importTextureDialog;
 		private static FileDialog _exportTextureDialog;
@@ -30,6 +32,7 @@ namespace GaneshaDx.UserInterface {
 			MyraEnvironment.Game = Stage.Ganesha;
 
 			BuildOpenFileDialog();
+			BuildExportGltfFileDialog();
 
 			BuildImportTextureFileDialog();
 			BuildExportTextureFileDialog();
@@ -63,6 +66,12 @@ namespace GaneshaDx.UserInterface {
 		public static void OpenExportTextureFileDialog(string fileName) {
 			_exportTextureDialog.FilePath = fileName;
 			_exportTextureDialog.ShowModal(Desktop);
+			_modalIsOpen = true;
+		}
+
+		public static void OpenExportGltfFileDialog(string fileName) {
+			_exportGltfDialog.FilePath = fileName;
+			_exportGltfDialog.ShowModal(Desktop);
 			_modalIsOpen = true;
 		}
 
@@ -111,6 +120,33 @@ namespace GaneshaDx.UserInterface {
 					string fileDirectory = string.Join('\\', pathSegments);
 
 					MapData.LoadMapDataFromFiles(fileDirectory, mapName);
+				}
+
+				_modalIsOpen = false;
+			};
+		}
+
+		private static void BuildExportGltfFileDialog() {
+			_exportGltfDialog = new FileDialog(FileDialogMode.SaveFile) {
+				Folder = _lastGltfFileLocation,
+				Filter = "*.gltf"
+			};
+
+			_exportGltfDialog.Closed += (s, a) => {
+				if (_exportGltfDialog.Result) {
+					string filePath = _exportGltfDialog.FilePath;
+					_exportGltfDialog.Folder = filePath;
+					_lastGltfFileLocation = filePath;
+
+					List<string> pathSegments = filePath.Split('\\').ToList();
+					string fileName = pathSegments.Last();
+					List<string> filenameSegments = fileName.Split('.').ToList();
+
+					if (filenameSegments.Last().ToLower() != "gltf") {
+						fileName += ".gltf";
+					}
+
+					MapData.ExportGltf(_exportGltfDialog.Folder + "\\" + fileName);
 				}
 
 				_modalIsOpen = false;

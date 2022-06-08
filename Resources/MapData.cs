@@ -141,6 +141,11 @@ namespace GaneshaDx.Resources {
 			return true;
 		}
 
+		public static void ExportGltf(string filePath) {
+			GltfExport.Export(filePath);
+			OverlayConsole.AddMessage("Map Exported as " + filePath);
+		}
+
 		public static void ImportTexture(string filePath) {
 			Texture2D importedTexture = Texture2D.FromFile(Stage.GraphicsDevice, filePath);
 
