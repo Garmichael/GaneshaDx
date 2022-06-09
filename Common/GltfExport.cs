@@ -16,6 +16,7 @@ using Vector3 = System.Numerics.Vector3;
 using Vector2 = System.Numerics.Vector2;
 using MTex2D = Microsoft.Xna.Framework.Graphics.Texture2D;
 using GaneshaDx.Resources.ContentDataTypes.Palettes;
+using GaneshaDx.Resources.ContentDataTypes.TextureAnimations;
 using SharpGLTF.Scenes;
 
 namespace GaneshaDx.Common
@@ -172,6 +173,23 @@ namespace GaneshaDx.Common
 		}
 
 		private static void ApplyPalette(Color[] textureColors, Palette palette) {
+			bool usesTextureAnimations = CurrentMapState.StateData.TextureAnimations != null &&
+			                             CurrentMapState.StateData.TextureAnimations.Count > 0;
+
+			if (usesTextureAnimations) {
+				int paletteIndex = CurrentMapState.StateData.Palettes.IndexOf(palette);
+				
+				foreach (AnimatedTextureInstructions instruction in CurrentMapState.StateData.TextureAnimations) {
+					if (instruction.TextureAnimationType == TextureAnimationType.PaletteAnimation) {
+						PaletteAnimation paletteAnimation = (PaletteAnimation) instruction.Instructions;
+						if (paletteIndex == paletteAnimation.OverriddenPaletteId) {
+							palette = CurrentMapState.StateData.PaletteAnimationFrames[paletteAnimation.AnimationStartIndex];
+							break;
+						}
+					}
+				}
+			}
+
 			for (int colorIndex = 0; colorIndex < textureColors.Length; colorIndex++) {
 				Color pixelColor = textureColors[colorIndex];
 				if (GreyPalette.Contains(pixelColor)) {
