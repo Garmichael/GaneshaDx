@@ -107,7 +107,7 @@ namespace GaneshaDx.Common {
 			JsonWriterOptions jsonWriterOptions = new JsonWriterOptions();
 			jsonWriterOptions.Indented = true;
 			settings.JsonOptions = jsonWriterOptions;
-			model.SaveGLTF(filePath, settings);
+			model.SaveGLB(filePath, settings);
 		}
 
 		private static Vector3 ConvertAndScaleVector3(Microsoft.Xna.Framework.Vector3 vector3) {

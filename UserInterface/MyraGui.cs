@@ -129,7 +129,7 @@ namespace GaneshaDx.UserInterface {
 		private static void BuildExportGltfFileDialog() {
 			_exportGltfDialog = new FileDialog(FileDialogMode.SaveFile) {
 				Folder = _lastGltfFileLocation,
-				Filter = "*.gltf"
+				Filter = "*.glb"
 			};
 
 			_exportGltfDialog.Closed += (s, a) => {
@@ -142,8 +142,8 @@ namespace GaneshaDx.UserInterface {
 					string fileName = pathSegments.Last();
 					List<string> filenameSegments = fileName.Split('.').ToList();
 
-					if (filenameSegments.Last().ToLower() != "gltf") {
-						fileName += ".gltf";
+					if (filenameSegments.Last().ToLower() != "glb") {
+						fileName += ".glb";
 					}
 
 					MapData.ExportGltf(_exportGltfDialog.Folder + "\\" + fileName);
