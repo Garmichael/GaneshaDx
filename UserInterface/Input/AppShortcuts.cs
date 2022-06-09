@@ -157,7 +157,6 @@ namespace GaneshaDx.UserInterface.Input {
 					}
 
 					if (AppInput.KeyJustPressed(Keys.U)) {
-						OverlayConsole.AddMessage("Hey");
 						string fileName = MapData.MapName + "." +
 						                  CurrentMapState.StateData.StateTextureResource.XFile +
 						                  ".uvMap" +
