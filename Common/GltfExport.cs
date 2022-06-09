@@ -24,36 +24,24 @@ namespace GaneshaDx.Common {
 	public static class GltfExport {
 		private const float ReduceScaleFactor = 50;
 
-		private static List<Color> _greyPalette = new List<Color>();
-
-		private static List<Color> GreyPalette {
-			get {
-				if (_greyPalette.Count > 0) {
-					return _greyPalette;
-				}
-
-				_greyPalette = new List<Color> {
-					Utilities.GetColorFromHex("000000"),
-					Utilities.GetColorFromHex("111111"),
-					Utilities.GetColorFromHex("222222"),
-					Utilities.GetColorFromHex("333333"),
-					Utilities.GetColorFromHex("444444"),
-					Utilities.GetColorFromHex("555555"),
-					Utilities.GetColorFromHex("666666"),
-					Utilities.GetColorFromHex("777777"),
-					Utilities.GetColorFromHex("888888"),
-					Utilities.GetColorFromHex("999999"),
-					Utilities.GetColorFromHex("AAAAAA"),
-					Utilities.GetColorFromHex("BBBBBB"),
-					Utilities.GetColorFromHex("CCCCCC"),
-					Utilities.GetColorFromHex("DDDDDD"),
-					Utilities.GetColorFromHex("EEEEEE"),
-					Utilities.GetColorFromHex("FFFFFF")
-				};
-
-				return _greyPalette;
-			}
-		}
+		private static readonly List<Color> GreyPalette = new List<Color>{
+			Utilities.GetColorFromHex("000000"),
+			Utilities.GetColorFromHex("111111"),
+			Utilities.GetColorFromHex("222222"),
+			Utilities.GetColorFromHex("333333"),
+			Utilities.GetColorFromHex("444444"),
+			Utilities.GetColorFromHex("555555"),
+			Utilities.GetColorFromHex("666666"),
+			Utilities.GetColorFromHex("777777"),
+			Utilities.GetColorFromHex("888888"),
+			Utilities.GetColorFromHex("999999"),
+			Utilities.GetColorFromHex("AAAAAA"),
+			Utilities.GetColorFromHex("BBBBBB"),
+			Utilities.GetColorFromHex("CCCCCC"),
+			Utilities.GetColorFromHex("DDDDDD"),
+			Utilities.GetColorFromHex("EEEEEE"),
+			Utilities.GetColorFromHex("FFFFFF")
+		};
 
 		public static void Export(string filePath) {
 			MeshBuilder<VertexPosition, VertexTexture1> texturedMesh = new MeshBuilder<VertexPosition, VertexTexture1>("TexturedMesh");
