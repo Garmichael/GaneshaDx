@@ -17,7 +17,7 @@ namespace GaneshaDx.UserInterface.Input {
 			}
 
 			if (MapData.MapIsLoaded && !MyraGui.IsActive) {
-				if (!AppInput.ControlHeld) {
+				if (!AppInput.ControlHeld && !AppInput.ShiftHeld && !AppInput.AltHeld) {
 					if (AppInput.KeyJustPressed(Keys.Z)) {
 						StageCamera.FocusOnSelection();
 					}
@@ -118,7 +118,7 @@ namespace GaneshaDx.UserInterface.Input {
 					}
 				}
 
-				if (AppInput.ControlHeld) {
+				if (AppInput.ControlHeld && !AppInput.ShiftHeld && !AppInput.AltHeld) {
 					if (AppInput.KeyJustPressed(Keys.S)) {
 						MapData.SaveMap();
 					}
@@ -156,6 +156,16 @@ namespace GaneshaDx.UserInterface.Input {
 						MyraGui.OpenExportTextureFileDialog(fileName);
 					}
 
+					if (AppInput.KeyJustPressed(Keys.U)) {
+						OverlayConsole.AddMessage("Hey");
+						string fileName = MapData.MapName + "." +
+						                  CurrentMapState.StateData.StateTextureResource.XFile +
+						                  ".uvMap" +
+						                  ".png";
+
+						MyraGui.OpenExportUvMapFileDialog(fileName);
+					}
+					
 					if (AppInput.KeyJustPressed(Keys.R)) {
 						if (MyraGui.LastImportedTextureFile != "") {
 							MapData.ImportTexture(MyraGui.LastImportedTextureFile);
@@ -176,6 +186,14 @@ namespace GaneshaDx.UserInterface.Input {
 						if (canEditMeshAnimations) {
 							Gui.ShowDebugAnimatedMeshWindow = !Gui.ShowDebugAnimatedMeshWindow;
 						}
+					}
+				}
+
+				if (AppInput.ControlHeld && AppInput.ShiftHeld && !AppInput.AltHeld) {
+					if (AppInput.KeyJustPressed(Keys.E)) {
+						string fileName = MapData.MapName + ".gltf";
+
+						MyraGui.OpenExportGltfFileDialog(fileName);
 					}
 				}
 			}

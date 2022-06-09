@@ -70,9 +70,18 @@ namespace GaneshaDx.UserInterface.GuiForms {
 						MapData.ImportTexture(MyraGui.LastImportedTextureFile);
 					}
 
+					if (ImGui.MenuItem("Export UV Map", "Ctrl + U", false, MapData.MapIsLoaded)) {
+						string fileName = MapData.MapName + "." +
+						                  CurrentMapState.StateData.StateTextureResource.XFile +
+						                  ".uvMap" +
+						                  ".png";
+
+						MyraGui.OpenExportUvMapFileDialog(fileName);
+					}
+					
 					ImGui.Separator();
 
-					if (ImGui.MenuItem("Export to GLTF", null, false, MapData.MapIsLoaded)) {
+					if (ImGui.MenuItem("Export to GLTF", "Ctrl + Shift + E", false, MapData.MapIsLoaded)) {
 						string fileName = MapData.MapName + ".gltf";
 
 						MyraGui.OpenExportGltfFileDialog(fileName);
