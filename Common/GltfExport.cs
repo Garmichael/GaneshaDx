@@ -24,7 +24,7 @@ namespace GaneshaDx.Common {
 	public static class GltfExport {
 		private const float ReduceScaleFactor = 50;
 
-		private static readonly List<Color> GreyPalette = new List<Color>{
+		private static readonly List<Color> GreyPalette = new List<Color> {
 			Utilities.GetColorFromHex("000000"),
 			Utilities.GetColorFromHex("111111"),
 			Utilities.GetColorFromHex("222222"),
@@ -124,8 +124,10 @@ namespace GaneshaDx.Common {
 			return new Vector2((float) adjustedX, (float) adjustedY);
 		}
 
-		private static void CreateTextures(List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>> texturedPrimitives,
-			MeshBuilder<VertexPosition, VertexTexture1> texturedMesh) {
+		private static void CreateTextures(
+			List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>> texturedPrimitives,
+			MeshBuilder<VertexPosition, VertexTexture1> texturedMesh
+		) {
 			MTex2D stateTexture = CurrentMapState.StateData.Texture;
 
 			foreach (Palette palette in CurrentMapState.StateData.Palettes) {
