@@ -141,8 +141,8 @@ namespace GaneshaDx.Resources {
 			return true;
 		}
 
-		public static void ExportGltf(string filePath) {
-			GltfExport.Export(filePath);
+		public static void ExportGlb(string filePath) {
+			GlbExpoter.Export(filePath);
 			OverlayConsole.AddMessage("Map Exported as " + filePath);
 		}
 

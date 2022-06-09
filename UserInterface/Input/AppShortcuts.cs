@@ -190,9 +190,9 @@ namespace GaneshaDx.UserInterface.Input {
 
 				if (AppInput.ControlHeld && AppInput.ShiftHeld && !AppInput.AltHeld) {
 					if (AppInput.KeyJustPressed(Keys.E)) {
-						string fileName = MapData.MapName + ".gltf";
+						string fileName = MapData.MapName + ".glb";
 
-						MyraGui.OpenExportGltfFileDialog(fileName);
+						MyraGui.OpenExportGlbFileDialog(fileName);
 					}
 				}
 			}

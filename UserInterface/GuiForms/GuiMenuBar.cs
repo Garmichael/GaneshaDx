@@ -81,10 +81,10 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					
 					ImGui.Separator();
 
-					if (ImGui.MenuItem("Export to GLTF", "Ctrl + Shift + E", false, MapData.MapIsLoaded)) {
+					if (ImGui.MenuItem("Export to GLB", "Ctrl + Shift + E", false, MapData.MapIsLoaded)) {
 						string fileName = MapData.MapName + ".glb";
 
-						MyraGui.OpenExportGltfFileDialog(fileName);
+						MyraGui.OpenExportGlbFileDialog(fileName);
 					}
 
 					ImGui.Separator();

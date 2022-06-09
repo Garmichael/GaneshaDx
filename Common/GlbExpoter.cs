@@ -21,7 +21,7 @@ using SharpGLTF.Scenes;
 using AlphaMode = SharpGLTF.Materials.AlphaMode;
 
 namespace GaneshaDx.Common {
-	public static class GltfExport {
+	public static class GlbExpoter {
 		private const float ReduceScaleFactor = 50;
 
 		private static readonly List<Color> GreyPalette = new List<Color> {

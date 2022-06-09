@@ -12,8 +12,8 @@ namespace GaneshaDx.UserInterface {
 		public static Desktop Desktop;
 		private static bool _modalIsOpen;
 		private static FileDialog _openFileDialog;
-		private static FileDialog _exportGltfDialog;
-		private static string _lastGltfFileLocation;
+		private static FileDialog _exportGlbDialog;
+		private static string _lastGlbFileLocation;
 
 		private static FileDialog _importTextureDialog;
 		private static FileDialog _exportTextureDialog;
@@ -32,7 +32,7 @@ namespace GaneshaDx.UserInterface {
 			MyraEnvironment.Game = Stage.Ganesha;
 
 			BuildOpenFileDialog();
-			BuildExportGltfFileDialog();
+			BuildExportGlbFileDialog();
 
 			BuildImportTextureFileDialog();
 			BuildExportTextureFileDialog();
@@ -69,9 +69,9 @@ namespace GaneshaDx.UserInterface {
 			_modalIsOpen = true;
 		}
 
-		public static void OpenExportGltfFileDialog(string fileName) {
-			_exportGltfDialog.FilePath = fileName;
-			_exportGltfDialog.ShowModal(Desktop);
+		public static void OpenExportGlbFileDialog(string fileName) {
+			_exportGlbDialog.FilePath = fileName;
+			_exportGlbDialog.ShowModal(Desktop);
 			_modalIsOpen = true;
 		}
 
@@ -126,17 +126,19 @@ namespace GaneshaDx.UserInterface {
 			};
 		}
 
-		private static void BuildExportGltfFileDialog() {
-			_exportGltfDialog = new FileDialog(FileDialogMode.SaveFile) {
-				Folder = _lastGltfFileLocation,
+		private static void BuildExportGlbFileDialog() {
+			_lastGlbFileLocation = Configuration.Properties.LoadFolder;
+				
+			_exportGlbDialog = new FileDialog(FileDialogMode.SaveFile) {
+				Folder = _lastGlbFileLocation,
 				Filter = "*.glb"
 			};
 
-			_exportGltfDialog.Closed += (s, a) => {
-				if (_exportGltfDialog.Result) {
-					string filePath = _exportGltfDialog.FilePath;
-					_exportGltfDialog.Folder = filePath;
-					_lastGltfFileLocation = filePath;
+			_exportGlbDialog.Closed += (s, a) => {
+				if (_exportGlbDialog.Result) {
+					string filePath = _exportGlbDialog.FilePath;
+					_exportGlbDialog.Folder = filePath;
+					_lastGlbFileLocation = filePath;
 
 					List<string> pathSegments = filePath.Split('\\').ToList();
 					string fileName = pathSegments.Last();
@@ -146,7 +148,7 @@ namespace GaneshaDx.UserInterface {
 						fileName += ".glb";
 					}
 
-					MapData.ExportGltf(_exportGltfDialog.Folder + "\\" + fileName);
+					MapData.ExportGlb(_exportGlbDialog.Folder + "\\" + fileName);
 				}
 
 				_modalIsOpen = false;
