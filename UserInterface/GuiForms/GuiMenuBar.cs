@@ -40,6 +40,19 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				}
 
 				if (ImGui.BeginMenu("Edit")) {
+					bool canCopyOrPasteVertexPositions = Gui.Widget == WidgetSelectionMode.PolygonVertexTranslate &&
+					                                     Selection.SelectedPolygons.Count == 1;
+
+					if (ImGui.MenuItem("Store Vertex", "S", false, MapData.MapIsLoaded && canCopyOrPasteVertexPositions)) {
+						TransformWidget.SelectSnappingVertex();
+					}
+
+					if (ImGui.MenuItem("Snap Stored Vertex", "D", false, MapData.MapIsLoaded && canCopyOrPasteVertexPositions)) {
+						TransformWidget.SnapSnappingVertex();
+					}
+
+					ImGui.Separator();
+					
 					ImGui.MenuItem("Add Polygon", "Ctrl + N", ref Gui.ShowAddPolygonWindow, MapData.MapIsLoaded);
 
 					if (ImGui.MenuItem("Clone Selection", "Ctrl + D", false, MapData.MapIsLoaded)) {
