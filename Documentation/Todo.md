@@ -29,7 +29,6 @@
 ### Rendering
 
     [5] [2] Game View shadow overlay
-    [5] [2] Compass Rose with N-E-S-W on it
 
 ### No Known Solution / Probably Won't Implement
 
