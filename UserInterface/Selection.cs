@@ -156,34 +156,50 @@ namespace GaneshaDx.UserInterface {
 
 			foreach (KeyValuePair<PolygonType, List<Polygon>> polygonCollection in allPolygons) {
 				foreach (Polygon polygon in polygonCollection.Value) {
-					CameraRayResults triangleAIntersects = CameraRay.GetResults(
-						new List<Vector3> {
-							polygon.Vertices[0].Position,
-							polygon.Vertices[1].Position,
-							polygon.Vertices[2].Position
-						}
-					);
+					bool shouldHideBasedOnVisibilityAngle =
+						polygon.RenderingProperties != null &&
+						Configuration.Properties.HideHiddenPolysByFacing &&
+						(
+							StageCamera.FacingDirection == StageCamera.CameraView.Northeast &&
+							polygon.RenderingProperties.InvisibleNortheast ||
+							StageCamera.FacingDirection == StageCamera.CameraView.Northwest &&
+							polygon.RenderingProperties.InvisibleNorthwest ||
+							StageCamera.FacingDirection == StageCamera.CameraView.Southeast &&
+							polygon.RenderingProperties.InvisibleSoutheast ||
+							StageCamera.FacingDirection == StageCamera.CameraView.Southwest &&
+							polygon.RenderingProperties.InvisibleSouthwest
+						);
 
-					CameraRayResults triangleBIntersects = polygon.IsQuad
-						? CameraRay.GetResults(
+					if (!shouldHideBasedOnVisibilityAngle) {
+						CameraRayResults triangleAIntersects = CameraRay.GetResults(
 							new List<Vector3> {
-								polygon.Vertices[3].Position,
-								polygon.Vertices[2].Position,
-								polygon.Vertices[1].Position
+								polygon.Vertices[0].Position,
+								polygon.Vertices[1].Position,
+								polygon.Vertices[2].Position
 							}
-						)
-						: new CameraRayResults { HasHit = false };
+						);
 
-					if (triangleAIntersects.HasHit) {
-						_hoverPosition = triangleAIntersects.HitPoint;
-					}
+						CameraRayResults triangleBIntersects = polygon.IsQuad
+							? CameraRay.GetResults(
+								new List<Vector3> {
+									polygon.Vertices[3].Position,
+									polygon.Vertices[2].Position,
+									polygon.Vertices[1].Position
+								}
+							)
+							: new CameraRayResults { HasHit = false };
 
-					if (triangleBIntersects.HasHit) {
-						_hoverPosition = triangleBIntersects.HitPoint;
-					}
+						if (triangleAIntersects.HasHit) {
+							_hoverPosition = triangleAIntersects.HitPoint;
+						}
 
-					if (triangleAIntersects.HasHit || triangleBIntersects.HasHit) {
-						HoveredPolygons.Add(polygon);
+						if (triangleBIntersects.HasHit) {
+							_hoverPosition = triangleBIntersects.HitPoint;
+						}
+
+						if (triangleAIntersects.HasHit || triangleBIntersects.HasHit) {
+							HoveredPolygons.Add(polygon);
+						}
 					}
 				}
 			}
