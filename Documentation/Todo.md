@@ -10,6 +10,7 @@
         mapname_bev.png, mapname_45.png, mapname_135.png, mapname_225.png, mapname_315.png
     [3] [4] Figure out a color picker solution for the 32x32x32 color depth thing
     [2] [2] Output Wiki Code for Terrain
+    [1] [1] Figure out polygon max count and add it to the UI
 
 ### Animated Meshes
 
@@ -36,12 +37,7 @@
     [1] [1] Allow Alt-Click to change First Terrain Tile
     [3] [2] Build Number-Border for Terrain
 
-### Bugs
-
-    [1] [1] Terrain, resizing after adding terrain to another state
-
 ### Investigation
 
     - Map 41. Overridden Mesh File possibly linked to Removeable Objects
-    - Figure out polygon max count and add it to the UI
     - Map 92 & 104. Palette Animation only plays once in game
