@@ -202,6 +202,10 @@ namespace GaneshaDx.UserInterface.Input {
 							Gui.ShowDebugAnimatedMeshWindow = !Gui.ShowDebugAnimatedMeshWindow;
 						}
 					}
+
+					if (AppInput.KeyJustPressed(Keys.T)) {
+						Gui.ShowRawTerrainDataWindow = !Gui.ShowRawTerrainDataWindow;
+					}
 				}
 
 				if (AppInput.ControlHeld && AppInput.ShiftHeld && !AppInput.AltHeld) {

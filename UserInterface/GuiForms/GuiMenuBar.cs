@@ -253,6 +253,10 @@ namespace GaneshaDx.UserInterface.GuiForms {
 						Configuration.SaveConfiguration();
 					}
 					ImGui.Separator();
+					
+					ImGui.MenuItem("Show Raw Terrain Data", "Ctrl + T", ref Gui.ShowRawTerrainDataWindow, MapData.MapIsLoaded);
+
+					ImGui.Separator();
 
 					if (ImGui.MenuItem(
 						"Screenshot Mode",
