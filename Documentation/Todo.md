@@ -38,11 +38,6 @@
 ### Polygons
 
     [3] [1] Warn the user when more polys than the max are in the scene
-    [4] [1] Snap Poly to Poly
-    [4] [1] Snap Vertex to Vertex
-    [5] [2] Import from FBX
-    [5] [2] Export from FBX
-    [3] [2] Copy and Paste Polygon Selection 
 
 ### Bugs
 
