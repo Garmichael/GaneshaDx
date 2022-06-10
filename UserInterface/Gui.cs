@@ -79,6 +79,10 @@ namespace GaneshaDx.UserInterface {
 						if (ShowMeshAnimationsWindow) {
 							GuiWindowEditMeshAnimations.Render();
 						}
+
+						if (GuiWindowMapWarning.ShouldRender()) {
+							GuiWindowMapWarning.Render();
+						}
 					}
 
 					if (ShowAboutWindow) {

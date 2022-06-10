@@ -11,7 +11,7 @@ namespace GaneshaDx.Common {
 		private static readonly Texture2D BackgroundTexture;
 
 		static OverlayConsole() {
-			Font ??= Stage.Content.Load<SpriteFont>("DebugFont");
+			Font = Stage.Content.Load<SpriteFont>("DebugFont");
 
 			BackgroundTexture = new Texture2D(Stage.GraphicsDevice, 1, 1);
 			Color[] backgroundTextureColors = {new Color(0, 0, 0, 128)};

@@ -30,14 +30,9 @@
     [3] [2] Build Number-Border for Terrain
     [5] [2] Compass Rose with N-E-S-W on it
 
-### Terrain
-
-    [1] [1] Allow Alt-Click to change First Terrain Tile
+### No Known Solution / Probably Won't Implement
     [2] [2] Render non-red tiles on top when both are the same height
-
-### Polygons
-
-    [3] [1] Warn the user when more polys than the max are in the scene
+    [1] [1] Allow Alt-Click to change First Terrain Tile
 
 ### Bugs
 
