@@ -172,16 +172,19 @@ namespace GaneshaDx.UserInterface {
 					case RightPanelTab.Polygon:
 						GuiPanelMeshSelector.Render();
 						GuiPanelPolygon.Render();
+						GuiPanelTerrain.ResizeTerrainMode = false;
 						break;
 					case RightPanelTab.Texture:
 						GuiPanelMeshSelector.Render();
 						GuiPanelTexture.Render();
+						GuiPanelTerrain.ResizeTerrainMode = false;
 						break;
 					case RightPanelTab.Terrain:
 						GuiPanelTerrain.Render();
 						break;
 					case RightPanelTab.Map:
 						GuiPanelMap.Render();
+						GuiPanelTerrain.ResizeTerrainMode = false;
 						break;
 					default:
 						throw new ArgumentOutOfRangeException();
