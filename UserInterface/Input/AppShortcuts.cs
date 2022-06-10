@@ -18,6 +18,22 @@ namespace GaneshaDx.UserInterface.Input {
 
 			if (MapData.MapIsLoaded && !MyraGui.IsActive) {
 				if (!AppInput.ControlHeld && !AppInput.ShiftHeld && !AppInput.AltHeld) {
+					if (AppInput.KeyJustPressed(Keys.D1)) {
+						Gui.SelectedTab = RightPanelTab.Polygon;
+					}
+					
+					if (AppInput.KeyJustPressed(Keys.D2)) {
+						Gui.SelectedTab = RightPanelTab.Texture;
+					}
+					
+					if (AppInput.KeyJustPressed(Keys.D3)) {
+						Gui.SelectedTab = RightPanelTab.Terrain;
+					}
+					
+					if (AppInput.KeyJustPressed(Keys.D4)) {
+						Gui.SelectedTab = RightPanelTab.Map;
+					}
+					
 					if (AppInput.KeyJustPressed(Keys.Z)) {
 						StageCamera.FocusOnSelection();
 					}
