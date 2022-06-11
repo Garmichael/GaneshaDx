@@ -79,7 +79,7 @@ namespace GaneshaDx.UserInterface.Input {
 					}
 
 					if (AppInput.KeyJustPressed(Keys.P)) {
-						Gui.ShowPolygonListWindow = true;
+						Gui.ShowPolygonListWindow = !Gui.ShowPolygonListWindow;
 					}
 
 					if (AppInput.KeyJustPressed(Keys.Delete)) {
