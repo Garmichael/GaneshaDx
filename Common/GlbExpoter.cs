@@ -10,6 +10,7 @@ using System.IO;
 using GaneshaDx.Resources;
 using System.Collections.Generic;
 using GaneshaDx.Environment;
+using GaneshaDx.Resources.ContentDataTypes.MeshAnimations;
 using Microsoft.Xna.Framework;
 using Vector4 = System.Numerics.Vector4;
 using Vector3 = System.Numerics.Vector3;
@@ -59,36 +60,50 @@ namespace GaneshaDx.Common {
 					List<Vertex> vertices = polygon.Vertices;
 					List<Microsoft.Xna.Framework.Vector2> uvs = polygon.UvCoordinates;
 
+					List<Microsoft.Xna.Framework.Vector3> animatedVertices = new List<Microsoft.Xna.Framework.Vector3> {
+						TranslateVertexToAnimatedPosition(vertices[0], polygon.MeshType),
+						TranslateVertexToAnimatedPosition(vertices[1], polygon.MeshType),
+						TranslateVertexToAnimatedPosition(vertices[2], polygon.MeshType),
+						TranslateVertexToAnimatedPosition(vertices[3], polygon.MeshType),
+					};
+					
 					if (polygon.IsTextured) {
 						// 0,1,3,2 is FFT vertex order, reversing here to correct facing/back-culling.
 						texturedPrimitives[polygon.PaletteId].AddQuadrangle(
-							(ConvertAndScaleVector3(vertices[2].Position), GetAdjustedUvCoordinates(uvs[2], polygon.TexturePage)),
-							(ConvertAndScaleVector3(vertices[3].Position), GetAdjustedUvCoordinates(uvs[3], polygon.TexturePage)),
-							(ConvertAndScaleVector3(vertices[1].Position), GetAdjustedUvCoordinates(uvs[1], polygon.TexturePage)),
-							(ConvertAndScaleVector3(vertices[0].Position), GetAdjustedUvCoordinates(uvs[0], polygon.TexturePage))
+							(ConvertAndScaleVector3(animatedVertices[2]), GetAdjustedUvCoordinates(uvs[2], polygon.TexturePage)),
+							(ConvertAndScaleVector3(animatedVertices[3]), GetAdjustedUvCoordinates(uvs[3], polygon.TexturePage)),
+							(ConvertAndScaleVector3(animatedVertices[1]), GetAdjustedUvCoordinates(uvs[1], polygon.TexturePage)),
+							(ConvertAndScaleVector3(animatedVertices[0]), GetAdjustedUvCoordinates(uvs[0], polygon.TexturePage))
 						);
 					} else {
 						blackPrimitive.AddQuadrangle(
-							ConvertAndScaleVector3ToVertexPosition(vertices[2].Position),
-							ConvertAndScaleVector3ToVertexPosition(vertices[3].Position),
-							ConvertAndScaleVector3ToVertexPosition(vertices[1].Position),
-							ConvertAndScaleVector3ToVertexPosition(vertices[0].Position)
+							ConvertAndScaleVector3ToVertexPosition(animatedVertices[2]),
+							ConvertAndScaleVector3ToVertexPosition(animatedVertices[3]),
+							ConvertAndScaleVector3ToVertexPosition(animatedVertices[1]),
+							ConvertAndScaleVector3ToVertexPosition(animatedVertices[0])
 						);
 					}
 				} else {
-					List<Vertex> verts = polygon.Vertices;
+					List<Vertex> vertices = polygon.Vertices;
 					List<Microsoft.Xna.Framework.Vector2> uvs = polygon.UvCoordinates;
+					
+					List<Microsoft.Xna.Framework.Vector3> animatedVertices = new List<Microsoft.Xna.Framework.Vector3> {
+						TranslateVertexToAnimatedPosition(vertices[0], polygon.MeshType),
+						TranslateVertexToAnimatedPosition(vertices[1], polygon.MeshType),
+						TranslateVertexToAnimatedPosition(vertices[2], polygon.MeshType)
+					};
+					
 					if (polygon.IsTextured) {
 						texturedPrimitives[polygon.PaletteId].AddTriangle(
-							(ConvertAndScaleVector3(verts[2].Position), GetAdjustedUvCoordinates(uvs[2], polygon.TexturePage)),
-							(ConvertAndScaleVector3(verts[1].Position), GetAdjustedUvCoordinates(uvs[1], polygon.TexturePage)),
-							(ConvertAndScaleVector3(verts[0].Position), GetAdjustedUvCoordinates(uvs[0], polygon.TexturePage))
+							(ConvertAndScaleVector3(animatedVertices[2]), GetAdjustedUvCoordinates(uvs[2], polygon.TexturePage)),
+							(ConvertAndScaleVector3(animatedVertices[1]), GetAdjustedUvCoordinates(uvs[1], polygon.TexturePage)),
+							(ConvertAndScaleVector3(animatedVertices[0]), GetAdjustedUvCoordinates(uvs[0], polygon.TexturePage))
 						);
 					} else {
 						blackPrimitive.AddTriangle(
-							ConvertAndScaleVector3ToVertexPosition(verts[2].Position),
-							ConvertAndScaleVector3ToVertexPosition(verts[1].Position),
-							ConvertAndScaleVector3ToVertexPosition(verts[0].Position)
+							ConvertAndScaleVector3ToVertexPosition(animatedVertices[2]),
+							ConvertAndScaleVector3ToVertexPosition(animatedVertices[1]),
+							ConvertAndScaleVector3ToVertexPosition(animatedVertices[0])
 						);
 					}
 				}
@@ -116,6 +131,44 @@ namespace GaneshaDx.Common {
 
 		private static VertexPosition ConvertAndScaleVector3ToVertexPosition(Microsoft.Xna.Framework.Vector3 vector3) {
 			return new VertexPosition(vector3.X / ReduceScaleFactor, vector3.Y / ReduceScaleFactor, vector3.Z / ReduceScaleFactor);
+		}
+
+		private static Microsoft.Xna.Framework.Vector3 TranslateVertexToAnimatedPosition(Vertex vertex, MeshType meshType) {
+			Microsoft.Xna.Framework.Vector3 animatedPosition = vertex.Position;
+
+			if (meshType == MeshType.PrimaryMesh) {
+				return animatedPosition;
+			}
+
+			List<MeshType> animatedMeshTypes = new List<MeshType> {
+				MeshType.AnimatedMesh1, MeshType.AnimatedMesh2, MeshType.AnimatedMesh3, MeshType.AnimatedMesh4,
+				MeshType.AnimatedMesh5, MeshType.AnimatedMesh6, MeshType.AnimatedMesh7, MeshType.AnimatedMesh8
+			};
+			MeshAnimation meshAnimation = CurrentMapState.StateData.MeshAnimationInstructions.MeshAnimations[animatedMeshTypes.IndexOf(meshType)];
+
+			MeshAnimationKeyFrame keyFrame = CurrentMapState.StateData.MeshAnimationInstructions.KeyFrames[meshAnimation.Frames[0].FrameStateId - 1];
+
+			Matrix rotationX = Matrix.CreateRotationX(MathHelper.ToRadians((float) keyFrame.Rotation[0]));
+			Matrix rotationY = Matrix.CreateRotationY(MathHelper.ToRadians((float) keyFrame.Rotation[1]));
+			Matrix rotationZ = Matrix.CreateRotationZ(MathHelper.ToRadians((float) keyFrame.Rotation[2]));
+			
+			animatedPosition = Microsoft.Xna.Framework.Vector3.Transform(animatedPosition, rotationX * rotationY * rotationZ);
+			
+			Matrix scale = Matrix.CreateScale(
+				(float) keyFrame.Scale[0],
+				(float) keyFrame.Scale[1],
+				(float) keyFrame.Scale[2]
+			);
+			
+			animatedPosition = Microsoft.Xna.Framework.Vector3.Transform(animatedPosition, scale);
+
+			animatedPosition += new Microsoft.Xna.Framework.Vector3(
+				-(float) keyFrame.Position[0],
+				(float) keyFrame.Position[1],
+				(float) keyFrame.Position[2]
+			);
+
+			return animatedPosition;
 		}
 
 		private static Vector2 GetAdjustedUvCoordinates(Microsoft.Xna.Framework.Vector2 uv, int texturePage) {
