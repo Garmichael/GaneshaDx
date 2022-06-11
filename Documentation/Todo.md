@@ -22,6 +22,11 @@
             Maybe manually define XFile?
     [1] [4] Copy / Paste
     [1] [1] Add Has Invisibility Angles to the Resource Management Window
+    [1] [3] Integrate Overridden Mesh Files and Removeable Objects
+
+### Animated Palettes
+
+    [2] [4] Map 92 & 104. Palette Animation only plays once in game
 
 ### No Known Solution / Probably Won't Implement
 
@@ -30,8 +35,3 @@
     [3] [2] Build Number-Border for Terrain
     [3] [4] Figure out a color picker solution for the 32x32x32 color depth thing
     [5] [2] Game View shadow overlay
-
-### Investigation
-
-    - Map 41. Overridden Mesh File possibly linked to Removeable Objects
-    - Map 92 & 104. Palette Animation only plays once in game
