@@ -393,9 +393,6 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			GuiStyle.SetElementStyle(ElementStyle.Header);
 
 			if (ImGui.CollapsingHeader("Polygon Counts", ImGuiTreeNodeFlags.DefaultOpen)) {
-				Dictionary<PolygonType, List<Polygon>> polygons =
-					CurrentMapState.StateData.PolygonCollection[MeshType.PrimaryMesh];
-
 				GuiStyle.SetNewUiToDefaultStyle();
 				ImGui.Indent();
 				ImGui.Columns(3, "PolygonCounts", false);
@@ -411,7 +408,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					ImGui.NextColumn();
 
 					ImGui.PushItemWidth(valueColumnWidth);
-					ImGui.Text(polygons[PolygonType.UntexturedTriangle].Count.ToString());
+					ImGui.Text(Utilities.GetTotalPolygonCount(PolygonType.UntexturedTriangle).ToString());
 					ImGui.PopItemWidth();
 
 					ImGui.NextColumn();
@@ -431,7 +428,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					ImGui.NextColumn();
 
 					ImGui.PushItemWidth(valueColumnWidth);
-					ImGui.Text(polygons[PolygonType.UntexturedQuad].Count.ToString());
+					ImGui.Text(Utilities.GetTotalPolygonCount(PolygonType.UntexturedQuad).ToString());
 
 					ImGui.PopItemWidth();
 					ImGui.NextColumn();
@@ -451,13 +448,13 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					ImGui.NextColumn();
 
 					ImGui.PushItemWidth(valueColumnWidth);
-					ImGui.Text(polygons[PolygonType.TexturedTriangle].Count.ToString());
+					ImGui.Text(Utilities.GetTotalPolygonCount(PolygonType.TexturedTriangle).ToString());
 					ImGui.PopItemWidth();
 
 					ImGui.NextColumn();
 
 					ImGui.PushItemWidth(valueColumnWidth * 2);
-					ImGui.Text("of    512");
+					ImGui.Text("of    360");
 					ImGui.PopItemWidth();
 
 					ImGui.NextColumn();
@@ -471,26 +468,17 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					ImGui.NextColumn();
 
 					ImGui.PushItemWidth(valueColumnWidth);
-					ImGui.Text(polygons[PolygonType.TexturedQuad].Count.ToString());
+					ImGui.Text(Utilities.GetTotalPolygonCount(PolygonType.TexturedQuad).ToString());
 					ImGui.PopItemWidth();
 
 					ImGui.NextColumn();
 
 					ImGui.PushItemWidth(valueColumnWidth * 2);
-					ImGui.Text("of    768");
+					ImGui.Text("of    710");
 					ImGui.PopItemWidth();
 				}
 
 				ImGui.Columns(1);
-				
-				if (ImGui.Button("Polygon List")) {
-					Gui.ShowPolygonListWindow = true;
-				}
-
-				if (ImGui.Button("Select Overlapping Polygons")) {
-					CurrentMapState.SelectOverlappingPolygons();
-				}
-				
 				ImGui.Unindent();
 			}
 		}

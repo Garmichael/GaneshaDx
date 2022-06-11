@@ -8,7 +8,6 @@
     [2] [5] Undo
     [1] [3] Auto-Export Screenshots (four angles, plus Top-down, hidden UI)
         mapname_bev.png, mapname_45.png, mapname_135.png, mapname_225.png, mapname_315.png
-    [1] [1] Figure out polygon max count and add it to the UI
 
 ### Animated Meshes
 

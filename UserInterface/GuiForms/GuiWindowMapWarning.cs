@@ -8,16 +8,17 @@ using Vector2 = System.Numerics.Vector2;
 
 namespace GaneshaDx.UserInterface.GuiForms {
 	public static class GuiWindowMapWarning {
-		private const int Width = 400;
+		private const int Width = 500;
 		private const int HeightPerRow = 19;
 		private static readonly List<string> Warnings = new List<string>();
 
-		private const int MaxTexturedQuads = 700;
-		private const int MaxTexturedTriangles = 512;
+		private const int MaxTexturedQuads = 710;
+		private const int MaxTexturedTriangles = 360;
 		private const int MaxUntexturedQuads = 256;
 		private const int MaxUntexturedTriangles = 64;
 
 		public static bool ShouldRender() {
+			Warnings.Clear();
 			GetWarnings();
 			return Warnings.Count > 0;
 		}
@@ -38,7 +39,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			int modelingSpaceWidth = Stage.Width - GuiStyle.RightPanelWidth;
 			ImGui.SetNextWindowPos(new Vector2((modelingSpaceWidth - Width) / 2f, Stage.Height - totalHeight));
 
-			ImGui.Begin("Polygon List", flags);
+			ImGui.Begin("Map Warnings", flags);
 			{
 				ImGuiStylePtr style = ImGui.GetStyle();
 				style.Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.Selected];
@@ -47,29 +48,31 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					ImGui.Text(warning);
 				}
 			}
+			ImGui.End();
 		}
 
 		private static void GetWarnings() {
 			Warnings.Clear();
 
-			int totalTexturedQuads = CurrentMapState.StateData.PolygonCollection[MeshType.PrimaryMesh][PolygonType.TexturedQuad].Count;
+
+			int totalTexturedQuads = Utilities.GetTotalPolygonCount(PolygonType.TexturedQuad);
 			if (totalTexturedQuads > MaxTexturedQuads) {
-				Warnings.Add("Too Many Textured Quads: Map Will Usually Crash In FFT");
+				Warnings.Add("Too Many Textured Quads. Using " + totalTexturedQuads + " of " + MaxTexturedQuads);
 			}
 
-			int totalTexturedTriangles = CurrentMapState.StateData.PolygonCollection[MeshType.PrimaryMesh][PolygonType.TexturedTriangle].Count;
+			int totalTexturedTriangles = Utilities.GetTotalPolygonCount(PolygonType.TexturedTriangle);
 			if (totalTexturedTriangles > MaxTexturedTriangles) {
-				Warnings.Add("Too Many Textured Triangles: Map Will Usually Crash In FFT");
+				Warnings.Add("Too Many Textured Triangles. Using " + totalTexturedTriangles + " of " + MaxTexturedTriangles);
 			}
 
-			int totalUntexturedQuads = CurrentMapState.StateData.PolygonCollection[MeshType.PrimaryMesh][PolygonType.UntexturedQuad].Count;
+			int totalUntexturedQuads = Utilities.GetTotalPolygonCount(PolygonType.UntexturedQuad);
 			if (totalUntexturedQuads > MaxUntexturedQuads) {
-				Warnings.Add("Too Many Untextured Quads: Map Will Usually Crash In FFT");
+				Warnings.Add("Too Many Untextured Quads. Using " + totalUntexturedQuads + " of " + MaxUntexturedQuads);
 			}
 
-			int totalUntexturedTriangles = CurrentMapState.StateData.PolygonCollection[MeshType.PrimaryMesh][PolygonType.UntexturedTriangle].Count;
+			int totalUntexturedTriangles = Utilities.GetTotalPolygonCount(PolygonType.UntexturedTriangle);
 			if (totalUntexturedTriangles > MaxUntexturedTriangles) {
-				Warnings.Add("Too Many Untextured Triangles: Map Will Usually Crash In FFT");
+				Warnings.Add("Too Many Untextured Triangles. Using " + totalUntexturedTriangles + " of " + MaxUntexturedTriangles);
 			}
 		}
 	}

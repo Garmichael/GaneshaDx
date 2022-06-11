@@ -21,19 +21,19 @@ namespace GaneshaDx.UserInterface.Input {
 					if (AppInput.KeyJustPressed(Keys.D1)) {
 						Gui.SelectedTab = RightPanelTab.Polygon;
 					}
-					
+
 					if (AppInput.KeyJustPressed(Keys.D2)) {
 						Gui.SelectedTab = RightPanelTab.Texture;
 					}
-					
+
 					if (AppInput.KeyJustPressed(Keys.D3)) {
 						Gui.SelectedTab = RightPanelTab.Terrain;
 					}
-					
+
 					if (AppInput.KeyJustPressed(Keys.D4)) {
 						Gui.SelectedTab = RightPanelTab.Map;
 					}
-					
+
 					if (AppInput.KeyJustPressed(Keys.Z)) {
 						StageCamera.FocusOnSelection();
 					}
@@ -79,7 +79,7 @@ namespace GaneshaDx.UserInterface.Input {
 					}
 
 					if (AppInput.KeyJustPressed(Keys.P)) {
-						Gui.ShowPreferencesWindow = !Gui.ShowPreferencesWindow;
+						Gui.ShowPolygonListWindow = true;
 					}
 
 					if (AppInput.KeyJustPressed(Keys.Delete)) {
@@ -180,7 +180,7 @@ namespace GaneshaDx.UserInterface.Input {
 
 						MyraGui.OpenExportUvMapFileDialog(fileName);
 					}
-					
+
 					if (AppInput.KeyJustPressed(Keys.R)) {
 						if (MyraGui.LastImportedTextureFile != "") {
 							MapData.ImportTexture(MyraGui.LastImportedTextureFile);
@@ -206,6 +206,10 @@ namespace GaneshaDx.UserInterface.Input {
 					if (AppInput.KeyJustPressed(Keys.T)) {
 						Gui.ShowRawTerrainDataWindow = !Gui.ShowRawTerrainDataWindow;
 					}
+
+					if (AppInput.KeyJustPressed(Keys.P)) {
+						Gui.ShowPreferencesWindow = !Gui.ShowPreferencesWindow;
+					}
 				}
 
 				if (AppInput.ControlHeld && AppInput.ShiftHeld && !AppInput.AltHeld) {
@@ -213,6 +217,12 @@ namespace GaneshaDx.UserInterface.Input {
 						string fileName = MapData.MapName + ".glb";
 
 						MyraGui.OpenExportGlbFileDialog(fileName);
+					}
+
+					if (AppInput.KeyJustPressed(Keys.A)) {
+						if (Gui.SelectedTab != RightPanelTab.Terrain) {
+							Selection.SelectOverlappingPolygons();
+						}
 					}
 				}
 			}

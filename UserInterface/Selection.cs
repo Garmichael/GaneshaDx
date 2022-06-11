@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using GaneshaDx.Common;
 using GaneshaDx.Environment;
@@ -241,7 +242,48 @@ namespace GaneshaDx.UserInterface {
 				}
 			}
 		}
+		
+		public static void SelectOverlappingPolygons() {
+			SelectedPolygons.Clear();
 
+			List<PolygonType> polygonTypes = new List<PolygonType> {
+				PolygonType.TexturedQuad,
+				PolygonType.UntexturedQuad,
+				PolygonType.TexturedTriangle,
+				PolygonType.UntexturedTriangle
+			};
+
+			foreach (PolygonType polygonType in polygonTypes) {
+				List<Polygon> currentBucket = CurrentMapState.StateData.PolygonCollection[GuiPanelMeshSelector.SelectedMesh][polygonType];
+
+				foreach (Polygon polygon in currentBucket) {
+					if (!SelectedPolygons.Contains(polygon)) {
+						foreach (Polygon otherPolygon in currentBucket) {
+							if (
+								polygon != otherPolygon &&
+								!SelectedPolygons.Contains(otherPolygon) &&
+								Math.Abs(polygon.Vertices[0].Position.X - otherPolygon.Vertices[0].Position.X) < .1 &&
+								Math.Abs(polygon.Vertices[0].Position.Y - otherPolygon.Vertices[0].Position.Y) < .1 &&
+								Math.Abs(polygon.Vertices[0].Position.Z - otherPolygon.Vertices[0].Position.Z) < .1 &&
+								Math.Abs(polygon.Vertices[1].Position.X - otherPolygon.Vertices[1].Position.X) < .1 &&
+								Math.Abs(polygon.Vertices[1].Position.Y - otherPolygon.Vertices[1].Position.Y) < .1 &&
+								Math.Abs(polygon.Vertices[1].Position.Z - otherPolygon.Vertices[1].Position.Z) < .1 &&
+								Math.Abs(polygon.Vertices[2].Position.X - otherPolygon.Vertices[2].Position.X) < .1 &&
+								Math.Abs(polygon.Vertices[2].Position.Y - otherPolygon.Vertices[2].Position.Y) < .1 &&
+								Math.Abs(polygon.Vertices[2].Position.Z - otherPolygon.Vertices[2].Position.Z) < .1 &&
+								polygon.Vertices.Count > 3 &&
+								Math.Abs(polygon.Vertices[3].Position.X - otherPolygon.Vertices[3].Position.X) < .1 &&
+								Math.Abs(polygon.Vertices[3].Position.Y - otherPolygon.Vertices[3].Position.Y) < .1 &&
+								Math.Abs(polygon.Vertices[3].Position.Z - otherPolygon.Vertices[3].Position.Z) < .1
+							) {
+								AddPolyToSelection(polygon);
+							}
+						}
+					}
+				}
+			}
+		}
+		
 		public static void SelectAllPolygons() {
 			Polygon firstPolygon = null;
 			if (SelectedPolygons.Count > 0) {

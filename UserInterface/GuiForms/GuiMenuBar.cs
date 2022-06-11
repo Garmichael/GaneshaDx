@@ -28,7 +28,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 					ImGui.Separator();
 
-					ImGui.MenuItem("Preferences", "P", ref Gui.ShowPreferencesWindow, MapData.MapIsLoaded);
+					ImGui.MenuItem("Preferences", "Ctrl + P", ref Gui.ShowPreferencesWindow, MapData.MapIsLoaded);
 
 					ImGui.Separator();
 
@@ -52,7 +52,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					}
 
 					ImGui.Separator();
-					
+
 					ImGui.MenuItem("Add Polygon", "Ctrl + N", ref Gui.ShowAddPolygonWindow, MapData.MapIsLoaded);
 
 					if (ImGui.MenuItem("Clone Selection", "Ctrl + D", false, MapData.MapIsLoaded)) {
@@ -91,7 +91,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 						MyraGui.OpenExportUvMapFileDialog(fileName);
 					}
-					
+
 					ImGui.Separator();
 
 					if (ImGui.MenuItem("Export to GLB", "Ctrl + Shift + E", false, MapData.MapIsLoaded)) {
@@ -137,6 +137,16 @@ namespace GaneshaDx.UserInterface.GuiForms {
 						Selection.SelectedPolygons.Count > 0
 					)) {
 						Selection.GrowPolygonSelection();
+					}
+
+					if (ImGui.MenuItem(
+						"Select Overlapping Polygons",
+						"Ctrl + Shift + A",
+						false,
+						MapData.MapIsLoaded &&
+						Gui.SelectedTab != RightPanelTab.Terrain
+					)) {
+						Selection.SelectOverlappingPolygons();
 					}
 
 					ImGui.Separator();
@@ -209,6 +219,8 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				}
 
 				if (ImGui.BeginMenu("View")) {
+					ImGui.MenuItem("Polygon List", "P", ref Gui.ShowPolygonListWindow, MapData.MapIsLoaded);
+
 					ImGui.MenuItem("Camera Controls", "C", ref Gui.ShowCameraControlWindow, MapData.MapIsLoaded);
 
 					if (ImGui.MenuItem("Focus on Selection", "Z", false, MapData.MapIsLoaded)) {
@@ -240,7 +252,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					if (beforeLightingModeChange != Configuration.Properties.RenderPolygonsInLightingMode) {
 						Configuration.SaveConfiguration();
 					}
-					
+
 					bool beforeHideInvisiblePolys = Configuration.Properties.HideHiddenPolysByFacing;
 					ImGui.MenuItem(
 						"Hide Invisible Polys",
@@ -252,8 +264,9 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					if (beforeHideInvisiblePolys != Configuration.Properties.HideHiddenPolysByFacing) {
 						Configuration.SaveConfiguration();
 					}
+
 					ImGui.Separator();
-					
+
 					ImGui.MenuItem("Show Raw Terrain Data", "Ctrl + T", ref Gui.ShowRawTerrainDataWindow, MapData.MapIsLoaded);
 
 					ImGui.Separator();
