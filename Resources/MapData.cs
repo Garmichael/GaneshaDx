@@ -142,7 +142,7 @@ namespace GaneshaDx.Resources {
 		}
 
 		public static void ExportGlb(string filePath) {
-			GlbExpoter.Export(filePath);
+			GlbExporter.Export(filePath);
 			OverlayConsole.AddMessage("Map Exported as " + filePath);
 		}
 
