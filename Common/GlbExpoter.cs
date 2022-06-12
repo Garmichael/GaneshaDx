@@ -9,6 +9,7 @@ using SharpGLTF.Geometry.VertexTypes;
 using System.IO;
 using GaneshaDx.Resources;
 using System.Collections.Generic;
+using System.Linq;
 using GaneshaDx.Environment;
 using GaneshaDx.Resources.ContentDataTypes.MeshAnimations;
 using Microsoft.Xna.Framework;
@@ -45,15 +46,33 @@ namespace GaneshaDx.Common {
 		};
 
 		public static void Export(string filePath) {
-			MeshBuilder<VertexPosition, VertexTexture1> texturedMesh = new MeshBuilder<VertexPosition, VertexTexture1>("TexturedMesh");
-			List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>> texturedPrimitives =
-				new List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>();
-			CreateTextures(texturedPrimitives, texturedMesh);
+			Dictionary<MeshType, MeshBuilder<VertexPosition, VertexTexture1>> meshes = new Dictionary<MeshType, MeshBuilder<VertexPosition, VertexTexture1>> {
+				{ MeshType.PrimaryMesh, new MeshBuilder<VertexPosition, VertexTexture1>("PrimaryMesh") },
+				{ MeshType.AnimatedMesh1, new MeshBuilder<VertexPosition, VertexTexture1>("AnimatedMesh1") },
+				{ MeshType.AnimatedMesh2, new MeshBuilder<VertexPosition, VertexTexture1>("AnimatedMesh2") },
+				{ MeshType.AnimatedMesh3, new MeshBuilder<VertexPosition, VertexTexture1>("AnimatedMesh3") },
+				{ MeshType.AnimatedMesh4, new MeshBuilder<VertexPosition, VertexTexture1>("AnimatedMesh4") },
+				{ MeshType.AnimatedMesh5, new MeshBuilder<VertexPosition, VertexTexture1>("AnimatedMesh5") },
+				{ MeshType.AnimatedMesh6, new MeshBuilder<VertexPosition, VertexTexture1>("AnimatedMesh6") },
+				{ MeshType.AnimatedMesh7, new MeshBuilder<VertexPosition, VertexTexture1>("AnimatedMesh7") },
+				{ MeshType.AnimatedMesh8, new MeshBuilder<VertexPosition, VertexTexture1>("AnimatedMesh8") },
+			};
 
-			MeshBuilder<VertexPosition> blackMesh = new MeshBuilder<VertexPosition>("BlackMesh");
-			MaterialBuilder blackMaterial = new MaterialBuilder();
-			blackMaterial.WithBaseColor(new Vector4(0, 0, 0, 1));
-			PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexEmpty, VertexEmpty> blackPrimitive = blackMesh.UsePrimitive(blackMaterial);
+			Dictionary<MeshType, List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>> texturedPrimitives =
+				new Dictionary<MeshType, List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>> {
+					{ MeshType.PrimaryMesh, new List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>() },
+					{ MeshType.AnimatedMesh1, new List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>() },
+					{ MeshType.AnimatedMesh2, new List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>() },
+					{ MeshType.AnimatedMesh3, new List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>() },
+					{ MeshType.AnimatedMesh4, new List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>() },
+					{ MeshType.AnimatedMesh5, new List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>() },
+					{ MeshType.AnimatedMesh6, new List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>() },
+					{ MeshType.AnimatedMesh7, new List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>() },
+					{ MeshType.AnimatedMesh8, new List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>() },
+				};
+
+			CreateTextures(texturedPrimitives, meshes);
+
 
 			foreach (Polygon polygon in CurrentMapState.StateData.PolygonCollectionBucket) {
 				if (polygon.IsQuad) {
@@ -66,17 +85,17 @@ namespace GaneshaDx.Common {
 						TranslateVertexToAnimatedPosition(vertices[2], polygon.MeshType),
 						TranslateVertexToAnimatedPosition(vertices[3], polygon.MeshType),
 					};
-					
+
 					if (polygon.IsTextured) {
 						// 0,1,3,2 is FFT vertex order, reversing here to correct facing/back-culling.
-						texturedPrimitives[polygon.PaletteId].AddQuadrangle(
+						texturedPrimitives[polygon.MeshType][polygon.PaletteId].AddQuadrangle(
 							(ConvertAndScaleVector3(animatedVertices[2]), GetAdjustedUvCoordinates(uvs[2], polygon.TexturePage)),
 							(ConvertAndScaleVector3(animatedVertices[3]), GetAdjustedUvCoordinates(uvs[3], polygon.TexturePage)),
 							(ConvertAndScaleVector3(animatedVertices[1]), GetAdjustedUvCoordinates(uvs[1], polygon.TexturePage)),
 							(ConvertAndScaleVector3(animatedVertices[0]), GetAdjustedUvCoordinates(uvs[0], polygon.TexturePage))
 						);
 					} else {
-						blackPrimitive.AddQuadrangle(
+						texturedPrimitives[polygon.MeshType].Last().AddQuadrangle(
 							ConvertAndScaleVector3ToVertexPosition(animatedVertices[2]),
 							ConvertAndScaleVector3ToVertexPosition(animatedVertices[3]),
 							ConvertAndScaleVector3ToVertexPosition(animatedVertices[1]),
@@ -86,21 +105,21 @@ namespace GaneshaDx.Common {
 				} else {
 					List<Vertex> vertices = polygon.Vertices;
 					List<Microsoft.Xna.Framework.Vector2> uvs = polygon.UvCoordinates;
-					
+
 					List<Microsoft.Xna.Framework.Vector3> animatedVertices = new List<Microsoft.Xna.Framework.Vector3> {
 						TranslateVertexToAnimatedPosition(vertices[0], polygon.MeshType),
 						TranslateVertexToAnimatedPosition(vertices[1], polygon.MeshType),
 						TranslateVertexToAnimatedPosition(vertices[2], polygon.MeshType)
 					};
-					
+
 					if (polygon.IsTextured) {
-						texturedPrimitives[polygon.PaletteId].AddTriangle(
+						texturedPrimitives[polygon.MeshType][polygon.PaletteId].AddTriangle(
 							(ConvertAndScaleVector3(animatedVertices[2]), GetAdjustedUvCoordinates(uvs[2], polygon.TexturePage)),
 							(ConvertAndScaleVector3(animatedVertices[1]), GetAdjustedUvCoordinates(uvs[1], polygon.TexturePage)),
 							(ConvertAndScaleVector3(animatedVertices[0]), GetAdjustedUvCoordinates(uvs[0], polygon.TexturePage))
 						);
 					} else {
-						blackPrimitive.AddTriangle(
+						texturedPrimitives[polygon.MeshType].Last().AddTriangle(
 							ConvertAndScaleVector3ToVertexPosition(animatedVertices[2]),
 							ConvertAndScaleVector3ToVertexPosition(animatedVertices[1]),
 							ConvertAndScaleVector3ToVertexPosition(animatedVertices[0])
@@ -110,8 +129,15 @@ namespace GaneshaDx.Common {
 			}
 
 			SceneBuilder scene = new SceneBuilder();
-			scene.AddRigidMesh(texturedMesh, Matrix4x4.Identity);
-			scene.AddRigidMesh(blackMesh, Matrix4x4.Identity);
+			scene.AddRigidMesh(meshes[MeshType.PrimaryMesh], Matrix4x4.Identity);
+			scene.AddRigidMesh(meshes[MeshType.AnimatedMesh1], Matrix4x4.Identity);
+			scene.AddRigidMesh(meshes[MeshType.AnimatedMesh2], Matrix4x4.Identity);
+			scene.AddRigidMesh(meshes[MeshType.AnimatedMesh3], Matrix4x4.Identity);
+			scene.AddRigidMesh(meshes[MeshType.AnimatedMesh4], Matrix4x4.Identity);
+			scene.AddRigidMesh(meshes[MeshType.AnimatedMesh5], Matrix4x4.Identity);
+			scene.AddRigidMesh(meshes[MeshType.AnimatedMesh6], Matrix4x4.Identity);
+			scene.AddRigidMesh(meshes[MeshType.AnimatedMesh7], Matrix4x4.Identity);
+			scene.AddRigidMesh(meshes[MeshType.AnimatedMesh8], Matrix4x4.Identity);
 
 			// @todo: export lights
 
@@ -151,15 +177,15 @@ namespace GaneshaDx.Common {
 			Matrix rotationX = Matrix.CreateRotationX(MathHelper.ToRadians((float) keyFrame.Rotation[0]));
 			Matrix rotationY = Matrix.CreateRotationY(MathHelper.ToRadians((float) keyFrame.Rotation[1]));
 			Matrix rotationZ = Matrix.CreateRotationZ(MathHelper.ToRadians((float) keyFrame.Rotation[2]));
-			
+
 			animatedPosition = Microsoft.Xna.Framework.Vector3.Transform(animatedPosition, rotationX * rotationY * rotationZ);
-			
+
 			Matrix scale = Matrix.CreateScale(
 				(float) keyFrame.Scale[0],
 				(float) keyFrame.Scale[1],
 				(float) keyFrame.Scale[2]
 			);
-			
+
 			animatedPosition = Microsoft.Xna.Framework.Vector3.Transform(animatedPosition, scale);
 
 			animatedPosition += new Microsoft.Xna.Framework.Vector3(
@@ -178,8 +204,8 @@ namespace GaneshaDx.Common {
 		}
 
 		private static void CreateTextures(
-			List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>> texturedPrimitives,
-			MeshBuilder<VertexPosition, VertexTexture1> texturedMesh
+			Dictionary<MeshType, List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>> texturedPrimitives,
+			Dictionary<MeshType, MeshBuilder<VertexPosition, VertexTexture1>> texturedMesh
 		) {
 			MTex2D stateTexture = CurrentMapState.StateData.Texture;
 
@@ -207,7 +233,22 @@ namespace GaneshaDx.Common {
 				material.WithSpecularFactor(memoryImage, 0);
 				material.WithSpecularColor(memoryImage, Vector3.Zero);
 
-				texturedPrimitives.Add(texturedMesh.UsePrimitive(material));
+				foreach (
+					KeyValuePair<MeshType, List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>> texturedPrimitive
+					in texturedPrimitives
+				) {
+					texturedPrimitive.Value.Add(texturedMesh[texturedPrimitive.Key].UsePrimitive(material));
+				}
+			}
+
+			MaterialBuilder blackMaterial = new MaterialBuilder();
+			blackMaterial.WithBaseColor(new Vector4(0, 0, 0, 1));
+			blackMaterial.WithUnlitShader();
+			foreach (
+				KeyValuePair<MeshType, List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>> texturedPrimitive
+				in texturedPrimitives
+			) {
+				texturedPrimitive.Value.Add(texturedMesh[texturedPrimitive.Key].UsePrimitive(blackMaterial));
 			}
 		}
 
