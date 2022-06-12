@@ -150,59 +150,7 @@ namespace GaneshaDx.Common {
 			settings.JsonOptions = jsonWriterOptions;
 			model.SaveGLB(filePath, settings);
 		}
-
-		private static Vector3 ConvertAndScaleVector3(Microsoft.Xna.Framework.Vector3 vector3) {
-			return new Vector3(vector3.X / ReduceScaleFactor, vector3.Y / ReduceScaleFactor, vector3.Z / ReduceScaleFactor);
-		}
-
-		private static VertexPosition ConvertAndScaleVector3ToVertexPosition(Microsoft.Xna.Framework.Vector3 vector3) {
-			return new VertexPosition(vector3.X / ReduceScaleFactor, vector3.Y / ReduceScaleFactor, vector3.Z / ReduceScaleFactor);
-		}
-
-		private static Microsoft.Xna.Framework.Vector3 TranslateVertexToAnimatedPosition(Vertex vertex, MeshType meshType) {
-			Microsoft.Xna.Framework.Vector3 animatedPosition = vertex.Position;
-
-			if (meshType == MeshType.PrimaryMesh) {
-				return animatedPosition;
-			}
-
-			List<MeshType> animatedMeshTypes = new List<MeshType> {
-				MeshType.AnimatedMesh1, MeshType.AnimatedMesh2, MeshType.AnimatedMesh3, MeshType.AnimatedMesh4,
-				MeshType.AnimatedMesh5, MeshType.AnimatedMesh6, MeshType.AnimatedMesh7, MeshType.AnimatedMesh8
-			};
-			MeshAnimation meshAnimation = CurrentMapState.StateData.MeshAnimationInstructions.MeshAnimations[animatedMeshTypes.IndexOf(meshType)];
-
-			MeshAnimationKeyFrame keyFrame = CurrentMapState.StateData.MeshAnimationInstructions.KeyFrames[meshAnimation.Frames[0].FrameStateId - 1];
-
-			Matrix rotationX = Matrix.CreateRotationX(MathHelper.ToRadians((float) keyFrame.Rotation[0]));
-			Matrix rotationY = Matrix.CreateRotationY(MathHelper.ToRadians((float) keyFrame.Rotation[1]));
-			Matrix rotationZ = Matrix.CreateRotationZ(MathHelper.ToRadians((float) keyFrame.Rotation[2]));
-
-			animatedPosition = Microsoft.Xna.Framework.Vector3.Transform(animatedPosition, rotationX * rotationY * rotationZ);
-
-			Matrix scale = Matrix.CreateScale(
-				(float) keyFrame.Scale[0],
-				(float) keyFrame.Scale[1],
-				(float) keyFrame.Scale[2]
-			);
-
-			animatedPosition = Microsoft.Xna.Framework.Vector3.Transform(animatedPosition, scale);
-
-			animatedPosition += new Microsoft.Xna.Framework.Vector3(
-				-(float) keyFrame.Position[0],
-				(float) keyFrame.Position[1],
-				(float) keyFrame.Position[2]
-			);
-
-			return animatedPosition;
-		}
-
-		private static Vector2 GetAdjustedUvCoordinates(Microsoft.Xna.Framework.Vector2 uv, int texturePage) {
-			double adjustedX = uv.X / 256f;
-			double adjustedY = (uv.Y + 256 * texturePage) / 1024f;
-			return new Vector2((float) adjustedX, (float) adjustedY);
-		}
-
+		
 		private static void CreateTextures(
 			Dictionary<MeshType, List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>> texturedPrimitives,
 			Dictionary<MeshType, MeshBuilder<VertexPosition, VertexTexture1>> texturedMesh
@@ -287,6 +235,58 @@ namespace GaneshaDx.Common {
 			MemoryStream stream = new MemoryStream();
 			texture.SaveAsPng(stream, stateTexture.Width, stateTexture.Height);
 			return stream.ToArray();
+		}
+		
+		private static Vector3 ConvertAndScaleVector3(Microsoft.Xna.Framework.Vector3 vector3) {
+			return new Vector3(vector3.X / ReduceScaleFactor, vector3.Y / ReduceScaleFactor, vector3.Z / ReduceScaleFactor);
+		}
+
+		private static VertexPosition ConvertAndScaleVector3ToVertexPosition(Microsoft.Xna.Framework.Vector3 vector3) {
+			return new VertexPosition(vector3.X / ReduceScaleFactor, vector3.Y / ReduceScaleFactor, vector3.Z / ReduceScaleFactor);
+		}
+
+		private static Microsoft.Xna.Framework.Vector3 TranslateVertexToAnimatedPosition(Vertex vertex, MeshType meshType) {
+			Microsoft.Xna.Framework.Vector3 animatedPosition = vertex.Position;
+
+			if (meshType == MeshType.PrimaryMesh) {
+				return animatedPosition;
+			}
+
+			List<MeshType> animatedMeshTypes = new List<MeshType> {
+				MeshType.AnimatedMesh1, MeshType.AnimatedMesh2, MeshType.AnimatedMesh3, MeshType.AnimatedMesh4,
+				MeshType.AnimatedMesh5, MeshType.AnimatedMesh6, MeshType.AnimatedMesh7, MeshType.AnimatedMesh8
+			};
+			MeshAnimation meshAnimation = CurrentMapState.StateData.MeshAnimationInstructions.MeshAnimations[animatedMeshTypes.IndexOf(meshType)];
+
+			MeshAnimationKeyFrame keyFrame = CurrentMapState.StateData.MeshAnimationInstructions.KeyFrames[meshAnimation.Frames[0].FrameStateId - 1];
+
+			Matrix rotationX = Matrix.CreateRotationX(MathHelper.ToRadians((float) keyFrame.Rotation[0]));
+			Matrix rotationY = Matrix.CreateRotationY(MathHelper.ToRadians((float) keyFrame.Rotation[1]));
+			Matrix rotationZ = Matrix.CreateRotationZ(MathHelper.ToRadians((float) keyFrame.Rotation[2]));
+
+			animatedPosition = Microsoft.Xna.Framework.Vector3.Transform(animatedPosition, rotationX * rotationY * rotationZ);
+
+			Matrix scale = Matrix.CreateScale(
+				(float) keyFrame.Scale[0],
+				(float) keyFrame.Scale[1],
+				(float) keyFrame.Scale[2]
+			);
+
+			animatedPosition = Microsoft.Xna.Framework.Vector3.Transform(animatedPosition, scale);
+
+			animatedPosition += new Microsoft.Xna.Framework.Vector3(
+				-(float) keyFrame.Position[0],
+				(float) keyFrame.Position[1],
+				(float) keyFrame.Position[2]
+			);
+
+			return animatedPosition;
+		}
+
+		private static Vector2 GetAdjustedUvCoordinates(Microsoft.Xna.Framework.Vector2 uv, int texturePage) {
+			double adjustedX = uv.X / 256f;
+			double adjustedY = (uv.Y + 256 * texturePage) / 1024f;
+			return new Vector2((float) adjustedX, (float) adjustedY);
 		}
 	}
 }
