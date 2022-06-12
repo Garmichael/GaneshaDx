@@ -3,7 +3,7 @@ using GaneshaDx.Common;
 
 namespace GaneshaDx {
 	public static class Program {
-		public const string Version = "0.87 (alpha)";
+		public const string Version = "0.90 (alpha)";
 
 		[STAThread]
 		private static void Main() {
