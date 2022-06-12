@@ -1,5 +1,4 @@
-﻿using GaneshaDx.Common;
-using GaneshaDx.UserInterface.GuiDefinitions;
+﻿using GaneshaDx.UserInterface.GuiDefinitions;
 using ImGuiNET;
 using Vector2 = System.Numerics.Vector2;
 
@@ -15,7 +14,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			                               ImGuiWindowFlags.AlwaysAutoResize |
 			                               ImGuiWindowFlags.NoCollapse;
 
-			ImGui.SetNextWindowSize(new Vector2(250, 160));
+			ImGui.SetNextWindowSize(new Vector2(260, 210));
 			ImGui.Begin("About GaneshaDx", ref windowIsOpen, flags);
 			{
 				ImGui.PopFont();
@@ -27,7 +26,11 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				GuiStyle.AddSpace();
 				
 				ImGui.Text("Developed by Garret Bright");
-				ImGui.Text("Copyright 2022, Storm Garden Studio");
+				ImGui.Text("GLB Exporter by CalamityCoder");
+				
+				GuiStyle.AddSpace();
+				ImGui.Text("Copyright 2021 - 2022");
+				ImGui.Text("Storm Garden Studio");
 			}
 			ImGui.End();
 
