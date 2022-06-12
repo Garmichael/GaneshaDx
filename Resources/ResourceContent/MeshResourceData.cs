@@ -1444,6 +1444,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 			}
 
 			foreach (Polygon polygon in PolygonCollection[MeshType.PrimaryMesh][PolygonType.UntexturedTriangle]) {
+				polygon.RenderingProperties ??= new PolygonRenderingProperties();
 				RawData.AddRange(polygon.RenderingProperties.GetRawData());
 			}
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using GaneshaDx.Common;
 using GaneshaDx.Environment;
@@ -156,34 +157,50 @@ namespace GaneshaDx.UserInterface {
 
 			foreach (KeyValuePair<PolygonType, List<Polygon>> polygonCollection in allPolygons) {
 				foreach (Polygon polygon in polygonCollection.Value) {
-					CameraRayResults triangleAIntersects = CameraRay.GetResults(
-						new List<Vector3> {
-							polygon.Vertices[0].Position,
-							polygon.Vertices[1].Position,
-							polygon.Vertices[2].Position
-						}
-					);
+					bool shouldHideBasedOnVisibilityAngle =
+						polygon.RenderingProperties != null &&
+						Configuration.Properties.HideHiddenPolysByFacing &&
+						(
+							StageCamera.FacingDirection == StageCamera.CameraView.Northeast &&
+							polygon.RenderingProperties.InvisibleNortheast ||
+							StageCamera.FacingDirection == StageCamera.CameraView.Northwest &&
+							polygon.RenderingProperties.InvisibleNorthwest ||
+							StageCamera.FacingDirection == StageCamera.CameraView.Southeast &&
+							polygon.RenderingProperties.InvisibleSoutheast ||
+							StageCamera.FacingDirection == StageCamera.CameraView.Southwest &&
+							polygon.RenderingProperties.InvisibleSouthwest
+						);
 
-					CameraRayResults triangleBIntersects = polygon.IsQuad
-						? CameraRay.GetResults(
+					if (!shouldHideBasedOnVisibilityAngle) {
+						CameraRayResults triangleAIntersects = CameraRay.GetResults(
 							new List<Vector3> {
-								polygon.Vertices[3].Position,
-								polygon.Vertices[2].Position,
-								polygon.Vertices[1].Position
+								polygon.Vertices[0].Position,
+								polygon.Vertices[1].Position,
+								polygon.Vertices[2].Position
 							}
-						)
-						: new CameraRayResults { HasHit = false };
+						);
 
-					if (triangleAIntersects.HasHit) {
-						_hoverPosition = triangleAIntersects.HitPoint;
-					}
+						CameraRayResults triangleBIntersects = polygon.IsQuad
+							? CameraRay.GetResults(
+								new List<Vector3> {
+									polygon.Vertices[3].Position,
+									polygon.Vertices[2].Position,
+									polygon.Vertices[1].Position
+								}
+							)
+							: new CameraRayResults { HasHit = false };
 
-					if (triangleBIntersects.HasHit) {
-						_hoverPosition = triangleBIntersects.HitPoint;
-					}
+						if (triangleAIntersects.HasHit) {
+							_hoverPosition = triangleAIntersects.HitPoint;
+						}
 
-					if (triangleAIntersects.HasHit || triangleBIntersects.HasHit) {
-						HoveredPolygons.Add(polygon);
+						if (triangleBIntersects.HasHit) {
+							_hoverPosition = triangleBIntersects.HitPoint;
+						}
+
+						if (triangleAIntersects.HasHit || triangleBIntersects.HasHit) {
+							HoveredPolygons.Add(polygon);
+						}
 					}
 				}
 			}
@@ -225,7 +242,48 @@ namespace GaneshaDx.UserInterface {
 				}
 			}
 		}
+		
+		public static void SelectOverlappingPolygons() {
+			SelectedPolygons.Clear();
 
+			List<PolygonType> polygonTypes = new List<PolygonType> {
+				PolygonType.TexturedQuad,
+				PolygonType.UntexturedQuad,
+				PolygonType.TexturedTriangle,
+				PolygonType.UntexturedTriangle
+			};
+
+			foreach (PolygonType polygonType in polygonTypes) {
+				List<Polygon> currentBucket = CurrentMapState.StateData.PolygonCollection[GuiPanelMeshSelector.SelectedMesh][polygonType];
+
+				foreach (Polygon polygon in currentBucket) {
+					if (!SelectedPolygons.Contains(polygon)) {
+						foreach (Polygon otherPolygon in currentBucket) {
+							if (
+								polygon != otherPolygon &&
+								!SelectedPolygons.Contains(otherPolygon) &&
+								Math.Abs(polygon.Vertices[0].Position.X - otherPolygon.Vertices[0].Position.X) < .1 &&
+								Math.Abs(polygon.Vertices[0].Position.Y - otherPolygon.Vertices[0].Position.Y) < .1 &&
+								Math.Abs(polygon.Vertices[0].Position.Z - otherPolygon.Vertices[0].Position.Z) < .1 &&
+								Math.Abs(polygon.Vertices[1].Position.X - otherPolygon.Vertices[1].Position.X) < .1 &&
+								Math.Abs(polygon.Vertices[1].Position.Y - otherPolygon.Vertices[1].Position.Y) < .1 &&
+								Math.Abs(polygon.Vertices[1].Position.Z - otherPolygon.Vertices[1].Position.Z) < .1 &&
+								Math.Abs(polygon.Vertices[2].Position.X - otherPolygon.Vertices[2].Position.X) < .1 &&
+								Math.Abs(polygon.Vertices[2].Position.Y - otherPolygon.Vertices[2].Position.Y) < .1 &&
+								Math.Abs(polygon.Vertices[2].Position.Z - otherPolygon.Vertices[2].Position.Z) < .1 &&
+								polygon.Vertices.Count > 3 &&
+								Math.Abs(polygon.Vertices[3].Position.X - otherPolygon.Vertices[3].Position.X) < .1 &&
+								Math.Abs(polygon.Vertices[3].Position.Y - otherPolygon.Vertices[3].Position.Y) < .1 &&
+								Math.Abs(polygon.Vertices[3].Position.Z - otherPolygon.Vertices[3].Position.Z) < .1
+							) {
+								AddPolyToSelection(polygon);
+							}
+						}
+					}
+				}
+			}
+		}
+		
 		public static void SelectAllPolygons() {
 			Polygon firstPolygon = null;
 			if (SelectedPolygons.Count > 0) {

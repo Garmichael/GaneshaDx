@@ -20,6 +20,7 @@ namespace GaneshaDx.UserInterface {
 		public static bool ShowPreferencesWindow;
 		public static bool ShowAddPolygonWindow;
 		public static bool ShowPolygonListWindow;
+		public static bool ShowRawTerrainDataWindow;
 		private static bool _showManageResourcesWindow;
 		public static bool ShowAboutWindow;
 		public static bool ShowDebugAnimatedMeshWindow;
@@ -70,6 +71,10 @@ namespace GaneshaDx.UserInterface {
 							GuiWindowPolygonList.Render();
 						}
 
+						if (ShowRawTerrainDataWindow) {
+							GuiWindowRawTerrainData.Render();
+						}
+
 						if (ShowDebugAnimatedMeshWindow &&
 						    MapData.MapIsLoaded && CurrentMapState.StateData.MeshAnimationInstructions != null
 						) {
@@ -79,12 +84,16 @@ namespace GaneshaDx.UserInterface {
 						if (ShowMeshAnimationsWindow) {
 							GuiWindowEditMeshAnimations.Render();
 						}
+
+						if (GuiWindowMapWarning.ShouldRender()) {
+							GuiWindowMapWarning.Render();
+						}
 					}
 
 					if (ShowAboutWindow) {
 						GuiWindowAbout.Render();
 					}
-					
+
 					if (ImGui.GetIO().WantCaptureKeyboard || ImGui.GetIO().WantCaptureMouse) {
 						MyraGui.LockModeling = true;
 					}
@@ -168,16 +177,19 @@ namespace GaneshaDx.UserInterface {
 					case RightPanelTab.Polygon:
 						GuiPanelMeshSelector.Render();
 						GuiPanelPolygon.Render();
+						GuiPanelTerrain.ResizeTerrainMode = false;
 						break;
 					case RightPanelTab.Texture:
 						GuiPanelMeshSelector.Render();
 						GuiPanelTexture.Render();
+						GuiPanelTerrain.ResizeTerrainMode = false;
 						break;
 					case RightPanelTab.Terrain:
 						GuiPanelTerrain.Render();
 						break;
 					case RightPanelTab.Map:
 						GuiPanelMap.Render();
+						GuiPanelTerrain.ResizeTerrainMode = false;
 						break;
 					default:
 						throw new ArgumentOutOfRangeException();

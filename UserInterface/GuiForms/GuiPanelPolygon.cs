@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using GaneshaDx.Common;
 using GaneshaDx.Environment;
+using GaneshaDx.Resources;
 using GaneshaDx.Resources.ContentDataTypes.Polygons;
 using GaneshaDx.UserInterface.GuiDefinitions;
 using GaneshaDx.UserInterface.Widgets;
@@ -13,12 +14,15 @@ using Vector4 = System.Numerics.Vector4;
 
 namespace GaneshaDx.UserInterface.GuiForms {
 	public static class GuiPanelPolygon {
+		private static int _selectedMoveToId = 0;
+
 		public static void Render() {
 			RenderWidgetSelection();
 
 			if (Selection.SelectedPolygons.Count > 0) {
 				RenderPositionValues();
 				RenderNormalValues();
+				RenderConversionOptions();
 				RenderTerrainValues();
 				RenderInvisibilityAngles();
 			}
@@ -263,7 +267,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				ImGui.Text("Z");
 				ImGui.NextColumn();
 
-				string[] vertexLabels = {"A", "B", "C", "D"};
+				string[] vertexLabels = { "A", "B", "C", "D" };
 				Vector4[] vertexColors = {
 					Utilities.ConvertVector4(Color.Red.ToVector4()),
 					Utilities.ConvertVector4(Color.LightGreen.ToVector4()),
@@ -348,7 +352,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 				GuiStyle.SetNewUiToDefaultStyle();
 
-				string[] vertexLabels = {"A", "B", "C", "D"};
+				string[] vertexLabels = { "A", "B", "C", "D" };
 				Vector4[] vertexColors = {
 					Utilities.ConvertVector4(Color.Red.ToVector4()),
 					Utilities.ConvertVector4(Color.LightGreen.ToVector4()),
@@ -436,11 +440,145 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			}
 		}
 
+		private static void RenderConversionOptions() {
+			Polygon selectedPolygon = Selection.SelectedPolygons[0];
+
+			GuiStyle.SetNewUiToDefaultStyle();
+			GuiStyle.SetElementStyle(ElementStyle.Header);
+
+			if (ImGui.CollapsingHeader("Conversion", ImGuiTreeNodeFlags.DefaultOpen)) {
+				GuiStyle.SetNewUiToDefaultStyle();
+				ImGui.Indent();
+
+				if (CurrentMapState.StateData.HasAnimatedMesh1 ||
+				    CurrentMapState.StateData.HasAnimatedMesh2 ||
+				    CurrentMapState.StateData.HasAnimatedMesh3 ||
+				    CurrentMapState.StateData.HasAnimatedMesh4 ||
+				    CurrentMapState.StateData.HasAnimatedMesh5 ||
+				    CurrentMapState.StateData.HasAnimatedMesh6 ||
+				    CurrentMapState.StateData.HasAnimatedMesh7 ||
+				    CurrentMapState.StateData.HasAnimatedMesh8
+				) {
+					List<MeshType> meshTypes = new List<MeshType>();
+					List<string> labels = new List<string>();
+
+					MeshType selectedMesh = GuiPanelMeshSelector.SelectedMesh;
+
+					if (selectedMesh != MeshType.PrimaryMesh) {
+						meshTypes.Add(MeshType.PrimaryMesh);
+						labels.Add("Primary Mesh");
+					}
+
+					if (CurrentMapState.StateData.HasAnimatedMesh1 && selectedMesh != MeshType.AnimatedMesh1) {
+						meshTypes.Add(MeshType.AnimatedMesh1);
+						labels.Add("Animated Mesh 1");
+					}
+
+					if (CurrentMapState.StateData.HasAnimatedMesh2 && selectedMesh != MeshType.AnimatedMesh2) {
+						meshTypes.Add(MeshType.AnimatedMesh2);
+						labels.Add("Animated Mesh 2");
+					}
+
+					if (CurrentMapState.StateData.HasAnimatedMesh3 && selectedMesh != MeshType.AnimatedMesh3) {
+						meshTypes.Add(MeshType.AnimatedMesh3);
+						labels.Add("Animated Mesh 3");
+					}
+
+					if (CurrentMapState.StateData.HasAnimatedMesh4 && selectedMesh != MeshType.AnimatedMesh4) {
+						meshTypes.Add(MeshType.AnimatedMesh4);
+						labels.Add("Animated Mesh 4");
+					}
+
+					if (CurrentMapState.StateData.HasAnimatedMesh5 && selectedMesh != MeshType.AnimatedMesh5) {
+						meshTypes.Add(MeshType.AnimatedMesh5);
+						labels.Add("Animated Mesh 5");
+					}
+
+					if (CurrentMapState.StateData.HasAnimatedMesh6 && selectedMesh != MeshType.AnimatedMesh6) {
+						meshTypes.Add(MeshType.AnimatedMesh6);
+						labels.Add("Animated Mesh 6");
+					}
+
+					if (CurrentMapState.StateData.HasAnimatedMesh7 && selectedMesh != MeshType.AnimatedMesh7) {
+						meshTypes.Add(MeshType.AnimatedMesh7);
+						labels.Add("Animated Mesh 7");
+					}
+
+					if (CurrentMapState.StateData.HasAnimatedMesh8 && selectedMesh != MeshType.AnimatedMesh8) {
+						meshTypes.Add(MeshType.AnimatedMesh8);
+						labels.Add("Animated Mesh 8");
+					}
+
+					ImGui.Columns(2, "ConvertMeshTypeColumn", false);
+					ImGui.SetColumnWidth(0, GuiStyle.LabelWidth);
+					ImGui.SetColumnWidth(1, GuiStyle.WidgetWidth + 10);
+
+					ImGui.SetNextItemWidth(GuiStyle.LabelWidth - 10);
+
+					if (_selectedMoveToId > meshTypes.Count - 1) {
+						_selectedMoveToId = 0;
+					}
+					
+					ImGui.Combo("##MoveToMeshType", ref _selectedMoveToId, labels.ToArray(), meshTypes.Count);
+
+					ImGui.NextColumn();
+					
+					if (ImGui.Button("Move", new Vector2(GuiStyle.WidgetWidth, 20))) {
+						foreach (Polygon polygon in Selection.SelectedPolygons) {
+							CurrentMapState.StateData.PolygonCollection[polygon.MeshType][polygon.PolygonType].Remove(polygon);
+							polygon.MeshType = meshTypes[_selectedMoveToId];
+							CurrentMapState.StateData.PolygonCollection[polygon.MeshType][polygon.PolygonType].Add(polygon);
+						}
+					}
+
+					ImGui.NextColumn();
+				}
+
+				ImGui.NextColumn();
+
+				string label = selectedPolygon.IsTextured
+					? "To Untextured"
+					: "To Textured";
+
+				if (ImGui.Button(label, new Vector2(GuiStyle.WidgetWidth, 20))) {
+					CurrentMapState.StateData.PolygonCollection[selectedPolygon.MeshType][selectedPolygon.PolygonType].Remove(selectedPolygon);
+					if (selectedPolygon.IsTextured) {
+						selectedPolygon.PolygonType = selectedPolygon.IsQuad
+							? PolygonType.UntexturedQuad
+							: PolygonType.UntexturedTriangle;
+
+						selectedPolygon.UvCoordinates = null;
+					} else {
+						selectedPolygon.PolygonType = selectedPolygon.IsQuad
+							? PolygonType.TexturedQuad
+							: PolygonType.TexturedTriangle;
+
+						selectedPolygon.UvCoordinates = new List<Microsoft.Xna.Framework.Vector2> {
+							new Microsoft.Xna.Framework.Vector2(9, 9),
+							new Microsoft.Xna.Framework.Vector2(28, 9),
+							new Microsoft.Xna.Framework.Vector2(9, 28)
+						};
+
+						if (selectedPolygon.IsQuad) {
+							selectedPolygon.UvCoordinates.Add(new Microsoft.Xna.Framework.Vector2(28, 28));
+						}
+					}
+
+					CurrentMapState.StateData.PolygonCollection[selectedPolygon.MeshType][selectedPolygon.PolygonType].Add(selectedPolygon);
+				}
+
+
+				ImGui.Columns(1);
+				ImGui.Unindent();
+				GuiStyle.AddSpace();
+			}
+		}
+
 		private static void RenderTerrainValues() {
 			if (Selection.SelectedPolygons[0].MeshType != MeshType.PrimaryMesh) {
 				return;
 			}
-			
+
 			GuiStyle.SetNewUiToDefaultStyle();
 			GuiStyle.SetElementStyle(ElementStyle.Header);
 
@@ -568,23 +706,23 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 				ImGui.Checkbox("WNW", ref angles.InvisibleWestNorthWest);
 				ImGui.NextColumn();
-				
+
 				if (StageCamera.FacingDirection == StageCamera.CameraView.Northwest) {
 					style.Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.HighlightedText];
 				} else {
 					style.Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.Lightest];
 				}
-				
+
 				ImGui.Text("NW");
 				ImGui.NextColumn();
 				ImGui.NextColumn();
-				
+
 				if (StageCamera.FacingDirection == StageCamera.CameraView.Northeast) {
 					style.Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.HighlightedText];
 				} else {
 					style.Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.Lightest];
 				}
-				
+
 				ImGui.Text("NE");
 				ImGui.NextColumn();
 				ImGui.Checkbox("ENE", ref angles.InvisibleEastNortheast);
@@ -603,23 +741,23 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 				ImGui.Checkbox("WSW", ref angles.InvisibleWestSouthwest);
 				ImGui.NextColumn();
-				
+
 				if (StageCamera.FacingDirection == StageCamera.CameraView.Southwest) {
 					style.Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.HighlightedText];
 				} else {
 					style.Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.Lightest];
 				}
-				
+
 				ImGui.Text("SW");
 				ImGui.NextColumn();
 				ImGui.NextColumn();
-				
+
 				if (StageCamera.FacingDirection == StageCamera.CameraView.Southeast) {
 					style.Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.HighlightedText];
 				} else {
 					style.Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.Lightest];
 				}
-				
+
 				ImGui.Text("SE");
 				ImGui.NextColumn();
 				ImGui.Checkbox("ESE", ref angles.InvisibleEastSoutheast);

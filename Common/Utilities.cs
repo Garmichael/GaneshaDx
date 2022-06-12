@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using GaneshaDx.Resources;
 using GaneshaDx.Resources.ContentDataTypes.Polygons;
 using GaneshaDx.UserInterface;
 using Microsoft.Xna.Framework;
@@ -326,6 +327,21 @@ namespace GaneshaDx.Common {
 
 		public static bool PointIsWithinRange(Vector2 point, Vector2 center, float radius) {
 			return Vector2.Distance(point, center) < radius;
+		}
+		
+		public static int GetTotalPolygonCount(PolygonType polygonType) {
+			List<MeshType> allMeshTypes = new List<MeshType> {
+				MeshType.PrimaryMesh, MeshType.AnimatedMesh1, MeshType.AnimatedMesh2, MeshType.AnimatedMesh3,
+				MeshType.AnimatedMesh4, MeshType.AnimatedMesh5, MeshType.AnimatedMesh6, MeshType.AnimatedMesh7, MeshType.AnimatedMesh8
+			};
+
+			int total = 0;
+
+			foreach (MeshType meshType in allMeshTypes) {
+				total += CurrentMapState.StateData.PolygonCollection[meshType][polygonType].Count;
+			}
+
+			return total;
 		}
 	}
 }

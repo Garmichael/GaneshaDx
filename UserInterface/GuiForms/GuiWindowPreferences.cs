@@ -23,6 +23,13 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				ImGui.SetColumnWidth(0, GuiStyle.LabelWidth + 10);
 				ImGui.SetColumnWidth(1, GuiStyle.WidgetWidth + 10);
 
+				ImGui.Text("Swap Camera Buttons");
+				ImGui.NextColumn();
+
+				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+				ImGui.Checkbox("###PreferencesSwapCameraControls", ref Configuration.Properties.SwapCameraControls);
+				ImGui.NextColumn();
+				
 				ImGui.Text("Control+Drag Modifier");
 				ImGui.NextColumn();
 
@@ -48,11 +55,9 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				ImGui.Checkbox("###PreferencesPanningInverted", ref Configuration.Properties.InvertedPanning);
 				ImGui.NextColumn();
 
-				GuiStyle.AddSpace();
 				ImGui.Text("Rotation Strength");
 				ImGui.NextColumn();
 
-				GuiStyle.AddSpace();
 				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
 				ImGui.InputFloat("PreferencesRotationStrength", ref Configuration.Properties.RotationSensitivity,
 					0.05f);
@@ -67,21 +72,26 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				ImGui.Checkbox("###PreferencesRotationInverted", ref Configuration.Properties.InvertedRotation);
 				ImGui.NextColumn();
 
-				GuiStyle.AddSpace();
 				ImGui.Text("Zoom Strength");
 				ImGui.NextColumn();
 
-				GuiStyle.AddSpace();
 				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
 				ImGui.InputFloat("PreferencesZoomStrength", ref Configuration.Properties.ZoomStrength, 0.1f);
 				Configuration.Properties.ZoomStrength = Utilities.Min(Configuration.Properties.ZoomStrength, 1.1f);
 				ImGui.NextColumn();
 
 				GuiStyle.AddSpace();
-				ImGui.Text("Alpha as Semi-Transparent");
+				ImGui.Text("Expanded Compass");
 				ImGui.NextColumn();
 
 				GuiStyle.AddSpace();
+				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+				ImGui.Checkbox("###PreferencesExpandedCompass", ref Configuration.Properties.ExpandCompassToTerrainLength);
+				ImGui.NextColumn();
+				
+				ImGui.Text("Alpha as Semi-Transparent");
+				ImGui.NextColumn();
+
 				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
 				ImGui.Checkbox("###PreferencesAlpha", ref Configuration.Properties.RenderAlphaAsSemiTransparent);
 				ImGui.NextColumn();
@@ -100,13 +110,6 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				ImGui.Checkbox("###PreferencesShowFPS", ref Configuration.Properties.ShowFps);
 				ImGui.NextColumn();
 
-				ImGui.Text("Swap Camera Buttons");
-				ImGui.NextColumn();
-
-				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
-				ImGui.Checkbox("###PreferencesSwapCameraControls", ref Configuration.Properties.SwapCameraControls);
-				ImGui.NextColumn();
-
 				GuiStyle.AddSpace();
 				ImGui.Text("AutoSave");
 				ImGui.NextColumn();
@@ -118,7 +121,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 				ImGui.Text("AutoSave Every X Minutes");
 				ImGui.NextColumn();
-				
+
 				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
 				ImGui.InputInt("###PreferencesAutoSaveDuration", ref Configuration.Properties.AutoSaveDuration);
 				Configuration.Properties.AutoSaveDuration = Utilities.Min(Configuration.Properties.AutoSaveDuration, 1);
