@@ -10,6 +10,7 @@ using System.IO;
 using GaneshaDx.Resources;
 using System.Collections.Generic;
 using System.Linq;
+using FreeImageAPI;
 using GaneshaDx.Environment;
 using GaneshaDx.Resources.ContentDataTypes.MeshAnimations;
 using Microsoft.Xna.Framework;
@@ -20,9 +21,9 @@ using MTex2D = Microsoft.Xna.Framework.Graphics.Texture2D;
 using GaneshaDx.Resources.ContentDataTypes.Palettes;
 using GaneshaDx.Resources.ContentDataTypes.TextureAnimations;
 using GaneshaDx.UserInterface.GuiForms;
-using Microsoft.Xna.Framework.Graphics;
 using SharpGLTF.Scenes;
 using AlphaMode = SharpGLTF.Materials.AlphaMode;
+using Palette = GaneshaDx.Resources.ContentDataTypes.Palettes.Palette;
 using VertexPosition = SharpGLTF.Geometry.VertexTypes.VertexPosition;
 
 namespace GaneshaDx.Common {
@@ -239,10 +240,22 @@ namespace GaneshaDx.Common {
 
 		private static byte[] GeneratePngBytesFromColors(Color[] textureColors) {
 			MTex2D stateTexture = CurrentMapState.StateData.Texture;
-			MTex2D texture = new MTex2D(Stage.Ganesha.GraphicsDevice, stateTexture.Width, stateTexture.Height);
-			texture.SetData(textureColors);
+			FreeImageBitmap indexedPng = new FreeImageBitmap(stateTexture.Width, stateTexture.Height);
+
+			List<System.Drawing.Color> newColors = new List<System.Drawing.Color>();
+			foreach (Color color in textureColors) {
+				newColors.Add(System.Drawing.Color.FromArgb(color.A, color.R, color.G, color.B));
+			}
+
+			for (int x = 0; x < stateTexture.Width; x++) {
+				for (int y = 0; y < stateTexture.Height; y++) {
+					indexedPng.SetPixel(x, y, newColors[x + (stateTexture.Height - y - 1) * stateTexture.Width]);
+				}
+			}
+
 			MemoryStream stream = new MemoryStream();
-			texture.SaveAsPng(stream, stateTexture.Width, stateTexture.Height);
+			indexedPng.ConvertColorDepth(FREE_IMAGE_COLOR_DEPTH.FICD_08_BPP);
+			indexedPng.Save(stream, FREE_IMAGE_FORMAT.FIF_PNG, FREE_IMAGE_SAVE_FLAGS.PNG_Z_BEST_COMPRESSION);
 			return stream.ToArray();
 		}
 

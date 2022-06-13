@@ -24,6 +24,7 @@
         <TrimmerRootAssembly Include="Microsoft.Xna.Framework.Content.ContentTypeReader" Visible="false" />
     </ItemGroup>
     <ItemGroup>
+        <PackageReference Include="FreeImage.Standard" Version="4.3.9-beta4" />
         <PackageReference Include="ImGui.NET" Version="1.78.0" />
         <PackageReference Include="ImGuiHandler.MonoGame" Version="1.1.1" />
         <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.0.1641" />
