@@ -214,9 +214,7 @@ namespace GaneshaDx.UserInterface.Input {
 
 				if (AppInput.ControlHeld && AppInput.ShiftHeld && !AppInput.AltHeld) {
 					if (AppInput.KeyJustPressed(Keys.E)) {
-						string fileName = MapData.MapName + ".glb";
-
-						MyraGui.OpenExportGlbFileDialog(fileName);
+						Gui.ShowExportGlbWindow = !Gui.ShowExportGlbWindow;
 					}
 
 					if (AppInput.KeyJustPressed(Keys.A)) {

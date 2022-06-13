@@ -237,7 +237,7 @@ namespace GaneshaDx.Resources {
 			OverlayConsole.AddMessage("Uv Map Exported as " + filePath);
 			stream.Dispose();
 		}
-		
+
 		public static void SaveMap(bool isAutoSave = false) {
 			string mapFolder = _mapFolder;
 			string backupExtension = "";

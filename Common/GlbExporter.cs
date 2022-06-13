@@ -19,8 +19,11 @@ using Vector2 = System.Numerics.Vector2;
 using MTex2D = Microsoft.Xna.Framework.Graphics.Texture2D;
 using GaneshaDx.Resources.ContentDataTypes.Palettes;
 using GaneshaDx.Resources.ContentDataTypes.TextureAnimations;
+using GaneshaDx.UserInterface.GuiForms;
+using Microsoft.Xna.Framework.Graphics;
 using SharpGLTF.Scenes;
 using AlphaMode = SharpGLTF.Materials.AlphaMode;
+using VertexPosition = SharpGLTF.Geometry.VertexTypes.VertexPosition;
 
 namespace GaneshaDx.Common {
 	public static class GlbExporter {
@@ -150,7 +153,7 @@ namespace GaneshaDx.Common {
 			settings.JsonOptions = jsonWriterOptions;
 			model.SaveGLB(filePath, settings);
 		}
-		
+
 		private static void CreateTextures(
 			Dictionary<MeshType, List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>> texturedPrimitives,
 			Dictionary<MeshType, MeshBuilder<VertexPosition, VertexTexture1>> texturedMesh
@@ -167,8 +170,16 @@ namespace GaneshaDx.Common {
 
 				MemoryImage memoryImage = new MemoryImage(textureBytes);
 				MaterialBuilder material = new MaterialBuilder().WithAlpha(AlphaMode.MASK);
-				material.WithMetallicRoughnessShader();
-				material.WithMetallicRoughness(0, 1);
+
+				if (GuiWindowExportGlb.ExportUnlit) {
+					material.WithUnlitShader();
+				} else {
+					material.WithMetallicRoughnessShader();
+					material.WithMetallicRoughness(0, 1);
+					material.WithSpecularFactor(memoryImage, 0);
+					material.WithSpecularColor(memoryImage, Vector3.Zero);
+				}
+
 				material.WithChannelImage(KnownChannel.BaseColor, memoryImage);
 				material.UseChannel(KnownChannel.BaseColor)
 					.Texture
@@ -178,8 +189,6 @@ namespace GaneshaDx.Common {
 						TextureMipMapFilter.NEAREST_MIPMAP_NEAREST,
 						TextureInterpolationFilter.NEAREST
 					);
-				material.WithSpecularFactor(memoryImage, 0);
-				material.WithSpecularColor(memoryImage, Vector3.Zero);
 
 				foreach (
 					KeyValuePair<MeshType, List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>> texturedPrimitive
@@ -236,7 +245,7 @@ namespace GaneshaDx.Common {
 			texture.SaveAsPng(stream, stateTexture.Width, stateTexture.Height);
 			return stream.ToArray();
 		}
-		
+
 		private static Vector3 ConvertAndScaleVector3(Microsoft.Xna.Framework.Vector3 vector3) {
 			return new Vector3(vector3.X / ReduceScaleFactor, vector3.Y / ReduceScaleFactor, vector3.Z / ReduceScaleFactor);
 		}

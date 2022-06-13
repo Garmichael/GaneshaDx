@@ -25,6 +25,7 @@ namespace GaneshaDx.UserInterface {
 		public static bool ShowAboutWindow;
 		public static bool ShowDebugAnimatedMeshWindow;
 		public static bool ShowMeshAnimationsWindow;
+		public static bool ShowExportGlbWindow;
 
 		public static void Render() {
 			Stage.GraphicsDevice.Clear(Color.Transparent);
@@ -83,6 +84,10 @@ namespace GaneshaDx.UserInterface {
 
 						if (ShowMeshAnimationsWindow) {
 							GuiWindowEditMeshAnimations.Render();
+						}
+
+						if (ShowExportGlbWindow) {
+							GuiWindowExportGlb.Render();
 						}
 
 						if (GuiWindowMapWarning.ShouldRender()) {

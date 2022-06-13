@@ -94,10 +94,8 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 					ImGui.Separator();
 
-					if (ImGui.MenuItem("Export to GLB", "Ctrl + Shift + E", false, MapData.MapIsLoaded)) {
-						string fileName = MapData.MapName + ".glb";
-
-						MyraGui.OpenExportGlbFileDialog(fileName);
+					if (ImGui.MenuItem("Export to GLB", "Ctrl + Shift + E", Gui.ShowExportGlbWindow, MapData.MapIsLoaded)) {
+						Gui.ShowExportGlbWindow = !Gui.ShowExportGlbWindow;
 					}
 
 					ImGui.Separator();
