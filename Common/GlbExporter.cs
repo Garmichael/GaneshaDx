@@ -9,6 +9,7 @@ using SharpGLTF.Geometry.VertexTypes;
 using System.IO;
 using GaneshaDx.Resources;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
 using System.Linq;
 using FreeImageAPI;
 using GaneshaDx.Environment;
@@ -165,9 +166,7 @@ namespace GaneshaDx.Common {
 				Color[] textureColors = new Color[stateTexture.Width * stateTexture.Height];
 				stateTexture.GetData(textureColors);
 
-				ApplyPalette(textureColors, palette);
-
-				byte[] textureBytes = GeneratePngBytesFromColors(textureColors);
+				byte[] textureBytes = GeneratePngBytesFromColors(textureColors, ApplyPaletteAnimation(palette));
 
 				MemoryImage memoryImage = new MemoryImage(textureBytes);
 				MaterialBuilder material = new MaterialBuilder().WithAlpha(AlphaMode.MASK);
@@ -210,7 +209,7 @@ namespace GaneshaDx.Common {
 			}
 		}
 
-		private static void ApplyPalette(Color[] textureColors, Palette palette) {
+		private static Palette ApplyPaletteAnimation(Palette palette) {
 			bool usesTextureAnimations = CurrentMapState.StateData.TextureAnimations != null &&
 			                             CurrentMapState.StateData.TextureAnimations.Count > 0;
 
@@ -228,35 +227,68 @@ namespace GaneshaDx.Common {
 				}
 			}
 
-			for (int colorIndex = 0; colorIndex < textureColors.Length; colorIndex++) {
-				Color pixelColor = textureColors[colorIndex];
-				if (GreyPalette.Contains(pixelColor)) {
-					int index = GreyPalette.IndexOf(pixelColor);
-					PaletteColor paletteColor = palette.Colors[index];
-					textureColors[colorIndex] = paletteColor.ToColor();
-				}
-			}
+			return palette;
 		}
 
-		private static byte[] GeneratePngBytesFromColors(Color[] textureColors) {
+		private static byte[] GeneratePngBytesFromColors(Color[] textureColors, Palette palette) {
 			MTex2D stateTexture = CurrentMapState.StateData.Texture;
-			FreeImageBitmap indexedPng = new FreeImageBitmap(stateTexture.Width, stateTexture.Height);
-
-			List<System.Drawing.Color> newColors = new List<System.Drawing.Color>();
-			foreach (Color color in textureColors) {
-				newColors.Add(System.Drawing.Color.FromArgb(color.A, color.R, color.G, color.B));
-			}
+			FreeImageBitmap indexedPng = new FreeImageBitmap(stateTexture.Width, stateTexture.Height, PixelFormat.Format32bppArgb);
 
 			for (int x = 0; x < stateTexture.Width; x++) {
 				for (int y = 0; y < stateTexture.Height; y++) {
-					indexedPng.SetPixel(x, y, newColors[x + (stateTexture.Height - y - 1) * stateTexture.Width]);
+					Color textureColor = textureColors[x + (stateTexture.Height - y - 1) * stateTexture.Width];
+					System.Drawing.Color convertedColor = System.Drawing.Color.FromArgb(textureColor.A, textureColor.R, textureColor.G, textureColor.B);
+					indexedPng.SetPixel(x, y, convertedColor);
 				}
 			}
 
-			MemoryStream stream = new MemoryStream();
 			indexedPng.ConvertColorDepth(FREE_IMAGE_COLOR_DEPTH.FICD_08_BPP);
+
+			ApplyPalette(indexedPng, palette);
+
+			MemoryStream stream = new MemoryStream();
 			indexedPng.Save(stream, FREE_IMAGE_FORMAT.FIF_PNG, FREE_IMAGE_SAVE_FLAGS.PNG_Z_BEST_COMPRESSION);
 			return stream.ToArray();
+		}
+
+		private static void ApplyPalette(FreeImageBitmap indexedPng, Palette palette) {
+			List<int> transparentIndices = new List<int>();
+
+			for (int indexedPngPaletteIndex = 0; indexedPngPaletteIndex < palette.Colors.Count; indexedPngPaletteIndex++) {
+				RGBQUAD indexedPngPaletteColor = indexedPng.Palette.GetValue(indexedPngPaletteIndex);
+
+				for (int grayPaletteIndex = 0; grayPaletteIndex < GreyPalette.Count; grayPaletteIndex++) {
+					Color grayColor = GreyPalette[grayPaletteIndex];
+					if (
+						indexedPngPaletteColor.Color.R == grayColor.R &&
+						indexedPngPaletteColor.Color.G == grayColor.G &&
+						indexedPngPaletteColor.Color.B == grayColor.B
+					) {
+						indexedPngPaletteColor = new RGBQUAD(System.Drawing.Color.FromArgb(
+							255,
+							palette.Colors[grayPaletteIndex].ToColor().R,
+							palette.Colors[grayPaletteIndex].ToColor().G,
+							palette.Colors[grayPaletteIndex].ToColor().B
+						));
+						indexedPng.Palette.SetValue(indexedPngPaletteColor, indexedPngPaletteIndex);
+						if (palette.Colors[grayPaletteIndex].ToColor().A == 0) {
+							transparentIndices.Add(indexedPngPaletteIndex);
+						}
+					}
+				}
+			}
+
+			byte[] transparencyTable = new byte[256];
+
+			for (int i = 0; i < transparencyTable.Length; i++) {
+				transparencyTable[i] = 255;
+			}
+
+			foreach (int transparentIndex in transparentIndices) {
+				transparencyTable[transparentIndex] = 0;
+			}
+
+			indexedPng.TransparencyTable = transparencyTable;
 		}
 
 		private static Vector3 ConvertAndScaleVector3(Microsoft.Xna.Framework.Vector3 vector3) {
