@@ -223,6 +223,34 @@ namespace GaneshaDx.UserInterface.Input {
 						}
 					}
 				}
+
+				if (!AppInput.ControlHeld && AppInput.ShiftHeld && !AppInput.AltHeld) {
+					if (AppInput.KeyJustPressed(Keys.F)) {
+						if (Gui.Widget == WidgetSelectionMode.PolygonEdgeTranslate) {
+							TransformWidget.SelectNextEdge(AppInput.ShiftHeld);
+						} else if (Gui.Widget == WidgetSelectionMode.PolygonVertexTranslate) {
+							TransformWidget.SelectNextVertex(AppInput.ShiftHeld);
+						} else if (Gui.Widget == WidgetSelectionMode.PolygonRotate &&
+						           Selection.SelectedPolygons.Count > 0
+						) {
+							if (!RotationWidget.AnchoredToVertex) {
+								RotationWidget.AnchoredToVertex = true;
+								RotationWidget.AnchoredVertex = 0;
+							} else {
+								RotationWidget.AnchoredVertex++;
+
+								int totalVerts = Selection.SelectedPolygons[0].IsQuad
+									? 4
+									: 3;
+
+								if (RotationWidget.AnchoredVertex > totalVerts - 1) {
+									RotationWidget.AnchoredToVertex = false;
+									RotationWidget.AnchoredVertex = 0;
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 	}
