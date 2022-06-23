@@ -24,7 +24,7 @@ namespace GaneshaDx.Common {
 			using (StreamWriter writer = new StreamWriter(stream, Encoding.Default)) {
 				writer.WriteLine(JsonConvert.SerializeObject(Properties, Formatting.Indented));
 			}
-			
+
 			stream.Dispose();
 		}
 
@@ -55,6 +55,7 @@ namespace GaneshaDx.Common {
 			public bool RenderFftOrtho = false;
 			public bool HideHiddenPolysByFacing = true;
 			public bool ExpandCompassToTerrainLength = true;
+			public float AutoMapRatio = 0.679f;
 		}
 	}
 }

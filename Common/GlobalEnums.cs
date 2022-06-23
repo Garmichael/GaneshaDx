@@ -33,7 +33,8 @@
 	public enum Axis {
 		X,
 		Y,
-		Z
+		Z,
+		None
 	}
 	
 	public enum WidgetSelectionMode {

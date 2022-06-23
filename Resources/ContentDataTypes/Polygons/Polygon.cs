@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using GaneshaDx.Common;
 using GaneshaDx.Environment;
 using GaneshaDx.Rendering;
@@ -195,6 +196,107 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 					UvCoordinates[1] = tempUv;
 				}
 			}
+		}
+
+		public void AutoMapUvs() {
+			Axis planarAxis = GetPlanarAxis();
+			float ratio = Configuration.Properties.AutoMapRatio;
+
+			if (UvCoordinates == null) {
+				return;
+			}
+
+			if (planarAxis == Axis.None) {
+				OverlayConsole.AddMessage("AutoMap only works on flat polys");
+			}
+			if (planarAxis == Axis.Y) {
+				UvCoordinates[1] = new Vector2(
+					UvCoordinates[0].X + (float) Math.Round((Vertices[0].Position.X - Vertices[1].Position.X) * ratio, MidpointRounding.AwayFromZero),
+					UvCoordinates[0].Y + (float) Math.Round((Vertices[0].Position.Z - Vertices[1].Position.Z) * ratio, MidpointRounding.AwayFromZero)
+				);
+				UvCoordinates[2] = new Vector2(
+					UvCoordinates[0].X + (float) Math.Round((Vertices[0].Position.X - Vertices[2].Position.X) * ratio, MidpointRounding.AwayFromZero),
+					UvCoordinates[0].Y + (float) Math.Round((Vertices[0].Position.Z - Vertices[2].Position.Z) * ratio, MidpointRounding.AwayFromZero)
+				);
+				if (IsQuad) {
+					UvCoordinates[3] = new Vector2(
+						UvCoordinates[0].X + (float) Math.Round((Vertices[0].Position.X - Vertices[3].Position.X) * ratio, MidpointRounding.AwayFromZero),
+						UvCoordinates[0].Y + (float) Math.Round((Vertices[0].Position.Z - Vertices[3].Position.Z) * ratio, MidpointRounding.AwayFromZero)
+					);
+				}
+			}
+
+			if (planarAxis == Axis.Z) {
+				UvCoordinates[1] = new Vector2(
+					UvCoordinates[0].X + (float) Math.Round((Vertices[0].Position.X - Vertices[1].Position.X) * ratio, MidpointRounding.AwayFromZero),
+					UvCoordinates[0].Y + (float) Math.Round((Vertices[0].Position.Y - Vertices[1].Position.Y) * ratio, MidpointRounding.AwayFromZero)
+				);
+				UvCoordinates[2] = new Vector2(
+					UvCoordinates[0].X + (float) Math.Round((Vertices[0].Position.X - Vertices[2].Position.X) * ratio, MidpointRounding.AwayFromZero),
+					UvCoordinates[0].Y + (float) Math.Round((Vertices[0].Position.Y - Vertices[2].Position.Y) * ratio, MidpointRounding.AwayFromZero)
+				);
+				if (IsQuad) {
+					UvCoordinates[3] = new Vector2(
+						UvCoordinates[0].X + (float) Math.Round((Vertices[0].Position.X - Vertices[3].Position.X) * ratio, MidpointRounding.AwayFromZero),
+						UvCoordinates[0].Y + (float) Math.Round((Vertices[0].Position.Y - Vertices[3].Position.Y) * ratio, MidpointRounding.AwayFromZero)
+					);
+				}
+			}
+
+			if (planarAxis == Axis.X) {
+				UvCoordinates[1] = new Vector2(
+					UvCoordinates[0].X + (float) Math.Round((Vertices[0].Position.Z - Vertices[1].Position.Z) * ratio, MidpointRounding.AwayFromZero),
+					UvCoordinates[0].Y + (float) Math.Round((Vertices[0].Position.Y - Vertices[1].Position.Y) * ratio, MidpointRounding.AwayFromZero)
+				);
+				UvCoordinates[2] = new Vector2(
+					UvCoordinates[0].X + (float) Math.Round((Vertices[0].Position.Z - Vertices[2].Position.Z) * ratio, MidpointRounding.AwayFromZero),
+					UvCoordinates[0].Y + (float) Math.Round((Vertices[0].Position.Y - Vertices[2].Position.Y) * ratio, MidpointRounding.AwayFromZero)
+				);
+				if (IsQuad) {
+					UvCoordinates[3] = new Vector2(
+						UvCoordinates[0].X + (float) Math.Round((Vertices[0].Position.Z - Vertices[3].Position.Z) * ratio, MidpointRounding.AwayFromZero),
+						UvCoordinates[0].Y + (float) Math.Round((Vertices[0].Position.Y - Vertices[3].Position.Y) * ratio, MidpointRounding.AwayFromZero)
+					);
+				}
+			}
+		}
+
+		private Axis GetPlanarAxis() {
+			if (IsQuad &&
+			    (int) Vertices[0].Position.Y == (int) Vertices[1].Position.Y &&
+			    (int) Vertices[1].Position.Y == (int) Vertices[2].Position.Y &&
+			    (int) Vertices[2].Position.Y == (int) Vertices[3].Position.Y ||
+			    !IsQuad &&
+			    (int) Vertices[0].Position.Y == (int) Vertices[1].Position.Y &&
+			    (int) Vertices[1].Position.Y == (int) Vertices[2].Position.Y
+			) {
+				return Axis.Y;
+			}
+
+
+			if (IsQuad &&
+			    (int) Vertices[0].Position.X == (int) Vertices[1].Position.X &&
+			    (int) Vertices[1].Position.X == (int) Vertices[2].Position.X &&
+			    (int) Vertices[2].Position.X == (int) Vertices[3].Position.X ||
+			    !IsQuad &&
+			    (int) Vertices[0].Position.X == (int) Vertices[1].Position.X &&
+			    (int) Vertices[1].Position.X == (int) Vertices[2].Position.X
+			) {
+				return Axis.X;
+			}
+
+			if (IsQuad &&
+			    (int) Vertices[0].Position.Z == (int) Vertices[1].Position.Z &&
+			    (int) Vertices[1].Position.Z == (int) Vertices[2].Position.Z &&
+			    (int) Vertices[2].Position.Z == (int) Vertices[3].Position.Z ||
+			    !IsQuad &&
+			    (int) Vertices[0].Position.Z == (int) Vertices[1].Position.Z &&
+			    (int) Vertices[1].Position.Z == (int) Vertices[2].Position.Z
+			) {
+				return Axis.Z;
+			}
+
+			return Axis.None;
 		}
 
 		public void GuessNormals() {

@@ -220,7 +220,29 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					RotateUvSelection(90);
 				}
 
+				GuiStyle.AddSpace();
 
+				if (ImGui.Button("AutoMap", new Vector2(buttonWidth, buttonHeight))) {
+					foreach (Polygon selectedPolygon in Selection.SelectedPolygons) {
+						selectedPolygon.AutoMapUvs();
+					}
+				}
+
+				ImGui.SameLine();
+				ImGui.SetNextItemWidth(buttonWidth);
+
+				float beforeRatio = Configuration.Properties.AutoMapRatio;
+				ImGui.InputFloat("##autoMapValue", ref Configuration.Properties.AutoMapRatio);
+				if (ImGui.IsItemHovered()) {
+					ImGui.BeginTooltip();
+					ImGui.Text("AutoMap Ratio");
+					ImGui.EndTooltip();
+				}
+
+				if (Math.Abs(beforeRatio - Configuration.Properties.AutoMapRatio) >= 0.001) {
+					Configuration.SaveConfiguration();
+				}
+				
 				GuiStyle.AddSpace();
 
 				if (ImGui.Button("Copy##CopyPolygonUv", new Vector2(buttonWidth, buttonHeight))) {
@@ -459,7 +481,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 							Selection.AddPolyToSelection(polygon);
 						}
 					}
-					
+
 					foreach (
 						Polygon polygon
 						in CurrentMapState.StateData.PolygonCollection[GuiPanelMeshSelector.SelectedMesh][PolygonType.TexturedQuad]
