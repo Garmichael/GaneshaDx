@@ -1,6 +1,8 @@
-﻿using GaneshaDx.Common;
+﻿using System.Collections.Generic;
+using GaneshaDx.Common;
 using GaneshaDx.Environment;
 using GaneshaDx.Resources;
+using GaneshaDx.Resources.ContentDataTypes.Polygons;
 using GaneshaDx.UserInterface.GuiDefinitions;
 using GaneshaDx.UserInterface.Widgets;
 using Microsoft.Xna.Framework.Input;
@@ -132,6 +134,15 @@ namespace GaneshaDx.UserInterface.Input {
 					if (AppInput.KeyJustPressed(Keys.D)) {
 						TransformWidget.SnapSnappingVertex();
 					}
+					
+					if (AppInput.KeyJustPressed(Keys.A)) {
+						bool canEditMeshAnimations = MapData.MapIsLoaded &&
+						                             CurrentMapState.StateData.MeshAnimationInstructions != null;
+						if (canEditMeshAnimations) {
+							Gui.ShowMeshAnimationsWindow = !Gui.ShowMeshAnimationsWindow;
+						}
+					}
+
 				}
 
 				if (AppInput.ControlHeld && !AppInput.ShiftHeld && !AppInput.AltHeld) {
@@ -188,11 +199,42 @@ namespace GaneshaDx.UserInterface.Input {
 					}
 
 					if (AppInput.KeyJustPressed(Keys.G)) {
-						bool canEditMeshAnimations = MapData.MapIsLoaded &&
-						                             CurrentMapState.StateData.MeshAnimationInstructions != null;
-						if (canEditMeshAnimations) {
-							Gui.ShowMeshAnimationsWindow = !Gui.ShowMeshAnimationsWindow;
+						if (Selection.SelectedPolygons.Count > 0) {
+							foreach (Polygon selectedPolygon in Selection.SelectedPolygons) {
+								selectedPolygon.GuessNormals();
+							}
+
+							Utilities.AverageNormals();
 						}
+					}
+					
+					if (AppInput.KeyJustPressed(Keys.L)) {
+						if (Selection.SelectedPolygons.Count > 0) {
+							foreach (Polygon selectedPolygon in Selection.SelectedPolygons) {
+								selectedPolygon.GuessNormals();
+							}
+						}
+					}
+
+					if (AppInput.KeyJustPressed(Keys.B)) {
+						List<Polygon> newPolys = new List<Polygon>();
+						foreach (Polygon selectedPolygon in Selection.SelectedPolygons) {
+							newPolys.AddRange(selectedPolygon.Break());
+						}
+
+						Selection.SelectedPolygons.Clear();
+
+						foreach (Polygon newPolygon in newPolys) {
+							Selection.AddPolyToSelection(newPolygon);
+						}
+					}
+
+					if (AppInput.KeyJustPressed(Keys.F)) {
+						foreach (Polygon selectedPolygon in Selection.SelectedPolygons) {
+							selectedPolygon.FlipNormals();
+						}
+
+						Utilities.AverageNormals();
 					}
 
 					if (AppInput.KeyJustPressed(Keys.H)) {

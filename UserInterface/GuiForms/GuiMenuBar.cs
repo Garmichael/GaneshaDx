@@ -1,7 +1,9 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using GaneshaDx.Common;
 using GaneshaDx.Environment;
 using GaneshaDx.Resources;
+using GaneshaDx.Resources.ContentDataTypes.Polygons;
 using GaneshaDx.UserInterface.GuiDefinitions;
 using GaneshaDx.UserInterface.Widgets;
 using ImGuiNET;
@@ -65,6 +67,46 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 					ImGui.Separator();
 
+
+					if (ImGui.MenuItem("Set Local Normals", "Ctrl + L", false, MapData.MapIsLoaded && Selection.SelectedPolygons.Count > 0)) {
+						foreach (Polygon selectedPolygon in Selection.SelectedPolygons) {
+							selectedPolygon.GuessNormals();
+						}
+					}
+
+					if (ImGui.MenuItem("Set Group Normals", "Ctrl + G", false, MapData.MapIsLoaded && Selection.SelectedPolygons.Count > 0)) {
+						foreach (Polygon selectedPolygon in Selection.SelectedPolygons) {
+							selectedPolygon.GuessNormals();
+						}
+
+						Utilities.AverageNormals();
+					}
+
+					ImGui.Separator();
+					
+					if (ImGui.MenuItem("Break Polygons", "Ctrl + B", false, MapData.MapIsLoaded && Selection.SelectedPolygons.Count > 0)) {
+						List<Polygon> newPolys = new List<Polygon>();
+						foreach (Polygon selectedPolygon in Selection.SelectedPolygons) {
+							newPolys.AddRange(selectedPolygon.Break());
+						}
+
+						Selection.SelectedPolygons.Clear();
+
+						foreach (Polygon newPolygon in newPolys) {
+							Selection.AddPolyToSelection(newPolygon);
+						}
+					}
+					
+					if (ImGui.MenuItem("Flip Normals", "Ctrl + F", false, MapData.MapIsLoaded && Selection.SelectedPolygons.Count > 0)) {
+						foreach (Polygon selectedPolygon in Selection.SelectedPolygons) {
+							selectedPolygon.FlipNormals();
+						}
+
+						Utilities.AverageNormals();
+					}
+					
+					ImGui.Separator();
+					
 					if (ImGui.MenuItem("Import Texture", "Ctrl + I", false, MapData.MapIsLoaded)) {
 						MyraGui.OpenImportTextureFileDialog();
 					}
@@ -96,20 +138,6 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 					if (ImGui.MenuItem("Export to GLB", "Ctrl + Shift + E", Gui.ShowExportGlbWindow, MapData.MapIsLoaded)) {
 						Gui.ShowExportGlbWindow = !Gui.ShowExportGlbWindow;
-					}
-
-					ImGui.Separator();
-
-					bool canEditMeshAnimations = MapData.MapIsLoaded &&
-					                             CurrentMapState.StateData.MeshAnimationInstructions != null;
-
-					if (ImGui.MenuItem(
-						"Edit Mesh Animations",
-						"Ctrl + G",
-						Gui.ShowMeshAnimationsWindow,
-						canEditMeshAnimations)
-					) {
-						Gui.ShowMeshAnimationsWindow = !Gui.ShowMeshAnimationsWindow;
 					}
 
 					ImGui.EndMenu();
@@ -264,6 +292,27 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					}
 
 					ImGui.Separator();
+
+					bool canEditMeshAnimations = MapData.MapIsLoaded &&
+					                             CurrentMapState.StateData.MeshAnimationInstructions != null;
+
+					if (ImGui.MenuItem(
+						"Edit Mesh Animations",
+						"A",
+						Gui.ShowMeshAnimationsWindow,
+						canEditMeshAnimations)
+					) {
+						Gui.ShowMeshAnimationsWindow = !Gui.ShowMeshAnimationsWindow;
+					}
+
+					if (ImGui.MenuItem(
+						"Manage Map Resources",
+						"M",
+						false,
+						MapData.MapIsLoaded)
+					) {
+						Gui.ToggleManageResourcesWindow();
+					}
 
 					ImGui.MenuItem("Show Raw Terrain Data", "Ctrl + T", ref Gui.ShowRawTerrainDataWindow, MapData.MapIsLoaded);
 
