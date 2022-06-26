@@ -266,12 +266,12 @@ namespace GaneshaDx.Common {
 					) {
 						indexedPngPaletteColor = new RGBQUAD(System.Drawing.Color.FromArgb(
 							255,
-							palette.Colors[grayPaletteIndex].ToColor().R,
-							palette.Colors[grayPaletteIndex].ToColor().G,
-							palette.Colors[grayPaletteIndex].ToColor().B
+							palette.Colors[grayPaletteIndex].ToColor(false).R,
+							palette.Colors[grayPaletteIndex].ToColor(false).G,
+							palette.Colors[grayPaletteIndex].ToColor(false).B
 						));
 						indexedPng.Palette.SetValue(indexedPngPaletteColor, indexedPngPaletteIndex);
-						if (palette.Colors[grayPaletteIndex].ToColor().A == 0) {
+						if (palette.Colors[grayPaletteIndex].ToColor(false).A == 0) {
 							transparentIndices.Add(indexedPngPaletteIndex);
 						}
 					}

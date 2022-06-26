@@ -497,7 +497,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				Palette palette = CurrentMapState.StateData.Palettes[paletteIndex];
 
 				for (int colorIndex = 0; colorIndex < totalColorsPerPalette; colorIndex++) {
-					Vector4 color = Utilities.ConvertVector4(palette.Colors[colorIndex].ToColor().ToVector4());
+					Vector4 color = Utilities.ConvertVector4(palette.Colors[colorIndex].ToColor(false).ToVector4());
 
 					if (
 						palette.Colors[colorIndex].IsTransparent &&
@@ -555,7 +555,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 			if (ImGui.BeginPopup("paletteColorPicker")) {
 				Palette palette = CurrentMapState.StateData.Palettes[_paletteToChange];
-				Vector4 color = Utilities.ConvertVector4(palette.Colors[_colorToChange].ToColor().ToVector4());
+				Vector4 color = Utilities.ConvertVector4(palette.Colors[_colorToChange].ToColor(false).ToVector4());
 
 				if (palette.Colors[_colorToChange].IsTransparent) {
 					color.W = 0;
@@ -702,7 +702,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				Palette palette = CurrentMapState.StateData.PaletteAnimationFrames[paletteIndex];
 
 				for (int colorIndex = 0; colorIndex < totalColorsPerPalette; colorIndex++) {
-					Vector4 color = Utilities.ConvertVector4(palette.Colors[colorIndex].ToColor().ToVector4());
+					Vector4 color = Utilities.ConvertVector4(palette.Colors[colorIndex].ToColor(false).ToVector4());
 
 					if (
 						palette.Colors[colorIndex].IsTransparent &&
@@ -761,7 +761,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 			if (ImGui.BeginPopup("paletteAnimationColorPicker")) {
 				Palette palette = CurrentMapState.StateData.PaletteAnimationFrames[_paletteToChange];
-				Vector4 color = Utilities.ConvertVector4(palette.Colors[_colorToChange].ToColor().ToVector4());
+				Vector4 color = Utilities.ConvertVector4(palette.Colors[_colorToChange].ToColor(false).ToVector4());
 
 				if (palette.Colors[_colorToChange].IsTransparent) {
 					color.W = 0;

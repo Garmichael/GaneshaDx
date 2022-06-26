@@ -11,7 +11,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.Palettes {
 				Vector4[] paletteColors = new Vector4[Colors.Count];
 
 				for (int colorIndex = 0; colorIndex < Colors.Count; colorIndex++) {
-					paletteColors[colorIndex] = Colors[colorIndex].ToColor().ToVector4();
+					paletteColors[colorIndex] = Colors[colorIndex].ToColor(true).ToVector4();
 				}
 
 				return paletteColors;

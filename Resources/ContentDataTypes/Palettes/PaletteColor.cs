@@ -28,14 +28,14 @@ namespace GaneshaDx.Resources.ContentDataTypes.Palettes {
 			IsTransparent = color.A < 255;
 		}
 
-		public Color ToColor() {
+		public Color ToColor(bool obeySemiTransparentConfig) {
 			const double ratio = 255f / 31f;
 			int red = (int) Math.Round(Red * ratio);
 			int green = (int) Math.Round(Green * ratio);
 			int blue = (int) Math.Round(Blue * ratio);
 
 			return IsTransparent && red == 0 && green == 0 && blue == 0
-				? Configuration.Properties.RenderAlphaAsSemiTransparent
+				? Configuration.Properties.RenderAlphaAsSemiTransparent && obeySemiTransparentConfig
 					? new Color(128, 128, 128, 32)
 					: new Color(0, 0, 0, 0)
 				: new Color(red, green, blue, 255);
