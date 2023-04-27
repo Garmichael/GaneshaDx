@@ -49,6 +49,7 @@ namespace GaneshaDx.Resources.ContentDataTypes {
 		private MeshResourceData _terrainSource;
 		private MeshResourceData _paletteSource;
 		private MeshResourceData _textureAnimationSource;
+		private MeshResourceData _animatedPaletteFramesSource;
 
 		public Texture2D Texture;
 
@@ -98,10 +99,10 @@ namespace GaneshaDx.Resources.ContentDataTypes {
 		}
 
 		public List<Palette> PaletteAnimationFrames {
-			get => _textureAnimationSource?.PaletteAnimationFrames;
+			get => _animatedPaletteFramesSource?.PaletteAnimationFrames;
 			set {
-				if (_textureAnimationSource != null) {
-					_textureAnimationSource.PaletteAnimationFrames = value;
+				if (_animatedPaletteFramesSource != null) {
+					_animatedPaletteFramesSource.PaletteAnimationFrames = value;
 				}
 			}
 		}
@@ -243,6 +244,25 @@ namespace GaneshaDx.Resources.ContentDataTypes {
 					MeshResourceData resourceData = (MeshResourceData) mapResource.ResourceData;
 					if (resourceData.HasTextureAnimations) {
 						_textureAnimationSource = resourceData;
+						break;
+					}
+				}
+			}
+
+			// Texture Animation Source
+			foreach (MapResource mapResource in stateMeshResources) {
+				MeshResourceData resourceData = (MeshResourceData) mapResource.ResourceData;
+				if (resourceData.HasPaletteAnimationFrames) {
+					_animatedPaletteFramesSource = resourceData;
+					break;
+				}
+			}
+
+			if (_animatedPaletteFramesSource == null) {
+				foreach (MapResource mapResource in initialMeshResources) {
+					MeshResourceData resourceData = (MeshResourceData) mapResource.ResourceData;
+					if (resourceData.HasPaletteAnimationFrames) {
+						_animatedPaletteFramesSource = resourceData;
 						break;
 					}
 				}
