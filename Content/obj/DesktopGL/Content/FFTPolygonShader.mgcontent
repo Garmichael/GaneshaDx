@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>C:/Users/Garmy/Documents/GaneshaDx/Content/FFTPolygonShader.fx</SourceFile>
-  <SourceTime>2021-07-07T12:06:43.5514734-07:00</SourceTime>
-  <DestFile>C:/Users/Garmy/Documents/GaneshaDx/Content/bin/DesktopGL/Content/FFTPolygonShader.xnb</DestFile>
-  <DestTime>2021-07-07T12:06:50.7507987-07:00</DestTime>
+  <SourceFile>C:/Users/Garmy/Documents/WorkFiles/GaneshaDx/Content/FFTPolygonShader.fx</SourceFile>
+  <SourceTime>2024-02-15T11:22:57.5647301-08:00</SourceTime>
+  <DestFile>C:/Users/Garmy/Documents/WorkFiles/GaneshaDx/Content/bin/DesktopGL/Content/FFTPolygonShader.xnb</DestFile>
+  <DestTime>2024-02-15T11:25:56.2452999-08:00</DestTime>
   <Importer>EffectImporter</Importer>
-  <ImporterTime>2020-08-10T16:17:54-07:00</ImporterTime>
+  <ImporterTime>2020-08-10T09:17:54-07:00</ImporterTime>
   <Processor>EffectProcessor</Processor>
-  <ProcessorTime>2020-08-10T16:17:54-07:00</ProcessorTime>
+  <ProcessorTime>2020-08-10T09:17:54-07:00</ProcessorTime>
   <Parameters>
     <Key>DebugMode</Key>
     <Value>Auto</Value>
