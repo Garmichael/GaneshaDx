@@ -25,8 +25,15 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				RenderConversionOptions();
 				RenderTerrainValues();
 				RenderInvisibilityAngles();
+				if (Configuration.Properties.ShowUnknownValues) {
+					RenderUnknownValues();
+				}
 			}
 
+			if (Configuration.Properties.ShowUnknownValues) {
+				RenderUnknownPolygonBlockData();
+			}
+			
 			RenderRenderOptions();
 		}
 
@@ -849,6 +856,127 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			}
 		}
 
+		private static void RenderUnknownValues() {
+			if (Selection.SelectedPolygons[0].IsTextured) {
+				return;
+			}
+
+			GuiStyle.SetNewUiToDefaultStyle();
+			GuiStyle.SetElementStyle(ElementStyle.Header);
+
+			if (ImGui.CollapsingHeader("Unknown Values", ImGuiTreeNodeFlags.DefaultOpen)) {
+				Polygon polygon = Selection.SelectedPolygons[0];
+
+				GuiStyle.SetNewUiToDefaultStyle();
+				ImGui.Indent();
+				ImGui.Columns(2, "UnknownValuesColumns", false);
+				ImGui.SetColumnWidth(0, GuiStyle.LabelWidth);
+				ImGui.SetColumnWidth(1, GuiStyle.WidgetWidth + 10);
+
+				GuiStyle.SetNewUiToDefaultStyle();
+
+				int unknownBlockA = polygon.UnknownUntexturedValueA;
+				int unknownBlockB = polygon.UnknownUntexturedValueB;
+				int unknownBlockC = polygon.UnknownUntexturedValueC;
+				int unknownBlockD = polygon.UnknownUntexturedValueD;
+
+				int beforeUnknownBlockA = polygon.UnknownUntexturedValueA;
+				int beforeUnknownBlockB = polygon.UnknownUntexturedValueB;
+				int beforeUnknownBlockC = polygon.UnknownUntexturedValueC;
+				int beforeUnknownBlockD = polygon.UnknownUntexturedValueD;
+
+				ImGui.Text("Unknown Value A");
+				ImGui.NextColumn();
+				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+				ImGui.InputInt("##UnknownA", ref unknownBlockA, 1);
+				ImGui.NextColumn();
+				
+				ImGui.Text("Unknown Value B");
+				ImGui.NextColumn();
+				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+				ImGui.InputInt("##UnknownB", ref unknownBlockB, 1);
+				ImGui.NextColumn();
+				
+				ImGui.Text("Unknown Value C");
+				ImGui.NextColumn();
+				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+				ImGui.InputInt("##UnknownC", ref unknownBlockC, 1);
+				ImGui.NextColumn();
+				
+				ImGui.Text("Unknown Value D");
+				ImGui.NextColumn();
+				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+				ImGui.InputInt("##UnknownD", ref unknownBlockD, 1);
+				ImGui.NextColumn();
+
+				unknownBlockA = Utilities.Clamp(unknownBlockA, 0, 255);
+				unknownBlockB = Utilities.Clamp(unknownBlockB, 0, 255);
+				unknownBlockC = Utilities.Clamp(unknownBlockC, 0, 255);
+				unknownBlockD = Utilities.Clamp(unknownBlockD, 0, 255);
+
+				if (unknownBlockA != beforeUnknownBlockA) {
+					foreach (Polygon selectedPolygon in Selection.SelectedPolygons) {
+						selectedPolygon.UnknownUntexturedValueA = unknownBlockA;
+					}
+				}
+				if (unknownBlockB != beforeUnknownBlockB) {
+					foreach (Polygon selectedPolygon in Selection.SelectedPolygons) {
+						selectedPolygon.UnknownUntexturedValueB = unknownBlockB;
+					}
+				}
+				if (unknownBlockC != beforeUnknownBlockC) {
+					foreach (Polygon selectedPolygon in Selection.SelectedPolygons) {
+						selectedPolygon.UnknownUntexturedValueC = unknownBlockC;
+					}
+				}
+				if (unknownBlockD != beforeUnknownBlockD) {
+					foreach (Polygon selectedPolygon in Selection.SelectedPolygons) {
+						selectedPolygon.UnknownUntexturedValueD = unknownBlockD;
+					}
+				}
+
+
+				ImGui.Columns(1);
+				ImGui.Unindent();
+				GuiStyle.AddSpace();
+			}
+		}
+		
+		private static void RenderUnknownPolygonBlockData() {
+			GuiStyle.SetNewUiToDefaultStyle();
+			GuiStyle.SetElementStyle(ElementStyle.Header);
+
+			if (ImGui.CollapsingHeader("Unknown Polygon Block Data###unknownPolyDataTab", ImGuiTreeNodeFlags.DefaultOpen)) {
+				GuiStyle.SetNewUiToDefaultStyle();
+				ImGui.Indent();
+				ImGui.Columns(2, "RenderUnknownPolygonBlockDataTab", false);
+				ImGui.SetColumnWidth(0, GuiStyle.LabelWidth);
+				ImGui.SetColumnWidth(1, GuiStyle.WidgetWidth + 10);
+				
+				GuiStyle.SetNewUiToDefaultStyle();
+				
+				ImGui.Text("Has Post-Poly Padding");
+				ImGui.NextColumn();
+				bool usesEndOfPolygonPadding = CurrentMapState.StateData.UsesEndOfPolygonPadding[GuiPanelMeshSelector.SelectedMesh];
+				ImGui.Checkbox("##UsesPostPolygonPadding", ref usesEndOfPolygonPadding);
+				CurrentMapState.StateData.UsesEndOfPolygonPadding[GuiPanelMeshSelector.SelectedMesh] = usesEndOfPolygonPadding;
+				ImGui.NextColumn();
+				
+				ImGui.Text("Post-Poly Bytes");
+				ImGui.NextColumn();
+				int postPolyByteA = CurrentMapState.StateData.EndOfPolygonPadding[GuiPanelMeshSelector.SelectedMesh][0];
+				int postPolyByteB = CurrentMapState.StateData.EndOfPolygonPadding[GuiPanelMeshSelector.SelectedMesh][1];
+				ImGui.InputInt("##PolyPolyByteA", ref postPolyByteA);
+				ImGui.InputInt("##PolyPolyByteA", ref postPolyByteB);
+				ImGui.NextColumn();
+				
+				ImGui.Columns(1);
+				ImGui.Unindent();
+			}
+			
+			GuiStyle.AddSpace();
+		}
+		
 		private static void RenderRenderOptions() {
 			GuiStyle.SetNewUiToDefaultStyle();
 			GuiStyle.SetElementStyle(ElementStyle.Header);

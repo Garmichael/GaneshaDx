@@ -30,6 +30,7 @@ namespace GaneshaDx.Common {
 
 		public class ConfigurationProperties {
 			public bool ShowFps = true;
+			public bool ShowUnknownValues = false;
 			public string LoadFolder = @"C:\";
 			public float PanningSensitivity = 1f;
 			public float RotationSensitivity = 1f;
@@ -49,7 +50,6 @@ namespace GaneshaDx.Common {
 			public bool RenderPolygonsInLightingMode = false;
 			public bool IsolateMeshes = false;
 			public bool SwapCameraControls = false;
-			public bool AddExtraBytes = false;
 			public bool AutoSaveEnabled = true;
 			public int AutoSaveDuration = 10;
 			public bool RenderFftOrtho = false;

@@ -36,6 +36,16 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 
 		public bool IsHovered => Selection.HoveredPolygons.Count > 0 && Selection.HoveredPolygons[0] == this;
 
+		public int UnknownTextureValue3;
+		public int UnknownTextureValue6A;
+		public int UnknownTextureValue6B;
+		public int UnknownTextureValue7;
+
+		public int UnknownUntexturedValueA;
+		public int UnknownUntexturedValueB;
+		public int UnknownUntexturedValueC;
+		public int UnknownUntexturedValueD;
+		
 		public Vector3 AveragePoint {
 			get {
 				List<Vector3> adjustedVerts = new List<Vector3>();

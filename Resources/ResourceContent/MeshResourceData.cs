@@ -65,16 +65,28 @@ namespace GaneshaDx.Resources.ResourceContent {
 		public Color BackgroundBottomColor;
 		public Color AmbientLightColor;
 
-		private readonly Dictionary<MeshType, List<byte>> _unknownChunks = new Dictionary<MeshType, List<byte>> {
-			{MeshType.PrimaryMesh, new List<byte>()},
-			{MeshType.AnimatedMesh1, new List<byte>()},
-			{MeshType.AnimatedMesh2, new List<byte>()},
-			{MeshType.AnimatedMesh3, new List<byte>()},
-			{MeshType.AnimatedMesh4, new List<byte>()},
-			{MeshType.AnimatedMesh5, new List<byte>()},
-			{MeshType.AnimatedMesh6, new List<byte>()},
-			{MeshType.AnimatedMesh7, new List<byte>()},
-			{MeshType.AnimatedMesh8, new List<byte>()}
+		public readonly Dictionary<MeshType, bool> UsesEndOfPolygonPadding = new Dictionary<MeshType, bool> {
+			{ MeshType.PrimaryMesh, false },
+			{ MeshType.AnimatedMesh1, false },
+			{ MeshType.AnimatedMesh2, false },
+			{ MeshType.AnimatedMesh3, false },
+			{ MeshType.AnimatedMesh4, false },
+			{ MeshType.AnimatedMesh5, false },
+			{ MeshType.AnimatedMesh6, false },
+			{ MeshType.AnimatedMesh7, false },
+			{ MeshType.AnimatedMesh8, false }
+		};
+
+		public readonly Dictionary<MeshType, List<byte>> EndOfPolygonPadding = new Dictionary<MeshType, List<byte>> {
+			{ MeshType.PrimaryMesh, new List<byte>() },
+			{ MeshType.AnimatedMesh1, new List<byte>() },
+			{ MeshType.AnimatedMesh2, new List<byte>() },
+			{ MeshType.AnimatedMesh3, new List<byte>() },
+			{ MeshType.AnimatedMesh4, new List<byte>() },
+			{ MeshType.AnimatedMesh5, new List<byte>() },
+			{ MeshType.AnimatedMesh6, new List<byte>() },
+			{ MeshType.AnimatedMesh7, new List<byte>() },
+			{ MeshType.AnimatedMesh8, new List<byte>() }
 		};
 
 		public List<Palette> Palettes = new List<Palette>();
@@ -177,8 +189,9 @@ namespace GaneshaDx.Resources.ResourceContent {
 				ProcessMeshPositionData(meshType, pointer);
 				ProcessMeshNormalData(meshType);
 				ProcessMeshTextureData(meshType);
-				ProcessMeshUnknownChunk(meshType);
+				ProcessUnknownPolygonData(meshType);
 				ProcessTerrainBinding(meshType);
+				ProcessUnknownPostPolygonData(meshType);
 			}
 		}
 
@@ -292,7 +305,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 		}
 
 		private void ProcessMeshPositionDataPerPoly(int totalCount, List<Polygon> polyContainer, int totalVerts) {
-			List<Color> vertexColors = new List<Color> {Color.Red, Color.Green, Color.Blue, Color.Yellow};
+			List<Color> vertexColors = new List<Color> { Color.Red, Color.Green, Color.Blue, Color.Yellow };
 
 			for (int index = 0; index < totalCount; index++) {
 				polyContainer[index].Vertices = new List<Vertex>();
@@ -390,6 +403,9 @@ namespace GaneshaDx.Resources.ResourceContent {
 				int vertexDu = _currentByteIndex + 10;
 				int vertexDv = _currentByteIndex + 11;
 
+				polyContainer[index].UnknownTextureValue3 = RawData[_currentByteIndex + 3];
+				polyContainer[index].UnknownTextureValue7 = RawData[_currentByteIndex + 7];
+
 				polyContainer[index].UvCoordinates = new List<Vector2> {
 					new Vector2(RawData[vertexAu], RawData[vertexAv]),
 					new Vector2(RawData[vertexBu], RawData[vertexBv]),
@@ -407,6 +423,8 @@ namespace GaneshaDx.Resources.ResourceContent {
 				int texturePageId = Utilities.GetIntFromBinary(texturePageBits.Substring(texturePageBits.Length - 2));
 				polyContainer[index].TexturePage = texturePageId;
 
+				polyContainer[index].UnknownTextureValue6A = Utilities.GetIntFromBinary(texturePageBits.Substring(0, 4));
+				polyContainer[index].UnknownTextureValue6B = Utilities.GetIntFromBinary(texturePageBits.Substring(4, 2));
 				_currentByteIndex += 10;
 
 				if (totalVerts == 4) {
@@ -416,12 +434,23 @@ namespace GaneshaDx.Resources.ResourceContent {
 			}
 		}
 
-		private void ProcessMeshUnknownChunk(MeshType meshType) {
-			int totalBytes = 4 * _unTexturedQuadCount[meshType] + 4 * _unTexturedTriangleCount[meshType];
-			for (int index = 0; index < totalBytes; index++) {
-				_unknownChunks[meshType].Add(RawData[_currentByteIndex]);
-				_currentByteIndex++;
+		private void ProcessUnknownPolygonData(MeshType meshType) {
+			for (int index = 0; index < _unTexturedTriangleCount[meshType]; index++) {
+				PolygonCollection[meshType][PolygonType.UntexturedTriangle][index].UnknownUntexturedValueA = RawData[_currentByteIndex];
+				PolygonCollection[meshType][PolygonType.UntexturedTriangle][index].UnknownUntexturedValueB = RawData[_currentByteIndex + 1];
+				PolygonCollection[meshType][PolygonType.UntexturedTriangle][index].UnknownUntexturedValueC = RawData[_currentByteIndex + 2];
+				PolygonCollection[meshType][PolygonType.UntexturedTriangle][index].UnknownUntexturedValueD = RawData[_currentByteIndex + 3];
+				_currentByteIndex += 4;
 			}
+			
+			for (int index = 0; index < _unTexturedQuadCount[meshType]; index++) {
+				PolygonCollection[meshType][PolygonType.UntexturedQuad][index].UnknownUntexturedValueA = RawData[_currentByteIndex];
+				PolygonCollection[meshType][PolygonType.UntexturedQuad][index].UnknownUntexturedValueB = RawData[_currentByteIndex + 1];
+				PolygonCollection[meshType][PolygonType.UntexturedQuad][index].UnknownUntexturedValueC = RawData[_currentByteIndex + 2];
+				PolygonCollection[meshType][PolygonType.UntexturedQuad][index].UnknownUntexturedValueD = RawData[_currentByteIndex + 3];
+				_currentByteIndex += 4;
+			}
+			
 		}
 
 		private void ProcessTerrainBinding(MeshType meshType) {
@@ -443,6 +472,25 @@ namespace GaneshaDx.Resources.ResourceContent {
 				polyContainer[index].TerrainX = RawData[_currentByteIndex + 1];
 				polyContainer[index].TerrainLevel = Utilities.GetIntFromBinary(bits.Substring(bits.Length - 1));
 				_currentByteIndex += 2;
+			}
+		}
+
+		private void ProcessUnknownPostPolygonData(MeshType meshType) {
+			int nextStartBlock = Utilities.GetInt32FromLittleEndian(
+				RawData[TexturePalettePointer],
+				RawData[TexturePalettePointer + 1],
+				RawData[TexturePalettePointer + 2],
+				RawData[TexturePalettePointer + 3]
+			);
+
+			if (_currentByteIndex < nextStartBlock) {
+				UsesEndOfPolygonPadding[meshType] = true;
+				EndOfPolygonPadding[meshType] = new List<byte> {
+					RawData[_currentByteIndex],
+					RawData[_currentByteIndex + 1]
+				};
+			} else {
+				EndOfPolygonPadding[meshType] = new List<byte> { 0, 0 };
 			}
 		}
 
@@ -923,11 +971,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 			BuildRawDataMeshTextureProperties(MeshType.PrimaryMesh);
 			BuildRawDataMeshUnknownData(MeshType.PrimaryMesh);
 			BuildRawDataMeshTerrainDefinitions(MeshType.PrimaryMesh);
-
-			if (Configuration.Properties.AddExtraBytes) {
-				RawData.Add(0);
-				RawData.Add(0);
-			}
+			BuildRawPostPolygonBlock(MeshType.PrimaryMesh);
 		}
 
 		private void BuildRawDataMeshHeader(MeshType meshType) {
@@ -1092,14 +1136,16 @@ namespace GaneshaDx.Resources.ResourceContent {
 				RawData.Add((byte) polygon.UvCoordinates[0].X);
 				RawData.Add((byte) polygon.UvCoordinates[0].Y);
 				RawData.Add((byte) polygon.PaletteId);
-				RawData.Add(120);
+				RawData.Add((byte) polygon.UnknownTextureValue3);
 				RawData.Add((byte) polygon.UvCoordinates[1].X);
 				RawData.Add((byte) polygon.UvCoordinates[1].Y);
-				string binary = Utilities.GetBinaryFromInt(0, 4) +
-				                Utilities.GetBinaryFromInt(3, 2) +
-				                Utilities.GetBinaryFromInt(polygon.TexturePage, 2);
+
+				string binary = Utilities.GetBinaryFromInt(polygon.UnknownTextureValue6A, 4) +
+					  Utilities.GetBinaryFromInt(polygon.UnknownTextureValue6B, 2) +
+					  Utilities.GetBinaryFromInt(polygon.TexturePage, 2);
 				RawData.Add((byte) Utilities.GetIntFromBinary(binary));
-				RawData.Add(0);
+
+				RawData.Add((byte) polygon.UnknownTextureValue7);
 				RawData.Add((byte) polygon.UvCoordinates[2].X);
 				RawData.Add((byte) polygon.UvCoordinates[2].Y);
 			}
@@ -1124,11 +1170,18 @@ namespace GaneshaDx.Resources.ResourceContent {
 		}
 
 		private void BuildRawDataMeshUnknownData(MeshType meshType) {
-			int totalBytes = PolygonCollection[meshType][PolygonType.UntexturedTriangle].Count * 4 +
-			                 PolygonCollection[meshType][PolygonType.UntexturedQuad].Count * 4;
+			for (int index = 0; index < PolygonCollection[meshType][PolygonType.UntexturedTriangle].Count; index++) {
+				RawData.Add((byte)PolygonCollection[meshType][PolygonType.UntexturedTriangle][index].UnknownUntexturedValueA);
+				RawData.Add((byte)PolygonCollection[meshType][PolygonType.UntexturedTriangle][index].UnknownUntexturedValueB);
+				RawData.Add((byte)PolygonCollection[meshType][PolygonType.UntexturedTriangle][index].UnknownUntexturedValueC);
+				RawData.Add((byte)PolygonCollection[meshType][PolygonType.UntexturedTriangle][index].UnknownUntexturedValueD);
+			}
 
-			for (int index = 0; index < totalBytes; index++) {
-				RawData.Add(0);
+			for (int index = 0; index < PolygonCollection[meshType][PolygonType.UntexturedQuad].Count; index++) {
+				RawData.Add((byte)PolygonCollection[meshType][PolygonType.UntexturedQuad][index].UnknownUntexturedValueA);
+				RawData.Add((byte)PolygonCollection[meshType][PolygonType.UntexturedQuad][index].UnknownUntexturedValueB);
+				RawData.Add((byte)PolygonCollection[meshType][PolygonType.UntexturedQuad][index].UnknownUntexturedValueC);
+				RawData.Add((byte)PolygonCollection[meshType][PolygonType.UntexturedQuad][index].UnknownUntexturedValueD);
 			}
 		}
 
@@ -1151,6 +1204,13 @@ namespace GaneshaDx.Resources.ResourceContent {
 			}
 		}
 
+		private void BuildRawPostPolygonBlock(MeshType meshType) {
+			if (UsesEndOfPolygonPadding[meshType]) {
+				RawData.Add(EndOfPolygonPadding[meshType][0]);
+				RawData.Add(EndOfPolygonPadding[meshType][1]);
+			}
+		}
+		
 		private void BuildRawDataTexturePalettes() {
 			if (!HasPalettes) {
 				return;
@@ -1179,12 +1239,6 @@ namespace GaneshaDx.Resources.ResourceContent {
 			BuildRawDataDirectionalLights();
 			BuildRawDataAmbientLight();
 			BuildRawDataBackgroundColors();
-
-			if (Configuration.Properties.AddExtraBytes) {
-				RawData.Add(0);
-				RawData.Add(0);
-				RawData.Add(0);
-			}
 		}
 
 		private void BuildRawDataDirectionalLights() {
@@ -1275,11 +1329,6 @@ namespace GaneshaDx.Resources.ResourceContent {
 			RawData.Add((byte) Terrain.SizeX);
 			RawData.Add((byte) Terrain.SizeZ);
 			RawData.AddRange(Terrain.GetRawData());
-
-			if (Configuration.Properties.AddExtraBytes) {
-				RawData.Add(0);
-				RawData.Add(0);
-			}
 		}
 
 		private void BuildRawDataTextureAnimations() {
@@ -1393,6 +1442,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 					BuildRawDataMeshTextureProperties(meshTypes[index]);
 					BuildRawDataMeshUnknownData(meshTypes[index]);
 					BuildRawDataMeshTerrainDefinitions(meshTypes[index]);
+					BuildRawPostPolygonBlock(meshTypes[index]);
 				}
 			}
 		}
@@ -1422,10 +1472,10 @@ namespace GaneshaDx.Resources.ResourceContent {
 			}
 
 			for (int i = 0;
-				i < totalTexturedTriangles -
-				PolygonCollection[MeshType.PrimaryMesh][PolygonType.TexturedTriangle].Count;
-				i++
-			) {
+			     i < totalTexturedTriangles -
+			     PolygonCollection[MeshType.PrimaryMesh][PolygonType.TexturedTriangle].Count;
+			     i++
+			    ) {
 				RawData.Add(0);
 				RawData.Add(128);
 			}
@@ -1435,10 +1485,10 @@ namespace GaneshaDx.Resources.ResourceContent {
 			}
 
 			for (int i = 0;
-				i < totalTexturedQuads -
-				PolygonCollection[MeshType.PrimaryMesh][PolygonType.TexturedQuad].Count;
-				i++
-			) {
+			     i < totalTexturedQuads -
+			     PolygonCollection[MeshType.PrimaryMesh][PolygonType.TexturedQuad].Count;
+			     i++
+			    ) {
 				RawData.Add(0);
 				RawData.Add(128);
 			}
@@ -1449,10 +1499,10 @@ namespace GaneshaDx.Resources.ResourceContent {
 			}
 
 			for (int i = 0;
-				i < totalUntexturedTriangles -
-				PolygonCollection[MeshType.PrimaryMesh][PolygonType.UntexturedTriangle].Count;
-				i++
-			) {
+			     i < totalUntexturedTriangles -
+			     PolygonCollection[MeshType.PrimaryMesh][PolygonType.UntexturedTriangle].Count;
+			     i++
+			    ) {
 				RawData.Add(0);
 				RawData.Add(128);
 			}
@@ -1462,10 +1512,10 @@ namespace GaneshaDx.Resources.ResourceContent {
 			}
 
 			for (int i = 0;
-				i < totalUntexturedQuads -
-				PolygonCollection[MeshType.PrimaryMesh][PolygonType.UntexturedQuad].Count;
-				i++
-			) {
+			     i < totalUntexturedQuads -
+			     PolygonCollection[MeshType.PrimaryMesh][PolygonType.UntexturedQuad].Count;
+			     i++
+			    ) {
 				RawData.Add(0);
 				RawData.Add(128);
 			}

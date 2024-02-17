@@ -173,6 +173,61 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					}
 				}
 
+				if (Configuration.Properties.ShowUnknownValues) {
+					GuiStyle.AddSpace();
+					ImGui.NextColumn();
+					ImGui.Text("Unknown3");
+					ImGui.NextColumn();
+					ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+					int unknown3 = Selection.SelectedPolygons[0].UnknownTextureValue3;
+					int beforeUnknown3 = unknown3;
+					ImGui.InputInt("##Unknown3Value", ref unknown3, 1);
+					if (beforeUnknown3 != unknown3) {
+						foreach (Polygon selectedPolygon in Selection.SelectedPolygons) {
+							selectedPolygon.UnknownTextureValue3 = unknown3;
+						}
+					}
+					
+					ImGui.NextColumn();
+					ImGui.Text("Unknown6a");
+					ImGui.NextColumn();
+					ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+					int unknown6A = Selection.SelectedPolygons[0].UnknownTextureValue6A;
+					int beforeUnknown6A = unknown6A;
+					ImGui.InputInt("##Unknown6AValue", ref unknown6A, 1);
+					if (beforeUnknown6A != unknown6A) {
+						foreach (Polygon selectedPolygon in Selection.SelectedPolygons) {
+							selectedPolygon.UnknownTextureValue6A = unknown6A;
+						}
+					}
+					
+					ImGui.NextColumn();
+					ImGui.Text("Unknown6b");
+					int unknown6B = Selection.SelectedPolygons[0].UnknownTextureValue6B;
+					int beforeUnknown6B = unknown6B;
+					ImGui.NextColumn();
+					ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+					ImGui.InputInt("##Unknown6BValue", ref unknown6B, 1);
+					if (beforeUnknown6B != unknown6B) {
+						foreach (Polygon selectedPolygon in Selection.SelectedPolygons) {
+							selectedPolygon.UnknownTextureValue6B = unknown6B;
+						}
+					}
+					
+					ImGui.NextColumn();
+					ImGui.Text("Unknown7");
+					int unknown7 = Selection.SelectedPolygons[0].UnknownTextureValue7;
+					int beforeUnknown7 = unknown7;
+					ImGui.NextColumn();
+					ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+					ImGui.InputInt("##Unknown7Value", ref unknown7, 1);
+					if (beforeUnknown7 != unknown7) {
+						foreach (Polygon selectedPolygon in Selection.SelectedPolygons) {
+							selectedPolygon.UnknownTextureValue7 = unknown7;
+						}
+					}
+				}
+
 				ImGui.Columns(1);
 
 				const int buttonWidth = 120;

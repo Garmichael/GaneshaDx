@@ -22,6 +22,10 @@ namespace GaneshaDx.Resources.ContentDataTypes {
 		public Dictionary<MeshType, Dictionary<PolygonType, List<Polygon>>> PolygonCollection =>
 			_primaryMeshSource?.PolygonCollection;
 
+		public Dictionary<MeshType, bool> UsesEndOfPolygonPadding => _primaryMeshSource?.UsesEndOfPolygonPadding;
+
+		public Dictionary<MeshType, List<byte>> EndOfPolygonPadding => _primaryMeshSource?.EndOfPolygonPadding;
+
 		public List<Polygon> PolygonCollectionBucket {
 			get {
 				List<Polygon> polygonCollectionBucket = new List<Polygon>();
@@ -125,14 +129,14 @@ namespace GaneshaDx.Resources.ContentDataTypes {
 			}
 		}
 
-		public bool HasAnimatedMesh1 => _animatedMesh1Source is {HasAnimatedMesh1: true};
-		public bool HasAnimatedMesh2 => _animatedMesh1Source is {HasAnimatedMesh2: true};
-		public bool HasAnimatedMesh3 => _animatedMesh1Source is {HasAnimatedMesh3: true};
-		public bool HasAnimatedMesh4 => _animatedMesh1Source is {HasAnimatedMesh4: true};
-		public bool HasAnimatedMesh5 => _animatedMesh1Source is {HasAnimatedMesh5: true};
-		public bool HasAnimatedMesh6 => _animatedMesh1Source is {HasAnimatedMesh6: true};
-		public bool HasAnimatedMesh7 => _animatedMesh1Source is {HasAnimatedMesh7: true};
-		public bool HasAnimatedMesh8 => _animatedMesh1Source is {HasAnimatedMesh8: true};
+		public bool HasAnimatedMesh1 => _animatedMesh1Source is { HasAnimatedMesh1: true };
+		public bool HasAnimatedMesh2 => _animatedMesh1Source is { HasAnimatedMesh2: true };
+		public bool HasAnimatedMesh3 => _animatedMesh1Source is { HasAnimatedMesh3: true };
+		public bool HasAnimatedMesh4 => _animatedMesh1Source is { HasAnimatedMesh4: true };
+		public bool HasAnimatedMesh5 => _animatedMesh1Source is { HasAnimatedMesh5: true };
+		public bool HasAnimatedMesh6 => _animatedMesh1Source is { HasAnimatedMesh6: true };
+		public bool HasAnimatedMesh7 => _animatedMesh1Source is { HasAnimatedMesh7: true };
+		public bool HasAnimatedMesh8 => _animatedMesh1Source is { HasAnimatedMesh8: true };
 
 		public Terrain Terrain {
 			get => _terrainSource?.Terrain;

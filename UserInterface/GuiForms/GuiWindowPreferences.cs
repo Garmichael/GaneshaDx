@@ -16,11 +16,14 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			                               ImGuiWindowFlags.AlwaysAutoResize |
 			                               ImGuiWindowFlags.NoCollapse;
 
+			
+			ImGui.SetNextWindowSize(new Vector2(300, 450));
+			
 			ImGui.Begin("Preferences", ref windowIsOpen, flags);
 			{
 				ImGui.PopFont();
 				ImGui.Columns(2, "PreferencesControls", false);
-				ImGui.SetColumnWidth(0, GuiStyle.LabelWidth + 10);
+				ImGui.SetColumnWidth(0, GuiStyle.LabelWidth + 30);
 				ImGui.SetColumnWidth(1, GuiStyle.WidgetWidth + 10);
 
 				ImGui.Text("Swap Camera Buttons");
@@ -108,8 +111,17 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
 				ImGui.Checkbox("###PreferencesShowFPS", ref Configuration.Properties.ShowFps);
+				GuiStyle.AddSpace();
+				ImGui.NextColumn();
+				
+				
+				ImGui.Text("Show/Save Unknown Values");
 				ImGui.NextColumn();
 
+				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+				ImGui.Checkbox("###PreferencesShowUnknownValues", ref Configuration.Properties.ShowUnknownValues);
+				ImGui.NextColumn();
+				
 				GuiStyle.AddSpace();
 				ImGui.Text("AutoSave");
 				ImGui.NextColumn();
@@ -131,7 +143,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 				GuiStyle.AddSpace();
 
-				const int saveButtonWidth = GuiStyle.LabelWidth + 10 + GuiStyle.WidgetWidth;
+				const int saveButtonWidth = GuiStyle.LabelWidth + 30 + GuiStyle.WidgetWidth;
 				const int saveButtonHeight = 20;
 				if (ImGui.Button("Save Preferences", new Vector2(saveButtonWidth, saveButtonHeight))) {
 					Configuration.SaveConfiguration();
