@@ -27,6 +27,12 @@ namespace GaneshaDx.Resources.ContentDataTypes.Terrains {
 		public bool RotatesSouthwestBottom;
 		public bool RotatesSoutheastBottom;
 		public bool RotatesNortheastBottom;
+		public int Unknown0A;
+		public int Unknown0B;
+		public int Unknown1;
+		public int Unknown5;
+		public int Unknown6;
+		
 
 		public Vector3 AveragePoint {
 			get {
@@ -184,9 +190,9 @@ namespace GaneshaDx.Resources.ContentDataTypes.Terrains {
 				}
 			}
 
-			string binary = "00" + Utilities.GetBinaryFromInt(surfaceTypeId, 6);
+			string binary = Unknown0A + Unknown0B + Utilities.GetBinaryFromInt(surfaceTypeId, 6);
 			rawData.Add((byte) Utilities.GetIntFromBinary(binary));
-			rawData.Add(0);
+			rawData.Add((byte) Unknown1);
 			rawData.Add((byte) Height);
 
 			binary = Utilities.GetBinaryFromInt(Depth, 3) +
@@ -203,9 +209,9 @@ namespace GaneshaDx.Resources.ContentDataTypes.Terrains {
 
 			rawData.Add((byte) slopeTypeId);
 
-			rawData.Add(0);
+			rawData.Add((byte) Unknown5);
 
-			binary = "00000000000000" +
+			binary = Utilities.GetBinaryFromInt(Unknown6).Substring(2) +
 			         (Impassable ? "1" : "0") +
 			         (Unselectable ? "1" : "0");
 			rawData.Add((byte) Utilities.GetIntFromBinary(binary));

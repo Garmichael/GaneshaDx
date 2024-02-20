@@ -227,6 +227,102 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 					ImGui.NextColumn();
 
+					if (Configuration.Properties.ShowUnknownValues) {
+						ImGui.Text("Unknown0A");
+						ImGui.NextColumn();
+						
+						int beforeUnknown0A = tiles[tileIndex].Unknown0A;
+						ImGui.InputInt("###Unknown0A" + tileIndex, ref tiles[tileIndex].Unknown0A, 1);
+						tiles[tileIndex].Unknown0A = Utilities.Min(tiles[tileIndex].Unknown0A, 0);
+						
+						if (beforeUnknown0A != tiles[tileIndex].Unknown0A) {
+							foreach (TerrainTile otherTerrainTile in Selection.SelectedTerrainTiles) {
+								if (otherTerrainTile != tiles[tileIndex] &&
+								    otherTerrainTile.Level == tiles[tileIndex].Level
+								   ) {
+									otherTerrainTile.Unknown0A = tiles[tileIndex].Unknown0A;
+								}
+							}
+						}
+						
+						ImGui.NextColumn();
+						
+						ImGui.Text("Unknown0B");
+						ImGui.NextColumn();
+						
+						int beforeUnknown0B = tiles[tileIndex].Unknown0B;
+						ImGui.InputInt("###Unknown0B" + tileIndex, ref tiles[tileIndex].Unknown0B, 1);
+						tiles[tileIndex].Unknown0B = Utilities.Min(tiles[tileIndex].Unknown0B, 0);
+						
+						if (beforeUnknown0B != tiles[tileIndex].Unknown0B) {
+							foreach (TerrainTile otherTerrainTile in Selection.SelectedTerrainTiles) {
+								if (otherTerrainTile != tiles[tileIndex] &&
+								    otherTerrainTile.Level == tiles[tileIndex].Level
+								   ) {
+									otherTerrainTile.Unknown0B = tiles[tileIndex].Unknown0B;
+								}
+							}
+						}
+						
+						ImGui.NextColumn();
+						
+						ImGui.Text("Unknown1");
+						ImGui.NextColumn();
+						
+						int beforeUnknown1 = tiles[tileIndex].Unknown1;
+						ImGui.InputInt("###Unknown1" + tileIndex, ref tiles[tileIndex].Unknown1, 1);
+						tiles[tileIndex].Unknown1 = Utilities.Min(tiles[tileIndex].Unknown1, 0);
+						
+						if (beforeUnknown0A != tiles[tileIndex].Unknown1) {
+							foreach (TerrainTile otherTerrainTile in Selection.SelectedTerrainTiles) {
+								if (otherTerrainTile != tiles[tileIndex] &&
+								    otherTerrainTile.Level == tiles[tileIndex].Level
+								   ) {
+									otherTerrainTile.Unknown1 = tiles[tileIndex].Unknown1;
+								}
+							}
+						}
+						
+						ImGui.NextColumn();
+						
+						ImGui.Text("Unknown5");
+						ImGui.NextColumn();
+						
+						int beforeUnknown5 = tiles[tileIndex].Unknown5;
+						ImGui.InputInt("###Unknown5" + tileIndex, ref tiles[tileIndex].Unknown5, 1);
+						tiles[tileIndex].Unknown5 = Utilities.Min(tiles[tileIndex].Unknown5, 0);
+						
+						if (beforeUnknown0A != tiles[tileIndex].Unknown5) {
+							foreach (TerrainTile otherTerrainTile in Selection.SelectedTerrainTiles) {
+								if (otherTerrainTile != tiles[tileIndex] &&
+								    otherTerrainTile.Level == tiles[tileIndex].Level
+								   ) {
+									otherTerrainTile.Unknown5 = tiles[tileIndex].Unknown5;
+								}
+							}
+						}
+						
+						ImGui.NextColumn();
+						
+						ImGui.Text("Unknown6");
+						ImGui.NextColumn();
+						
+						int beforeUnknown6 = tiles[tileIndex].Unknown6;
+						ImGui.InputInt("###Unknown6" + tileIndex, ref tiles[tileIndex].Unknown6, 1);
+						tiles[tileIndex].Unknown6 = Utilities.Min(tiles[tileIndex].Unknown6, 0);
+						
+						if (beforeUnknown0A != tiles[tileIndex].Unknown6) {
+							foreach (TerrainTile otherTerrainTile in Selection.SelectedTerrainTiles) {
+								if (otherTerrainTile != tiles[tileIndex] &&
+								    otherTerrainTile.Level == tiles[tileIndex].Level
+								   ) {
+									otherTerrainTile.Unknown6 = tiles[tileIndex].Unknown6;
+								}
+							}
+						}
+						
+						ImGui.NextColumn();
+					}
 
 					ImGui.Columns(1);
 

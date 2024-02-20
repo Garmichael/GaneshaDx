@@ -686,11 +686,17 @@ namespace GaneshaDx.Resources.ResourceContent {
 
 					for (int indexX = 0; indexX < width; indexX++) {
 						string binary = Utilities.GetBinaryFromInt(RawData[_currentByteIndex]);
+						
+						int unknown0A = Utilities.GetIntFromBinary(binary.Substring(0, 1));
+						int unknown0B = Utilities.GetIntFromBinary(binary.Substring(1, 1));
+						
 						int surfaceTypeId = Utilities.GetIntFromBinary(binary.Substring(2));
 						TerrainSurfaceType surfaceType = CommonLists.TerrainSurfaceTypes[surfaceTypeId];
 
+						int unknown1 = RawData[_currentByteIndex + 1];
+						
 						int height = RawData[_currentByteIndex + 2];
-
+						
 						binary = Utilities.GetBinaryFromInt(RawData[_currentByteIndex + 3]);
 						int depth = Utilities.GetIntFromBinary(binary.Substring(0, 3));
 						int slopeHeight = Utilities.GetIntFromBinary(binary.Substring(3));
@@ -701,7 +707,12 @@ namespace GaneshaDx.Resources.ResourceContent {
 								? CommonLists.TerrainSlopeTypes[RawData[_currentByteIndex + 4]]
 								: TerrainSlopeType.Flat;
 
+						int unknown5 = RawData[_currentByteIndex + 5];
+						
 						binary = Utilities.GetBinaryFromInt(RawData[_currentByteIndex + 6]);
+
+						int unknown6 = Utilities.GetIntFromBinary(binary.Substring(0,6));
+						
 						bool impassable = Utilities.GetIntFromBinary(binary.Substring(6, 1)) == 1;
 						bool unselectable = Utilities.GetIntFromBinary(binary.Substring(7, 1)) == 1;
 
@@ -735,6 +746,11 @@ namespace GaneshaDx.Resources.ResourceContent {
 							RotatesSouthwestBottom = rotatesSouthwestBottom,
 							RotatesSoutheastBottom = rotatesSoutheastBottom,
 							RotatesNortheastBottom = rotatesNortheastBottom,
+							Unknown0A = unknown0A,
+							Unknown0B = unknown0B, 
+							Unknown1 = unknown1, 
+							Unknown5 = unknown5, 
+							Unknown6 = unknown6
 						};
 
 						terrainTiles.Add(terrainTile);
