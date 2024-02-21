@@ -65,6 +65,9 @@ namespace GaneshaDx.Resources.ResourceContent {
 		public Color BackgroundBottomColor;
 		public Color AmbientLightColor;
 
+		public bool UsesEndOfBackgroundColorPadding;
+		public List<byte> EndOfBackgroundColorPadding = new List<byte> { 0, 0, 0 };
+		
 		public readonly Dictionary<MeshType, bool> UsesEndOfPolygonPadding = new Dictionary<MeshType, bool> {
 			{ MeshType.PrimaryMesh, false },
 			{ MeshType.AnimatedMesh1, false },
@@ -78,15 +81,15 @@ namespace GaneshaDx.Resources.ResourceContent {
 		};
 
 		public readonly Dictionary<MeshType, List<byte>> EndOfPolygonPadding = new Dictionary<MeshType, List<byte>> {
-			{ MeshType.PrimaryMesh, new List<byte>() },
-			{ MeshType.AnimatedMesh1, new List<byte>() },
-			{ MeshType.AnimatedMesh2, new List<byte>() },
-			{ MeshType.AnimatedMesh3, new List<byte>() },
-			{ MeshType.AnimatedMesh4, new List<byte>() },
-			{ MeshType.AnimatedMesh5, new List<byte>() },
-			{ MeshType.AnimatedMesh6, new List<byte>() },
-			{ MeshType.AnimatedMesh7, new List<byte>() },
-			{ MeshType.AnimatedMesh8, new List<byte>() }
+			{ MeshType.PrimaryMesh, new List<byte> { 0, 0 } },
+			{ MeshType.AnimatedMesh1, new List<byte> { 0, 0 } },
+			{ MeshType.AnimatedMesh2, new List<byte> { 0, 0 } },
+			{ MeshType.AnimatedMesh3, new List<byte> { 0, 0 } },
+			{ MeshType.AnimatedMesh4, new List<byte> { 0, 0 } },
+			{ MeshType.AnimatedMesh5, new List<byte> { 0, 0 } },
+			{ MeshType.AnimatedMesh6, new List<byte> { 0, 0 } },
+			{ MeshType.AnimatedMesh7, new List<byte> { 0, 0 } },
+			{ MeshType.AnimatedMesh8, new List<byte> { 0, 0 } }
 		};
 
 		public List<Palette> Palettes = new List<Palette>();
@@ -551,6 +554,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 			ProcessDirectionalLights();
 			ProcessAmbientLight();
 			ProcessBackgroundColors();
+			ProcessUnknownPostBackgroundColorsData();
 		}
 
 		private void ProcessDirectionalLights() {
@@ -656,8 +660,29 @@ namespace GaneshaDx.Resources.ResourceContent {
 
 			BackgroundTopColor = new Color(topR, topG, topB, 255);
 			BackgroundBottomColor = new Color(bottomR, bottomG, bottomB, 255);
+			_currentByteIndex += 6;
 		}
 
+		private void ProcessUnknownPostBackgroundColorsData() {
+			int nextStartBlock = Utilities.GetInt32FromLittleEndian(
+				RawData[TerrainPointer],
+				RawData[TerrainPointer + 1],
+				RawData[TerrainPointer + 2],
+				RawData[TerrainPointer + 3]
+			);
+
+			if (_currentByteIndex < nextStartBlock) {
+				UsesEndOfBackgroundColorPadding = true;
+				EndOfBackgroundColorPadding = new List<byte> {
+					RawData[_currentByteIndex],
+					RawData[_currentByteIndex + 1],
+					RawData[_currentByteIndex + 2]
+				};
+			} else {
+				EndOfBackgroundColorPadding = new List<byte> { 0, 0, 0 };
+			}
+		}
+		
 		private void ProcessTerrain() {
 			_currentByteIndex = Utilities.GetInt32FromLittleEndian(
 				RawData[TerrainPointer],
@@ -1255,6 +1280,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 			BuildRawDataDirectionalLights();
 			BuildRawDataAmbientLight();
 			BuildRawDataBackgroundColors();
+			BuildRawPostBackgroundBlock();
 		}
 
 		private void BuildRawDataDirectionalLights() {
@@ -1332,6 +1358,14 @@ namespace GaneshaDx.Resources.ResourceContent {
 			RawData.Add(BackgroundBottomColor.B);
 		}
 
+		private void BuildRawPostBackgroundBlock() {
+			if (UsesEndOfBackgroundColorPadding) {
+				RawData.Add(EndOfBackgroundColorPadding[0]);
+				RawData.Add(EndOfBackgroundColorPadding[1]);
+				RawData.Add(EndOfBackgroundColorPadding[1]);
+			}
+		}
+		
 		private void BuildRawDataTerrain() {
 			if (!HasTerrain) {
 				return;

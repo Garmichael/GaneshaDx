@@ -964,10 +964,16 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				
 				ImGui.Text("Post-Poly Bytes");
 				ImGui.NextColumn();
+				
 				int postPolyByteA = CurrentMapState.StateData.EndOfPolygonPadding[GuiPanelMeshSelector.SelectedMesh][0];
 				int postPolyByteB = CurrentMapState.StateData.EndOfPolygonPadding[GuiPanelMeshSelector.SelectedMesh][1];
+				
 				ImGui.InputInt("##PolyPolyByteA", ref postPolyByteA);
-				ImGui.InputInt("##PolyPolyByteA", ref postPolyByteB);
+				ImGui.InputInt("##PolyPolyByteB", ref postPolyByteB);
+				
+				CurrentMapState.StateData.EndOfPolygonPadding[GuiPanelMeshSelector.SelectedMesh][0] = (byte) postPolyByteA;
+				CurrentMapState.StateData.EndOfPolygonPadding[GuiPanelMeshSelector.SelectedMesh][1] = (byte) postPolyByteB;
+				
 				ImGui.NextColumn();
 				
 				ImGui.Columns(1);

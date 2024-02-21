@@ -18,6 +18,9 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			RenderCurrentStateSection();
 			RenderBackgroundColorsSection();
 			RenderLightingSection();
+			if (Configuration.Properties.ShowUnknownValues) {
+				RenderUnknownEndOfBackgroundData();
+			}
 			RenderStatsSection();
 		}
 
@@ -387,6 +390,47 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			}
 		}
 
+		private static void RenderUnknownEndOfBackgroundData() {
+			GuiStyle.SetNewUiToDefaultStyle();
+			GuiStyle.SetElementStyle(ElementStyle.Header);
+			
+			if (ImGui.CollapsingHeader("Unknown Data", ImGuiTreeNodeFlags.DefaultOpen)) {
+				GuiStyle.SetNewUiToDefaultStyle();
+				ImGui.Indent();
+				ImGui.Columns(2, "Unknown Data", false);
+				ImGui.SetColumnWidth(0, GuiStyle.LabelWidth);
+				ImGui.SetColumnWidth(1, GuiStyle.WidgetWidth + 10);
+				
+				ImGui.Text("Has Post-Background");
+				ImGui.Text("Padding");
+				ImGui.NextColumn();
+				bool usesEndOfBackgroundColorPadding = CurrentMapState.StateData.UsesEndOfBackgroundColorPadding;
+				ImGui.Checkbox("##UsesPostBackgroundPadding", ref usesEndOfBackgroundColorPadding);
+				CurrentMapState.StateData.UsesEndOfBackgroundColorPadding = usesEndOfBackgroundColorPadding;
+				ImGui.NextColumn();
+				
+				ImGui.Text("Post-Background Bytes");
+				ImGui.NextColumn();
+				int postPolyByteA = CurrentMapState.StateData.EndOfBackgroundColorPadding[0];
+				int postPolyByteB = CurrentMapState.StateData.EndOfBackgroundColorPadding[1];
+				int postPolyByteC = CurrentMapState.StateData.EndOfBackgroundColorPadding[2];
+				
+				ImGui.InputInt("##PostBackgroundByteA", ref postPolyByteA);
+				ImGui.InputInt("##PostBackgroundByteB", ref postPolyByteB);
+				ImGui.InputInt("##PostBackgroundByteC", ref postPolyByteC);
+
+				CurrentMapState.StateData.EndOfBackgroundColorPadding[0] = (byte) postPolyByteA;
+				CurrentMapState.StateData.EndOfBackgroundColorPadding[1] = (byte) postPolyByteB;
+				CurrentMapState.StateData.EndOfBackgroundColorPadding[2] = (byte) postPolyByteC;
+				
+				ImGui.NextColumn();
+				
+				ImGui.Columns(1);
+				ImGui.Unindent();
+				GuiStyle.AddSpace();
+			}
+		}
+		
 		private static void RenderStatsSection() {
 			const int valueColumnWidth = 30;
 			GuiStyle.SetNewUiToDefaultStyle();
