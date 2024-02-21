@@ -45,6 +45,8 @@ namespace GaneshaDx.Resources.ContentDataTypes {
 		}
 
 		public List<byte> EndOfTerrainPadding => _primaryMeshSource?.EndOfTerrainPadding;
+
+		public List<byte> UnknownRenderPropertiesData => _primaryMeshSource?.UnknownRenderPropertiesData;
 		
 		public List<Polygon> PolygonCollectionBucket {
 			get {

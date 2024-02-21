@@ -102,6 +102,8 @@ namespace GaneshaDx.Resources.ResourceContent {
 		public bool UsesEndOfTerrainPadding;
 		public List<byte> EndOfTerrainPadding = new List<byte> { 0, 0 };
 			
+		public List<byte> UnknownRenderPropertiesData;
+		
 		public MeshResourceData(List<byte> rawData) {
 			RawData = rawData;
 
@@ -941,7 +943,11 @@ namespace GaneshaDx.Resources.ResourceContent {
 			const int totalUntexturedTriangles = 64;
 			const int totalUntexturedQuads = 256;
 
-			_currentByteIndex += unknownDataLength;
+			UnknownRenderPropertiesData = new List<byte>();
+			for (int i = 0; i < unknownDataLength; i++) {
+				UnknownRenderPropertiesData.Add(RawData[_currentByteIndex]);
+				_currentByteIndex++;
+			}
 
 			List<Polygon> texturedTriangles = PolygonCollection[MeshType.PrimaryMesh][PolygonType.TexturedTriangle];
 			List<Polygon> texturedQuads = PolygonCollection[MeshType.PrimaryMesh][PolygonType.TexturedQuad];
@@ -1545,7 +1551,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 			const int totalUntexturedQuads = 256;
 
 			for (int i = 0; i < unknownDataLength; i++) {
-				RawData.Add(0);
+				RawData.Add(UnknownRenderPropertiesData[i]);
 			}
 
 			foreach (Polygon polygon in PolygonCollection[MeshType.PrimaryMesh][PolygonType.TexturedTriangle]) {

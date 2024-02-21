@@ -26,10 +26,15 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				RenderTerrainValues();
 				RenderInvisibilityAngles();
 				if (Configuration.Properties.ShowUnknownValues) {
-					RenderUnknownValues();
+					RenderUnknownUntexturedValues();
+					RenderUnknownRenderPropertiesValues();
 				}
 			}
 
+			if (Configuration.Properties.ShowUnknownValues) {
+				RenderUnknownRenderPropertiesHeader();
+			}
+			
 			RenderRenderOptions();
 		}
 
@@ -852,7 +857,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			}
 		}
 
-		private static void RenderUnknownValues() {
+		private static void RenderUnknownUntexturedValues() {
 			if (Selection.SelectedPolygons[0].IsTextured) {
 				return;
 			}
@@ -860,7 +865,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			GuiStyle.SetNewUiToDefaultStyle();
 			GuiStyle.SetElementStyle(ElementStyle.Header);
 
-			if (ImGui.CollapsingHeader("Unknown Values", ImGuiTreeNodeFlags.DefaultOpen)) {
+			if (ImGui.CollapsingHeader("Unknown Untextured Values", ImGuiTreeNodeFlags.DefaultOpen)) {
 				Polygon polygon = Selection.SelectedPolygons[0];
 
 				GuiStyle.SetNewUiToDefaultStyle();
@@ -937,7 +942,98 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				GuiStyle.AddSpace();
 			}
 		}
-		
+
+		private static void RenderUnknownRenderPropertiesValues() {
+			GuiStyle.SetNewUiToDefaultStyle();
+			GuiStyle.SetElementStyle(ElementStyle.Header);
+
+			if (ImGui.CollapsingHeader("Unknown Render Properties Values", ImGuiTreeNodeFlags.DefaultOpen)) {
+				Polygon polygon = Selection.SelectedPolygons[0];
+
+				GuiStyle.SetNewUiToDefaultStyle();
+				ImGui.Indent();
+				ImGui.Columns(2, "UnknownRenderPropertiesValuesColumns", false);
+				ImGui.SetColumnWidth(0, GuiStyle.LabelWidth);
+				ImGui.SetColumnWidth(1, GuiStyle.WidgetWidth + 10);
+
+				GuiStyle.SetNewUiToDefaultStyle();
+
+				bool unknown1 = polygon.RenderingProperties.Unknown1;
+				bool unknown14 = polygon.RenderingProperties.Unknown14;
+				bool unknown15 = polygon.RenderingProperties.Unknown15;
+
+				bool beforeUnknown1 = polygon.RenderingProperties.Unknown1;
+				bool beforeUnknown14 = polygon.RenderingProperties.Unknown14;
+				bool beforeUnknown15 = polygon.RenderingProperties.Unknown15;
+
+				ImGui.Text("Unknown1");
+				ImGui.NextColumn();
+				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+				ImGui.Checkbox("##UnknownRenderingProperty1", ref unknown1);
+				ImGui.NextColumn();
+				
+				ImGui.Text("Unknown14");
+				ImGui.NextColumn();
+				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+				ImGui.Checkbox("##UnknownRenderingProperty14", ref unknown14);
+				ImGui.NextColumn();
+				
+				ImGui.Text("Unknown15");
+				ImGui.NextColumn();
+				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+				ImGui.Checkbox("##UnknownRenderingProperty15", ref unknown15);
+				ImGui.NextColumn();
+
+				if (unknown1 != beforeUnknown1) {
+					foreach (Polygon selectedPolygon in Selection.SelectedPolygons) {
+						selectedPolygon.RenderingProperties.Unknown1 = unknown1;
+					}
+				}
+				if (unknown14 != beforeUnknown14) {
+					foreach (Polygon selectedPolygon in Selection.SelectedPolygons) {
+						selectedPolygon.RenderingProperties.Unknown14 = unknown14;
+					}
+				}
+				if (unknown15 != beforeUnknown15) {
+					foreach (Polygon selectedPolygon in Selection.SelectedPolygons) {
+						selectedPolygon.RenderingProperties.Unknown15 = unknown15;
+					}
+				}
+
+				ImGui.Columns(1);
+				ImGui.Unindent();
+				GuiStyle.AddSpace();
+			}
+		}
+
+		private static void RenderUnknownRenderPropertiesHeader() {
+			GuiStyle.SetNewUiToDefaultStyle();
+			GuiStyle.SetElementStyle(ElementStyle.Header);
+
+			if (ImGui.CollapsingHeader("Unknown Render Properties Header###polyTab", ImGuiTreeNodeFlags.DefaultOpen)) {
+				GuiStyle.SetNewUiToDefaultStyle();
+				ImGui.Indent();
+
+				GuiStyle.SetNewUiToDefaultStyle();
+				
+				ImGui.Text("Header Bytes (896 long)");
+				ImGui.NewLine();
+
+				for (int index = 0; index < CurrentMapState.StateData.UnknownRenderPropertiesData.Count; index++) {
+					int value = CurrentMapState.StateData.UnknownRenderPropertiesData[index];
+					ImGui.SetNextItemWidth(50);
+					if (index % 4 != 0) {
+						ImGui.SameLine();
+					}
+
+					ImGui.DragInt("##RenderPropertiesHeader" + index, ref value, 1);
+					CurrentMapState.StateData.UnknownRenderPropertiesData[index] = (byte) value;
+				}
+
+				ImGui.Unindent();
+			}
+		}
+
 		private static void RenderRenderOptions() {
 			GuiStyle.SetNewUiToDefaultStyle();
 			GuiStyle.SetElementStyle(ElementStyle.Header);

@@ -17,9 +17,9 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 		public bool InvisibleSouthSoutheast;
 		public bool InvisibleSoutheast;
 		public bool LitTexture;
-		private bool _unknownA;
-		private bool _unknownB;
-		private bool _unknownC;
+		public bool Unknown1;
+		public bool Unknown14;
+		public bool Unknown15;
 
 		public PolygonRenderingProperties() {
 			RawData = "0000000000000000";
@@ -29,7 +29,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 		public PolygonRenderingProperties(string rawData) {
 			RawData = rawData;
 			LitTexture = RawData.Substring(0, 1) == "1";
-			_unknownA = RawData.Substring(1, 1) == "1";
+			Unknown1 = RawData.Substring(1, 1) == "1";
 			InvisibleNortheast = RawData.Substring(2, 1) == "1";
 			InvisibleSoutheast = RawData.Substring(3, 1) == "1";
 			InvisibleSouthwest = RawData.Substring(4, 1) == "1";
@@ -42,8 +42,8 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 			InvisibleWestSouthwest = RawData.Substring(11, 1) == "1";
 			InvisibleWestNorthWest = RawData.Substring(12, 1) == "1";
 			InvisibleNorthNorthwest = RawData.Substring(13, 1) == "1";
-			_unknownB = RawData.Substring(14, 1) == "1";
-			_unknownC = RawData.Substring(15, 1) == "1";
+			Unknown14 = RawData.Substring(14, 1) == "1";
+			Unknown15 = RawData.Substring(15, 1) == "1";
 		}
 
 		public List<byte> GetRawData() {
@@ -53,10 +53,11 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 			                    (InvisibleWestSouthwest ? "1" : "0") +
 			                    (InvisibleWestNorthWest ? "1" : "0") +
 			                    (InvisibleNorthNorthwest ? "1" : "0") +
-			                    "00";
+			                    (Unknown14 ? "1" : "0") +
+			                    (Unknown15 ? "1" : "0");
 
 			string lowBinary = (LitTexture ? "1" : "0") +
-			                   "0" +
+			                   (Unknown1 ? "1" : "0") +
 			                   (InvisibleNortheast ? "1" : "0") +
 			                   (InvisibleSoutheast ? "1" : "0") +
 			                   (InvisibleSouthwest ? "1" : "0") +
@@ -84,7 +85,10 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 				InvisibleSouthSouthwest = InvisibleSouthSouthwest,
 				InvisibleSouthSoutheast = InvisibleSouthSoutheast,
 				InvisibleSoutheast = InvisibleSoutheast,
-				LitTexture = LitTexture
+				LitTexture = LitTexture,
+				Unknown1 = Unknown1,
+				Unknown14 = Unknown14,
+				Unknown15 = Unknown15
 			};
 		}
 	}
