@@ -36,6 +36,16 @@ namespace GaneshaDx.Resources.ContentDataTypes {
 
 		public List<byte> EndOfBackgroundColorPadding => _primaryMeshSource?.EndOfBackgroundColorPadding;
 		
+		public bool UsesEndOfTerrainPadding {
+			get {
+				bool? x = _primaryMeshSource?.UsesEndOfTerrainPadding;
+				return x != null && x.Value;
+			}
+			set => _primaryMeshSource.UsesEndOfTerrainPadding = value;
+		}
+
+		public List<byte> EndOfTerrainPadding => _primaryMeshSource?.EndOfTerrainPadding;
+		
 		public List<Polygon> PolygonCollectionBucket {
 			get {
 				List<Polygon> polygonCollectionBucket = new List<Polygon>();

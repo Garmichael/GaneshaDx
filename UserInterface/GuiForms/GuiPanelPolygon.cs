@@ -30,10 +30,6 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				}
 			}
 
-			if (Configuration.Properties.ShowUnknownValues) {
-				RenderUnknownPolygonBlockData();
-			}
-			
 			RenderRenderOptions();
 		}
 
@@ -940,47 +936,6 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				ImGui.Unindent();
 				GuiStyle.AddSpace();
 			}
-		}
-		
-		private static void RenderUnknownPolygonBlockData() {
-			GuiStyle.SetNewUiToDefaultStyle();
-			GuiStyle.SetElementStyle(ElementStyle.Header);
-
-			if (ImGui.CollapsingHeader("Unknown Polygon Block Data###unknownPolyDataTab", ImGuiTreeNodeFlags.DefaultOpen)) {
-				GuiStyle.SetNewUiToDefaultStyle();
-				ImGui.Indent();
-				ImGui.Columns(2, "RenderUnknownPolygonBlockDataTab", false);
-				ImGui.SetColumnWidth(0, GuiStyle.LabelWidth);
-				ImGui.SetColumnWidth(1, GuiStyle.WidgetWidth + 10);
-				
-				GuiStyle.SetNewUiToDefaultStyle();
-				
-				ImGui.Text("Has Post-Poly Padding");
-				ImGui.NextColumn();
-				bool usesEndOfPolygonPadding = CurrentMapState.StateData.UsesEndOfPolygonPadding[GuiPanelMeshSelector.SelectedMesh];
-				ImGui.Checkbox("##UsesPostPolygonPadding", ref usesEndOfPolygonPadding);
-				CurrentMapState.StateData.UsesEndOfPolygonPadding[GuiPanelMeshSelector.SelectedMesh] = usesEndOfPolygonPadding;
-				ImGui.NextColumn();
-				
-				ImGui.Text("Post-Poly Bytes");
-				ImGui.NextColumn();
-				
-				int postPolyByteA = CurrentMapState.StateData.EndOfPolygonPadding[GuiPanelMeshSelector.SelectedMesh][0];
-				int postPolyByteB = CurrentMapState.StateData.EndOfPolygonPadding[GuiPanelMeshSelector.SelectedMesh][1];
-				
-				ImGui.InputInt("##PolyPolyByteA", ref postPolyByteA);
-				ImGui.InputInt("##PolyPolyByteB", ref postPolyByteB);
-				
-				CurrentMapState.StateData.EndOfPolygonPadding[GuiPanelMeshSelector.SelectedMesh][0] = (byte) postPolyByteA;
-				CurrentMapState.StateData.EndOfPolygonPadding[GuiPanelMeshSelector.SelectedMesh][1] = (byte) postPolyByteB;
-				
-				ImGui.NextColumn();
-				
-				ImGui.Columns(1);
-				ImGui.Unindent();
-			}
-			
-			GuiStyle.AddSpace();
 		}
 		
 		private static void RenderRenderOptions() {

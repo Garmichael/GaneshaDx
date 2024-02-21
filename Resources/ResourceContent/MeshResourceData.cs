@@ -99,6 +99,9 @@ namespace GaneshaDx.Resources.ResourceContent {
 
 		public Terrain Terrain;
 
+		public bool UsesEndOfTerrainPadding;
+		public List<byte> EndOfTerrainPadding = new List<byte> { 0, 0 };
+			
 		public MeshResourceData(List<byte> rawData) {
 			RawData = rawData;
 
@@ -109,6 +112,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 			ProcessTexturePalettes();
 			ProcessLightingAndBackground();
 			ProcessTerrain();
+			ProcessUnknownPostTerrainData();
 			ProcessTextureAnimations();
 			ProcessPaletteAnimationFrames();
 			ProcessMeshAnimationInstructions();
@@ -801,6 +805,25 @@ namespace GaneshaDx.Resources.ResourceContent {
 			};
 		}
 
+		private void ProcessUnknownPostTerrainData() {
+			int nextStartBlock = Utilities.GetInt32FromLittleEndian(
+				RawData[TextureAnimationsPointer],
+				RawData[TextureAnimationsPointer + 1],
+				RawData[TextureAnimationsPointer + 2],
+				RawData[TextureAnimationsPointer + 3]
+			);
+			
+			if (_currentByteIndex < nextStartBlock) {
+				UsesEndOfTerrainPadding = true;
+				EndOfTerrainPadding = new List<byte> {
+					RawData[_currentByteIndex],
+					RawData[_currentByteIndex + 1]
+				};
+			} else {
+				EndOfTerrainPadding = new List<byte> { 0, 0 };
+			}
+		}
+		
 		private void ProcessTextureAnimations() {
 			_currentByteIndex = Utilities.GetInt32FromLittleEndian(
 				RawData[TextureAnimationsPointer],
@@ -982,6 +1005,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 			BuildRawDataTexturePalettes();
 			BuildRawDataLightsAndBackground();
 			BuildRawDataTerrain();
+			BuildRawPostTerrainBlock();
 			BuildRawDataTextureAnimations();
 			BuildRawDataPaletteAnimationFrames();
 			BuildRawDataGrayscalePalettes();
@@ -1381,6 +1405,13 @@ namespace GaneshaDx.Resources.ResourceContent {
 			RawData.AddRange(Terrain.GetRawData());
 		}
 
+		private void BuildRawPostTerrainBlock() {
+			if (UsesEndOfTerrainPadding) {
+				RawData.Add(EndOfTerrainPadding[0]);
+				RawData.Add(EndOfTerrainPadding[1]);
+			}
+		}
+		
 		private void BuildRawDataTextureAnimations() {
 			if (!HasTextureAnimations) {
 				return;

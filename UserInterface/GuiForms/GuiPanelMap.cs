@@ -401,9 +401,32 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				ImGui.SetColumnWidth(0, GuiStyle.LabelWidth);
 				ImGui.SetColumnWidth(1, GuiStyle.WidgetWidth + 10);
 				
+				ImGui.Text("Has Post-Poly Padding");
+				ImGui.NextColumn();
+				bool usesEndOfPolygonPadding = CurrentMapState.StateData.UsesEndOfPolygonPadding[GuiPanelMeshSelector.SelectedMesh];
+				ImGui.Checkbox("##UsesPostPolygonPadding", ref usesEndOfPolygonPadding);
+				CurrentMapState.StateData.UsesEndOfPolygonPadding[GuiPanelMeshSelector.SelectedMesh] = usesEndOfPolygonPadding;
+				ImGui.NextColumn();
+				
+				ImGui.Text("Post-Poly Bytes");
+				ImGui.NextColumn();
+				
+				int postPolyByteA = CurrentMapState.StateData.EndOfPolygonPadding[GuiPanelMeshSelector.SelectedMesh][0];
+				int postPolyByteB = CurrentMapState.StateData.EndOfPolygonPadding[GuiPanelMeshSelector.SelectedMesh][1];
+				
+				ImGui.InputInt("##PolyPolyByteA", ref postPolyByteA);
+				ImGui.InputInt("##PolyPolyByteB", ref postPolyByteB);
+				
+				CurrentMapState.StateData.EndOfPolygonPadding[GuiPanelMeshSelector.SelectedMesh][0] = (byte) postPolyByteA;
+				CurrentMapState.StateData.EndOfPolygonPadding[GuiPanelMeshSelector.SelectedMesh][1] = (byte) postPolyByteB;
+				
+				ImGui.NextColumn();
+				
+				GuiStyle.AddSpace();
 				ImGui.Text("Has Post-Background");
 				ImGui.Text("Padding");
 				ImGui.NextColumn();
+				GuiStyle.AddSpace();
 				bool usesEndOfBackgroundColorPadding = CurrentMapState.StateData.UsesEndOfBackgroundColorPadding;
 				ImGui.Checkbox("##UsesPostBackgroundPadding", ref usesEndOfBackgroundColorPadding);
 				CurrentMapState.StateData.UsesEndOfBackgroundColorPadding = usesEndOfBackgroundColorPadding;
@@ -411,17 +434,40 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				
 				ImGui.Text("Post-Background Bytes");
 				ImGui.NextColumn();
-				int postPolyByteA = CurrentMapState.StateData.EndOfBackgroundColorPadding[0];
-				int postPolyByteB = CurrentMapState.StateData.EndOfBackgroundColorPadding[1];
-				int postPolyByteC = CurrentMapState.StateData.EndOfBackgroundColorPadding[2];
+				int postBackgroundByteA = CurrentMapState.StateData.EndOfBackgroundColorPadding[0];
+				int postBackgroundByteB = CurrentMapState.StateData.EndOfBackgroundColorPadding[1];
+				int postBackgroundByteC = CurrentMapState.StateData.EndOfBackgroundColorPadding[2];
 				
-				ImGui.InputInt("##PostBackgroundByteA", ref postPolyByteA);
-				ImGui.InputInt("##PostBackgroundByteB", ref postPolyByteB);
-				ImGui.InputInt("##PostBackgroundByteC", ref postPolyByteC);
+				ImGui.InputInt("##PostBackgroundByteA", ref postBackgroundByteA);
+				ImGui.InputInt("##PostBackgroundByteB", ref postBackgroundByteB);
+				ImGui.InputInt("##PostBackgroundByteC", ref postBackgroundByteC);
 
-				CurrentMapState.StateData.EndOfBackgroundColorPadding[0] = (byte) postPolyByteA;
-				CurrentMapState.StateData.EndOfBackgroundColorPadding[1] = (byte) postPolyByteB;
-				CurrentMapState.StateData.EndOfBackgroundColorPadding[2] = (byte) postPolyByteC;
+				CurrentMapState.StateData.EndOfBackgroundColorPadding[0] = (byte) postBackgroundByteA;
+				CurrentMapState.StateData.EndOfBackgroundColorPadding[1] = (byte) postBackgroundByteB;
+				CurrentMapState.StateData.EndOfBackgroundColorPadding[2] = (byte) postBackgroundByteC;
+				
+				ImGui.NextColumn();
+				
+				GuiStyle.AddSpace();
+				ImGui.Text("Has Post-Terrain");
+				ImGui.Text("Padding");
+				ImGui.NextColumn();
+				GuiStyle.AddSpace();
+				bool usesEndOfTerrainPadding = CurrentMapState.StateData.UsesEndOfTerrainPadding;
+				ImGui.Checkbox("##UsesPostTerrainPadding", ref usesEndOfTerrainPadding);
+				CurrentMapState.StateData.UsesEndOfTerrainPadding = usesEndOfTerrainPadding;
+				ImGui.NextColumn();
+				
+				ImGui.Text("Post-Terrain Bytes");
+				ImGui.NextColumn();
+				int postTerrainByteA = CurrentMapState.StateData.EndOfTerrainPadding[0];
+				int postTerrainByteB = CurrentMapState.StateData.EndOfTerrainPadding[1];
+				
+				ImGui.InputInt("##PostTerrainByteA", ref postTerrainByteA);
+				ImGui.InputInt("##PostTerrainByteB", ref postTerrainByteB);
+
+				CurrentMapState.StateData.EndOfTerrainPadding[0] = (byte) postTerrainByteA;
+				CurrentMapState.StateData.EndOfTerrainPadding[1] = (byte) postTerrainByteB;
 				
 				ImGui.NextColumn();
 				
