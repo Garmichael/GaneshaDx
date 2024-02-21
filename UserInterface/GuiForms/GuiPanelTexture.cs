@@ -187,7 +187,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 							selectedPolygon.UnknownTextureValue3 = unknown3;
 						}
 					}
-					
+
 					ImGui.NextColumn();
 					ImGui.Text("Unknown6a");
 					ImGui.NextColumn();
@@ -200,7 +200,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 							selectedPolygon.UnknownTextureValue6A = unknown6A;
 						}
 					}
-					
+
 					ImGui.NextColumn();
 					ImGui.Text("Unknown6b");
 					int unknown6B = Selection.SelectedPolygons[0].UnknownTextureValue6B;
@@ -213,7 +213,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 							selectedPolygon.UnknownTextureValue6B = unknown6B;
 						}
 					}
-					
+
 					ImGui.NextColumn();
 					ImGui.Text("Unknown7");
 					int unknown7 = Selection.SelectedPolygons[0].UnknownTextureValue7;
@@ -297,7 +297,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				if (Math.Abs(beforeRatio - Configuration.Properties.AutoMapRatio) >= 0.001) {
 					Configuration.SaveConfiguration();
 				}
-				
+
 				GuiStyle.AddSpace();
 
 				if (ImGui.Button("Copy##CopyPolygonUv", new Vector2(buttonWidth, buttonHeight))) {
@@ -320,7 +320,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 							if (selectedPolygon.RenderingProperties != null &&
 							    _copiedPolygon.RenderingProperties != null
-							) {
+							   ) {
 								selectedPolygon.RenderingProperties.LitTexture =
 									_copiedPolygon.RenderingProperties.LitTexture;
 							}
@@ -1054,6 +1054,87 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 				ImGui.Unindent();
 				ImGui.Columns(1);
+			}
+
+
+			if (Configuration.Properties.ShowUnknownValues) {
+				GuiStyle.SetElementStyle(ElementStyle.Header);
+				if (ImGui.CollapsingHeader("Unknown Properties", ImGuiTreeNodeFlags.DefaultOpen)) {
+					GuiStyle.SetNewUiToDefaultStyle();
+					ImGui.Indent();
+					ImGui.Columns(2, "UVA_UnknownPropertiesColumns", false);
+					ImGui.SetColumnWidth(0, GuiStyle.LabelWidth);
+					ImGui.SetColumnWidth(1, GuiStyle.WidgetWidth + 10);
+
+					ImGui.Text("Unknown 1");
+					ImGui.NextColumn();
+					ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+					ImGui.InputInt("UVA_Unknown1", ref selectedAnimation.Unknown1, 1);
+					ImGui.NextColumn();
+
+					ImGui.Text("Unknown 3");
+					ImGui.NextColumn();
+					ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+					ImGui.InputInt("UVA_Unknown3", ref selectedAnimation.Unknown3, 1);
+					ImGui.NextColumn();
+
+					ImGui.Text("Unknown 5");
+					ImGui.NextColumn();
+					ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+					ImGui.InputInt("UVA_Unknown5", ref selectedAnimation.Unknown5, 1);
+					ImGui.NextColumn();
+
+					ImGui.Text("Unknown 7");
+					ImGui.NextColumn();
+					ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+					ImGui.InputInt("UVA_Unknown7", ref selectedAnimation.Unknown7, 1);
+					ImGui.NextColumn();
+
+					ImGui.Text("Unknown 9");
+					ImGui.NextColumn();
+					ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+					ImGui.InputInt("UVA_Unknown9", ref selectedAnimation.Unknown9, 1);
+					ImGui.NextColumn();
+
+					ImGui.Text("Unknown 11");
+					ImGui.NextColumn();
+					ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+					ImGui.InputInt("UVA_Unknown11", ref selectedAnimation.Unknown11, 1);
+					ImGui.NextColumn();
+
+					ImGui.Text("Unknown 12");
+					ImGui.NextColumn();
+					ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+					ImGui.InputInt("UVA_Unknown12", ref selectedAnimation.Unknown12, 1);
+					ImGui.NextColumn();
+
+					ImGui.Text("Unknown 13");
+					ImGui.NextColumn();
+					ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+					ImGui.InputInt("UVA_Unknown13", ref selectedAnimation.Unknown13, 1);
+					ImGui.NextColumn();
+
+					ImGui.Text("Unknown 16");
+					ImGui.NextColumn();
+					ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+					ImGui.InputInt("UVA_Unknown16", ref selectedAnimation.Unknown16, 1);
+					ImGui.NextColumn();
+
+					ImGui.Text("Unknown 18");
+					ImGui.NextColumn();
+					ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+					ImGui.InputInt("UVA_Unknown18", ref selectedAnimation.Unknown18, 1);
+					ImGui.NextColumn();
+
+					ImGui.Text("Unknown 19");
+					ImGui.NextColumn();
+					ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+					ImGui.InputInt("UVA_Unknown19", ref selectedAnimation.Unknown19, 1);
+					ImGui.NextColumn();
+
+					ImGui.Unindent();
+					ImGui.Columns(1);
+				}
 			}
 
 			ImGui.Columns(1);

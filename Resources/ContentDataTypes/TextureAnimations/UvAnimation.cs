@@ -18,15 +18,17 @@ namespace GaneshaDx.Resources.ContentDataTypes.TextureAnimations {
 
 		public UvAnimationMode UvAnimationMode = UvAnimationMode.ForwardLooping;
 
-		private int _unknownB;
-		private int _unknownC;
-		private int _unknownD;
-		private int _unknownF;
-		private int _unknownG;
-		private int _unknownH;
-		private int _unknownI;
-		private int _unknownJ;
-		private int _unknownK;
+		public int Unknown1;
+		public int Unknown3;
+		public int Unknown5;
+		public int Unknown7;
+		public int Unknown9;
+		public int Unknown11;
+		public int Unknown12;
+		public int Unknown13;
+		public int Unknown16;
+		public int Unknown18;
+		public int Unknown19;
 
 		public int PreviousFramesFrameId = 0;
 
@@ -34,17 +36,19 @@ namespace GaneshaDx.Resources.ContentDataTypes.TextureAnimations {
 
 		public UvAnimation(List<byte> rawData) {
 			CanvasX = rawData[0] * 4;
+			Unknown1 = rawData[1];
 			CanvasY = rawData[2];
-			_unknownB = rawData[3];
+			Unknown3 = rawData[3];
 			SizeWidth = rawData[4] * 4;
-			_unknownC = rawData[5];
+			Unknown5 = rawData[5];
 			SizeHeight = rawData[6];
-			_unknownD = rawData[7];
+			Unknown7 = rawData[7];
 			FirstFrameX = rawData[8] * 4;
+			Unknown9 = rawData[9];
 			FirstFrameY = rawData[10];
-			_unknownF = rawData[11];
-			_unknownG = rawData[12];
-			_unknownH = rawData[13];
+			Unknown11 = rawData[11];
+			Unknown12 = rawData[12];
+			Unknown13 = rawData[13];
 
 			UvAnimationMode = rawData[14] switch {
 				1 => UvAnimationMode.ForwardLooping,
@@ -61,10 +65,10 @@ namespace GaneshaDx.Resources.ContentDataTypes.TextureAnimations {
 			};
 
 			FrameCount = rawData[15];
-			_unknownI = rawData[16];
+			Unknown16 = rawData[16];
 			FrameDuration = rawData[17];
-			_unknownJ = rawData[18];
-			_unknownK = rawData[19];
+			Unknown18 = rawData[18];
+			Unknown19 = rawData[19];
 
 			while (CanvasX >= 256) {
 				CanvasX -= 256;
@@ -88,25 +92,25 @@ namespace GaneshaDx.Resources.ContentDataTypes.TextureAnimations {
 
 			return new List<byte> {
 				(byte) ((CanvasX + CanvasTexturePage * 256) / 4f),
-				3,
+				(byte) Unknown1,
 				(byte) CanvasY,
-				0,
+				(byte) Unknown3,
 				(byte) (SizeWidth / 4f),
-				0,
+				(byte) Unknown5,
 				(byte) SizeHeight,
-				0,
+				(byte) Unknown7,
 				(byte) ((FirstFrameX + FirstFrameTexturePage * 256) / 4f),
-				3,
+				(byte) Unknown9,
 				(byte) FirstFrameY,
-				0,
-				0,
-				0,
+				(byte) Unknown11,
+				(byte) Unknown12,
+				(byte) Unknown13,
 				(byte) animationMode,
 				(byte) FrameCount,
-				0,
+				(byte) Unknown16,
 				(byte) FrameDuration,
-				0,
-				0
+				(byte) Unknown18,
+				(byte) Unknown19
 			};
 		}
 	}
