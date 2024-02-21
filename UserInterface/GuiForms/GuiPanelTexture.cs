@@ -883,6 +883,106 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			selectedAnimation.FrameDuration = Utilities.Min(selectedAnimation.FrameDuration, 1);
 			ImGui.NextColumn();
 
+			if (Configuration.Properties.ShowUnknownValues) {
+				GuiStyle.AddSpace();
+				
+				ImGui.Text("Unknown 1");
+				ImGui.NextColumn();
+				GuiStyle.AddSpace();
+				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+				ImGui.InputInt("##PA_Unknown1", ref selectedAnimation.Unknown1, 1);
+				ImGui.NextColumn();
+				
+				ImGui.Text("Unknown 2");
+				ImGui.NextColumn();
+				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+				ImGui.InputInt("##PA_Unknown2", ref selectedAnimation.Unknown2, 1);
+				ImGui.NextColumn();
+				
+				ImGui.Text("Unknown 3");
+				ImGui.NextColumn();
+				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+				ImGui.InputInt("##PA_Unknown3", ref selectedAnimation.Unknown3, 1);
+				ImGui.NextColumn();
+				
+				ImGui.Text("Unknown 4");
+				ImGui.NextColumn();
+				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+				ImGui.InputInt("##PA_Unknown4", ref selectedAnimation.Unknown4, 1);
+				ImGui.NextColumn();
+				
+				ImGui.Text("Unknown 5");
+				ImGui.NextColumn();
+				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+				ImGui.InputInt("##PA_Unknown5", ref selectedAnimation.Unknown5, 1);
+				ImGui.NextColumn();
+				
+				ImGui.Text("Unknown 6");
+				ImGui.NextColumn();
+				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+				ImGui.InputInt("##PA_Unknown6", ref selectedAnimation.Unknown6, 1);
+				ImGui.NextColumn();
+				
+				ImGui.Text("Unknown 7");
+				ImGui.NextColumn();
+				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+				ImGui.InputInt("##PA_Unknown7", ref selectedAnimation.Unknown7, 1);
+				ImGui.NextColumn();
+				
+				ImGui.Text("Unknown 9");
+				ImGui.NextColumn();
+				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+				ImGui.InputInt("##PA_Unknown9", ref selectedAnimation.Unknown9, 1);
+				ImGui.NextColumn();
+				
+				ImGui.Text("Unknown 10");
+				ImGui.NextColumn();
+				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+				ImGui.InputInt("##PA_Unknown10", ref selectedAnimation.Unknown10, 1);
+				ImGui.NextColumn();
+				
+				ImGui.Text("Unknown 11");
+				ImGui.NextColumn();
+				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+				ImGui.InputInt("##PA_Unknown11", ref selectedAnimation.Unknown11, 1);
+				ImGui.NextColumn();
+				
+				ImGui.Text("Unknown 12");
+				ImGui.NextColumn();
+				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+				ImGui.InputInt("##PA_Unknown12", ref selectedAnimation.Unknown12, 1);
+				ImGui.NextColumn();
+				
+				ImGui.Text("Unknown 13");
+				ImGui.NextColumn();
+				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+				ImGui.InputInt("##PA_Unknown13", ref selectedAnimation.Unknown13, 1);
+				ImGui.NextColumn();
+				
+				ImGui.Text("Unknown 14");
+				ImGui.NextColumn();
+				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+				ImGui.InputInt("##PA_Unknown14", ref selectedAnimation.Unknown14, 1);
+				ImGui.NextColumn();
+				
+				ImGui.Text("Unknown 16");
+				ImGui.NextColumn();
+				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+				ImGui.InputInt("##PA_Unknown16", ref selectedAnimation.Unknown16, 1);
+				ImGui.NextColumn();
+				
+				ImGui.Text("Unknown 18");
+				ImGui.NextColumn();
+				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+				ImGui.InputInt("##PA_Unknown18", ref selectedAnimation.Unknown18, 1);
+				ImGui.NextColumn();
+				
+				ImGui.Text("Unknown 19");
+				ImGui.NextColumn();
+				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+				ImGui.InputInt("##PA_Unknown19", ref selectedAnimation.Unknown19, 1);
+				ImGui.NextColumn();
+			}
 			ImGui.Columns(1);
 			ImGui.Unindent();
 		}
