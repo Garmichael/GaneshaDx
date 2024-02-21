@@ -394,14 +394,15 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			GuiStyle.SetNewUiToDefaultStyle();
 			GuiStyle.SetElementStyle(ElementStyle.Header);
 			
-			if (ImGui.CollapsingHeader("Unknown Data", ImGuiTreeNodeFlags.DefaultOpen)) {
+			if (ImGui.CollapsingHeader("Unknown Padding Data", ImGuiTreeNodeFlags.DefaultOpen)) {
 				GuiStyle.SetNewUiToDefaultStyle();
 				ImGui.Indent();
 				ImGui.Columns(2, "Unknown Data", false);
 				ImGui.SetColumnWidth(0, GuiStyle.LabelWidth);
 				ImGui.SetColumnWidth(1, GuiStyle.WidgetWidth + 10);
 				
-				ImGui.Text("Has Post-Poly Padding");
+				ImGui.Text("Has Post-Poly");
+				ImGui.Text("Padding");
 				ImGui.NextColumn();
 				bool usesEndOfPolygonPadding = CurrentMapState.StateData.UsesEndOfPolygonPadding[GuiPanelMeshSelector.SelectedMesh];
 				ImGui.Checkbox("##UsesPostPolygonPadding", ref usesEndOfPolygonPadding);
