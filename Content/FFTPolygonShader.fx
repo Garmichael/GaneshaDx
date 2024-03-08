@@ -16,12 +16,15 @@ float4 AmbientColor = float4(1, 1, 1, 1);
 
 float3 DirectionalLightDirection0 = float3(1, 0, 0);
 float4 DirectionalLightColor0 = float4(1, 1, 1, 1);
+float4 DirectionalLightBoost0 = float4(1, 1, 1, 1);
 
 float3 DirectionalLightDirection1 = float3(1, 0, 0);
 float4 DirectionalLightColor1 = float4(1, 1, 1, 1);
+float4 DirectionalLightBoost1 = float4(1, 1, 1, 1);
 
 float3 DirectionalLightDirection2 = float3(1, 0, 0);
 float4 DirectionalLightColor2 = float4(1, 1, 1, 1);
+float4 DirectionalLightBoost2 = float4(1, 1, 1, 1);
 
 float MaxAlpha = 1;
 
@@ -526,29 +529,48 @@ float4 PixelShaderFunction(VertexToPixel input) : COLOR0 {
         angle = dot(normal, DirectionalLightDirection0);
         if(angle >= 0){
             directionLightColor = DirectionalLightColor0 * angle;
-            lightColor += saturate(directionLightColor);
-            lightColor = saturate(lightColor);
+            lightColor += directionLightColor;
         }
 
         angle = dot(normal, DirectionalLightDirection1);
         if(angle >= 0){
             directionLightColor = DirectionalLightColor1 * angle;
-            lightColor += saturate(directionLightColor);
-            lightColor = saturate(lightColor);
+            lightColor += directionLightColor;
         }
         
         angle = dot(normal, DirectionalLightDirection2);
         if(angle >= 0){
             directionLightColor = DirectionalLightColor2 * angle;
-            lightColor += saturate(directionLightColor);
-            lightColor = saturate(lightColor);
+            lightColor += directionLightColor;
         }
         
         float4 ambientColor = AmbientColor;
         ambientColor.a = 1;
         lightColor.a = 1;
-        
-        textureColor = saturate(textureColor * (ambientColor * 2 + lightColor));
+                        
+        textureColor = textureColor * (ambientColor * 1.5f + lightColor);
+
+        lightColor = float4(0,0,0,1);
+
+        angle = dot(normal, DirectionalLightDirection0);
+        if(angle >= 0){
+            directionLightColor = DirectionalLightBoost0 * angle;
+            lightColor += directionLightColor;
+        }
+
+        angle = dot(normal, DirectionalLightDirection1);
+        if(angle >= 0){
+            directionLightColor = DirectionalLightBoost1 * angle;
+            lightColor += directionLightColor;
+        }
+
+        angle = dot(normal, DirectionalLightDirection2);
+        if(angle >= 0){
+            directionLightColor = DirectionalLightBoost2 * angle;
+            lightColor += directionLightColor;
+        }
+
+        textureColor += textureColor * lightColor;
     }
     
     if (HighlightBright){
@@ -563,7 +585,7 @@ float4 PixelShaderFunction(VertexToPixel input) : COLOR0 {
         textureColor.g += 0.3;
     }
     
-    textureColor = saturate(textureColor);
+//    textureColor = saturate(textureColor);
     
     if (textureColor.a > MaxAlpha){
         textureColor.a *= MaxAlpha;

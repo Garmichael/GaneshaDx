@@ -67,7 +67,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 
 		public bool UsesEndOfBackgroundColorPadding;
 		public List<byte> EndOfBackgroundColorPadding = new List<byte> { 0, 0, 0 };
-		
+
 		public readonly Dictionary<MeshType, bool> UsesEndOfPolygonPadding = new Dictionary<MeshType, bool> {
 			{ MeshType.PrimaryMesh, false },
 			{ MeshType.AnimatedMesh1, false },
@@ -101,9 +101,9 @@ namespace GaneshaDx.Resources.ResourceContent {
 
 		public bool UsesEndOfTerrainPadding;
 		public List<byte> EndOfTerrainPadding = new List<byte> { 0, 0 };
-			
+
 		public List<byte> UnknownRenderPropertiesData;
-		
+
 		public MeshResourceData(List<byte> rawData) {
 			RawData = rawData;
 
@@ -451,7 +451,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 				PolygonCollection[meshType][PolygonType.UntexturedTriangle][index].UnknownUntexturedValueD = RawData[_currentByteIndex + 3];
 				_currentByteIndex += 4;
 			}
-			
+
 			for (int index = 0; index < _unTexturedQuadCount[meshType]; index++) {
 				PolygonCollection[meshType][PolygonType.UntexturedQuad][index].UnknownUntexturedValueA = RawData[_currentByteIndex];
 				PolygonCollection[meshType][PolygonType.UntexturedQuad][index].UnknownUntexturedValueB = RawData[_currentByteIndex + 1];
@@ -459,7 +459,6 @@ namespace GaneshaDx.Resources.ResourceContent {
 				PolygonCollection[meshType][PolygonType.UntexturedQuad][index].UnknownUntexturedValueD = RawData[_currentByteIndex + 3];
 				_currentByteIndex += 4;
 			}
-			
 		}
 
 		private void ProcessTerrainBinding(MeshType meshType) {
@@ -570,44 +569,44 @@ namespace GaneshaDx.Resources.ResourceContent {
 				new DirectionalLight()
 			};
 
-			DirectionalLights[0].LightColor = new Color(
-				(int) (Utilities.Clamp(Utilities.GetInt16FromLittleEndian(
-						RawData[_currentByteIndex], RawData[_currentByteIndex + 1]), 0, 2040
-				) / 8f),
-				(int) (Utilities.Clamp(Utilities.GetInt16FromLittleEndian(
-						RawData[_currentByteIndex + 6], RawData[_currentByteIndex + 7]), 0, 2040
-				) / 8f),
-				(int) (Utilities.Clamp(Utilities.GetInt16FromLittleEndian(
-						RawData[_currentByteIndex + 12], RawData[_currentByteIndex + 13]), 0, 2040
-				) / 8f),
-				255
-			);
+			int r = (int) (Utilities.GetInt16FromLittleEndian(RawData[_currentByteIndex], RawData[_currentByteIndex + 1]) / 8f);
+			int g = (int) (Utilities.GetInt16FromLittleEndian(RawData[_currentByteIndex + 6], RawData[_currentByteIndex + 7]) / 8f);
+			int b = (int) (Utilities.GetInt16FromLittleEndian(RawData[_currentByteIndex + 12], RawData[_currentByteIndex + 13]) / 8f);
+			int rOverflow = Math.Max(0, r - 255);
+			int gOverflow = Math.Max(0, g - 255);
+			int bOverflow = Math.Max(0, b - 255);
+			r = Math.Max(0, 255);
+			g = Math.Max(0, 255);
+			b = Math.Max(0, 255);
 
-			DirectionalLights[1].LightColor = new Color(
-				(int) (Utilities.Clamp(Utilities.GetInt16FromLittleEndian(
-						RawData[_currentByteIndex + 2], RawData[_currentByteIndex + 3]), 0, 2040
-				) / 8f),
-				(int) (Utilities.Clamp(Utilities.GetInt16FromLittleEndian(
-						RawData[_currentByteIndex + 8], RawData[_currentByteIndex + 9]), 0, 2040
-				) / 8f),
-				(int) (Utilities.Clamp(Utilities.GetInt16FromLittleEndian(
-						RawData[_currentByteIndex + 14], RawData[_currentByteIndex + 15]), 0, 2040
-				) / 8f),
-				255
-			);
+			DirectionalLights[0].LightColor = new Color(r, g, b, 255);
+			DirectionalLights[0].Overflow = new Vector3(rOverflow, gOverflow, bOverflow);
 
-			DirectionalLights[2].LightColor = new Color(
-				(int) (Utilities.Clamp(Utilities.GetInt16FromLittleEndian(
-						RawData[_currentByteIndex + 4], RawData[_currentByteIndex + 5]), 0, 2040
-				) / 8f),
-				(int) (Utilities.Clamp(Utilities.GetInt16FromLittleEndian(
-					       RawData[_currentByteIndex + 10], RawData[_currentByteIndex + 11]), 0, 2040)
-				       / 8f),
-				(int) (Utilities.Clamp(Utilities.GetInt16FromLittleEndian(
-						RawData[_currentByteIndex + 16], RawData[_currentByteIndex + 17]), 0, 2040
-				) / 8f),
-				255
-			);
+			r = (int) (Utilities.GetInt16FromLittleEndian(RawData[_currentByteIndex + 2], RawData[_currentByteIndex + 3]) / 8f);
+			g = (int) (Utilities.GetInt16FromLittleEndian(RawData[_currentByteIndex + 8], RawData[_currentByteIndex + 9]) / 8f);
+			b = (int) (Utilities.GetInt16FromLittleEndian(RawData[_currentByteIndex + 14], RawData[_currentByteIndex + 15]) / 8f);
+			rOverflow = Math.Max(0, r - 255);
+			gOverflow = Math.Max(0, g - 255);
+			bOverflow = Math.Max(0, b - 255);
+			r = Math.Max(0, 255);
+			g = Math.Max(0, 255);
+			b = Math.Max(0, 255);
+
+			DirectionalLights[1].LightColor = new Color(r, g, b, 255);
+			DirectionalLights[1].Overflow = new Vector3(rOverflow, gOverflow, bOverflow);
+
+			r = (int) (Utilities.GetInt16FromLittleEndian(RawData[_currentByteIndex + 4], RawData[_currentByteIndex + 5]) / 8f);
+			g = (int) (Utilities.GetInt16FromLittleEndian(RawData[_currentByteIndex + 10], RawData[_currentByteIndex + 11]) / 8f);
+			b = (int) (Utilities.GetInt16FromLittleEndian(RawData[_currentByteIndex + 16], RawData[_currentByteIndex + 17]) / 8f);
+			rOverflow = Math.Max(0, r - 255);
+			gOverflow = Math.Max(0, g - 255);
+			bOverflow = Math.Max(0, b - 255);
+			r = Math.Max(0, 255);
+			g = Math.Max(0, 255);
+			b = Math.Max(0, 255);
+
+			DirectionalLights[2].LightColor = new Color(r, g, b, 255);
+			DirectionalLights[2].Overflow = new Vector3(rOverflow, gOverflow, bOverflow);
 
 			Vector3 direction = new Vector3(
 				-Utilities.GetInt16FromLittleEndian(RawData[_currentByteIndex + 18], RawData[_currentByteIndex + 19]),
@@ -688,7 +687,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 				EndOfBackgroundColorPadding = new List<byte> { 0, 0, 0 };
 			}
 		}
-		
+
 		private void ProcessTerrain() {
 			_currentByteIndex = Utilities.GetInt32FromLittleEndian(
 				RawData[TerrainPointer],
@@ -717,17 +716,17 @@ namespace GaneshaDx.Resources.ResourceContent {
 
 					for (int indexX = 0; indexX < width; indexX++) {
 						string binary = Utilities.GetBinaryFromInt(RawData[_currentByteIndex]);
-						
+
 						int unknown0A = Utilities.GetIntFromBinary(binary.Substring(0, 1));
 						int unknown0B = Utilities.GetIntFromBinary(binary.Substring(1, 1));
-						
+
 						int surfaceTypeId = Utilities.GetIntFromBinary(binary.Substring(2));
 						TerrainSurfaceType surfaceType = CommonLists.TerrainSurfaceTypes[surfaceTypeId];
 
 						int unknown1 = RawData[_currentByteIndex + 1];
-						
+
 						int height = RawData[_currentByteIndex + 2];
-						
+
 						binary = Utilities.GetBinaryFromInt(RawData[_currentByteIndex + 3]);
 						int depth = Utilities.GetIntFromBinary(binary.Substring(0, 3));
 						int slopeHeight = Utilities.GetIntFromBinary(binary.Substring(3));
@@ -739,11 +738,11 @@ namespace GaneshaDx.Resources.ResourceContent {
 								: TerrainSlopeType.Flat;
 
 						int unknown5 = RawData[_currentByteIndex + 5];
-						
+
 						binary = Utilities.GetBinaryFromInt(RawData[_currentByteIndex + 6]);
 
-						int unknown6 = Utilities.GetIntFromBinary(binary.Substring(0,6));
-						
+						int unknown6 = Utilities.GetIntFromBinary(binary.Substring(0, 6));
+
 						bool impassable = Utilities.GetIntFromBinary(binary.Substring(6, 1)) == 1;
 						bool unselectable = Utilities.GetIntFromBinary(binary.Substring(7, 1)) == 1;
 
@@ -778,9 +777,9 @@ namespace GaneshaDx.Resources.ResourceContent {
 							RotatesSoutheastBottom = rotatesSoutheastBottom,
 							RotatesNortheastBottom = rotatesNortheastBottom,
 							Unknown0A = unknown0A,
-							Unknown0B = unknown0B, 
-							Unknown1 = unknown1, 
-							Unknown5 = unknown5, 
+							Unknown0B = unknown0B,
+							Unknown1 = unknown1,
+							Unknown5 = unknown5,
 							Unknown6 = unknown6
 						};
 
@@ -814,7 +813,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 				RawData[TextureAnimationsPointer + 2],
 				RawData[TextureAnimationsPointer + 3]
 			);
-			
+
 			if (_currentByteIndex < nextStartBlock) {
 				UsesEndOfTerrainPadding = true;
 				EndOfTerrainPadding = new List<byte> {
@@ -825,7 +824,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 				EndOfTerrainPadding = new List<byte> { 0, 0 };
 			}
 		}
-		
+
 		private void ProcessTextureAnimations() {
 			_currentByteIndex = Utilities.GetInt32FromLittleEndian(
 				RawData[TextureAnimationsPointer],
@@ -1212,8 +1211,8 @@ namespace GaneshaDx.Resources.ResourceContent {
 				RawData.Add((byte) polygon.UvCoordinates[1].Y);
 
 				string binary = Utilities.GetBinaryFromInt(polygon.UnknownTextureValue6A, 4) +
-					  Utilities.GetBinaryFromInt(polygon.UnknownTextureValue6B, 2) +
-					  Utilities.GetBinaryFromInt(polygon.TexturePage, 2);
+				                Utilities.GetBinaryFromInt(polygon.UnknownTextureValue6B, 2) +
+				                Utilities.GetBinaryFromInt(polygon.TexturePage, 2);
 				RawData.Add((byte) Utilities.GetIntFromBinary(binary));
 
 				RawData.Add((byte) polygon.UnknownTextureValue7);
@@ -1242,17 +1241,17 @@ namespace GaneshaDx.Resources.ResourceContent {
 
 		private void BuildRawDataMeshUnknownData(MeshType meshType) {
 			for (int index = 0; index < PolygonCollection[meshType][PolygonType.UntexturedTriangle].Count; index++) {
-				RawData.Add((byte)PolygonCollection[meshType][PolygonType.UntexturedTriangle][index].UnknownUntexturedValueA);
-				RawData.Add((byte)PolygonCollection[meshType][PolygonType.UntexturedTriangle][index].UnknownUntexturedValueB);
-				RawData.Add((byte)PolygonCollection[meshType][PolygonType.UntexturedTriangle][index].UnknownUntexturedValueC);
-				RawData.Add((byte)PolygonCollection[meshType][PolygonType.UntexturedTriangle][index].UnknownUntexturedValueD);
+				RawData.Add((byte) PolygonCollection[meshType][PolygonType.UntexturedTriangle][index].UnknownUntexturedValueA);
+				RawData.Add((byte) PolygonCollection[meshType][PolygonType.UntexturedTriangle][index].UnknownUntexturedValueB);
+				RawData.Add((byte) PolygonCollection[meshType][PolygonType.UntexturedTriangle][index].UnknownUntexturedValueC);
+				RawData.Add((byte) PolygonCollection[meshType][PolygonType.UntexturedTriangle][index].UnknownUntexturedValueD);
 			}
 
 			for (int index = 0; index < PolygonCollection[meshType][PolygonType.UntexturedQuad].Count; index++) {
-				RawData.Add((byte)PolygonCollection[meshType][PolygonType.UntexturedQuad][index].UnknownUntexturedValueA);
-				RawData.Add((byte)PolygonCollection[meshType][PolygonType.UntexturedQuad][index].UnknownUntexturedValueB);
-				RawData.Add((byte)PolygonCollection[meshType][PolygonType.UntexturedQuad][index].UnknownUntexturedValueC);
-				RawData.Add((byte)PolygonCollection[meshType][PolygonType.UntexturedQuad][index].UnknownUntexturedValueD);
+				RawData.Add((byte) PolygonCollection[meshType][PolygonType.UntexturedQuad][index].UnknownUntexturedValueA);
+				RawData.Add((byte) PolygonCollection[meshType][PolygonType.UntexturedQuad][index].UnknownUntexturedValueB);
+				RawData.Add((byte) PolygonCollection[meshType][PolygonType.UntexturedQuad][index].UnknownUntexturedValueC);
+				RawData.Add((byte) PolygonCollection[meshType][PolygonType.UntexturedQuad][index].UnknownUntexturedValueD);
 			}
 		}
 
@@ -1281,7 +1280,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 				RawData.Add(EndOfPolygonPadding[meshType][1]);
 			}
 		}
-		
+
 		private void BuildRawDataTexturePalettes() {
 			if (!HasPalettes) {
 				return;
@@ -1317,39 +1316,39 @@ namespace GaneshaDx.Resources.ResourceContent {
 			byte high;
 			byte low;
 
-			(high, low) = Utilities.GetLittleEndianFromInt16(DirectionalLights[0].LightColor.R * 8);
+			(high, low) = Utilities.GetLittleEndianFromInt16((DirectionalLights[0].LightColor.R + (int) DirectionalLights[0].Overflow.X) * 8);
 			RawData.Add(high);
 			RawData.Add(low);
 
-			(high, low) = Utilities.GetLittleEndianFromInt16(DirectionalLights[1].LightColor.R * 8);
+			(high, low) = Utilities.GetLittleEndianFromInt16((DirectionalLights[1].LightColor.R + (int) DirectionalLights[1].Overflow.X) * 8);
 			RawData.Add(high);
 			RawData.Add(low);
 
-			(high, low) = Utilities.GetLittleEndianFromInt16(DirectionalLights[2].LightColor.R * 8);
+			(high, low) = Utilities.GetLittleEndianFromInt16((DirectionalLights[2].LightColor.R + (int) DirectionalLights[2].Overflow.X) * 8);
 			RawData.Add(high);
 			RawData.Add(low);
 
-			(high, low) = Utilities.GetLittleEndianFromInt16(DirectionalLights[0].LightColor.G * 8);
+			(high, low) = Utilities.GetLittleEndianFromInt16((DirectionalLights[0].LightColor.G + (int) DirectionalLights[0].Overflow.Y) * 8);
 			RawData.Add(high);
 			RawData.Add(low);
 
-			(high, low) = Utilities.GetLittleEndianFromInt16(DirectionalLights[1].LightColor.G * 8);
+			(high, low) = Utilities.GetLittleEndianFromInt16((DirectionalLights[1].LightColor.G + (int) DirectionalLights[1].Overflow.Y) * 8);
 			RawData.Add(high);
 			RawData.Add(low);
 
-			(high, low) = Utilities.GetLittleEndianFromInt16(DirectionalLights[2].LightColor.G * 8);
+			(high, low) = Utilities.GetLittleEndianFromInt16((DirectionalLights[2].LightColor.G + (int) DirectionalLights[2].Overflow.Y) * 8);
 			RawData.Add(high);
 			RawData.Add(low);
 
-			(high, low) = Utilities.GetLittleEndianFromInt16(DirectionalLights[0].LightColor.B * 8);
+			(high, low) = Utilities.GetLittleEndianFromInt16((DirectionalLights[0].LightColor.B + (int) DirectionalLights[0].Overflow.Z) * 8);
 			RawData.Add(high);
 			RawData.Add(low);
 
-			(high, low) = Utilities.GetLittleEndianFromInt16(DirectionalLights[1].LightColor.B * 8);
+			(high, low) = Utilities.GetLittleEndianFromInt16((DirectionalLights[1].LightColor.B + (int) DirectionalLights[1].Overflow.Z) * 8);
 			RawData.Add(high);
 			RawData.Add(low);
 
-			(high, low) = Utilities.GetLittleEndianFromInt16(DirectionalLights[2].LightColor.B * 8);
+			(high, low) = Utilities.GetLittleEndianFromInt16((DirectionalLights[2].LightColor.B + (int) DirectionalLights[2].Overflow.Z) * 8);
 			RawData.Add(high);
 			RawData.Add(low);
 
@@ -1395,7 +1394,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 				RawData.Add(EndOfBackgroundColorPadding[1]);
 			}
 		}
-		
+
 		private void BuildRawDataTerrain() {
 			if (!HasTerrain) {
 				return;
@@ -1417,7 +1416,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 				RawData.Add(EndOfTerrainPadding[1]);
 			}
 		}
-		
+
 		private void BuildRawDataTextureAnimations() {
 			if (!HasTextureAnimations) {
 				return;

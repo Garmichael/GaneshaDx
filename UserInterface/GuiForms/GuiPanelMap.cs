@@ -3,7 +3,6 @@ using GaneshaDx.Common;
 using GaneshaDx.Rendering;
 using GaneshaDx.Resources;
 using GaneshaDx.Resources.ContentDataTypes;
-using GaneshaDx.Resources.ContentDataTypes.Polygons;
 using GaneshaDx.Resources.ResourceContent;
 using GaneshaDx.UserInterface.GuiDefinitions;
 using ImGuiNET;
@@ -274,6 +273,39 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					ImGui.NextColumn();
 
 					ImGui.PushItemWidth(GuiStyle.LabelWidth);
+					ImGui.Text("Light 1 Overflow");
+					ImGui.PopItemWidth();
+					ImGui.NextColumn();
+
+					int rOverflow = (int) directionalLights[0].Overflow.X;
+					int gOverflow = (int) directionalLights[0].Overflow.Y;
+					int bOverflow = (int) directionalLights[0].Overflow.Z;
+					
+					ImGui.PushItemWidth(30);
+					ImGui.SliderInt("##Light1OverflowR", ref rOverflow, 0, 3840);
+					ImGui.SameLine();
+					ImGui.SliderInt("##Light1OverflowG", ref gOverflow, 0, 3840);
+					ImGui.SameLine();
+					ImGui.SliderInt("##Light1OverflowB", ref bOverflow, 0, 3840);
+					ImGui.PopItemWidth();
+
+					if (rOverflow > 0) {
+						directionalLights[0].LightColor.R = 255;
+					}
+
+					if (gOverflow > 0) {
+						directionalLights[0].LightColor.G = 255;
+					}
+
+					if (bOverflow > 0) {
+						directionalLights[0].LightColor.B = 255;
+					}
+
+					directionalLights[0].Overflow = new Microsoft.Xna.Framework.Vector3(rOverflow, gOverflow, bOverflow);
+
+					ImGui.NextColumn();
+					
+					ImGui.PushItemWidth(GuiStyle.LabelWidth);
 					ImGui.Text("Light 1 Elevation");
 					ImGui.PopItemWidth();
 
@@ -312,6 +344,39 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					lightColor = Utilities.ConvertVector3(directionalLights[1].LightColor.ToVector4());
 					ImGui.ColorEdit3("Light2Color", ref lightColor, GuiStyle.ColorBoxFlags);
 					directionalLights[1].LightColor = new Color(lightColor.X, lightColor.Y, lightColor.Z);
+
+					ImGui.NextColumn();
+
+					ImGui.PushItemWidth(GuiStyle.LabelWidth);
+					ImGui.Text("Light 2 Overflow");
+					ImGui.PopItemWidth();
+					ImGui.NextColumn();
+
+					rOverflow = (int) directionalLights[1].Overflow.X;
+					gOverflow = (int) directionalLights[1].Overflow.Y;
+					bOverflow = (int) directionalLights[1].Overflow.Z;
+					
+					ImGui.PushItemWidth(30);
+					ImGui.SliderInt("##Light2OverflowR", ref rOverflow, 0, 3840);
+					ImGui.SameLine();
+					ImGui.SliderInt("##Light2OverflowG", ref gOverflow, 0, 3840);
+					ImGui.SameLine();
+					ImGui.SliderInt("##Light2OverflowB", ref bOverflow, 0, 3840);
+					ImGui.PopItemWidth();
+
+					if (rOverflow > 0) {
+						directionalLights[1].LightColor.R = 255;
+					}
+
+					if (gOverflow > 0) {
+						directionalLights[1].LightColor.G = 255;
+					}
+
+					if (bOverflow > 0) {
+						directionalLights[1].LightColor.B = 255;
+					}
+					
+					directionalLights[1].Overflow = new Microsoft.Xna.Framework.Vector3(rOverflow, gOverflow, bOverflow);
 
 					ImGui.NextColumn();
 
@@ -357,6 +422,40 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 					ImGui.NextColumn();
 
+					ImGui.PushItemWidth(GuiStyle.LabelWidth);
+					ImGui.Text("Light 3 Overflow");
+					ImGui.PopItemWidth();
+					ImGui.NextColumn();
+
+					rOverflow = (int) directionalLights[2].Overflow.X;
+					gOverflow = (int) directionalLights[2].Overflow.Y;
+					bOverflow = (int) directionalLights[2].Overflow.Z;
+					
+					ImGui.PushItemWidth(30);
+					ImGui.SliderInt("##Light3OverflowR", ref rOverflow, 0, 3840);
+					ImGui.SameLine();
+					ImGui.SliderInt("##Light3OverflowG", ref gOverflow, 0, 3840);
+					ImGui.SameLine();
+					ImGui.SliderInt("##Light3OverflowB", ref bOverflow, 0, 3840);
+					ImGui.PopItemWidth();
+
+					if (rOverflow > 0) {
+						directionalLights[2].LightColor.R = 255;
+					}
+
+					if (gOverflow > 0) {
+						directionalLights[2].LightColor.G = 255;
+					}
+
+					if (bOverflow > 0) {
+						directionalLights[2].LightColor.B = 255;
+					}
+					
+					directionalLights[2].Overflow = new Microsoft.Xna.Framework.Vector3(rOverflow, gOverflow, bOverflow);
+
+					ImGui.NextColumn();
+
+					
 					ImGui.PushItemWidth(GuiStyle.LabelWidth);
 					ImGui.Text("Light 3 Elevation");
 					ImGui.PopItemWidth();
