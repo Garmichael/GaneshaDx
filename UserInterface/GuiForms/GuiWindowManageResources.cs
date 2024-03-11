@@ -7,6 +7,7 @@ using GaneshaDx.Resources;
 using GaneshaDx.Resources.ContentDataTypes;
 using GaneshaDx.Resources.ContentDataTypes.MeshAnimations;
 using GaneshaDx.Resources.ContentDataTypes.Palettes;
+using GaneshaDx.Resources.ContentDataTypes.Polygons;
 using GaneshaDx.Resources.ContentDataTypes.Terrains;
 using GaneshaDx.Resources.ContentDataTypes.TextureAnimations;
 using GaneshaDx.Resources.ResourceContent;
@@ -17,27 +18,32 @@ using Vector2 = System.Numerics.Vector2;
 
 namespace GaneshaDx.UserInterface.GuiForms {
 	public static class GuiWindowManageResources {
-		private static readonly List<(string, int)> Columns = new List<(string, int)> {
-			("\nFile", 90),
-			("\nMesh Type", 90),
-			("\nArrange", 75),
-			("\nTime", 50),
-			("\nWeather", 75),
-			("Primary\nMesh", 100),
-			("\nPalettes", 100),
-			("Lights and\nBackground", 100),
-			("\nTerrain", 100),
-			("Texture\nAnimations", 100),
-			("Palette\nAnimations", 100),
-			("Animated\nMesh Frames", 100),
-			("\nAnimated Meshes", 170),
-			("", 100)
-		};
+		private static List<(string, int)> _columnHeaders;
 
 		public static void Render() {
+			_columnHeaders = new List<(string, int)> {
+				("\n ", 50),
+				("\nFile", 90),
+				("\nMesh Type", 90),
+				("\nArrange", 75),
+				("\nTime", 50),
+				("\nWeather", 75),
+				("Primary\nMesh", 50),
+				("\nPalettes", 50),
+				("Grayscale\nPalette", 60),
+				("Lights and\nBackground", 70),
+				("Render\nProperties", 70),
+				("\nTerrain", 50),
+				("Texture\nAnimations", 70),
+				("Palette\nAnimations", 70),
+				("Animated\nMesh Frames", 80),
+				("\nAnimated Meshes", 170)
+			};
+				
 			bool windowIsOpen = true;
 
 			GuiStyle.SetNewUiToDefaultStyle();
+			ImGui.GetStyle().ItemSpacing = new Vector2(2, 2);
 			ImGui.GetStyle().WindowRounding = 0;
 			ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[2]);
 			const ImGuiWindowFlags flags = ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.HorizontalScrollbar |
@@ -51,10 +57,10 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			{
 				ImGui.BeginChild("ScrollWindowMMR", new Vector2(1475, (MapData.MeshResources.Count + 1) * 30), false);
 				ImGui.PopFont();
-				ImGui.Columns(Columns.Count, "ManageResourcesGrid", false);
+				ImGui.Columns(_columnHeaders.Count, "ManageResourcesGrid", false);
 
-				for (int columnIndex = 0; columnIndex < Columns.Count; columnIndex++) {
-					(string header, int columnWidth) = Columns[columnIndex];
+				for (int columnIndex = 0; columnIndex < _columnHeaders.Count; columnIndex++) {
+					(string header, int columnWidth) = _columnHeaders[columnIndex];
 					ImGui.SetColumnWidth(columnIndex, columnWidth + 10);
 
 					ImGui.Text(header);
@@ -65,6 +71,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 				for (int index = 0; index < MapData.MeshResources.Count; index++) {
 					BuildRow(index);
+					ImGui.Separator();
 				}
 
 				ImGui.Columns(1);
@@ -92,7 +99,24 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			bool stateSelected = CurrentMapState.StateData.MapArrangementState == mapResource.MapArrangementState &&
 			                     CurrentMapState.StateData.MapTime == mapResource.MapTime &&
 			                     CurrentMapState.StateData.MapWeather == mapResource.MapWeather;
-
+			
+			GuiStyle.SetNewUiToDefaultStyle();
+			ImGui.GetStyle().ItemSpacing = new Vector2(2, 2);
+			ImGui.GetStyle().FrameRounding = 0;
+			
+			if (stateSelected) {
+				GuiStyle.SetElementStyle(ElementStyle.ButtonDisabled);
+			}
+			
+			if (ImGui.Button("Select##SelectState_" + index) && !stateSelected) {
+				CurrentMapState.SetState(
+					mapResource.MapArrangementState,
+					mapResource.MapTime,
+					mapResource.MapWeather
+				);
+			}
+			ImGui.NextColumn();
+			
 			ImGui.GetStyle().Colors[(int) ImGuiCol.Text] = stateSelected
 				? GuiStyle.ColorPalette[ColorName.Highlighted]
 				: GuiStyle.ColorPalette[ColorName.Lightest];
@@ -127,7 +151,11 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			ImGui.NextColumn();
 			BuildColumnPalettes(index, meshResourceData, isInitialState);
 			ImGui.NextColumn();
+			BuildColumnGrayscalePalette(index, meshResourceData, isInitialState);
+			ImGui.NextColumn();
 			BuildColumnLightsAndBackground(index, meshResourceData, isInitialState);
+			ImGui.NextColumn();
+			BuildColumnRenderProperties(index, meshResourceData, isInitialState);
 			ImGui.NextColumn();
 			BuildColumnTerrain(index, meshResourceData, isInitialState);
 			ImGui.NextColumn();
@@ -139,62 +167,32 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			ImGui.NextColumn();
 			BuildColumnHasAnimatedMeshes(index, meshResourceData);
 			ImGui.NextColumn();
-
-			ImGui.GetStyle().ItemSpacing = new Vector2(8, 4);
-			GuiStyle.SetNewUiToDefaultStyle();
-			ImGui.GetStyle().FrameRounding = 0;
-
-			if (stateSelected) {
-				GuiStyle.SetElementStyle(ElementStyle.ButtonDisabled);
-			}
-
-			if (ImGui.Button("Select State##SelectState_" + index) && !stateSelected) {
-				CurrentMapState.SetState(
-					mapResource.MapArrangementState,
-					mapResource.MapTime,
-					mapResource.MapWeather
-				);
-			}
-
-			ImGui.NextColumn();
 		}
 
 		private static void BuildColumnPrimaryMesh(int index, MeshResourceData data, bool isInitialState) {
-			ImGui.GetStyle().ItemSpacing = new Vector2(1, 0);
 			bool beforeHasPrimaryMesh = data.HasPrimaryMesh;
+
+			GuiStyle.SetElementStyle(isInitialState ? ElementStyle.CheckboxDisabled : ElementStyle.CheckboxEnabled);
+
 			ImGui.Checkbox("###hasPrimaryMesh" + index, ref data.HasPrimaryMesh);
-			if (data.HasPrimaryMesh) {
-				ImGui.SameLine();
-				ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
-				ImGui.Button("C###copyPrimaryMesh" + index);
-				ImGui.SameLine();
-				ImGui.Button("V###copyPrimaryMesh" + index);
-				ImGui.PopFont();
-			}
 
 			if (beforeHasPrimaryMesh != data.HasPrimaryMesh) {
 				if (isInitialState) {
 					data.HasPrimaryMesh = true;
 				} else {
 					data.SetUpPolyContainers();
+					CurrentMapState.ResetState();
 				}
-
-				CurrentMapState.ResetState();
 			}
+			
+			GuiStyle.SetElementStyle(ElementStyle.CheckboxEnabled);
 		}
 
 		private static void BuildColumnPalettes(int index, MeshResourceData data, bool isInitialState) {
-			ImGui.GetStyle().ItemSpacing = new Vector2(1, 0);
 			bool beforeHasPalettes = data.HasPalettes;
+			GuiStyle.SetElementStyle(isInitialState ? ElementStyle.CheckboxDisabled : ElementStyle.CheckboxEnabled);
+			
 			ImGui.Checkbox("###hasPalettes" + index, ref data.HasPalettes);
-			if (data.HasPalettes) {
-				ImGui.SameLine();
-				ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
-				ImGui.Button("C###copyPalettes" + index);
-				ImGui.SameLine();
-				ImGui.Button("V###copyPalettes" + index);
-				ImGui.PopFont();
-			}
 
 			if (beforeHasPalettes != data.HasPalettes) {
 				if (isInitialState) {
@@ -218,24 +216,37 @@ namespace GaneshaDx.UserInterface.GuiForms {
 							data.Palettes.Add(newPalette);
 						}
 					}
+					
+					CurrentMapState.ResetState();
 				}
-
-				CurrentMapState.ResetState();
 			}
+			
+			GuiStyle.SetElementStyle(ElementStyle.CheckboxEnabled);
+		}
+
+		private static void BuildColumnGrayscalePalette(int index, MeshResourceData data, bool isInitialState) {
+			bool beforeHasPalettes = data.HasGrayscalePalettes;
+			GuiStyle.SetElementStyle(isInitialState ? ElementStyle.CheckboxDisabled : ElementStyle.CheckboxEnabled);
+			
+			ImGui.Checkbox("###hasGrayscalePalettes" + index, ref data.HasGrayscalePalettes);
+
+			if (beforeHasPalettes != data.HasGrayscalePalettes) {
+				if (isInitialState) {
+					data.HasGrayscalePalettes = true;
+				} else {
+					CurrentMapState.ResetState();
+				}
+			}
+			
+			GuiStyle.SetElementStyle(ElementStyle.CheckboxEnabled);
 		}
 
 		private static void BuildColumnLightsAndBackground(int index, MeshResourceData data, bool isInitialState) {
-			ImGui.GetStyle().ItemSpacing = new Vector2(1, 0);
 			bool beforeHasLightsBackground = data.HasLightsAndBackground;
+			
+			GuiStyle.SetElementStyle(isInitialState ? ElementStyle.CheckboxDisabled : ElementStyle.CheckboxEnabled);
+			
 			ImGui.Checkbox("###hasLighting" + index, ref data.HasLightsAndBackground);
-			if (data.HasLightsAndBackground) {
-				ImGui.SameLine();
-				ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
-				ImGui.Button("C###copyLighting" + index);
-				ImGui.SameLine();
-				ImGui.Button("V###copyLighting" + index);
-				ImGui.PopFont();
-			}
 
 			if (beforeHasLightsBackground != data.HasLightsAndBackground) {
 				if (isInitialState) {
@@ -257,20 +268,48 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 				CurrentMapState.ResetState();
 			}
+			
+			GuiStyle.SetElementStyle(ElementStyle.CheckboxEnabled);
 		}
 
-		private static void BuildColumnTerrain(int index, MeshResourceData data, bool isInitialState) {
-			ImGui.GetStyle().ItemSpacing = new Vector2(1, 0);
-			bool beforeHasTerrain = data.HasTerrain;
-			ImGui.Checkbox("###hasTerrain" + index, ref data.HasTerrain);
-			if (data.HasLightsAndBackground) {
-				ImGui.SameLine();
-				ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
-				ImGui.Button("C###copyTerrain" + index);
-				ImGui.SameLine();
-				ImGui.Button("V###copyTerrain" + index);
-				ImGui.PopFont();
+		private static void BuildColumnRenderProperties(int index, MeshResourceData data, bool isInitialState) {
+			bool beforeHasPalettes = data.HasPolygonRenderProperties;
+			
+			ImGui.Checkbox("###hasRenderProperties" + index, ref data.HasPolygonRenderProperties);
+
+			if (beforeHasPalettes != data.HasPolygonRenderProperties) {
+				foreach (KeyValuePair<MeshType, Dictionary<PolygonType, List<Polygon>>> polygonBuckets in data.PolygonCollection) {
+					foreach (KeyValuePair<PolygonType, List<Polygon>> polygons in polygonBuckets.Value) {
+						foreach (Polygon polygon in polygons.Value) {
+							polygon.RenderingProperties = data.HasPolygonRenderProperties 
+								? new PolygonRenderingProperties()
+								: null;
+						}
+					}
+				}
+
+				data.UnknownRenderPropertiesData = data.HasPolygonRenderProperties
+					? new List<byte>()
+					: null;
+
+				if (data.HasPolygonRenderProperties && data.UnknownRenderPropertiesData != null) {
+					for (int unknownPropertiesIndex = 0; unknownPropertiesIndex < 4096; unknownPropertiesIndex++) {
+						data.UnknownRenderPropertiesData.Add(0);
+					}
+				}
+				
+				if (!isInitialState) {
+					CurrentMapState.ResetState();
+				}
 			}
+		}
+		
+		private static void BuildColumnTerrain(int index, MeshResourceData data, bool isInitialState) {
+			bool beforeHasTerrain = data.HasTerrain;
+			
+			GuiStyle.SetElementStyle(isInitialState ? ElementStyle.CheckboxDisabled : ElementStyle.CheckboxEnabled);
+			
+			ImGui.Checkbox("###hasTerrain" + index, ref data.HasTerrain);
 
 			if (beforeHasTerrain != data.HasTerrain) {
 				if (isInitialState) {
@@ -289,24 +328,17 @@ namespace GaneshaDx.UserInterface.GuiForms {
 							SizeZ = 1
 						};
 					}
+					
+					CurrentMapState.ResetState();
 				}
-
-				CurrentMapState.ResetState();
 			}
+			
+			GuiStyle.SetElementStyle(ElementStyle.CheckboxEnabled);
 		}
 
 		private static void BuildColumnTextureAnimations(int index, MeshResourceData data) {
-			ImGui.GetStyle().ItemSpacing = new Vector2(1, 0);
 			bool beforeHasTerrain = data.HasTextureAnimations;
 			ImGui.Checkbox("###hasTextureAnimation" + index, ref data.HasTextureAnimations);
-			if (data.HasTextureAnimations) {
-				ImGui.SameLine();
-				ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
-				ImGui.Button("C###copyTextureAnimation" + index);
-				ImGui.SameLine();
-				ImGui.Button("V###copyTextureAnimation" + index);
-				ImGui.PopFont();
-			}
 
 			if (beforeHasTerrain != data.HasTextureAnimations) {
 				if (data.HasTextureAnimations) {
@@ -326,17 +358,8 @@ namespace GaneshaDx.UserInterface.GuiForms {
 		}
 
 		private static void BuildColumnPaletteAnimationFrames(int index, MeshResourceData data) {
-			ImGui.GetStyle().ItemSpacing = new Vector2(1, 0);
 			bool beforeHasAnimatedFrame = data.HasPaletteAnimationFrames;
 			ImGui.Checkbox("###hasAnimatedPalettes" + index, ref data.HasPaletteAnimationFrames);
-			if (data.HasPaletteAnimationFrames) {
-				ImGui.SameLine();
-				ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
-				ImGui.Button("C###copyAnimatedPalettes" + index);
-				ImGui.SameLine();
-				ImGui.Button("V###copyAnimatedPalettes" + index);
-				ImGui.PopFont();
-			}
 
 			if (beforeHasAnimatedFrame != data.HasPaletteAnimationFrames) {
 				if (data.HasPaletteAnimationFrames) {
@@ -397,17 +420,8 @@ namespace GaneshaDx.UserInterface.GuiForms {
 		}
 
 		private static void BuildColumnHasAnimatedMeshInstructions(int index, MeshResourceData data) {
-			ImGui.GetStyle().ItemSpacing = new Vector2(1, 0);
 			bool beforeAnimatedMeshes = data.HasAnimatedMeshInstructions;
 			ImGui.Checkbox("###hasAnimatedMeshes" + index, ref data.HasAnimatedMeshInstructions);
-			if (data.HasAnimatedMeshInstructions) {
-				ImGui.SameLine();
-				ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
-				ImGui.Button("C###copyAnimatedMeshes" + index);
-				ImGui.SameLine();
-				ImGui.Button("V###copyAnimatedMeshes" + index);
-				ImGui.PopFont();
-			}
 
 			if (beforeAnimatedMeshes != data.HasAnimatedMeshInstructions) {
 				data.MeshAnimationInstructions = data.HasAnimatedMeshInstructions
@@ -419,7 +433,6 @@ namespace GaneshaDx.UserInterface.GuiForms {
 		}
 
 		private static void BuildColumnHasAnimatedMeshes(int index, MeshResourceData data) {
-			ImGui.GetStyle().ItemSpacing = new Vector2(1, 0);
 			bool beforeAnimatedMesh1 = data.HasAnimatedMesh1;
 			bool beforeAnimatedMesh2 = data.HasAnimatedMesh2;
 			bool beforeAnimatedMesh3 = data.HasAnimatedMesh3;

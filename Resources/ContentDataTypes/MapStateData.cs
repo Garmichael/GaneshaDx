@@ -19,6 +19,8 @@ namespace GaneshaDx.Resources.ContentDataTypes {
 		public List<MapResource> StateMeshResources;
 		public MapResource StateTextureResource;
 
+		public bool HasPolygonRenderingProperties => _primaryMeshSource is { HasPolygonRenderProperties: true };
+		
 		public Dictionary<MeshType, Dictionary<PolygonType, List<Polygon>>> PolygonCollection =>
 			_primaryMeshSource?.PolygonCollection;
 
@@ -74,6 +76,7 @@ namespace GaneshaDx.Resources.ContentDataTypes {
 		private MeshResourceData _lightingAndBackgroundSource;
 		private MeshResourceData _terrainSource;
 		private MeshResourceData _paletteSource;
+		private MeshResourceData _grayscalePaletteSource;
 		private MeshResourceData _textureAnimationSource;
 		private MeshResourceData _animatedPaletteFramesSource;
 
@@ -120,6 +123,15 @@ namespace GaneshaDx.Resources.ContentDataTypes {
 			set {
 				if (_paletteSource.Palettes != null) {
 					_paletteSource.Palettes = value;
+				}
+			}
+		}
+
+		public List<Palette> GrayscalePalette {
+			get => _grayscalePaletteSource?.Palettes;
+			set {
+				if (_grayscalePaletteSource.Palettes != null) {
+					_grayscalePaletteSource.Palettes = value;
 				}
 			}
 		}
@@ -232,6 +244,25 @@ namespace GaneshaDx.Resources.ContentDataTypes {
 					MeshResourceData resourceData = (MeshResourceData) mapResource.ResourceData;
 					if (resourceData.HasPalettes) {
 						_paletteSource = resourceData;
+						break;
+					}
+				}
+			}
+
+			// Grayscale Palette Source
+			foreach (MapResource mapResource in stateMeshResources) {
+				MeshResourceData resourceData = (MeshResourceData) mapResource.ResourceData;
+				if (resourceData.HasGrayscalePalettes) {
+					_grayscalePaletteSource = resourceData;
+					break;
+				}
+			}
+
+			if (_grayscalePaletteSource == null) {
+				foreach (MapResource mapResource in initialMeshResources) {
+					MeshResourceData resourceData = (MeshResourceData) mapResource.ResourceData;
+					if (resourceData.HasGrayscalePalettes) {
+						_grayscalePaletteSource = resourceData;
 						break;
 					}
 				}

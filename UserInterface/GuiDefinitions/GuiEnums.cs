@@ -11,6 +11,8 @@
 		ButtonTabSelected,
 		ButtonSelected,
 		ButtonDisabled,
+		CheckboxDisabled,
+		CheckboxEnabled,
 		InvisibleWindowStyle,
 		FixedPanelStyle,
 		Header,

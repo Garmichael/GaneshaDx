@@ -944,6 +944,10 @@ namespace GaneshaDx.UserInterface.GuiForms {
 		}
 
 		private static void RenderUnknownRenderPropertiesValues() {
+			if (!CurrentMapState.StateData.HasPolygonRenderingProperties) {
+				return;
+			}
+			
 			GuiStyle.SetNewUiToDefaultStyle();
 			GuiStyle.SetElementStyle(ElementStyle.Header);
 
@@ -1007,6 +1011,10 @@ namespace GaneshaDx.UserInterface.GuiForms {
 		}
 
 		private static void RenderUnknownRenderPropertiesHeader() {
+			if (!CurrentMapState.StateData.HasPolygonRenderingProperties) {
+				return;
+			}
+			
 			GuiStyle.SetNewUiToDefaultStyle();
 			GuiStyle.SetElementStyle(ElementStyle.Header);
 

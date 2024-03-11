@@ -184,6 +184,19 @@ namespace GaneshaDx.UserInterface.GuiDefinitions {
 				colors[(int) ImGuiCol.Text] = ColorPalette[ColorName.Darkest];
 			}
 
+			if (elementStyle == ElementStyle.CheckboxDisabled) {
+				colors[(int) ImGuiCol.FrameBg] = ColorPalette[ColorName.Darkest];
+				colors[(int) ImGuiCol.FrameBgHovered] = ColorPalette[ColorName.Darkest];
+				colors[(int) ImGuiCol.FrameBgActive] = ColorPalette[ColorName.Darkest];
+			}
+
+
+			if (elementStyle == ElementStyle.CheckboxEnabled) {
+				colors[(int) ImGuiCol.FrameBg] = ColorPalette[ColorName.Darker];
+				colors[(int) ImGuiCol.FrameBgHovered] = ColorPalette[ColorName.Dark];
+				colors[(int) ImGuiCol.FrameBgActive] = ColorPalette[ColorName.Dark];
+			}
+			
 			if (elementStyle == ElementStyle.InvisibleWindowStyle) {
 				colors[(int) ImGuiCol.WindowBg] = Vector4.Zero;
 			}

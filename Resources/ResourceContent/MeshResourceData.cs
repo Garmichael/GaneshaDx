@@ -44,6 +44,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 		public bool HasAnimatedMesh8;
 
 		public bool HasPalettes;
+		public bool HasGrayscalePalettes;
 		public bool HasLightsAndBackground;
 		public bool HasTextureAnimations;
 		public bool HasTerrain;
@@ -96,7 +97,11 @@ namespace GaneshaDx.Resources.ResourceContent {
 		public List<Palette> PaletteAnimationFrames = new List<Palette>();
 
 		public List<AnimatedTextureInstructions> AnimatedTextureInstructions = new List<AnimatedTextureInstructions>();
+		
+		private readonly List<byte> _rawMeshAnimationInstructionData = new List<byte>();
 
+		public MeshAnimationInstructions MeshAnimationInstructions;
+		
 		public Terrain Terrain;
 
 		public bool UsesEndOfTerrainPadding;
@@ -117,6 +122,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 			ProcessUnknownPostTerrainData();
 			ProcessTextureAnimations();
 			ProcessPaletteAnimationFrames();
+			ProcessGrayscalePalette();
 			ProcessMeshAnimationInstructions();
 			ProcessPolygonRenderProperties();
 		}
@@ -889,10 +895,21 @@ namespace GaneshaDx.Resources.ResourceContent {
 			}
 		}
 
-		private readonly List<byte> _rawMeshAnimationInstructionData = new List<byte>();
+		private void ProcessGrayscalePalette() {
+			_currentByteIndex = Utilities.GetInt32FromLittleEndian(
+				RawData[TexturePalettesGrayscalePointer],
+				RawData[TexturePalettesGrayscalePointer + 1],
+				RawData[TexturePalettesGrayscalePointer + 2],
+				RawData[TexturePalettesGrayscalePointer + 3]
+			);
 
-		public MeshAnimationInstructions MeshAnimationInstructions;
+			if (_currentByteIndex == 0) {
+				return;
+			}
 
+			HasGrayscalePalettes = true;
+		}
+		
 		private void ProcessMeshAnimationInstructions() {
 			const int instructionChunkSize = 14620;
 
@@ -1448,6 +1465,10 @@ namespace GaneshaDx.Resources.ResourceContent {
 		}
 
 		private void BuildRawDataGrayscalePalettes() {
+			if (!HasGrayscalePalettes) {
+				return;
+			}
+			
 			(RawData[TexturePalettesGrayscalePointer],
 				RawData[TexturePalettesGrayscalePointer + 1],
 				RawData[TexturePalettesGrayscalePointer + 2],
