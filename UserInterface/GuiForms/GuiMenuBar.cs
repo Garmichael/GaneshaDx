@@ -306,7 +306,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					}
 
 					if (ImGui.MenuItem(
-						"Manage Map Resources",
+						"Manage Mesh Resources",
 						"M",
 						false,
 						MapData.MapIsLoaded)

@@ -164,7 +164,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				
 				GuiStyle.AddSpace();
 
-				if (ImGui.Button("Manage Map Resources")) {
+				if (ImGui.Button("Manage Mesh Resources")) {
 					Gui.ToggleManageResourcesWindow();
 				}
 
