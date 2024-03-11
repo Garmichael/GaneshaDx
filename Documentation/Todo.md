@@ -26,7 +26,8 @@
 
 ### Animated Palettes
 
-    [2] [4] Map 92 & 104. Palette Animation only plays once in game
+    [2] [4] Map 92 & 104. Palette Animation only plays once in game. 
+    Most likely related to the Unknown14 property of the animation. 13 = once.
 
 ### No Known Solution / Probably Won't Implement
 
