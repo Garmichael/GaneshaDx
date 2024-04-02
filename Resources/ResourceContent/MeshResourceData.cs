@@ -581,9 +581,9 @@ namespace GaneshaDx.Resources.ResourceContent {
 			int rOverflow = Math.Max(0, r - 255);
 			int gOverflow = Math.Max(0, g - 255);
 			int bOverflow = Math.Max(0, b - 255);
-			r = Math.Max(0, 255);
-			g = Math.Max(0, 255);
-			b = Math.Max(0, 255);
+			r = Math.Clamp(r, 0, 255);
+			g = Math.Clamp(g, 0, 255);
+			b = Math.Clamp(b, 0, 255);
 
 			DirectionalLights[0].LightColor = new Color(r, g, b, 255);
 			DirectionalLights[0].Overflow = new Vector3(rOverflow, gOverflow, bOverflow);
@@ -594,9 +594,9 @@ namespace GaneshaDx.Resources.ResourceContent {
 			rOverflow = Math.Max(0, r - 255);
 			gOverflow = Math.Max(0, g - 255);
 			bOverflow = Math.Max(0, b - 255);
-			r = Math.Max(0, 255);
-			g = Math.Max(0, 255);
-			b = Math.Max(0, 255);
+			r = Math.Clamp(r, 0, 255);
+			g = Math.Clamp(g, 0, 255);
+			b = Math.Clamp(b, 0, 255);
 
 			DirectionalLights[1].LightColor = new Color(r, g, b, 255);
 			DirectionalLights[1].Overflow = new Vector3(rOverflow, gOverflow, bOverflow);
@@ -607,9 +607,9 @@ namespace GaneshaDx.Resources.ResourceContent {
 			rOverflow = Math.Max(0, r - 255);
 			gOverflow = Math.Max(0, g - 255);
 			bOverflow = Math.Max(0, b - 255);
-			r = Math.Max(0, 255);
-			g = Math.Max(0, 255);
-			b = Math.Max(0, 255);
+			r = Math.Clamp(r, 0, 255);
+			g = Math.Clamp(g, 0, 255);
+			b = Math.Clamp(b, 0, 255);
 
 			DirectionalLights[2].LightColor = new Color(r, g, b, 255);
 			DirectionalLights[2].Overflow = new Vector3(rOverflow, gOverflow, bOverflow);
