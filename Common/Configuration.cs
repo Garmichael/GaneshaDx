@@ -54,6 +54,7 @@ namespace GaneshaDx.Common {
 			public int AutoSaveDuration = 10;
 			public bool RenderFftOrtho = false;
 			public bool HideHiddenPolysByFacing = false;
+			public bool PlaysScriptedTextureAnimations = false;
 			public bool ExpandCompassToTerrainLength = true;
 			public float AutoMapRatio = 0.679f;
 		}

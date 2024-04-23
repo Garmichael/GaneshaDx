@@ -96,7 +96,7 @@ namespace GaneshaDx.UserInterface.Input {
 						Gui.ToggleManageResourcesWindow();
 					}
 
-					if (AppInput.KeyJustPressed(Keys.B)) {
+					if (AppInput.KeyJustPressed(Keys.O)) {
 						Configuration.Properties.RenderFftOrtho = !Configuration.Properties.RenderFftOrtho;
 						Configuration.SaveConfiguration();
 					}
@@ -143,6 +143,10 @@ namespace GaneshaDx.UserInterface.Input {
 						}
 					}
 
+					if (AppInput.KeyJustPressed(Keys.K)) {
+						Configuration.Properties.PlaysScriptedTextureAnimations = !Configuration.Properties.PlaysScriptedTextureAnimations;
+						Configuration.SaveConfiguration();
+					}
 				}
 
 				if (AppInput.ControlHeld && !AppInput.ShiftHeld && !AppInput.AltHeld) {

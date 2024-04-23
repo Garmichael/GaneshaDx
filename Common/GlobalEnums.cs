@@ -48,6 +48,7 @@
 	public enum TextureAnimationType {
 		UvAnimation,
 		PaletteAnimation,
+		UnknownAnimation,
 		None
 	}
 	
@@ -60,6 +61,14 @@
 		Unknown
 	}
 
+	public enum PaletteAnimationMode {
+		ForwardLooping,
+		ForwardAndReverseLooping,
+		ForwardOnceOnTrigger,
+		ForwardLoopingOnTrigger,
+		Unknown
+	}
+	
 	public enum MeshType {
 		PrimaryMesh,
 		AnimatedMesh1,

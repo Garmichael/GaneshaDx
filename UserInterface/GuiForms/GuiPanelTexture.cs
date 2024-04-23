@@ -20,7 +20,8 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			Palettes,
 			AnimationsList,
 			UvAnimation,
-			PaletteAnimation
+			PaletteAnimation,
+			UnknownAnimation
 		}
 
 		public static PanelMode CurrentPanelMode;
@@ -47,6 +48,8 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				RenderPaletteAnimation();
 			} else if (CurrentPanelMode == PanelMode.UvAnimation) {
 				RenderUvAnimation();
+			} else if (CurrentPanelMode == PanelMode.UnknownAnimation) {
+				RenderUnknownAnimation();
 			}
 		}
 
@@ -691,6 +694,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 						textureAnimations[index].Instructions = textureAnimations[index].TextureAnimationType switch {
 							TextureAnimationType.PaletteAnimation => new PaletteAnimation(),
 							TextureAnimationType.UvAnimation => new UvAnimation(),
+							TextureAnimationType.UnknownAnimation => new UnknownAnimation(),
 							_ => null
 						};
 					} else {
@@ -715,6 +719,11 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					if (textureAnimations[index].TextureAnimationType == TextureAnimationType.UvAnimation) {
 						SelectedTextureAnimation = CurrentMapState.StateData.TextureAnimations[index].Instructions;
 						CurrentPanelMode = PanelMode.UvAnimation;
+					}
+
+					if (textureAnimations[index].TextureAnimationType == TextureAnimationType.UnknownAnimation) {
+						SelectedTextureAnimation = CurrentMapState.StateData.TextureAnimations[index].Instructions;
+						CurrentPanelMode = PanelMode.UnknownAnimation;
 					}
 				}
 
@@ -849,6 +858,23 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			ImGui.SetColumnWidth(0, GuiStyle.LabelWidth);
 			ImGui.SetColumnWidth(1, GuiStyle.WidgetWidth + 10);
 
+			ImGui.Text("Animation Mode");
+			ImGui.NextColumn();
+
+			ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+			int animationMode = (int) selectedAnimation.AnimationMode;
+
+			List<string> animationModes = Enum.GetNames(typeof(PaletteAnimationMode)).ToList();
+			for (int animationModeIndex = 0; animationModeIndex < animationModes.Count; animationModeIndex++) {
+				animationModes[animationModeIndex] = Regex.Replace(
+					animationModes[animationModeIndex], "(\\B[A-Z])", " $1"
+				);
+			}
+
+			ImGui.Combo("PA_AnimationMode", ref animationMode, animationModes.ToArray(), animationModes.Count);
+			selectedAnimation.AnimationMode = (PaletteAnimationMode) animationMode;
+			ImGui.NextColumn();
+			
 			ImGui.Text("Target Palette Id");
 			ImGui.NextColumn();
 
@@ -871,7 +897,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
 			ImGui.InputInt("PA_FrameCount", ref selectedAnimation.FrameCount, 1);
 			selectedAnimation.FrameCount = Utilities.Clamp(
-				selectedAnimation.FrameCount, 1, 16 - selectedAnimation.AnimationStartIndex
+				selectedAnimation.FrameCount, 0, 16 - selectedAnimation.AnimationStartIndex
 			);
 			ImGui.NextColumn();
 
@@ -880,49 +906,56 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 			ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
 			ImGui.InputInt("PA_FrameDuration", ref selectedAnimation.FrameDuration, 1);
-			selectedAnimation.FrameDuration = Utilities.Min(selectedAnimation.FrameDuration, 1);
+			selectedAnimation.FrameDuration = Utilities.Min(selectedAnimation.FrameDuration, 0);
 			ImGui.NextColumn();
-
+			
 			if (Configuration.Properties.ShowUnknownValues) {
 				GuiStyle.AddSpace();
+				ImGui.NextColumn();
+				ImGui.NextColumn();
 				
+				ImGui.Text("Unknown 0A");
+				ImGui.NextColumn();
+				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+				ImGui.InputInt("##PA_Unknown0a", ref selectedAnimation.Unknown0A, 1);
+				ImGui.NextColumn();
+
 				ImGui.Text("Unknown 1");
 				ImGui.NextColumn();
-				GuiStyle.AddSpace();
 				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
 				ImGui.InputInt("##PA_Unknown1", ref selectedAnimation.Unknown1, 1);
 				ImGui.NextColumn();
-				
+
 				ImGui.Text("Unknown 2");
 				ImGui.NextColumn();
 				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
 				ImGui.InputInt("##PA_Unknown2", ref selectedAnimation.Unknown2, 1);
 				ImGui.NextColumn();
-				
+
 				ImGui.Text("Unknown 3");
 				ImGui.NextColumn();
 				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
 				ImGui.InputInt("##PA_Unknown3", ref selectedAnimation.Unknown3, 1);
 				ImGui.NextColumn();
-				
+
 				ImGui.Text("Unknown 4");
 				ImGui.NextColumn();
 				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
 				ImGui.InputInt("##PA_Unknown4", ref selectedAnimation.Unknown4, 1);
 				ImGui.NextColumn();
-				
+
 				ImGui.Text("Unknown 5");
 				ImGui.NextColumn();
 				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
 				ImGui.InputInt("##PA_Unknown5", ref selectedAnimation.Unknown5, 1);
 				ImGui.NextColumn();
-				
+
 				ImGui.Text("Unknown 6");
 				ImGui.NextColumn();
 				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
 				ImGui.InputInt("##PA_Unknown6", ref selectedAnimation.Unknown6, 1);
 				ImGui.NextColumn();
-				
+
 				ImGui.Text("Unknown 7");
 				ImGui.NextColumn();
 				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
@@ -940,49 +973,44 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
 				ImGui.InputInt("##PA_Unknown10", ref selectedAnimation.Unknown10, 1);
 				ImGui.NextColumn();
-				
+
 				ImGui.Text("Unknown 11");
 				ImGui.NextColumn();
 				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
 				ImGui.InputInt("##PA_Unknown11", ref selectedAnimation.Unknown11, 1);
 				ImGui.NextColumn();
-				
+
 				ImGui.Text("Unknown 12");
 				ImGui.NextColumn();
 				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
 				ImGui.InputInt("##PA_Unknown12", ref selectedAnimation.Unknown12, 1);
 				ImGui.NextColumn();
-				
+
 				ImGui.Text("Unknown 13");
 				ImGui.NextColumn();
 				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
 				ImGui.InputInt("##PA_Unknown13", ref selectedAnimation.Unknown13, 1);
 				ImGui.NextColumn();
-				
-				ImGui.Text("Unknown 14");
-				ImGui.NextColumn();
-				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
-				ImGui.InputInt("##PA_Unknown14", ref selectedAnimation.Unknown14, 1);
-				ImGui.NextColumn();
-				
+
 				ImGui.Text("Unknown 16");
 				ImGui.NextColumn();
 				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
 				ImGui.InputInt("##PA_Unknown16", ref selectedAnimation.Unknown16, 1);
 				ImGui.NextColumn();
-				
+
 				ImGui.Text("Unknown 18");
 				ImGui.NextColumn();
 				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
 				ImGui.InputInt("##PA_Unknown18", ref selectedAnimation.Unknown18, 1);
 				ImGui.NextColumn();
-				
+
 				ImGui.Text("Unknown 19");
 				ImGui.NextColumn();
 				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
 				ImGui.InputInt("##PA_Unknown19", ref selectedAnimation.Unknown19, 1);
 				ImGui.NextColumn();
 			}
+
 			ImGui.Columns(1);
 			ImGui.Unindent();
 		}
@@ -1141,7 +1169,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				GuiStyle.AddSpace();
 				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
 				ImGui.InputInt("UVA_FrameCount", ref selectedAnimation.FrameCount, 1);
-				selectedAnimation.FrameCount = Utilities.Clamp(selectedAnimation.FrameCount, 1, 252);
+				selectedAnimation.FrameCount = Utilities.Clamp(selectedAnimation.FrameCount, 0, 252);
 				ImGui.NextColumn();
 
 				ImGui.Text("Frame Duration");
@@ -1149,7 +1177,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
 				ImGui.InputInt("UVA_FrameDuration", ref selectedAnimation.FrameDuration, 1);
-				selectedAnimation.FrameDuration = Utilities.Min(selectedAnimation.FrameDuration, 1);
+				selectedAnimation.FrameDuration = Utilities.Min(selectedAnimation.FrameDuration, 0);
 				ImGui.NextColumn();
 
 				ImGui.Unindent();
@@ -1236,6 +1264,49 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					ImGui.Columns(1);
 				}
 			}
+
+			ImGui.Columns(1);
+			ImGui.Unindent();
+		}
+
+		private static void RenderUnknownAnimation() {
+			UnknownAnimation selectedAnimation = (UnknownAnimation) SelectedTextureAnimation;
+
+			GuiStyle.SetNewUiToDefaultStyle();
+
+			if (ImGui.Button("< Return")) {
+				CurrentPanelMode = PanelMode.AnimationsList;
+			}
+
+			GuiStyle.AddSpace();
+
+			ImGui.Indent();
+			ImGui.Columns(2, "UNK_AnimationColumns", false);
+			ImGui.SetColumnWidth(0, GuiStyle.LabelWidth);
+			ImGui.SetColumnWidth(1, GuiStyle.WidgetWidth + 10);
+
+			List<int> values = new List<int>() {
+				selectedAnimation.Unknown0, selectedAnimation.Unknown1, selectedAnimation.Unknown2,
+				selectedAnimation.Unknown3, selectedAnimation.Unknown4, selectedAnimation.Unknown5,
+				selectedAnimation.Unknown6, selectedAnimation.Unknown7, selectedAnimation.Unknown8,
+				selectedAnimation.Unknown9, selectedAnimation.Unknown10, selectedAnimation.Unknown11,
+				selectedAnimation.Unknown12, selectedAnimation.Unknown13, selectedAnimation.Unknown14,
+				selectedAnimation.Unknown15, selectedAnimation.Unknown16, selectedAnimation.Unknown17,
+				selectedAnimation.Unknown18, selectedAnimation.Unknown19
+			};
+
+			for (int valueIndex = 0; valueIndex < values.Count; valueIndex++) {
+				ImGui.Text("Unknown " + valueIndex);
+				ImGui.NextColumn();
+				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+
+				int value = values[valueIndex];
+				ImGui.InputInt("UNK_Unknown" + valueIndex, ref value, 1);
+				values[valueIndex] = value;
+
+				ImGui.NextColumn();
+			}
+
 
 			ImGui.Columns(1);
 			ImGui.Unindent();

@@ -57,7 +57,7 @@ namespace GaneshaDx.Rendering {
 
 				if (uvAnimation.UvAnimationMode != UvAnimationMode.ForwardLooping &&
 				    uvAnimation.UvAnimationMode != UvAnimationMode.ForwardAndReverseLooping
-				) {
+				   ) {
 					continue;
 				}
 
@@ -154,6 +154,13 @@ namespace GaneshaDx.Rendering {
 					continue;
 				}
 
+				if (paletteAnimation.AnimationMode != PaletteAnimationMode.ForwardLooping &&
+				    paletteAnimation.AnimationMode != PaletteAnimationMode.ForwardAndReverseLooping &&
+				    !Configuration.Properties.PlaysScriptedTextureAnimations
+				   ) {
+					continue;
+				}
+
 				int frameId = GetAnimationFrameId(paletteAnimation) + paletteAnimation.AnimationStartIndex;
 
 				Palette targetPalette = AnimationAdjustedPalettes[paletteAnimation.OverriddenPaletteId];
@@ -175,7 +182,7 @@ namespace GaneshaDx.Rendering {
 
 			if (uvAnimation.UvAnimationMode == UvAnimationMode.ForwardAndReverseLooping &&
 			    timesLoopPlayed % 2 == 0
-			) {
+			   ) {
 				frameId = uvAnimation.FrameCount - 1 - frameId;
 			}
 
@@ -187,9 +194,16 @@ namespace GaneshaDx.Rendering {
 			double totalDuration = paletteAnimation.FrameCount * adjustedFrameDuration;
 			double millisecondsPlayed = Stage.GameTime.TotalGameTime.TotalMilliseconds;
 			double timeIntoLoop = millisecondsPlayed % totalDuration;
+			double timesLoopPlayed = Math.Floor(millisecondsPlayed / totalDuration);
 			int frameId = (int) Math.Floor((float) timeIntoLoop / adjustedFrameDuration);
 
-			return frameId;
+			if (paletteAnimation.AnimationMode == PaletteAnimationMode.ForwardAndReverseLooping &&
+			    timesLoopPlayed % 2 == 0
+			   ) {
+				frameId = paletteAnimation.FrameCount - 1 - frameId;
+			}
+            
+			return totalDuration == 0 ? 0 : frameId;
 		}
 
 		public static void Render() {

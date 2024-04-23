@@ -18,11 +18,11 @@ namespace GaneshaDx.Resources.ContentDataTypes.TextureAnimations {
 
 		public UvAnimationMode UvAnimationMode = UvAnimationMode.ForwardLooping;
 
-		public int Unknown1;
+		public int Unknown1 = 3;
 		public int Unknown3;
 		public int Unknown5;
 		public int Unknown7;
-		public int Unknown9;
+		public int Unknown9 = 3;
 		public int Unknown11;
 		public int Unknown12;
 		public int Unknown13;

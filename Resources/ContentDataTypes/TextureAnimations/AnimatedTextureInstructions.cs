@@ -13,7 +13,9 @@ namespace GaneshaDx.Resources.ContentDataTypes.TextureAnimations {
 
 		public AnimatedTextureInstructions(List<byte> rawData) {
 			bool isUvAnimation = rawData[1] == 3 && rawData[9] == 3;
-			bool isPaletteAnimation = rawData[1] == 0 && rawData[2] == 224 && rawData[3] == 1 && rawData[14] > 0;
+			bool isPaletteAnimation = rawData[2] == 224;
+
+			bool isEmptyAnimation = IsEmptyAnimation(rawData);
 
 			if (isUvAnimation) {
 				TextureAnimationType = TextureAnimationType.UvAnimation;
@@ -21,9 +23,23 @@ namespace GaneshaDx.Resources.ContentDataTypes.TextureAnimations {
 			} else if (isPaletteAnimation) {
 				TextureAnimationType = TextureAnimationType.PaletteAnimation;
 				Instructions = new PaletteAnimation(rawData);
+			} else if (!isEmptyAnimation) {
+				TextureAnimationType = TextureAnimationType.UnknownAnimation;
+				Instructions = new UnknownAnimation(rawData);
 			} else {
 				TextureAnimationType = TextureAnimationType.None;
 			}
+		}
+
+		private bool IsEmptyAnimation(List<byte> rawData) {
+			bool isEmptyAnimation = true;
+			foreach (byte data in rawData) {
+				if (data != 0) {
+					isEmptyAnimation = false;
+				}
+			}
+
+			return isEmptyAnimation;
 		}
 
 		public List<byte> GetRawData() {

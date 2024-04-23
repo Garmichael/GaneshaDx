@@ -258,7 +258,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					bool beforeOrthoModeChange = Configuration.Properties.RenderFftOrtho;
 					ImGui.MenuItem(
 						"FFT Ortho Mode",
-						"B",
+						"O",
 						ref Configuration.Properties.RenderFftOrtho,
 						MapData.MapIsLoaded
 					);
@@ -291,6 +291,19 @@ namespace GaneshaDx.UserInterface.GuiForms {
 						Configuration.SaveConfiguration();
 					}
 
+					
+					bool beforePlayMalformedTextureAnimations = Configuration.Properties.PlaysScriptedTextureAnimations;
+					ImGui.MenuItem(
+						"Play Scripted Texture Animations",
+						"K",
+						ref Configuration.Properties.PlaysScriptedTextureAnimations,
+						MapData.MapIsLoaded
+					);
+
+					if (beforePlayMalformedTextureAnimations != Configuration.Properties.PlaysScriptedTextureAnimations) {
+						Configuration.SaveConfiguration();
+					}
+					
 					ImGui.Separator();
 
 					bool canEditMeshAnimations = MapData.MapIsLoaded &&
