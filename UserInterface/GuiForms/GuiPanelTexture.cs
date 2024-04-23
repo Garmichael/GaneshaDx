@@ -178,6 +178,21 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 				if (Configuration.Properties.ShowUnknownValues) {
 					GuiStyle.AddSpace();
+					
+					ImGui.NextColumn();
+					ImGui.Text("Texture Source (3=map)");
+					int unknown6B = Selection.SelectedPolygons[0].TextureSource;
+					int beforeUnknown6B = unknown6B;
+					ImGui.NextColumn();
+					ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+					ImGui.InputInt("##Unknown6BValue", ref unknown6B, 1);
+					if (beforeUnknown6B != unknown6B) {
+						foreach (Polygon selectedPolygon in Selection.SelectedPolygons) {
+							selectedPolygon.TextureSource = unknown6B;
+							selectedPolygon.TextureSource = Utilities.Clamp(selectedPolygon.TextureSource, 0, 255);
+						}
+					}
+					
 					ImGui.NextColumn();
 					ImGui.Text("Unknown3");
 					ImGui.NextColumn();
@@ -201,19 +216,6 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					if (beforeUnknown6A != unknown6A) {
 						foreach (Polygon selectedPolygon in Selection.SelectedPolygons) {
 							selectedPolygon.UnknownTextureValue6A = unknown6A;
-						}
-					}
-
-					ImGui.NextColumn();
-					ImGui.Text("Unknown6b");
-					int unknown6B = Selection.SelectedPolygons[0].UnknownTextureValue6B;
-					int beforeUnknown6B = unknown6B;
-					ImGui.NextColumn();
-					ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
-					ImGui.InputInt("##Unknown6BValue", ref unknown6B, 1);
-					if (beforeUnknown6B != unknown6B) {
-						foreach (Polygon selectedPolygon in Selection.SelectedPolygons) {
-							selectedPolygon.UnknownTextureValue6B = unknown6B;
 						}
 					}
 
@@ -874,7 +876,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			ImGui.Combo("PA_AnimationMode", ref animationMode, animationModes.ToArray(), animationModes.Count);
 			selectedAnimation.AnimationMode = (PaletteAnimationMode) animationMode;
 			ImGui.NextColumn();
-			
+
 			ImGui.Text("Target Palette Id");
 			ImGui.NextColumn();
 
@@ -908,12 +910,12 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			ImGui.InputInt("PA_FrameDuration", ref selectedAnimation.FrameDuration, 1);
 			selectedAnimation.FrameDuration = Utilities.Min(selectedAnimation.FrameDuration, 0);
 			ImGui.NextColumn();
-			
+
 			if (Configuration.Properties.ShowUnknownValues) {
 				GuiStyle.AddSpace();
 				ImGui.NextColumn();
 				ImGui.NextColumn();
-				
+
 				ImGui.Text("Unknown 0A");
 				ImGui.NextColumn();
 				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
@@ -961,13 +963,13 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
 				ImGui.InputInt("##PA_Unknown7", ref selectedAnimation.Unknown7, 1);
 				ImGui.NextColumn();
-				
+
 				ImGui.Text("Unknown 9");
 				ImGui.NextColumn();
 				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
 				ImGui.InputInt("##PA_Unknown9", ref selectedAnimation.Unknown9, 1);
 				ImGui.NextColumn();
-				
+
 				ImGui.Text("Unknown 10");
 				ImGui.NextColumn();
 				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);

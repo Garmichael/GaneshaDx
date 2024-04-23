@@ -36,9 +36,9 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 
 		public bool IsHovered => Selection.HoveredPolygons.Count > 0 && Selection.HoveredPolygons[0] == this;
 
-		public int UnknownTextureValue3;
+		public int UnknownTextureValue3 = 120;
 		public int UnknownTextureValue6A;
-		public int UnknownTextureValue6B;
+		public int TextureSource = 3;
 		public int UnknownTextureValue7;
 
 		public int UnknownUntexturedValueA;
@@ -341,7 +341,15 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 				TerrainX = TerrainX,
 				TerrainZ = TerrainZ,
 				TexturePage = TexturePage,
-				Vertices = new List<Vertex>()
+				Vertices = new List<Vertex>(),
+				UnknownTextureValue3 = UnknownTextureValue3,
+				UnknownTextureValue6A = UnknownTextureValue6A,
+				TextureSource = TextureSource,
+				UnknownTextureValue7 = UnknownTextureValue7,
+				UnknownUntexturedValueA = UnknownUntexturedValueA,
+				UnknownUntexturedValueB = UnknownUntexturedValueB,
+				UnknownUntexturedValueC = UnknownUntexturedValueC,
+				UnknownUntexturedValueD = UnknownUntexturedValueD 
 			};
 
 			foreach (Vertex vertex in Vertices) {
@@ -379,7 +387,15 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 				TerrainX = TerrainX,
 				TerrainZ = TerrainZ,
 				TexturePage = TexturePage,
-				Vertices = new List<Vertex>()
+				Vertices = new List<Vertex>(),
+				UnknownTextureValue3 = UnknownTextureValue3,
+				UnknownTextureValue6A = UnknownTextureValue6A,
+				TextureSource = TextureSource,
+				UnknownTextureValue7 = UnknownTextureValue7,
+				UnknownUntexturedValueA = UnknownUntexturedValueA,
+				UnknownUntexturedValueB = UnknownUntexturedValueB,
+				UnknownUntexturedValueC = UnknownUntexturedValueC,
+				UnknownUntexturedValueD = UnknownUntexturedValueD 
 			};
 
 			Polygon newPolygonB = new Polygon {
@@ -391,7 +407,15 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 				TerrainX = TerrainX,
 				TerrainZ = TerrainZ,
 				TexturePage = TexturePage,
-				Vertices = new List<Vertex>()
+				Vertices = new List<Vertex>(),
+				UnknownTextureValue3 = UnknownTextureValue3,
+				UnknownTextureValue6A = UnknownTextureValue6A,
+				TextureSource = TextureSource,
+				UnknownTextureValue7 = UnknownTextureValue7,
+				UnknownUntexturedValueA = UnknownUntexturedValueA,
+				UnknownUntexturedValueB = UnknownUntexturedValueB,
+				UnknownUntexturedValueC = UnknownUntexturedValueC,
+				UnknownUntexturedValueD = UnknownUntexturedValueD
 			};
 
 			newPolygonA.Vertices.Add(CloneVertex(0, Color.Red));

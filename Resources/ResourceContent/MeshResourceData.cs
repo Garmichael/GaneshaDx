@@ -439,7 +439,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 				polyContainer[index].TexturePage = texturePageId;
 
 				polyContainer[index].UnknownTextureValue6A = Utilities.GetIntFromBinary(texturePageBits.Substring(0, 4));
-				polyContainer[index].UnknownTextureValue6B = Utilities.GetIntFromBinary(texturePageBits.Substring(4, 2));
+				polyContainer[index].TextureSource = Utilities.GetIntFromBinary(texturePageBits.Substring(4, 2));
 				_currentByteIndex += 10;
 
 				if (totalVerts == 4) {
@@ -1228,7 +1228,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 				RawData.Add((byte) polygon.UvCoordinates[1].Y);
 
 				string binary = Utilities.GetBinaryFromInt(polygon.UnknownTextureValue6A, 4) +
-				                Utilities.GetBinaryFromInt(polygon.UnknownTextureValue6B, 2) +
+				                Utilities.GetBinaryFromInt(polygon.TextureSource, 2) +
 				                Utilities.GetBinaryFromInt(polygon.TexturePage, 2);
 				RawData.Add((byte) Utilities.GetIntFromBinary(binary));
 
@@ -1241,11 +1241,11 @@ namespace GaneshaDx.Resources.ResourceContent {
 				RawData.Add((byte) polygon.UvCoordinates[0].X);
 				RawData.Add((byte) polygon.UvCoordinates[0].Y);
 				RawData.Add((byte) polygon.PaletteId);
-				RawData.Add(120);
+				RawData.Add((byte) polygon.UnknownTextureValue3);
 				RawData.Add((byte) polygon.UvCoordinates[1].X);
 				RawData.Add((byte) polygon.UvCoordinates[1].Y);
-				string binary = Utilities.GetBinaryFromInt(0, 4) +
-				                Utilities.GetBinaryFromInt(3, 2) +
+				string binary = Utilities.GetBinaryFromInt(polygon.UnknownTextureValue6A, 4) +
+				                Utilities.GetBinaryFromInt(polygon.TextureSource, 2) +
 				                Utilities.GetBinaryFromInt(polygon.TexturePage, 2);
 				RawData.Add((byte) Utilities.GetIntFromBinary(binary));
 				RawData.Add(0);
