@@ -115,7 +115,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				ImGui.NextColumn();
 				
 				
-				ImGui.Text("Show/Save Unknown Values");
+				ImGui.Text("Show Unknown Values");
 				ImGui.NextColumn();
 
 				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);

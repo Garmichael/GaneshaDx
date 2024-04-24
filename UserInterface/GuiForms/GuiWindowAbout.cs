@@ -29,7 +29,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				ImGui.Text("GLB Exporter by CalamityCoder");
 				
 				GuiStyle.AddSpace();
-				ImGui.Text("Copyright 2021 - 2022");
+				ImGui.Text("Copyright 2021 - Present");
 				ImGui.Text("Storm Garden Studio");
 			}
 			ImGui.End();

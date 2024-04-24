@@ -21,13 +21,7 @@
         Figure out how to number XFiles
             Maybe manually define XFile?
     [1] [4] Copy / Paste
-    [1] [1] Add Has Invisibility Angles to the Resource Management Window
     [1] [3] Integrate Overridden Mesh Files and Removeable Objects
-
-### Animated Palettes
-
-    [2] [4] Map 92 & 104. Palette Animation only plays once in game. 
-    Most likely related to the Unknown14 property of the animation. 13 = once.
 
 ### No Known Solution / Probably Won't Implement
 
