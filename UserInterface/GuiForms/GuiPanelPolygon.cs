@@ -536,6 +536,14 @@ namespace GaneshaDx.UserInterface.GuiForms {
 							CurrentMapState.StateData.PolygonCollection[polygon.MeshType][polygon.PolygonType].Remove(polygon);
 							polygon.MeshType = meshTypes[_selectedMoveToId];
 							CurrentMapState.StateData.PolygonCollection[polygon.MeshType][polygon.PolygonType].Add(polygon);
+
+							if (polygon.MeshType == MeshType.PrimaryMesh) {
+								if (CurrentMapState.StateData.HasPolygonRenderingProperties) {
+									polygon.RenderingProperties = new PolygonRenderingProperties();
+								}
+							} else {
+								polygon.RenderingProperties = null;
+							}
 						}
 					}
 
