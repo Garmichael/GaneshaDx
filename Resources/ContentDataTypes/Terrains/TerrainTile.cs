@@ -9,10 +9,12 @@ using Microsoft.Xna.Framework.Graphics;
 namespace GaneshaDx.Resources.ContentDataTypes.Terrains {
 	public class TerrainTile {
 		public TerrainSurfaceType SurfaceType;
+		public int Shading;
 		public int Height;
 		public int Depth;
 		public int SlopeHeight;
 		public TerrainSlopeType SlopeType;
+		public bool PassThroughOnly;
 		public bool Impassable;
 		public bool Unselectable;
 		public int IndexZ;
@@ -31,7 +33,9 @@ namespace GaneshaDx.Resources.ContentDataTypes.Terrains {
 		public int Unknown0B;
 		public int Unknown1;
 		public int Unknown5;
-		public int Unknown6;
+		public bool Unknown6B;
+		public bool Unknown6C;
+		public bool Unknown6D;
 		
 
 		public Vector3 AveragePoint {
@@ -211,7 +215,11 @@ namespace GaneshaDx.Resources.ContentDataTypes.Terrains {
 
 			rawData.Add((byte) Unknown5);
 
-			binary = Utilities.GetBinaryFromInt(Unknown6).Substring(2) +
+			binary = (PassThroughOnly ? "1" : "0") +
+			         (Unknown6B ? "1" : "0") +
+			         (Unknown6C ? "1" : "0") +
+			         (Unknown6D ? "1" : "0") +
+			         Utilities.GetBinaryFromInt(Shading, 2) +
 			         (Impassable ? "1" : "0") +
 			         (Unselectable ? "1" : "0");
 			rawData.Add((byte) Utilities.GetIntFromBinary(binary));

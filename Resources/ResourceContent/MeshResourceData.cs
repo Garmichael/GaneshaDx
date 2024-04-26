@@ -747,7 +747,11 @@ namespace GaneshaDx.Resources.ResourceContent {
 
 						binary = Utilities.GetBinaryFromInt(RawData[_currentByteIndex + 6]);
 
-						int unknown6 = Utilities.GetIntFromBinary(binary.Substring(0, 6));
+						bool passThroughOnly =Utilities.GetIntFromBinary(binary.Substring(0, 1)) == 1; 
+						bool unknown6B =Utilities.GetIntFromBinary(binary.Substring(1, 1)) == 1; 
+						bool unknown6C =Utilities.GetIntFromBinary(binary.Substring(2, 1)) == 1; 
+						bool unknown6D =Utilities.GetIntFromBinary(binary.Substring(3, 1)) == 1; 
+						int shading = Utilities.GetIntFromBinary(binary.Substring(4, 2));
 
 						bool impassable = Utilities.GetIntFromBinary(binary.Substring(6, 1)) == 1;
 						bool unselectable = Utilities.GetIntFromBinary(binary.Substring(7, 1)) == 1;
@@ -769,8 +773,10 @@ namespace GaneshaDx.Resources.ResourceContent {
 							Depth = depth,
 							SlopeHeight = slopeHeight,
 							SlopeType = slopeType,
+							PassThroughOnly = passThroughOnly,
 							Impassable = impassable,
 							Unselectable = unselectable,
+							Shading = shading,
 							IndexZ = indexZ,
 							IndexX = indexX,
 							Level = terrainLevel,
@@ -786,7 +792,9 @@ namespace GaneshaDx.Resources.ResourceContent {
 							Unknown0B = unknown0B,
 							Unknown1 = unknown1,
 							Unknown5 = unknown5,
-							Unknown6 = unknown6
+							Unknown6B = unknown6B,
+							Unknown6C = unknown6C,
+							Unknown6D = unknown6D,
 						};
 
 						terrainTiles.Add(terrainTile);

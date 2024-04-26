@@ -188,12 +188,62 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					}
 
 					ImGui.NextColumn();
-
-					GuiStyle.AddSpace();
-					ImGui.Text("Impassable");
+					ImGui.Text("Shading");
+					
 					ImGui.NextColumn();
+					
+					List<string> shadingTypes = Enum.GetNames(typeof(TerrainDarkness)).ToList();
+					for (int shadingTypeIndex = 0; shadingTypeIndex < shadingTypes.Count; shadingTypeIndex++) {
+						shadingTypes[shadingTypeIndex] =
+							Regex.Replace(shadingTypes[shadingTypeIndex], "(\\B[A-Z])", " $1");
+					}
+					
+					int beforeShading = tiles[tileIndex].Shading;
+				
+					ImGui.PushItemWidth(GuiStyle.WidgetWidth);	
+					ImGui.Combo(
+						"###ShadingType" + tileIndex,
+						ref tiles[tileIndex].Shading,
+						shadingTypes.ToArray(),
+						shadingTypes.Count
+					);
+					ImGui.PopItemWidth();
+					
+					if (beforeShading != tiles[tileIndex].Shading) {
+						foreach (TerrainTile otherTerrainTile in Selection.SelectedTerrainTiles) {
+							if (otherTerrainTile != tiles[tileIndex] &&
+							    otherTerrainTile.Level == tiles[tileIndex].Level
+							   ) {
+								otherTerrainTile.Shading = tiles[tileIndex].Shading;
+							}
+						}
+					}
 
+					
+					ImGui.NextColumn();
 					GuiStyle.AddSpace();
+					
+					ImGui.Text("Pass Through Only");
+					ImGui.NextColumn();
+					GuiStyle.AddSpace();
+					
+					ImGui.PushItemWidth(GuiStyle.CheckBoxWidth);
+					bool beforeUnknown6A = tiles[tileIndex].PassThroughOnly;
+					ImGui.Checkbox("###unknown6a" + tileIndex, ref tiles[tileIndex].PassThroughOnly);
+					if (beforeUnknown6A != tiles[tileIndex].PassThroughOnly) {
+						foreach (TerrainTile otherTerrainTile in Selection.SelectedTerrainTiles) {
+							if (otherTerrainTile != tiles[tileIndex] &&
+							    otherTerrainTile.Level == tiles[tileIndex].Level
+							   ) {
+								otherTerrainTile.PassThroughOnly = tiles[tileIndex].PassThroughOnly;
+							}
+						}
+					}
+					
+					ImGui.NextColumn();
+					ImGui.Text("Impassable");
+					
+					ImGui.NextColumn();
 					ImGui.PushItemWidth(GuiStyle.CheckBoxWidth);
 					bool beforeImpassable = tiles[tileIndex].Impassable;
 					ImGui.Checkbox("##impassable" + tileIndex, ref tiles[tileIndex].Impassable);
@@ -228,8 +278,11 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					ImGui.NextColumn();
 
 					if (Configuration.Properties.ShowUnknownValues) {
+						GuiStyle.AddSpace();
 						ImGui.Text("Unknown0A");
+						
 						ImGui.NextColumn();
+						GuiStyle.AddSpace();
 						
 						int beforeUnknown0A = tiles[tileIndex].Unknown0A;
 						ImGui.InputInt("###Unknown0A" + tileIndex, ref tiles[tileIndex].Unknown0A, 1);
@@ -301,26 +354,59 @@ namespace GaneshaDx.UserInterface.GuiForms {
 								}
 							}
 						}
-						
+					
 						ImGui.NextColumn();
-						
-						ImGui.Text("Unknown6");
+
+						ImGui.Text("Unknown 6B");
 						ImGui.NextColumn();
-						
-						int beforeUnknown6 = tiles[tileIndex].Unknown6;
-						ImGui.InputInt("###Unknown6" + tileIndex, ref tiles[tileIndex].Unknown6, 1);
-						tiles[tileIndex].Unknown6 = Utilities.Min(tiles[tileIndex].Unknown6, 0);
-						
-						if (beforeUnknown0A != tiles[tileIndex].Unknown6) {
+
+						ImGui.PushItemWidth(GuiStyle.CheckBoxWidth);
+						bool beforeUnknown6B = tiles[tileIndex].Unknown6B;
+						ImGui.Checkbox("###unknown6b" + tileIndex, ref tiles[tileIndex].Unknown6B);
+						if (beforeUnknown6B != tiles[tileIndex].Unknown6B) {
 							foreach (TerrainTile otherTerrainTile in Selection.SelectedTerrainTiles) {
 								if (otherTerrainTile != tiles[tileIndex] &&
 								    otherTerrainTile.Level == tiles[tileIndex].Level
 								   ) {
-									otherTerrainTile.Unknown6 = tiles[tileIndex].Unknown6;
+									otherTerrainTile.Unknown6B = tiles[tileIndex].Unknown6B;
 								}
 							}
 						}
+						ImGui.NextColumn();
 						
+						ImGui.Text("Unknown 6C");
+						ImGui.NextColumn();
+
+						ImGui.PushItemWidth(GuiStyle.CheckBoxWidth);
+						bool beforeUnknown6C = tiles[tileIndex].Unknown6C;
+						ImGui.Checkbox("###unknown6C" + tileIndex, ref tiles[tileIndex].Unknown6C);
+						if (beforeUnknown6C != tiles[tileIndex].Unknown6C) {
+							foreach (TerrainTile otherTerrainTile in Selection.SelectedTerrainTiles) {
+								if (otherTerrainTile != tiles[tileIndex] &&
+								    otherTerrainTile.Level == tiles[tileIndex].Level
+								   ) {
+									otherTerrainTile.Unknown6C = tiles[tileIndex].Unknown6C;
+								}
+							}
+						}
+
+						ImGui.NextColumn();
+						ImGui.Text("Unknown 6D");
+						ImGui.NextColumn();
+
+						ImGui.PushItemWidth(GuiStyle.CheckBoxWidth);
+						bool beforeUnknown6D = tiles[tileIndex].Unknown6D;
+						ImGui.Checkbox("###unknown6D" + tileIndex, ref tiles[tileIndex].Unknown6D);
+						if (beforeUnknown6D != tiles[tileIndex].Unknown6D) {
+							foreach (TerrainTile otherTerrainTile in Selection.SelectedTerrainTiles) {
+								if (otherTerrainTile != tiles[tileIndex] &&
+								    otherTerrainTile.Level == tiles[tileIndex].Level
+								   ) {
+									otherTerrainTile.Unknown6D = tiles[tileIndex].Unknown6D;
+								}
+							}
+						}
+
 						ImGui.NextColumn();
 					}
 

@@ -171,6 +171,13 @@
 		ConcaveNorthwest,
 	}
 
+	public enum TerrainDarkness {
+		Normal,
+		Dark,
+		Darker,
+		Darkest
+	}
+
 	public enum MeshAnimationTweenType {
 		TweenTo,
 		TweenBy,
