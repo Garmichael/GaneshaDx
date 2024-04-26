@@ -962,6 +962,10 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			if (ImGui.CollapsingHeader("Unknown Render Properties Values", ImGuiTreeNodeFlags.DefaultOpen)) {
 				Polygon polygon = Selection.SelectedPolygons[0];
 
+				if (polygon.RenderingProperties == null) {
+					return;
+				}
+				
 				GuiStyle.SetNewUiToDefaultStyle();
 				ImGui.Indent();
 				ImGui.Columns(2, "UnknownRenderPropertiesValuesColumns", false);

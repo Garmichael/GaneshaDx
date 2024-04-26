@@ -2,7 +2,7 @@
 
 namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 	public class MeshAnimationInstructions {
-		public readonly List<byte> InstructionsHeader = new List<byte>();
+		public readonly List<byte> KeyframesHeader = new List<byte>();
 		public readonly List<MeshAnimationKeyFrame> KeyFrames = new List<MeshAnimationKeyFrame>();
 
 		public readonly List<byte> MeshAnimationsHeader = new List<byte>();
@@ -12,7 +12,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 		public readonly MeshAnimationUnknown UnknownChunk;
 
 		public MeshAnimationInstructions() {
-			InstructionsHeader = new List<byte> { 1, 0, 0, 0, 128, 0, 0, 0 };
+			KeyframesHeader = new List<byte> { 1, 0, 0, 0, 128, 0, 0, 0 };
 			MeshAnimationsHeader = new List<byte> { 2, 0, 0, 0, 16, 0, 64, 0 };
 			UnknownChunkHeader = new List<byte> { 3, 0, 0, 0, 64, 0, 0, 0 };
 			KeyFrames = new List<MeshAnimationKeyFrame>();
@@ -46,8 +46,8 @@ namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 
 			int currentByteIndex = 0;
 
-			while (InstructionsHeader.Count < headerLength) {
-				InstructionsHeader.Add(rawData[currentByteIndex]);
+			while (KeyframesHeader.Count < headerLength) {
+				KeyframesHeader.Add(rawData[currentByteIndex]);
 				currentByteIndex++;
 			}
 

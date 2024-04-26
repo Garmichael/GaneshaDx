@@ -24,6 +24,80 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				MeshAnimationInstructions set = CurrentMapState.StateData.MeshAnimationInstructions;
 				ImGui.PopFont();
 
+				if (ImGui.CollapsingHeader("Headers")) {
+					const int inputWidth = 40;
+						ImGui.GetStyle().Colors[(int) ImGuiCol.Header] = GuiStyle.ColorPalette[ColorName.Lightest];
+						ImGui.GetStyle().Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.Dark];
+
+						ImGui.Indent();
+						
+						if(ImGui.CollapsingHeader("Keyframes Header")) {
+							GuiStyle.SetNewUiToDefaultStyle();
+							ImGui.Columns(4, "HeaderData", false);
+							ImGui.SetColumnWidth(0, inputWidth + 10);
+							ImGui.SetColumnWidth(1, inputWidth + 10);
+							ImGui.SetColumnWidth(2, inputWidth + 10);
+							ImGui.SetColumnWidth(3, inputWidth + 10);
+
+							for (int dataIndex = 0; dataIndex < set.KeyframesHeader.Count; dataIndex++) {
+								int data = set.KeyframesHeader[dataIndex];
+								ImGui.SetNextItemWidth(inputWidth);
+								ImGui.DragInt("###keyframeHeader_" + dataIndex, ref data);
+								set.KeyframesHeader[dataIndex] = (byte) data;
+								ImGui.NextColumn();
+								if (dataIndex == 3) {
+									
+								}
+							}
+							ImGui.Columns(1);
+						}
+						
+						if(ImGui.CollapsingHeader("Mesh Animations Header")) {
+							GuiStyle.SetNewUiToDefaultStyle();
+							ImGui.Columns(4, "HeaderData", false);
+							ImGui.SetColumnWidth(0, inputWidth + 10);
+							ImGui.SetColumnWidth(1, inputWidth + 10);
+							ImGui.SetColumnWidth(2, inputWidth + 10);
+							ImGui.SetColumnWidth(3, inputWidth + 10);
+
+							for (int dataIndex = 0; dataIndex < set.MeshAnimationsHeader.Count; dataIndex++) {
+								int data = set.MeshAnimationsHeader[dataIndex];
+								ImGui.SetNextItemWidth(inputWidth);
+								ImGui.DragInt("###meshAnimationsHeader_" + dataIndex, ref data);
+								set.MeshAnimationsHeader[dataIndex] = (byte) data;
+								ImGui.NextColumn();
+								if (dataIndex == 3) {
+									
+								}
+							}
+							ImGui.Columns(1);
+						}
+						
+						if(ImGui.CollapsingHeader("Unknown Chunk Header")) {
+							GuiStyle.SetNewUiToDefaultStyle();
+							ImGui.Columns(4, "HeaderData", false);
+							ImGui.SetColumnWidth(0, inputWidth + 10);
+							ImGui.SetColumnWidth(1, inputWidth + 10);
+							ImGui.SetColumnWidth(2, inputWidth + 10);
+							ImGui.SetColumnWidth(3, inputWidth + 10);
+
+							for (int dataIndex = 0; dataIndex < set.UnknownChunkHeader.Count; dataIndex++) {
+								int data = set.UnknownChunkHeader[dataIndex];
+								ImGui.SetNextItemWidth(inputWidth);
+								ImGui.DragInt("###unknownChunkHeader_" + dataIndex, ref data);
+								set.UnknownChunkHeader[dataIndex] = (byte) data;
+								ImGui.NextColumn();
+								if (dataIndex == 3) {
+									
+								}
+							}
+							ImGui.Columns(1);
+						}
+						
+						ImGui.Unindent();
+						GuiStyle.SetNewUiToDefaultStyle();
+				}
+				
 				if (ImGui.CollapsingHeader("Keyframes")) {
 					ImGui.Indent();
 

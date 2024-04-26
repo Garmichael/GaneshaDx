@@ -1512,7 +1512,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 				RawData[AnimatedMeshInstructionsPointer + 2],
 				RawData[AnimatedMeshInstructionsPointer + 3]) = Utilities.GetLittleEndianFromInt32(RawData.Count);
 
-			RawData.AddRange(MeshAnimationInstructions.InstructionsHeader);
+			RawData.AddRange(MeshAnimationInstructions.KeyframesHeader);
 
 			foreach (MeshAnimationKeyFrame keyFrame in MeshAnimationInstructions.KeyFrames) {
 				RawData.AddRange(keyFrame.GetRawData());
