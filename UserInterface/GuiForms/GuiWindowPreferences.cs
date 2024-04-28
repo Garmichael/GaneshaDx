@@ -17,7 +17,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			                               ImGuiWindowFlags.NoCollapse;
 
 			
-			ImGui.SetNextWindowSize(new Vector2(300, 450));
+			ImGui.SetNextWindowSize(new Vector2(300, 480));
 			
 			ImGui.Begin("Preferences", ref windowIsOpen, flags);
 			{
@@ -84,12 +84,13 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				ImGui.NextColumn();
 
 				GuiStyle.AddSpace();
-				ImGui.Text("Expanded Compass");
+				
+				ImGui.Text("Normal Indicator Length");
 				ImGui.NextColumn();
 
 				GuiStyle.AddSpace();
 				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
-				ImGui.Checkbox("###PreferencesExpandedCompass", ref Configuration.Properties.ExpandCompassToTerrainLength);
+				ImGui.InputInt("###PreferencesNormalIndicatorLength", ref Configuration.Properties.NormalIndicatorLength);
 				ImGui.NextColumn();
 				
 				ImGui.Text("Alpha as Semi-Transparent");
@@ -106,6 +107,13 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				ImGui.Checkbox("###PreferencesBackfaces", ref Configuration.Properties.AllowBackfaceSelection);
 				ImGui.NextColumn();
 
+				ImGui.Text("Expanded Compass");
+				ImGui.NextColumn();
+
+				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+				ImGui.Checkbox("###PreferencesExpandedCompass", ref Configuration.Properties.ExpandCompassToTerrainLength);
+				ImGui.NextColumn();
+				
 				ImGui.Text("Show FPS");
 				ImGui.NextColumn();
 

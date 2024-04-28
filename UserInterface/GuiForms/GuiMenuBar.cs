@@ -291,6 +291,18 @@ namespace GaneshaDx.UserInterface.GuiForms {
 						Configuration.SaveConfiguration();
 					}
 
+					bool beforeHideIndicatorNormals = Configuration.Properties.HideNormalIndicators;
+					ImGui.MenuItem(
+						"Hide Vertex Normal Indicators",
+						"N",
+						ref Configuration.Properties.HideNormalIndicators,
+						MapData.MapIsLoaded
+					);
+
+					if (beforeHideInvisiblePolys != Configuration.Properties.HideNormalIndicators) {
+						Configuration.SaveConfiguration();
+					}
+
 					
 					bool beforePlayMalformedTextureAnimations = Configuration.Properties.PlaysScriptedTextureAnimations;
 					ImGui.MenuItem(

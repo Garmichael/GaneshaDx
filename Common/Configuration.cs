@@ -57,6 +57,8 @@ namespace GaneshaDx.Common {
 			public bool PlaysScriptedTextureAnimations = false;
 			public bool ExpandCompassToTerrainLength = true;
 			public float AutoMapRatio = 0.679f;
+			public bool HideNormalIndicators = false;
+			public int NormalIndicatorLength = 50;
 		}
 	}
 }

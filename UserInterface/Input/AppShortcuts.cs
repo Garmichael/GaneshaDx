@@ -61,14 +61,17 @@ namespace GaneshaDx.UserInterface.Input {
 					}
 
 					if (AppInput.KeyJustPressed(Keys.L)) {
-						Configuration.Properties.RenderPolygonsInLightingMode =
-							!Configuration.Properties.RenderPolygonsInLightingMode;
+						Configuration.Properties.RenderPolygonsInLightingMode = !Configuration.Properties.RenderPolygonsInLightingMode;
 						Configuration.SaveConfiguration();
 					}
 
 					if (AppInput.KeyJustPressed(Keys.H)) {
-						Configuration.Properties.HideHiddenPolysByFacing =
-							!Configuration.Properties.HideHiddenPolysByFacing;
+						Configuration.Properties.HideHiddenPolysByFacing = !Configuration.Properties.HideHiddenPolysByFacing;
+						Configuration.SaveConfiguration();
+					}
+
+					if (AppInput.KeyJustPressed(Keys.N)) {
+						Configuration.Properties.HideNormalIndicators = !Configuration.Properties.HideNormalIndicators;
 						Configuration.SaveConfiguration();
 					}
 
@@ -108,7 +111,7 @@ namespace GaneshaDx.UserInterface.Input {
 							TransformWidget.SelectNextVertex(AppInput.ShiftHeld);
 						} else if (Gui.Widget == WidgetSelectionMode.PolygonRotate &&
 						           Selection.SelectedPolygons.Count > 0
-						) {
+						          ) {
 							if (!RotationWidget.AnchoredToVertex) {
 								RotationWidget.AnchoredToVertex = true;
 								RotationWidget.AnchoredVertex = 0;
@@ -134,7 +137,7 @@ namespace GaneshaDx.UserInterface.Input {
 					if (AppInput.KeyJustPressed(Keys.D)) {
 						TransformWidget.SnapSnappingVertex();
 					}
-					
+
 					if (AppInput.KeyJustPressed(Keys.A)) {
 						bool canEditMeshAnimations = MapData.MapIsLoaded &&
 						                             CurrentMapState.StateData.MeshAnimationSet != null;
@@ -211,7 +214,7 @@ namespace GaneshaDx.UserInterface.Input {
 							Utilities.AverageNormals();
 						}
 					}
-					
+
 					if (AppInput.KeyJustPressed(Keys.L)) {
 						if (Selection.SelectedPolygons.Count > 0) {
 							foreach (Polygon selectedPolygon in Selection.SelectedPolygons) {
@@ -278,7 +281,7 @@ namespace GaneshaDx.UserInterface.Input {
 							TransformWidget.SelectNextVertex(AppInput.ShiftHeld);
 						} else if (Gui.Widget == WidgetSelectionMode.PolygonRotate &&
 						           Selection.SelectedPolygons.Count > 0
-						) {
+						          ) {
 							if (!RotationWidget.AnchoredToVertex) {
 								RotationWidget.AnchoredToVertex = true;
 								RotationWidget.AnchoredVertex = 0;
