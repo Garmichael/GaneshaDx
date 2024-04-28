@@ -48,10 +48,18 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 
 		public Vector3 AveragePoint {
 			get {
-				List<Vector3> adjustedVerts = new List<Vector3>();
-				foreach (Vertex vertex in Vertices) {
-					adjustedVerts.Add(vertex.CurrentAnimatedPosition);
-				}
+				List<Vector3> adjustedVerts = IsQuad
+					? new List<Vector3> {
+						Vertices[0].CurrentAnimatedPosition,
+						Vertices[1].CurrentAnimatedPosition,
+						Vertices[2].CurrentAnimatedPosition,
+						Vertices[3].CurrentAnimatedPosition
+					}
+					: new List<Vector3> {
+						Vertices[0].CurrentAnimatedPosition,
+						Vertices[1].CurrentAnimatedPosition,
+						Vertices[2].CurrentAnimatedPosition
+					};
 
 				return Utilities.GetAveragePoint(adjustedVerts);
 			}
@@ -554,7 +562,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 				lightDirection.Normalize();
 				Stage.FftPolygonEffect.Parameters["DirectionalLightDirection" + lightIndex].SetValue(lightDirection);
 
-				Vector4 lightColor = RenderingProperties.LitTexture
+				Vector4 lightColor = RenderingProperties is { LitTexture: true }
 					? thisLight.LightColor.ToVector4()
 					: new Vector4(0f, 0f, 0f, 1);
 				Stage.FftPolygonEffect.Parameters["DirectionalLightColor" + lightIndex].SetValue(lightColor);
