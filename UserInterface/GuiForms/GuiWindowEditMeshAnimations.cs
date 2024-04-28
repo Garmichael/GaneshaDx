@@ -14,20 +14,26 @@ namespace GaneshaDx.UserInterface.GuiForms {
 		private const int LeftPanelWidth = 280;
 		private const int RightPanelWidth = 490;
 		private const int WindowWidth = LeftPanelWidth + RightPanelWidth;
-		private const int WindowHeight = 550;
-		private const int FooterHeight = 70;
+		private const int FooterHeight = 80;
+		private const int WindowHeight = 570;
+		private static int _windowHeightWithUnknownsShown = 570;
 
 		private static int _selectedFrameState;
 		private static int _selectedMeshId;
 		private static int _selectedStateId;
 
 		public static void Render() {
+			_windowHeightWithUnknownsShown = 640;
+			
 			bool windowIsOpen = true;
 
 			GuiStyle.SetNewUiToDefaultStyle();
 			ImGui.GetStyle().WindowRounding = 3;
 			ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[2]);
-			ImGui.SetNextWindowSize(new Vector2(WindowWidth, WindowHeight));
+			int windowHeight = Configuration.Properties.ShowUnknownValues
+				? _windowHeightWithUnknownsShown
+				: WindowHeight;
+			ImGui.SetNextWindowSize(new Vector2(WindowWidth, windowHeight));
 
 			ImGui.Begin("Mesh Animations", ref windowIsOpen, ImGuiWindowFlags.NoResize);
 			{
@@ -38,18 +44,17 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				ImGui.SetColumnWidth(0, LeftPanelWidth);
 				ImGui.SetColumnWidth(1, RightPanelWidth);
 
-				ImGui.BeginChild("KeyFrames", new Vector2(LeftPanelWidth, WindowHeight - FooterHeight));
-				RenderKeyFrames();
+				ImGui.BeginChild("AnimationInstructions", new Vector2(LeftPanelWidth, windowHeight - FooterHeight));
+				RenderAnimationInstructions();
 				ImGui.EndChild();
 
 				ImGui.NextColumn();
 
-				ImGui.BeginChild("KeyFrameStates", new Vector2(RightPanelWidth, WindowHeight - FooterHeight));
+				ImGui.BeginChild("KeyFrameStates", new Vector2(RightPanelWidth, windowHeight - FooterHeight));
 				RenderFrameStatePanel();
 				ImGui.EndChild();
 
 				ImGui.Columns(1);
-
 				RenderControlsPanel();
 			}
 			ImGui.End();
@@ -59,7 +64,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			}
 		}
 
-		private static void RenderKeyFrames() {
+		private static void RenderAnimationInstructions() {
 			const int optionsLabelWidth = 40;
 			const int optionsInputWidth = 75;
 			const int spacing = 10;
@@ -79,9 +84,11 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			ImGui.InputInt("##meshId", ref _selectedMeshId);
 			_selectedMeshId = Utilities.Clamp(_selectedMeshId, 1, 8);
 
+			MeshAnimationSet instructions = CurrentMapState.StateData.MeshAnimationSet;
+			int meshIndex = _selectedMeshId - 1 + _selectedStateId * 8;
+			
 			if (beforeSelectedMeshId != _selectedMeshId) {
-				_selectedFrameState = CurrentMapState.StateData.MeshAnimationInstructions
-					.MeshAnimations[_selectedMeshId - 1 + _selectedStateId * 8].Frames[0].FrameStateId;
+				_selectedFrameState = instructions.MeshInstructionSets[meshIndex].Instructions[0].FrameStateId;
 			}
 
 			ImGui.NextColumn();
@@ -94,16 +101,58 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 			ImGui.SetNextItemWidth(optionsInputWidth);
 			int beforeSelectedStateId = _selectedStateId;
-			
+
 			ImGui.InputInt("##stateId", ref _selectedStateId);
 			_selectedStateId = Utilities.Clamp(_selectedStateId, 0, 7);
-			
+
 			if (beforeSelectedStateId != _selectedStateId) {
-				_selectedFrameState = CurrentMapState.StateData.MeshAnimationInstructions
-					.MeshAnimations[_selectedMeshId - 1 + _selectedStateId * 8].Frames[0].FrameStateId;
+				_selectedFrameState = instructions.MeshInstructionSets[meshIndex].Instructions[0].FrameStateId;
 			}
 
+			GuiStyle.AddSpace();
+
+			AnimatedMeshProperties meshProperties = instructions.MeshProperties[meshIndex];
+			ImGui.Columns(2, "MeshProperties", false);
+			ImGui.SetColumnWidth(0, optionsLabelWidth + optionsInputWidth + 10 + spacing);
+			ImGui.SetColumnWidth(1, 2 * (optionsInputWidth + 10));
+
+			
+			ImGui.Text("Parent Mesh Id");
 			ImGui.NextColumn();
+			ImGui.SetNextItemWidth(optionsInputWidth + 40);
+			ImGui.InputInt("##MeshPropertiesLinkedParent" + meshIndex, ref meshProperties.LinkedParentMesh, 1);
+			meshProperties.LinkedParentMesh = Utilities.Clamp(meshProperties.LinkedParentMesh, 0, 7);
+			ImGui.NextColumn();
+
+			if (Configuration.Properties.ShowUnknownValues) {
+				ImGui.Text("Unknown1");
+				ImGui.NextColumn();
+				ImGui.SetNextItemWidth(optionsInputWidth + 40);
+				ImGui.InputInt("##MeshPropertiesUnknown1_" + meshIndex, ref meshProperties.Unknown1, 1);
+				meshProperties.Unknown1 = Utilities.Min(meshProperties.Unknown1, 0);
+				ImGui.NextColumn();
+				
+				ImGui.Text("Unknown2");
+				ImGui.NextColumn();
+				ImGui.SetNextItemWidth(optionsInputWidth + 40);
+				ImGui.InputInt("##MeshPropertiesUnknown2_" + meshIndex, ref meshProperties.Unknown2, 1);
+				meshProperties.Unknown2 = Utilities.Min(meshProperties.Unknown2, 0);
+				ImGui.NextColumn();
+				
+				ImGui.Text("Unknown3");
+				ImGui.NextColumn();
+				ImGui.SetNextItemWidth(optionsInputWidth + 40);
+				ImGui.InputInt("##MeshPropertiesUnknown3_" + meshIndex, ref meshProperties.Unknown3, 1);
+				meshProperties.Unknown3 = Utilities.Min(meshProperties.Unknown3, 0);
+				ImGui.NextColumn();
+			}
+
+			ImGui.Columns(5, "InstructionList", false);
+			ImGui.SetColumnWidth(0, optionsLabelWidth);
+			ImGui.SetColumnWidth(1, optionsInputWidth + 10);
+			ImGui.SetColumnWidth(2, spacing);
+			ImGui.SetColumnWidth(3, optionsLabelWidth);
+			ImGui.SetColumnWidth(4, optionsInputWidth + 10);
 
 			const int idWidth = 30;
 			const int inputWidth = 55;
@@ -142,41 +191,40 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			GuiStyle.AddSpace(5);
 			ImGui.NextColumn();
 
-			int meshAnimationIndex = _selectedMeshId - 1 + _selectedStateId * 8;
-			MeshAnimation meshAnimation =
-				CurrentMapState.StateData.MeshAnimationInstructions.MeshAnimations[meshAnimationIndex];
+			AnimatedMeshInstructionSet animatedMeshInstructionSet = instructions.MeshInstructionSets[meshIndex];
 
 			for (int i = 0; i < 16; i++) {
 				ImGui.Text((i + 1).ToString());
 				ImGui.NextColumn();
 
 				ImGui.SetNextItemWidth(inputWidth);
-				ImGui.DragInt("##MeshAnimationFrameFrameStateId" + i, ref meshAnimation.Frames[i].FrameStateId);
+				ImGui.DragInt("##MeshAnimationFrameFrameStateId" + i, ref animatedMeshInstructionSet.Instructions[i].FrameStateId);
 				ImGui.NextColumn();
 
-				if (_selectedFrameState == meshAnimation.Frames[i].FrameStateId) {
+				if (_selectedFrameState == animatedMeshInstructionSet.Instructions[i].FrameStateId) {
 					GuiStyle.SetElementStyle(ElementStyle.ButtonSelected);
 				} else {
 					GuiStyle.SetNewUiToDefaultStyle();
 					ImGui.GetStyle().FrameRounding = 0;
 				}
-				
+
 				if (ImGui.Button(">##MeshAnimationGoToFrameState" + i, new Vector2(buttonWidth, 20))) {
-					_selectedFrameState = meshAnimation.Frames[i].FrameStateId;
+					_selectedFrameState = animatedMeshInstructionSet.Instructions[i].FrameStateId;
 				}
 
 				ImGui.NextColumn();
 
 				ImGui.SetNextItemWidth(inputWidth);
-				ImGui.DragInt("##MeshAnimationFrameDuration" + i, ref meshAnimation.Frames[i].Duration);
-				meshAnimation.Frames[i].Duration = Utilities.Min(meshAnimation.Frames[i].Duration, 0);
+				ImGui.DragInt("##MeshAnimationFrameDuration" + i, ref animatedMeshInstructionSet.Instructions[i].Duration);
+				animatedMeshInstructionSet.Instructions[i].Duration = Utilities.Min(animatedMeshInstructionSet.Instructions[i].Duration, 0);
 				ImGui.NextColumn();
 
 				ImGui.SetNextItemWidth(inputWidth);
-				ImGui.DragInt("##MeshAnimationFrameNextFrameId" + i, ref meshAnimation.Frames[i].NextFrameId);
+				ImGui.DragInt("##MeshAnimationFrameNextFrameId" + i, ref animatedMeshInstructionSet.Instructions[i].NextFrameId);
 				ImGui.NextColumn();
 			}
-			
+
+			ImGui.Columns(1);
 			GuiStyle.SetNewUiToDefaultStyle();
 			ImGui.GetStyle().FrameRounding = 0;
 		}
@@ -184,36 +232,36 @@ namespace GaneshaDx.UserInterface.GuiForms {
 		private static void RenderFrameStatePanel() {
 			RenderFrameStatePanelHeader();
 
-			MeshAnimationKeyFrame selectedKeyFrame =
-				CurrentMapState.StateData.MeshAnimationInstructions.KeyFrames[_selectedFrameState - 1];
+			MeshAnimationKeyframe selectedKeyframe =
+				CurrentMapState.StateData.MeshAnimationSet.Keyframes[_selectedFrameState - 1];
 
 			RenderFrameStatePanelValueSet(
 				"Position",
-				selectedKeyFrame.PositionTweenTypes,
-				selectedKeyFrame.Position,
+				selectedKeyframe.PositionTweenTypes,
+				selectedKeyframe.Position,
 				true,
-				selectedKeyFrame.PositionStartPercents,
-				selectedKeyFrame.PositionEndPercents
+				selectedKeyframe.PositionStartPercents,
+				selectedKeyframe.PositionEndPercents
 			);
 			GuiStyle.AddSpace();
 
 			RenderFrameStatePanelValueSet(
 				"Rotation",
-				selectedKeyFrame.RotationTweenTypes,
-				selectedKeyFrame.Rotation,
+				selectedKeyframe.RotationTweenTypes,
+				selectedKeyframe.Rotation,
 				false,
-				selectedKeyFrame.RotationStartPercents,
-				selectedKeyFrame.RotationEndPercents
+				selectedKeyframe.RotationStartPercents,
+				selectedKeyframe.RotationEndPercents
 			);
 			GuiStyle.AddSpace();
 
 			RenderFrameStatePanelValueSet(
 				"Scale",
-				selectedKeyFrame.ScaleTweenTypes,
-				selectedKeyFrame.Scale,
+				selectedKeyframe.ScaleTweenTypes,
+				selectedKeyframe.Scale,
 				false,
-				selectedKeyFrame.ScaleStartPercents,
-				selectedKeyFrame.ScaleEndPercents
+				selectedKeyframe.ScaleStartPercents,
+				selectedKeyframe.ScaleEndPercents
 			);
 			GuiStyle.AddSpace();
 		}
@@ -228,7 +276,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 			ImGui.NextColumn();
 
-			ImGui.Text("KeyFrame Id");
+			ImGui.Text("KeyFrame");
 			ImGui.NextColumn();
 
 			ImGui.SetNextItemWidth(inputWidth);
@@ -390,7 +438,8 @@ namespace GaneshaDx.UserInterface.GuiForms {
 		}
 
 		private static void RenderControlsPanel() {
-			ImGui.SetCursorPosX(WindowWidth / 2 - 40);
+			GuiStyle.AddSpace();
+			ImGui.SetCursorPosX(WindowWidth / 2f - 40);
 			GuiStyle.SetNewUiToDefaultStyle();
 
 			if (!MeshAnimationController.AnimationsPlaying) {

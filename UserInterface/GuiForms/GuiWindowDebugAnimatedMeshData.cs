@@ -21,95 +21,92 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			{
 				ImGui.Checkbox("Show Unused? ", ref _showUnused);
 
-				MeshAnimationInstructions set = CurrentMapState.StateData.MeshAnimationInstructions;
+				MeshAnimationSet set = CurrentMapState.StateData.MeshAnimationSet;
 				ImGui.PopFont();
 
 				if (ImGui.CollapsingHeader("Headers")) {
 					const int inputWidth = 40;
-						ImGui.GetStyle().Colors[(int) ImGuiCol.Header] = GuiStyle.ColorPalette[ColorName.Lightest];
-						ImGui.GetStyle().Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.Dark];
+					ImGui.GetStyle().Colors[(int) ImGuiCol.Header] = GuiStyle.ColorPalette[ColorName.Lightest];
+					ImGui.GetStyle().Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.Dark];
 
-						ImGui.Indent();
-						
-						if(ImGui.CollapsingHeader("Keyframes Header")) {
-							GuiStyle.SetNewUiToDefaultStyle();
-							ImGui.Columns(4, "HeaderData", false);
-							ImGui.SetColumnWidth(0, inputWidth + 10);
-							ImGui.SetColumnWidth(1, inputWidth + 10);
-							ImGui.SetColumnWidth(2, inputWidth + 10);
-							ImGui.SetColumnWidth(3, inputWidth + 10);
+					ImGui.Indent();
 
-							for (int dataIndex = 0; dataIndex < set.KeyframesHeader.Count; dataIndex++) {
-								int data = set.KeyframesHeader[dataIndex];
-								ImGui.SetNextItemWidth(inputWidth);
-								ImGui.DragInt("###keyframeHeader_" + dataIndex, ref data);
-								set.KeyframesHeader[dataIndex] = (byte) data;
-								ImGui.NextColumn();
-								if (dataIndex == 3) {
-									
-								}
-							}
-							ImGui.Columns(1);
-						}
-						
-						if(ImGui.CollapsingHeader("Mesh Animations Header")) {
-							GuiStyle.SetNewUiToDefaultStyle();
-							ImGui.Columns(4, "HeaderData", false);
-							ImGui.SetColumnWidth(0, inputWidth + 10);
-							ImGui.SetColumnWidth(1, inputWidth + 10);
-							ImGui.SetColumnWidth(2, inputWidth + 10);
-							ImGui.SetColumnWidth(3, inputWidth + 10);
-
-							for (int dataIndex = 0; dataIndex < set.MeshAnimationsHeader.Count; dataIndex++) {
-								int data = set.MeshAnimationsHeader[dataIndex];
-								ImGui.SetNextItemWidth(inputWidth);
-								ImGui.DragInt("###meshAnimationsHeader_" + dataIndex, ref data);
-								set.MeshAnimationsHeader[dataIndex] = (byte) data;
-								ImGui.NextColumn();
-								if (dataIndex == 3) {
-									
-								}
-							}
-							ImGui.Columns(1);
-						}
-						
-						if(ImGui.CollapsingHeader("Unknown Chunk Header")) {
-							GuiStyle.SetNewUiToDefaultStyle();
-							ImGui.Columns(4, "HeaderData", false);
-							ImGui.SetColumnWidth(0, inputWidth + 10);
-							ImGui.SetColumnWidth(1, inputWidth + 10);
-							ImGui.SetColumnWidth(2, inputWidth + 10);
-							ImGui.SetColumnWidth(3, inputWidth + 10);
-
-							for (int dataIndex = 0; dataIndex < set.UnknownChunkHeader.Count; dataIndex++) {
-								int data = set.UnknownChunkHeader[dataIndex];
-								ImGui.SetNextItemWidth(inputWidth);
-								ImGui.DragInt("###unknownChunkHeader_" + dataIndex, ref data);
-								set.UnknownChunkHeader[dataIndex] = (byte) data;
-								ImGui.NextColumn();
-								if (dataIndex == 3) {
-									
-								}
-							}
-							ImGui.Columns(1);
-						}
-						
-						ImGui.Unindent();
+					if (ImGui.CollapsingHeader("Keyframes Header")) {
 						GuiStyle.SetNewUiToDefaultStyle();
+						ImGui.Columns(4, "HeaderData", false);
+						ImGui.SetColumnWidth(0, inputWidth + 10);
+						ImGui.SetColumnWidth(1, inputWidth + 10);
+						ImGui.SetColumnWidth(2, inputWidth + 10);
+						ImGui.SetColumnWidth(3, inputWidth + 10);
+
+						for (int dataIndex = 0; dataIndex < set.KeyframesHeader.Count; dataIndex++) {
+							int data = set.KeyframesHeader[dataIndex];
+							ImGui.SetNextItemWidth(inputWidth);
+							ImGui.DragInt("###keyframeHeader_" + dataIndex, ref data);
+							set.KeyframesHeader[dataIndex] = (byte) data;
+							ImGui.NextColumn();
+							if (dataIndex == 3) { }
+						}
+
+						ImGui.Columns(1);
+					}
+
+					if (ImGui.CollapsingHeader("Mesh Animations Header")) {
+						GuiStyle.SetNewUiToDefaultStyle();
+						ImGui.Columns(4, "HeaderData", false);
+						ImGui.SetColumnWidth(0, inputWidth + 10);
+						ImGui.SetColumnWidth(1, inputWidth + 10);
+						ImGui.SetColumnWidth(2, inputWidth + 10);
+						ImGui.SetColumnWidth(3, inputWidth + 10);
+
+						for (int dataIndex = 0; dataIndex < set.MeshInstructionSetsHeader.Count; dataIndex++) {
+							int data = set.MeshInstructionSetsHeader[dataIndex];
+							ImGui.SetNextItemWidth(inputWidth);
+							ImGui.DragInt("###meshAnimationsHeader_" + dataIndex, ref data);
+							set.MeshInstructionSetsHeader[dataIndex] = (byte) data;
+							ImGui.NextColumn();
+							if (dataIndex == 3) { }
+						}
+
+						ImGui.Columns(1);
+					}
+
+					if (ImGui.CollapsingHeader("Unknown Chunk Header")) {
+						GuiStyle.SetNewUiToDefaultStyle();
+						ImGui.Columns(4, "HeaderData", false);
+						ImGui.SetColumnWidth(0, inputWidth + 10);
+						ImGui.SetColumnWidth(1, inputWidth + 10);
+						ImGui.SetColumnWidth(2, inputWidth + 10);
+						ImGui.SetColumnWidth(3, inputWidth + 10);
+
+						for (int dataIndex = 0; dataIndex < set.MeshPropertiesHeader.Count; dataIndex++) {
+							int data = set.MeshPropertiesHeader[dataIndex];
+							ImGui.SetNextItemWidth(inputWidth);
+							ImGui.DragInt("###unknownChunkHeader_" + dataIndex, ref data);
+							set.MeshPropertiesHeader[dataIndex] = (byte) data;
+							ImGui.NextColumn();
+							if (dataIndex == 3) { }
+						}
+
+						ImGui.Columns(1);
+					}
+
+					ImGui.Unindent();
+					GuiStyle.SetNewUiToDefaultStyle();
 				}
-				
+
 				if (ImGui.CollapsingHeader("Keyframes")) {
 					ImGui.Indent();
 
 					const int inputWidth = 40;
-					for (int setIndex = 0; setIndex < set.KeyFrames.Count; setIndex++) {
-						MeshAnimationKeyFrame keyFrame = set.KeyFrames[setIndex];
+					for (int setIndex = 0; setIndex < set.Keyframes.Count; setIndex++) {
+						MeshAnimationKeyframe keyframe = set.Keyframes[setIndex];
 
 						GuiStyle.SetNewUiToDefaultStyle();
 
 						bool highlightHeader = false;
 
-						foreach (int data in keyFrame.Properties) {
+						foreach (int data in keyframe.Properties) {
 							if (data != 0) {
 								highlightHeader = true;
 								break;
@@ -130,15 +127,15 @@ namespace GaneshaDx.UserInterface.GuiForms {
 							ImGui.SetColumnWidth(3, inputWidth + 10);
 							ImGui.SetColumnWidth(4, inputWidth + 10);
 
-							for (int dataIndex = 0; dataIndex < keyFrame.Properties.Count;) {
+							for (int dataIndex = 0; dataIndex < keyframe.Properties.Count;) {
 								ImGui.Text(dataIndex + ": ");
 								ImGui.NextColumn();
 
 								for (int field = 0; field < 4; field++) {
-									int value = keyFrame.Properties[dataIndex];
+									int value = keyframe.Properties[dataIndex];
 									ImGui.SetNextItemWidth(inputWidth);
 									ImGui.DragInt("###instruction_" + setIndex + "_" + dataIndex, ref value);
-									keyFrame.Properties[dataIndex] = value;
+									keyframe.Properties[dataIndex] = value;
 									ImGui.NextColumn();
 									dataIndex++;
 								}
@@ -148,7 +145,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 							if (ImGui.Button("Copy##instructionSet_" + setIndex)) {
 								List<string> bytes = new List<string>();
-								foreach (int x in keyFrame.Properties) {
+								foreach (int x in keyframe.Properties) {
 									bytes.Add(x.ToString());
 								}
 
@@ -163,7 +160,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 								for (int index = 0; index < byteArray.Length; index++) {
 									string entry = byteArray[index];
 									byte byteValue = (byte) int.Parse(entry);
-									keyFrame.Properties[index] = byteValue;
+									keyframe.Properties[index] = byteValue;
 								}
 							}
 						}
@@ -176,8 +173,8 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					ImGui.Indent();
 
 					const int inputWidth = 40;
-					for (int setIndex = 0; setIndex < set.MeshAnimations.Count; setIndex++) {
-						MeshAnimation link = set.MeshAnimations[setIndex];
+					for (int setIndex = 0; setIndex < set.MeshInstructionSets.Count; setIndex++) {
+						AnimatedMeshInstructionSet link = set.MeshInstructionSets[setIndex];
 
 						GuiStyle.SetNewUiToDefaultStyle();
 
@@ -199,7 +196,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 						int stateId = (int) Math.Floor(setIndex / 8f);
 						if ((highlightHeader || _showUnused) &&
 						    ImGui.CollapsingHeader("Mesh " + meshId + " | State " + stateId)
-						) {
+						   ) {
 							GuiStyle.SetNewUiToDefaultStyle();
 							ImGui.Columns(6, "LinkSetData", false);
 							ImGui.SetColumnWidth(0, 30);
@@ -269,6 +266,53 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					ImGui.Unindent();
 				}
 
+				if (ImGui.CollapsingHeader("Mesh Properties")) {
+					ImGui.Indent();
+
+					const int inputWidth = 40;
+
+					ImGui.Columns(5, "MeshProperties", false);
+					ImGui.SetColumnWidth(0, 150);
+					ImGui.SetColumnWidth(1, inputWidth + 10);
+					ImGui.SetColumnWidth(2, inputWidth + 10);
+					ImGui.SetColumnWidth(3, inputWidth + 10);
+					ImGui.SetColumnWidth(4, inputWidth + 10);
+
+					for (int dataIndex = 0; dataIndex < set.MeshProperties.Count; dataIndex++) {
+						int meshId = dataIndex % 8 + 1;
+						int stateId = (int) Math.Floor(dataIndex / 8f);
+
+						ImGui.Text("Mesh " + meshId + " __ State " + stateId);
+						ImGui.NextColumn();
+
+						ImGui.SetNextItemWidth(inputWidth);
+						int value = set.MeshProperties[dataIndex].LinkedParentMesh;
+						ImGui.DragInt("###MeshPropertyLinked" + dataIndex, ref value);
+						set.MeshProperties[dataIndex].LinkedParentMesh = (byte) value;
+						ImGui.NextColumn();
+						
+						ImGui.SetNextItemWidth(inputWidth);
+						value = set.MeshProperties[dataIndex].Unknown1;
+						ImGui.DragInt("###MeshPropertyUnknown1" + dataIndex, ref value);
+						set.MeshProperties[dataIndex].Unknown1 = (byte) value;
+						ImGui.NextColumn();
+						
+						ImGui.SetNextItemWidth(inputWidth);
+						value = set.MeshProperties[dataIndex].Unknown2;
+						ImGui.DragInt("###MeshPropertyUnknown2" + dataIndex, ref value);
+						set.MeshProperties[dataIndex].Unknown2 = (byte) value;
+						ImGui.NextColumn();
+						
+						ImGui.SetNextItemWidth(inputWidth);
+						value = set.MeshProperties[dataIndex].Unknown3;
+						ImGui.DragInt("###MeshPropertyUnknown3" + dataIndex, ref value);
+						set.MeshProperties[dataIndex].Unknown3 = (byte) value;
+						ImGui.NextColumn();
+					}
+					
+					ImGui.Columns(1);
+				}
+
 				if (ImGui.CollapsingHeader("Unknown Chunk")) {
 					ImGui.Indent();
 
@@ -281,18 +325,18 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					ImGui.SetColumnWidth(3, inputWidth + 10);
 					ImGui.SetColumnWidth(4, inputWidth + 10);
 
-					for (int dataIndex = 0; dataIndex < set.UnknownChunk.Data.Count;) {
+					for (int dataIndex = 0; dataIndex < set.UnknownDataChunk.Data.Count;) {
 						ImGui.Text(dataIndex + ": ");
 						ImGui.NextColumn();
 
 						for (int field = 0; field < 4; field++) {
-							int value = set.UnknownChunk.Data[dataIndex];
+							int value = set.UnknownDataChunk.Data[dataIndex];
 							ImGui.SetNextItemWidth(inputWidth);
 							ImGui.DragInt("###linkUnknownChunk" + dataIndex, ref value);
-							set.UnknownChunk.Data[dataIndex] = (byte) value;
+							set.UnknownDataChunk.Data[dataIndex] = (byte) value;
 							ImGui.NextColumn();
 							dataIndex++;
-							if (dataIndex > set.UnknownChunk.Data.Count - 1) {
+							if (dataIndex > set.UnknownDataChunk.Data.Count - 1) {
 								break;
 							}
 						}
@@ -302,7 +346,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 					if (ImGui.Button("Copy##linkUnknownChunk")) {
 						List<string> bytes = new List<string>();
-						foreach (byte x in set.UnknownChunk.Data) {
+						foreach (byte x in set.UnknownDataChunk.Data) {
 							bytes.Add(x.ToString());
 						}
 
@@ -317,7 +361,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 						for (int index = 0; index < byteArray.Length; index++) {
 							string entry = byteArray[index];
 							byte byteValue = (byte) int.Parse(entry);
-							set.UnknownChunk.Data[index] = byteValue;
+							set.UnknownDataChunk.Data[index] = byteValue;
 						}
 					}
 				}

@@ -29,20 +29,20 @@ namespace GaneshaDx.Rendering {
 		public static void PlayAnimations() {
 			Reset();
 
-			if (CurrentMapState.StateData.MeshAnimationInstructions == null) {
+			if (CurrentMapState.StateData.MeshAnimationSet == null) {
 				return;
 			}
 
 			AnimationsPlaying = true;
 
 			foreach (MeshType meshType in AnimatedMeshTypes) {
-				List<MeshAnimation> meshAnimations = CurrentMapState.StateData.MeshAnimationInstructions.MeshAnimations;
+				List<AnimatedMeshInstructionSet> meshAnimations = CurrentMapState.StateData.MeshAnimationSet.MeshInstructionSets;
 				int meshAnimationIndex = (int) meshType - 1;
-				bool isValidAnimationFrame = meshAnimations[meshAnimationIndex].Frames[0].FrameStateId > 0;
+				bool isValidAnimationFrame = meshAnimations[meshAnimationIndex].Instructions[0].FrameStateId > 0;
 
 				if (isValidAnimationFrame) {
 					Animations[meshType] ??= new MeshAnimationRoutine(
-						meshAnimations[meshAnimationIndex].Frames[0],
+						meshAnimations[meshAnimationIndex].Instructions[0],
 						Vector3.Zero,
 						Vector3.Zero,
 						Vector3.Zero,
@@ -70,20 +70,20 @@ namespace GaneshaDx.Rendering {
 		}
 
 		public static void Update() {
-			if (!MapData.MapIsLoaded || CurrentMapState.StateData.MeshAnimationInstructions == null) {
+			if (!MapData.MapIsLoaded || CurrentMapState.StateData.MeshAnimationSet == null) {
 				return;
 			}
 
 			foreach (MeshType meshType in AnimatedMeshTypes) {
 				if (Animations[meshType] != null && Animations[meshType].IsFinished()) {
-					MeshAnimationInstructions allInstructions = CurrentMapState.StateData.MeshAnimationInstructions;
-					MeshAnimation thisMeshAnimation = allInstructions.MeshAnimations[(int) meshType - 1];
+					MeshAnimationSet all = CurrentMapState.StateData.MeshAnimationSet;
+					AnimatedMeshInstructionSet thisAnimatedMeshInstructionSet = all.MeshInstructionSets[(int) meshType - 1];
 
 					MeshAnimationRoutine currentRoutine = Animations[meshType];
-					int nextFrameId = currentRoutine.CurrentFrame.NextFrameId - 1;
+					int nextFrameId = currentRoutine.AnimatedMeshInstruction.NextFrameId - 1;
 
 					Animations[meshType] = new MeshAnimationRoutine(
-						nextFrameId >= 0 ? thisMeshAnimation.Frames[nextFrameId] : null,
+						nextFrameId >= 0 ? thisAnimatedMeshInstructionSet.Instructions[nextFrameId] : null,
 						currentRoutine.CurrentPosition,
 						Vector3.Zero,
 						currentRoutine.CurrentScale,

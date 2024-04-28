@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using GaneshaDx.Common;
-using Microsoft.Xna.Framework;
 
 namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
-	public class MeshAnimationKeyFrame {
+	public class MeshAnimationKeyframe {
 		public readonly List<int> Properties = new List<int>();
 
 		public readonly List<double> Position = new List<double>();
@@ -19,7 +18,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 		public readonly List<double> RotationEndPercents = new List<double>();
 		public readonly List<double> ScaleEndPercents = new List<double>();
 
-		public MeshAnimationKeyFrame() {
+		public MeshAnimationKeyframe() {
 			Position = new List<double> { 0, 0, 0 };
 			Rotation = new List<double> { 0, 0, 0 };
 			Scale = new List<double> { 0, 0, 0 };
@@ -51,7 +50,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 			ScaleEndPercents = new List<double> { 0, 0, 0 };
 		}
 
-		public MeshAnimationKeyFrame(List<byte> rawData) {
+		public MeshAnimationKeyframe(List<byte> rawData) {
 			for (int byteIndex = 0; byteIndex < rawData.Count; byteIndex += 2) {
 				Properties.Add(Utilities.GetInt16FromLittleEndian(rawData[byteIndex], rawData[byteIndex + 1]));
 			}

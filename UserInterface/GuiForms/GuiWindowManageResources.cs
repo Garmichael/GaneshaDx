@@ -424,8 +424,8 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			ImGui.Checkbox("###hasAnimatedMeshes" + index, ref data.HasAnimatedMeshInstructions);
 
 			if (beforeAnimatedMeshes != data.HasAnimatedMeshInstructions) {
-				data.MeshAnimationInstructions = data.HasAnimatedMeshInstructions
-					? new MeshAnimationInstructions()
+				data.MeshAnimationSet = data.HasAnimatedMeshInstructions
+					? new MeshAnimationSet()
 					: null;
 
 				CurrentMapState.ResetState();

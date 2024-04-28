@@ -100,7 +100,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 		
 		private readonly List<byte> _rawMeshAnimationInstructionData = new List<byte>();
 
-		public MeshAnimationInstructions MeshAnimationInstructions;
+		public MeshAnimationSet MeshAnimationSet;
 		
 		public Terrain Terrain;
 
@@ -943,7 +943,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 			}
 
 			if (_rawMeshAnimationInstructionData.Count == instructionChunkSize) {
-				MeshAnimationInstructions = new MeshAnimationInstructions(_rawMeshAnimationInstructionData);
+				MeshAnimationSet = new MeshAnimationSet(_rawMeshAnimationInstructionData);
 			}
 		}
 
@@ -1512,20 +1512,25 @@ namespace GaneshaDx.Resources.ResourceContent {
 				RawData[AnimatedMeshInstructionsPointer + 2],
 				RawData[AnimatedMeshInstructionsPointer + 3]) = Utilities.GetLittleEndianFromInt32(RawData.Count);
 
-			RawData.AddRange(MeshAnimationInstructions.KeyframesHeader);
+			RawData.AddRange(MeshAnimationSet.KeyframesHeader);
 
-			foreach (MeshAnimationKeyFrame keyFrame in MeshAnimationInstructions.KeyFrames) {
-				RawData.AddRange(keyFrame.GetRawData());
+			foreach (MeshAnimationKeyframe keyframe in MeshAnimationSet.Keyframes) {
+				RawData.AddRange(keyframe.GetRawData());
 			}
 
-			RawData.AddRange(MeshAnimationInstructions.MeshAnimationsHeader);
+			RawData.AddRange(MeshAnimationSet.MeshInstructionSetsHeader);
 
-			foreach (MeshAnimation meshAnimation in MeshAnimationInstructions.MeshAnimations) {
-				RawData.AddRange(meshAnimation.GetRawData());
+			foreach (AnimatedMeshInstructionSet instructionSet in MeshAnimationSet.MeshInstructionSets) {
+				RawData.AddRange(instructionSet.GetRawData());
 			}
 
-			RawData.AddRange(MeshAnimationInstructions.UnknownChunkHeader);
-			RawData.AddRange(MeshAnimationInstructions.UnknownChunk.Data);
+			RawData.AddRange(MeshAnimationSet.MeshPropertiesHeader);
+
+			foreach (AnimatedMeshProperties meshProperties in MeshAnimationSet.MeshProperties) {
+				RawData.AddRange(meshProperties.GetRawData());
+			}
+			
+			RawData.AddRange(MeshAnimationSet.UnknownDataChunk.Data);
 		}
 
 		private void BuildRawDataAnimatedMeshes() {

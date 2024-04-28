@@ -137,7 +137,7 @@ namespace GaneshaDx.UserInterface.Input {
 					
 					if (AppInput.KeyJustPressed(Keys.A)) {
 						bool canEditMeshAnimations = MapData.MapIsLoaded &&
-						                             CurrentMapState.StateData.MeshAnimationInstructions != null;
+						                             CurrentMapState.StateData.MeshAnimationSet != null;
 						if (canEditMeshAnimations) {
 							Gui.ShowMeshAnimationsWindow = !Gui.ShowMeshAnimationsWindow;
 						}
@@ -243,7 +243,7 @@ namespace GaneshaDx.UserInterface.Input {
 
 					if (AppInput.KeyJustPressed(Keys.H)) {
 						bool canEditMeshAnimations = MapData.MapIsLoaded &&
-						                             CurrentMapState.StateData.MeshAnimationInstructions != null;
+						                             CurrentMapState.StateData.MeshAnimationSet != null;
 						if (canEditMeshAnimations) {
 							Gui.ShowDebugAnimatedMeshWindow = !Gui.ShowDebugAnimatedMeshWindow;
 						}

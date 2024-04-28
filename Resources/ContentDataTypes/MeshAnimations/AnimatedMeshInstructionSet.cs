@@ -2,23 +2,23 @@
 using GaneshaDx.Common;
 
 namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
-	public class MeshAnimation {
+	public class AnimatedMeshInstructionSet {
 		public readonly List<byte> RawData;
-		public readonly List<MeshAnimationFrame> Frames = new List<MeshAnimationFrame>();
+		public readonly List<AnimatedMeshInstruction> Instructions = new List<AnimatedMeshInstruction>();
 
-		public MeshAnimation() {
-			const int totalFrames = 16;
+		public AnimatedMeshInstructionSet() {
+			const int totalInstructions = 16;
 
-			for (int i = 0; i < totalFrames; i++) {
-				Frames.Add(new MeshAnimationFrame());
+			for (int i = 0; i < totalInstructions; i++) {
+				Instructions.Add(new AnimatedMeshInstruction());
 			}
 		}
 
-		public MeshAnimation(List<byte> rawData) {
+		public AnimatedMeshInstructionSet(List<byte> rawData) {
 			RawData = rawData;
 			int currentBye = 0;
 			for (int frameIndex = 0; frameIndex < 16; frameIndex++) {
-				Frames.Add(new MeshAnimationFrame {
+				Instructions.Add(new AnimatedMeshInstruction {
 					FrameStateId = rawData[currentBye],
 					NextFrameId = rawData[currentBye + 1],
 					Duration = Utilities.GetInt16FromLittleEndian(rawData[currentBye + 2], rawData[currentBye + 3])
@@ -30,7 +30,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.MeshAnimations {
 		public List<byte> GetRawData() {
 			List<byte> rawData = new List<byte>();
 
-			foreach (MeshAnimationFrame frame in Frames) {
+			foreach (AnimatedMeshInstruction frame in Instructions) {
 				rawData.Add((byte)frame.FrameStateId);
 				rawData.Add((byte)frame.NextFrameId);
 				rawData.Add(Utilities.GetLittleEndianFromInt16(frame.Duration).high);

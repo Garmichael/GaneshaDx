@@ -77,7 +77,7 @@ namespace GaneshaDx.UserInterface {
 						}
 
 						if (ShowDebugAnimatedMeshWindow &&
-						    MapData.MapIsLoaded && CurrentMapState.StateData.MeshAnimationInstructions != null
+						    MapData.MapIsLoaded && CurrentMapState.StateData.MeshAnimationSet != null
 						) {
 							GuiWindowDebugAnimatedMeshData.Render();
 						}
