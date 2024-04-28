@@ -338,8 +338,14 @@ namespace GaneshaDx.UserInterface.Widgets {
 			return new CameraRayResults {HasHit = false};
 		}
 
+		private bool _hasBuildAxisVertices = false;
 		public void Render() {
-			BuildAxisVertices();
+
+			if (!_hasBuildAxisVertices) {
+				BuildAxisVertices();
+				_hasBuildAxisVertices = true;
+			}
+
 			BuildPlaneVertices();
 
 			Stage.UntexturedVertexBuffer.SetData(_axisRenderVertices);
@@ -359,8 +365,7 @@ namespace GaneshaDx.UserInterface.Widgets {
 
 		private void BuildAxisVertices() {
 			float zoomAdjustedRadius = (float) StageCamera.ZoomLevel;
-			List<VertexPositionColorTexture> arrowVerts = new List<VertexPositionColorTexture>();
-
+			
 			if (_axis == Axis.X) {
 				float directionAdjustment = StageCamera.CamPosition.X < _center.X ? 0 : 180;
 
@@ -387,16 +392,16 @@ namespace GaneshaDx.UserInterface.Widgets {
 				}
 			}
 
-			foreach (Vector3 vert in _axisVertices) {
-				arrowVerts.Add(new VertexPositionColorTexture(
+			_axisRenderVertices = new VertexPositionColorTexture[_axisVertices.Count];
+			
+			for (int vertexIndex = 0; vertexIndex < _axisVertices.Count; vertexIndex++) {
+				Vector3 vert = _axisVertices[vertexIndex];
+				_axisRenderVertices[vertexIndex] = new VertexPositionColorTexture(
 					_center + vert,
 					IsHovered || IsActive ? HoverColor : NormalColor,
 					Vector2.Zero
-				));
+				);
 			}
-
-
-			_axisRenderVertices = arrowVerts.ToArray();
 		}
 
 		private void BuildPlaneVertices() {

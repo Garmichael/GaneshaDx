@@ -45,8 +45,6 @@ namespace GaneshaDx.UserInterface.Widgets {
 		private void BuildLightIndicatorVertices() {
 			float zoomAdjustedRadius = Radius * (float) StageCamera.ZoomLevel;
 			float zoomAdjustedLength = LightLength * (float) StageCamera.ZoomLevel;
-
-			List<VertexPositionColorTexture> verts = new List<VertexPositionColorTexture>();
 			List<Vector3> vertPositions = new List<Vector3>();
 
 			for (int vertexIndex = 0; vertexIndex < LightSides; vertexIndex++) {
@@ -145,7 +143,10 @@ namespace GaneshaDx.UserInterface.Widgets {
 				vertexIndex--;
 			}
 
-			foreach (Vector3 vectorPosition in vertPositions) {
+			_lightIndicatorVertices = new VertexPositionColorTexture[vertPositions.Count];
+
+			for (int vertexIndex = 0; vertexIndex < vertPositions.Count; vertexIndex++) {
+				Vector3 vectorPosition = vertPositions[vertexIndex];
 				Vector3 position = vectorPosition;
 				Color color = position.Z == 0 ? _color : _light.LightColor;
 
@@ -164,20 +165,12 @@ namespace GaneshaDx.UserInterface.Widgets {
 				);
 
 				position.Z -= CurrentMapState.StateData.Terrain.SizeZ * 28f * 1.5f;
-
 				position = Vector3.Transform(position, elevationRotation);
 				position = Vector3.Transform(position, azimuthRotation);
-
 				position += center;
 
-				verts.Add(new VertexPositionColorTexture(
-					position,
-					color,
-					new Vector2(0, 0))
-				);
+				_lightIndicatorVertices[vertexIndex] = new VertexPositionColorTexture(position, color, Vector2.Zero);
 			}
-
-			_lightIndicatorVertices = verts.ToArray();
 		}
 	}
 }

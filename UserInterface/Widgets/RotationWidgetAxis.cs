@@ -26,8 +26,8 @@ namespace GaneshaDx.UserInterface.Widgets {
 		public CameraRayResults LeftButtonHoveredResults;
 		public CameraRayResults RightButtonHoveredResults;
 		public bool IsHovered => LeftButtonHovered || RightButtonHovered;
-		private bool LeftButtonHovered => LeftButtonHoveredResults is {HasHit: true};
-		private bool RightButtonHovered => RightButtonHoveredResults is {HasHit: true};
+		private bool LeftButtonHovered => LeftButtonHoveredResults is { HasHit: true };
+		private bool RightButtonHovered => RightButtonHoveredResults is { HasHit: true };
 		private bool _leftButtonIsClockwise = true;
 		private Vector3 AveragePoint => Utilities.GetAveragePoint(_axisVertices);
 		public double DistanceToCamera => Vector3.Distance(StageCamera.CamPosition, AveragePoint);
@@ -92,14 +92,13 @@ namespace GaneshaDx.UserInterface.Widgets {
 				if (RotationWidget.AnchoredVertex > Selection.SelectedPolygons[0].Vertices.Count - 1) {
 					RotationWidget.AnchoredVertex = 0;
 				}
-				
+
 				_center = Selection.SelectedPolygons[0].Vertices[RotationWidget.AnchoredVertex].Position;
 			}
 		}
 
 		private void BuildAxisPoleVertices() {
 			float zoomAdjustedRadius = (float) StageCamera.ZoomLevel;
-			List<VertexPositionColorTexture> axisPoleVerts = new List<VertexPositionColorTexture>();
 
 			if (_axis == Axis.X) {
 				float directionAdjustment = StageCamera.CamPosition.X < _center.X ? 0 : 180;
@@ -127,22 +126,21 @@ namespace GaneshaDx.UserInterface.Widgets {
 				}
 			}
 
-			foreach (Vector3 vert in _axisVertices) {
-				axisPoleVerts.Add(new VertexPositionColorTexture(
-					_center + vert,
-					_axisPoleColor,
-					Vector2.Zero
-				));
+			if (_axisPoleRenderVertices.Length != _axisVertices.Count) {
+				_axisPoleRenderVertices = new VertexPositionColorTexture[_axisVertices.Count];
 			}
 
-			_axisPoleRenderVertices = axisPoleVerts.ToArray();
+			for (int vertexIndex = 0; vertexIndex < _axisVertices.Count; vertexIndex++) {
+				_axisPoleRenderVertices[vertexIndex] = new VertexPositionColorTexture(
+					_center + _axisVertices[vertexIndex],
+					_axisPoleColor,
+					Vector2.Zero
+				);
+			}
 		}
 
 		private void BuildRotationButtonVertices() {
 			float zoomAdjustedRadius = (float) StageCamera.ZoomLevel;
-			List<VertexPositionColorTexture> leftButtonRenderVertices = new List<VertexPositionColorTexture>();
-			List<VertexPositionColorTexture> rightButtonRenderVertices = new List<VertexPositionColorTexture>();
-
 			_leftButtonVertices.Clear();
 			_rightButtonVertices.Clear();
 
@@ -198,24 +196,29 @@ namespace GaneshaDx.UserInterface.Widgets {
 					throw new ArgumentOutOfRangeException();
 			}
 
-			foreach (Vector3 vert in _leftButtonVertices) {
-				leftButtonRenderVertices.Add(new VertexPositionColorTexture(
-					_center + vert,
+			if (_leftButtonRenderVertices.Length != _leftButtonVertices.Count) {
+				_leftButtonRenderVertices = new VertexPositionColorTexture[_leftButtonVertices.Count];
+			}
+
+			if (_rightButtonRenderVertices.Length != _rightButtonVertices.Count) {
+				_rightButtonRenderVertices = new VertexPositionColorTexture[_rightButtonVertices.Count];
+			}
+			
+			for (int vertexIndex = 0; vertexIndex < _leftButtonVertices.Count; vertexIndex++) {
+				_leftButtonRenderVertices[vertexIndex] = new VertexPositionColorTexture(
+					_center + _leftButtonVertices[vertexIndex],
 					LeftButtonHovered ? HoverColor : NormalColor,
 					Vector2.Zero
-				));
+				);
 			}
 
-			foreach (Vector3 vert in _rightButtonVertices) {
-				rightButtonRenderVertices.Add(new VertexPositionColorTexture(
-					_center + vert,
+			for (int vertexIndex = 0; vertexIndex < _rightButtonVertices.Count; vertexIndex++) {
+				_rightButtonRenderVertices[vertexIndex] = new VertexPositionColorTexture(
+					_center + _rightButtonVertices[vertexIndex],
 					RightButtonHovered ? HoverColor : NormalColor,
 					Vector2.Zero
-				));
+				);
 			}
-
-			_leftButtonRenderVertices = leftButtonRenderVertices.ToArray();
-			_rightButtonRenderVertices = rightButtonRenderVertices.ToArray();
 		}
 
 		public void Render() {
@@ -297,9 +300,9 @@ namespace GaneshaDx.UserInterface.Widgets {
 				);
 
 				if (distanceToLeftButton < distanceToRightButton) {
-					RightButtonHoveredResults = new CameraRayResults {HasHit = false};
+					RightButtonHoveredResults = new CameraRayResults { HasHit = false };
 				} else {
-					LeftButtonHoveredResults = new CameraRayResults {HasHit = false};
+					LeftButtonHoveredResults = new CameraRayResults { HasHit = false };
 				}
 			}
 
@@ -377,7 +380,7 @@ namespace GaneshaDx.UserInterface.Widgets {
 				foreach (Polygon polygon in Selection.SelectedPolygons) {
 					if (LeftButtonHoveredResults.HasHit && _leftButtonIsClockwise ||
 					    RightButtonHoveredResults.HasHit && !_leftButtonIsClockwise
-					) {
+					   ) {
 						polygon.RotateVerticesClockwise();
 					} else {
 						polygon.RotateVerticesCounterClockwise();
@@ -401,7 +404,7 @@ namespace GaneshaDx.UserInterface.Widgets {
 				}
 			}
 
-			return new CameraRayResults {HasHit = false};
+			return new CameraRayResults { HasHit = false };
 		}
 
 		private CameraRayResults GetRightButtonHoveredResults() {
@@ -419,7 +422,7 @@ namespace GaneshaDx.UserInterface.Widgets {
 				}
 			}
 
-			return new CameraRayResults {HasHit = false};
+			return new CameraRayResults { HasHit = false };
 		}
 
 		private List<Vector3> GetAxisArrowDefinition() {

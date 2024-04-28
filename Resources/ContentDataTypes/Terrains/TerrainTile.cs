@@ -143,7 +143,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.Terrains {
 				Vertices[3] += liftAmount;
 			}
 
-			List<VertexPositionColorTexture> verts = new List<VertexPositionColorTexture> {
+			_renderVertices = new[] {
 				new VertexPositionColorTexture(Vertices[0], GetVertexColor(Vertices[0].Y), Vector2.Zero),
 				new VertexPositionColorTexture(Vertices[1], GetVertexColor(Vertices[1].Y), Vector2.Zero),
 				new VertexPositionColorTexture(Vertices[2], GetVertexColor(Vertices[2].Y), Vector2.Zero),
@@ -151,8 +151,6 @@ namespace GaneshaDx.Resources.ContentDataTypes.Terrains {
 				new VertexPositionColorTexture(Vertices[0], GetVertexColor(Vertices[0].Y), Vector2.Zero),
 				new VertexPositionColorTexture(Vertices[2], GetVertexColor(Vertices[2].Y), Vector2.Zero),
 			};
-
-			_renderVertices = verts.ToArray();
 		}
 
 		private Color GetVertexColor(float height) {

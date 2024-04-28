@@ -5,16 +5,15 @@ using Microsoft.Xna.Framework;
 namespace GaneshaDx.Resources.ContentDataTypes.Palettes {
 	public class Palette {
 		public readonly List<PaletteColor> Colors = new List<PaletteColor>();
-
+		readonly Vector4[] _paletteColors = new Vector4[16];
+		
 		public Vector4[] ShaderColors {
 			get {
-				Vector4[] paletteColors = new Vector4[Colors.Count];
-
 				for (int colorIndex = 0; colorIndex < Colors.Count; colorIndex++) {
-					paletteColors[colorIndex] = Colors[colorIndex].ToColor(true).ToVector4();
+					_paletteColors[colorIndex] = Colors[colorIndex].ToColor(true).ToVector4();
 				}
 
-				return paletteColors;
+				return _paletteColors;
 			}
 		}
 

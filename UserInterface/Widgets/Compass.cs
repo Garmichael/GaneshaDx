@@ -38,14 +38,11 @@ namespace GaneshaDx.UserInterface.Widgets {
 		}
 
 		private void BuildCompassVertices() {
-			_totalTriangles = 0;
-
-			List<VertexPositionColorTexture> verts = new List<VertexPositionColorTexture>();
 			List<Vector3> sourceVertexPositions = BuildSingleAxisVertices();
 			List<Vector3> bothAxisVertices = new List<Vector3>();
 			List<Vector3> xAxisVertices = new List<Vector3>();
 			List<Vector3> zAxisVertices = new List<Vector3>();
-
+			
 			foreach (Vector3 vertexPosition in sourceVertexPositions) {
 				Matrix zRotation = Matrix.CreateRotationX(MathHelper.ToRadians(90));
 				Vector3 newVertexPosition = Vector3.Transform(vertexPosition, zRotation);
@@ -71,24 +68,16 @@ namespace GaneshaDx.UserInterface.Widgets {
 			bothAxisVertices.AddRange(xAxisVertices);
 			bothAxisVertices.AddRange(zAxisVertices);
 
-			foreach (Vector3 vectorPosition in bothAxisVertices) {
-				Vector3 position = vectorPosition;
-
-				Matrix elevationRotation = Matrix.CreateRotationX(
-					MathHelper.ToRadians(-90)
-				);
-
-				position = Vector3.Transform(position, elevationRotation);
-
-				verts.Add(new VertexPositionColorTexture(
-					position,
-					Color.Cyan,
-					new Vector2(0, 0))
-				);
+			_postVertices = new VertexPositionColorTexture[bothAxisVertices.Count];
+			
+			for (int vertexIndex = 0; vertexIndex < bothAxisVertices.Count; vertexIndex++) {
+				Vector3 vectorPosition = bothAxisVertices[vertexIndex];
+				Matrix elevationRotation = Matrix.CreateRotationX(MathHelper.ToRadians(-90));
+				Vector3 position = Vector3.Transform(vectorPosition, elevationRotation);
+				_postVertices[vertexIndex] = new VertexPositionColorTexture(position, Color.Cyan, Vector2.Zero);
 			}
 
 			_totalTriangles = Sides * 4 * 2;
-			_postVertices = verts.ToArray();
 		}
 
 		private List<Vector3> BuildSingleAxisVertices() {

@@ -45,7 +45,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 		public int UnknownUntexturedValueB;
 		public int UnknownUntexturedValueC;
 		public int UnknownUntexturedValueD;
-		
+
 		public Vector3 AveragePoint {
 			get {
 				List<Vector3> adjustedVerts = new List<Vector3>();
@@ -78,9 +78,9 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 			Stage.BasicEffect.VertexColorEnabled = false;
 
 			foreach (EffectPass pass in IsTextured
-				? Stage.FftPolygonEffect.CurrentTechnique.Passes
-				: Stage.BasicEffect.CurrentTechnique.Passes
-			) {
+				         ? Stage.FftPolygonEffect.CurrentTechnique.Passes
+				         : Stage.BasicEffect.CurrentTechnique.Passes
+			        ) {
 				pass.Apply();
 				Stage.GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleStrip, 0, IsQuad ? 2 : 1);
 			}
@@ -219,6 +219,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 			if (planarAxis == Axis.None) {
 				OverlayConsole.AddMessage("AutoMap only works on flat polys");
 			}
+
 			if (planarAxis == Axis.Y) {
 				UvCoordinates[1] = new Vector2(
 					UvCoordinates[0].X + (float) Math.Round((Vertices[0].Position.X - Vertices[1].Position.X) * ratio, MidpointRounding.AwayFromZero),
@@ -279,7 +280,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 			    !IsQuad &&
 			    (int) Vertices[0].Position.Y == (int) Vertices[1].Position.Y &&
 			    (int) Vertices[1].Position.Y == (int) Vertices[2].Position.Y
-			) {
+			   ) {
 				return Axis.Y;
 			}
 
@@ -291,7 +292,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 			    !IsQuad &&
 			    (int) Vertices[0].Position.X == (int) Vertices[1].Position.X &&
 			    (int) Vertices[1].Position.X == (int) Vertices[2].Position.X
-			) {
+			   ) {
 				return Axis.X;
 			}
 
@@ -302,7 +303,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 			    !IsQuad &&
 			    (int) Vertices[0].Position.Z == (int) Vertices[1].Position.Z &&
 			    (int) Vertices[1].Position.Z == (int) Vertices[2].Position.Z
-			) {
+			   ) {
 				return Axis.Z;
 			}
 
@@ -349,7 +350,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 				UnknownUntexturedValueA = UnknownUntexturedValueA,
 				UnknownUntexturedValueB = UnknownUntexturedValueB,
 				UnknownUntexturedValueC = UnknownUntexturedValueC,
-				UnknownUntexturedValueD = UnknownUntexturedValueD 
+				UnknownUntexturedValueD = UnknownUntexturedValueD
 			};
 
 			foreach (Vertex vertex in Vertices) {
@@ -395,7 +396,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 				UnknownUntexturedValueA = UnknownUntexturedValueA,
 				UnknownUntexturedValueB = UnknownUntexturedValueB,
 				UnknownUntexturedValueC = UnknownUntexturedValueC,
-				UnknownUntexturedValueD = UnknownUntexturedValueD 
+				UnknownUntexturedValueD = UnknownUntexturedValueD
 			};
 
 			Polygon newPolygonB = new Polygon {
@@ -486,7 +487,9 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 		}
 
 		private void SetRenderVertices() {
-			_renderVertices = new VertexPositionNormalTexture[IsQuad ? 4 : 3];
+			_renderVertices = IsQuad
+				? new VertexPositionNormalTexture[4]
+				: new VertexPositionNormalTexture[3];
 
 			_renderVertices[0] = BuildVertex(0);
 			_renderVertices[1] = BuildVertex(1);
@@ -546,21 +549,15 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 			);
 
 			for (int lightIndex = 0; lightIndex < 3; lightIndex++) {
-				DirectionalLight light = CurrentMapState.StateData.DirectionalLights[lightIndex];
-				Vector4 lightColor = light.LightColor.ToVector4();
-				Vector3 lightDirection = Utilities.SphereToVector(
-					CurrentMapState.StateData.DirectionalLights[lightIndex].DirectionElevation,
-					CurrentMapState.StateData.DirectionalLights[lightIndex].DirectionAzimuth
-				);
-
+				DirectionalLight thisLight = CurrentMapState.StateData.DirectionalLights[lightIndex];
+				Vector3 lightDirection = Utilities.SphereToVector(thisLight.DirectionElevation, thisLight.DirectionAzimuth);
 				lightDirection.Normalize();
-
 				Stage.FftPolygonEffect.Parameters["DirectionalLightDirection" + lightIndex].SetValue(lightDirection);
-				Stage.FftPolygonEffect.Parameters["DirectionalLightColor" + lightIndex].SetValue(
-					RenderingProperties is { LitTexture: false }
-						? new Vector4(0f, 0f, 0f, 1)
-						: lightColor
-				);
+
+				Vector4 lightColor = RenderingProperties.LitTexture
+					? thisLight.LightColor.ToVector4()
+					: new Vector4(0f, 0f, 0f, 1);
+				Stage.FftPolygonEffect.Parameters["DirectionalLightColor" + lightIndex].SetValue(lightColor);
 			}
 
 			Vector4[] shaderColors = SceneRenderer.AnimationAdjustedPalettes[PaletteId].ShaderColors;

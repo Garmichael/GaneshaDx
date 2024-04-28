@@ -124,17 +124,28 @@ namespace GaneshaDx.Rendering {
 		}
 
 		private static void SetPaletteAnimationInstructions() {
-			AnimationAdjustedPalettes.Clear();
+			if (AnimationAdjustedPalettes.Count != 16) {
+				AnimationAdjustedPalettes.Clear();
+				for (int i = 0; i < 16; i++) {
+					Palette blankPalette = new Palette();
+					for (int j = 0; j < 16; j++) {
+						blankPalette.Colors.Add(new PaletteColor(0, 0, 0, false));
+					}
 
-			foreach (Palette palette in CurrentMapState.StateData.Palettes) {
-				Palette newPalette = new Palette();
-				foreach (PaletteColor paletteColor in palette.Colors) {
-					newPalette.Colors.Add(new PaletteColor(
-						paletteColor.Red, paletteColor.Green, paletteColor.Blue, paletteColor.IsTransparent
-					));
+					AnimationAdjustedPalettes.Add(blankPalette);
 				}
+			}
 
-				AnimationAdjustedPalettes.Add(newPalette);
+			for (int paletteIndex = 0; paletteIndex < CurrentMapState.StateData.Palettes.Count; paletteIndex++) {
+				Palette palette = CurrentMapState.StateData.Palettes[paletteIndex];
+				
+				for (int colorIndex = 0; colorIndex < palette.Colors.Count; colorIndex++) {
+					PaletteColor paletteColor = palette.Colors[colorIndex];
+
+					AnimationAdjustedPalettes[paletteIndex].Colors[colorIndex] = new PaletteColor(
+						paletteColor.Red, paletteColor.Green, paletteColor.Blue, paletteColor.IsTransparent
+					);
+				}
 			}
 
 			List<AnimatedTextureInstructions> animations = CurrentMapState.StateData.TextureAnimations;
