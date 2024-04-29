@@ -16,14 +16,26 @@ namespace GaneshaDx.Rendering {
 
 		private static readonly Dictionary<MeshType, MeshAnimationRoutine> Animations =
 			new Dictionary<MeshType, MeshAnimationRoutine> {
-				{MeshType.AnimatedMesh1, null},
-				{MeshType.AnimatedMesh2, null},
-				{MeshType.AnimatedMesh3, null},
-				{MeshType.AnimatedMesh4, null},
-				{MeshType.AnimatedMesh5, null},
-				{MeshType.AnimatedMesh6, null},
-				{MeshType.AnimatedMesh7, null},
-				{MeshType.AnimatedMesh8, null},
+				{ MeshType.AnimatedMesh1, null },
+				{ MeshType.AnimatedMesh2, null },
+				{ MeshType.AnimatedMesh3, null },
+				{ MeshType.AnimatedMesh4, null },
+				{ MeshType.AnimatedMesh5, null },
+				{ MeshType.AnimatedMesh6, null },
+				{ MeshType.AnimatedMesh7, null },
+				{ MeshType.AnimatedMesh8, null },
+			};
+
+		private static readonly Dictionary<MeshType, AnimatedMeshProperties> MeshProperties =
+			new Dictionary<MeshType, AnimatedMeshProperties> {
+				{ MeshType.AnimatedMesh1, null },
+				{ MeshType.AnimatedMesh2, null },
+				{ MeshType.AnimatedMesh3, null },
+				{ MeshType.AnimatedMesh4, null },
+				{ MeshType.AnimatedMesh5, null },
+				{ MeshType.AnimatedMesh6, null },
+				{ MeshType.AnimatedMesh7, null },
+				{ MeshType.AnimatedMesh8, null },
 			};
 
 		public static void PlayAnimations() {
@@ -49,13 +61,15 @@ namespace GaneshaDx.Rendering {
 						true
 					);
 				}
+
+				MeshProperties[meshType] = CurrentMapState.StateData.MeshAnimationSet.MeshProperties[meshAnimationIndex];
 			}
 		}
 
 		public static void StopAnimations() {
 			Reset();
 			AnimationsPlaying = false;
-			
+
 			foreach (MeshType meshType in AnimatedMeshTypes) {
 				foreach (KeyValuePair<PolygonType, List<Polygon>> polygons in CurrentMapState.StateData.PolygonCollection[meshType]) {
 					foreach (Polygon polygon in polygons.Value) {
@@ -110,7 +124,7 @@ namespace GaneshaDx.Rendering {
 			if (Animations[meshType] == null) {
 				return vertexPosition;
 			}
-
+			
 			Matrix rotationX = Matrix.CreateRotationX(MathHelper.ToRadians(Animations[meshType].CurrentRotation.X));
 			Matrix rotationY = Matrix.CreateRotationY(MathHelper.ToRadians(Animations[meshType].CurrentRotation.Y));
 			Matrix rotationZ = Matrix.CreateRotationZ(MathHelper.ToRadians(Animations[meshType].CurrentRotation.Z));
@@ -131,6 +145,13 @@ namespace GaneshaDx.Rendering {
 				Animations[meshType].CurrentPosition.Z
 			);
 
+			if (MeshProperties[meshType].LinkedParentMesh > 0) {
+				vertexPosition = GetAnimatedVertexOffset(
+					AnimatedMeshTypes[MeshProperties[meshType].LinkedParentMesh - 1],
+					vertexPosition
+				);
+			}
+			
 			return vertexPosition;
 		}
 
