@@ -97,11 +97,11 @@ namespace GaneshaDx.Resources.ResourceContent {
 		public List<Palette> PaletteAnimationFrames = new List<Palette>();
 
 		public List<AnimatedTextureInstructions> AnimatedTextureInstructions = new List<AnimatedTextureInstructions>();
-		
+
 		private readonly List<byte> _rawMeshAnimationInstructionData = new List<byte>();
 
 		public MeshAnimationSet MeshAnimationSet;
-		
+
 		public Terrain Terrain;
 
 		public bool UsesEndOfTerrainPadding;
@@ -747,10 +747,10 @@ namespace GaneshaDx.Resources.ResourceContent {
 
 						binary = Utilities.GetBinaryFromInt(RawData[_currentByteIndex + 6]);
 
-						bool passThroughOnly =Utilities.GetIntFromBinary(binary.Substring(0, 1)) == 1; 
-						bool unknown6B =Utilities.GetIntFromBinary(binary.Substring(1, 1)) == 1; 
-						bool unknown6C =Utilities.GetIntFromBinary(binary.Substring(2, 1)) == 1; 
-						bool unknown6D =Utilities.GetIntFromBinary(binary.Substring(3, 1)) == 1; 
+						bool passThroughOnly = Utilities.GetIntFromBinary(binary.Substring(0, 1)) == 1;
+						bool unknown6B = Utilities.GetIntFromBinary(binary.Substring(1, 1)) == 1;
+						bool unknown6C = Utilities.GetIntFromBinary(binary.Substring(2, 1)) == 1;
+						bool unknown6D = Utilities.GetIntFromBinary(binary.Substring(3, 1)) == 1;
 						int shading = Utilities.GetIntFromBinary(binary.Substring(4, 2));
 
 						bool impassable = Utilities.GetIntFromBinary(binary.Substring(6, 1)) == 1;
@@ -917,7 +917,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 
 			HasGrayscalePalettes = true;
 		}
-		
+
 		private void ProcessMeshAnimationInstructions() {
 			const int instructionChunkSize = 14620;
 
@@ -1476,7 +1476,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 			if (!HasGrayscalePalettes) {
 				return;
 			}
-			
+
 			(RawData[TexturePalettesGrayscalePointer],
 				RawData[TexturePalettesGrayscalePointer + 1],
 				RawData[TexturePalettesGrayscalePointer + 2],
@@ -1529,7 +1529,7 @@ namespace GaneshaDx.Resources.ResourceContent {
 			foreach (AnimatedMeshProperties meshProperties in MeshAnimationSet.MeshProperties) {
 				RawData.AddRange(meshProperties.GetRawData());
 			}
-			
+
 			RawData.AddRange(MeshAnimationSet.UnknownDataChunk.Data);
 		}
 
