@@ -549,9 +549,10 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 		private void SetPolygonEffect() {
 			Stage.FftPolygonEffect.Parameters["ModelTexture"].SetValue(_texture2D);
 
+			bool isUnlit = RenderingProperties != null && !RenderingProperties.LitTexture; 
 			Color ambientColor = CurrentMapState.StateData.AmbientLightColor;
 			Stage.FftPolygonEffect.Parameters["AmbientColor"].SetValue(
-				RenderingProperties is { LitTexture: false }
+				isUnlit
 					? new Vector4(0.5f, 0.5f, 0.5f, 1)
 					: ambientColor.ToVector4()
 			);
@@ -562,9 +563,9 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 				lightDirection.Normalize();
 				Stage.FftPolygonEffect.Parameters["DirectionalLightDirection" + lightIndex].SetValue(lightDirection);
 
-				Vector4 lightColor = RenderingProperties is { LitTexture: true }
-					? thisLight.LightColor.ToVector4()
-					: new Vector4(0f, 0f, 0f, 1);
+				Vector4 lightColor = isUnlit
+					? new Vector4(0f, 0f, 0f, 1)
+					: thisLight.LightColor.ToVector4();
 				Stage.FftPolygonEffect.Parameters["DirectionalLightColor" + lightIndex].SetValue(lightColor);
 			}
 
