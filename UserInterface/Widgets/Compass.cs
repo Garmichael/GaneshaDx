@@ -12,7 +12,7 @@ namespace GaneshaDx.UserInterface.Widgets {
 		private const int Sides = 8;
 		private int _totalTriangles;
 
-		private VertexPositionColorTexture[] _postVertices;
+		private VertexPositionColorTexture[] _postVertices = {};
 		private readonly DepthStencilState _depthBufferState;
 
 		public Compass() {
@@ -68,8 +68,10 @@ namespace GaneshaDx.UserInterface.Widgets {
 			bothAxisVertices.AddRange(xAxisVertices);
 			bothAxisVertices.AddRange(zAxisVertices);
 
-			_postVertices = new VertexPositionColorTexture[bothAxisVertices.Count];
-			
+			if (_postVertices.Length != bothAxisVertices.Count) {
+				_postVertices = new VertexPositionColorTexture[bothAxisVertices.Count];
+			}
+
 			for (int vertexIndex = 0; vertexIndex < bothAxisVertices.Count; vertexIndex++) {
 				Vector3 vectorPosition = bothAxisVertices[vertexIndex];
 				Matrix elevationRotation = Matrix.CreateRotationX(MathHelper.ToRadians(-90));

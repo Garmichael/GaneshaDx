@@ -14,7 +14,7 @@ namespace GaneshaDx.UserInterface.Widgets {
 
 		private readonly DirectionalLight _light;
 		private readonly Color _color;
-		private VertexPositionColorTexture[] _lightIndicatorVertices;
+		private VertexPositionColorTexture[] _lightIndicatorVertices = {};
 		private readonly DepthStencilState _depthBufferState;
 
 		public DirectionalLightIndicator(DirectionalLight light, Color color) {
@@ -143,7 +143,9 @@ namespace GaneshaDx.UserInterface.Widgets {
 				vertexIndex--;
 			}
 
-			_lightIndicatorVertices = new VertexPositionColorTexture[vertPositions.Count];
+			if (_lightIndicatorVertices.Length != vertPositions.Count) {
+				_lightIndicatorVertices = new VertexPositionColorTexture[vertPositions.Count];
+			}
 
 			for (int vertexIndex = 0; vertexIndex < vertPositions.Count; vertexIndex++) {
 				Vector3 vectorPosition = vertPositions[vertexIndex];
