@@ -22,6 +22,8 @@ namespace GaneshaDx.UserInterface.GuiForms {
 		private static int _selectedMeshId;
 		private static int _selectedStateId;
 
+		public static int StateActivelyPlaying = 0;
+		
 		public static void Render() {
 			_windowHeightWithUnknownsShown = 640;
 			
@@ -439,9 +441,20 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 		private static void RenderControlsPanel() {
 			GuiStyle.AddSpace();
-			ImGui.SetCursorPosX(WindowWidth / 2f - 40);
+			ImGui.SetCursorPosX(WindowWidth / 2f - 80);
 			GuiStyle.SetNewUiToDefaultStyle();
 
+			ImGui.SetNextItemWidth(80);
+			int beforeStateActivelyPlaying = StateActivelyPlaying;
+			string[] labels = new[] { "State 0", "State 1", "State 2", "State 3", "State 4", "State 5", "State 6", "State 7" };
+			ImGui.Combo("##SelectedMeshType", ref StateActivelyPlaying, labels, labels.Length);
+
+			if (beforeStateActivelyPlaying != StateActivelyPlaying) {
+				MeshAnimationController.PlayAnimations(StateActivelyPlaying);
+			}
+
+			ImGui.SameLine();
+			
 			if (!MeshAnimationController.AnimationsPlaying) {
 				GuiStyle.SetElementStyle(ElementStyle.ButtonSelected);
 			} else {
@@ -465,9 +478,8 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 			ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
 			if (ImGui.Button("P##MeshAnimationPlay")) {
-				MeshAnimationController.PlayAnimations();
+				MeshAnimationController.PlayAnimations(StateActivelyPlaying);
 			}
-
 			ImGui.PopFont();
 		}
 	}

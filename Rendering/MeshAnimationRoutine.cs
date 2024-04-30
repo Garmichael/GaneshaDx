@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 namespace GaneshaDx.Rendering {
 	public class MeshAnimationRoutine {
 		public readonly AnimatedMeshInstruction AnimatedMeshInstruction;
+		public AnimatedMeshInstructionSet MyAnimationInstructionSet;
 		private readonly MeshAnimationKeyframe _currentKeyframe;
 		private readonly double _startTime;
 		private double _timeIntoAnimation;
@@ -31,7 +32,8 @@ namespace GaneshaDx.Rendering {
 			Vector3 startPosition,
 			Vector3 startRotation,
 			Vector3 startScale,
-			bool isInitialFrame
+			bool isInitialFrame,
+			AnimatedMeshInstructionSet myAnimationInstructionSet
 		) {
 			MeshAnimationSet instructions = CurrentMapState.StateData.MeshAnimationSet;
 			_currentKeyframe = animatedMeshInstruction == null || animatedMeshInstruction.FrameStateId == 0
@@ -46,6 +48,7 @@ namespace GaneshaDx.Rendering {
 			CurrentPosition = startPosition;
 			CurrentRotation = startRotation;
 			CurrentScale = startScale;
+			MyAnimationInstructionSet = myAnimationInstructionSet;
 		}
 
 		public bool IsFinished() {

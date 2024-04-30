@@ -8,13 +8,14 @@ using Microsoft.Xna.Framework;
 namespace GaneshaDx.Rendering {
 	public static class MeshAnimationController {
 		public static bool AnimationsPlaying = true;
+		public static int ActivePlayingState;
 
 		private static readonly List<MeshType> AnimatedMeshTypes = new List<MeshType> {
 			MeshType.AnimatedMesh1, MeshType.AnimatedMesh2, MeshType.AnimatedMesh3, MeshType.AnimatedMesh4,
 			MeshType.AnimatedMesh5, MeshType.AnimatedMesh6, MeshType.AnimatedMesh7, MeshType.AnimatedMesh8
 		};
 
-		private static readonly Dictionary<MeshType, MeshAnimationRoutine> Animations =
+		public static readonly Dictionary<MeshType, MeshAnimationRoutine> Animations =
 			new Dictionary<MeshType, MeshAnimationRoutine> {
 				{ MeshType.AnimatedMesh1, null },
 				{ MeshType.AnimatedMesh2, null },
@@ -38,18 +39,20 @@ namespace GaneshaDx.Rendering {
 				{ MeshType.AnimatedMesh8, null },
 			};
 
-		public static void PlayAnimations() {
+		public static void PlayAnimations(int stateToPlay = 0) {
 			Reset();
 
 			if (CurrentMapState.StateData.MeshAnimationSet == null) {
 				return;
 			}
 
+			ActivePlayingState = stateToPlay;
 			AnimationsPlaying = true;
 
 			foreach (MeshType meshType in AnimatedMeshTypes) {
 				List<AnimatedMeshInstructionSet> meshAnimations = CurrentMapState.StateData.MeshAnimationSet.MeshInstructionSets;
-				int meshAnimationIndex = (int) meshType - 1;
+				int meshAnimationIndex = (int) (meshType - 1) + ActivePlayingState * 8;
+
 				bool isValidAnimationFrame = meshAnimations[meshAnimationIndex].Instructions[0].FrameStateId > 0;
 
 				if (isValidAnimationFrame) {
@@ -57,8 +60,9 @@ namespace GaneshaDx.Rendering {
 						meshAnimations[meshAnimationIndex].Instructions[0],
 						Vector3.Zero,
 						Vector3.Zero,
-						Vector3.Zero,
-						true
+						Vector3.One,
+						true,
+						meshAnimations[meshAnimationIndex]
 					);
 				}
 
@@ -90,8 +94,9 @@ namespace GaneshaDx.Rendering {
 
 			foreach (MeshType meshType in AnimatedMeshTypes) {
 				if (Animations[meshType] != null && Animations[meshType].IsFinished()) {
-					MeshAnimationSet all = CurrentMapState.StateData.MeshAnimationSet;
-					AnimatedMeshInstructionSet thisAnimatedMeshInstructionSet = all.MeshInstructionSets[(int) meshType - 1];
+					List<AnimatedMeshInstructionSet> meshAnimations = CurrentMapState.StateData.MeshAnimationSet.MeshInstructionSets;
+					int meshAnimationIndex = (int) (meshType - 1) + ActivePlayingState * 8;
+					AnimatedMeshInstructionSet thisAnimatedMeshInstructionSet = meshAnimations[meshAnimationIndex];
 
 					MeshAnimationRoutine currentRoutine = Animations[meshType];
 					int nextFrameId = currentRoutine.AnimatedMeshInstruction.NextFrameId - 1;
@@ -101,7 +106,8 @@ namespace GaneshaDx.Rendering {
 						currentRoutine.CurrentPosition,
 						Vector3.Zero,
 						currentRoutine.CurrentScale,
-						false
+						false,
+						thisAnimatedMeshInstructionSet
 					);
 
 					foreach (
@@ -124,7 +130,7 @@ namespace GaneshaDx.Rendering {
 			if (Animations[meshType] == null) {
 				return vertexPosition;
 			}
-			
+
 			Matrix rotationX = Matrix.CreateRotationX(MathHelper.ToRadians(Animations[meshType].CurrentRotation.X));
 			Matrix rotationY = Matrix.CreateRotationY(MathHelper.ToRadians(Animations[meshType].CurrentRotation.Y));
 			Matrix rotationZ = Matrix.CreateRotationZ(MathHelper.ToRadians(Animations[meshType].CurrentRotation.Z));
@@ -151,7 +157,7 @@ namespace GaneshaDx.Rendering {
 					vertexPosition
 				);
 			}
-			
+
 			return vertexPosition;
 		}
 
