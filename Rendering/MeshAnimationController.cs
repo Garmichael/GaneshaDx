@@ -104,7 +104,7 @@ namespace GaneshaDx.Rendering {
 					Animations[meshType] = new MeshAnimationRoutine(
 						nextFrameId >= 0 ? thisAnimatedMeshInstructionSet.Instructions[nextFrameId] : null,
 						currentRoutine.CurrentPosition,
-						Vector3.Zero,
+						currentRoutine.CurrentRotation,
 						currentRoutine.CurrentScale,
 						false,
 						thisAnimatedMeshInstructionSet
