@@ -15,13 +15,13 @@ namespace GaneshaDx.UserInterface.Widgets {
 
 		private readonly List<Vector3> _arrowDefinition;
 		private readonly List<Vector3> _axisVertices = new List<Vector3>();
-		private VertexPositionColorTexture[] _axisPoleRenderVertices;
+		private VertexPositionColorTexture[] _axisPoleRenderVertices = {};
 
 		private readonly List<Vector3> _rotationButtonDefinition;
 		private readonly List<Vector3> _leftButtonVertices = new List<Vector3>();
 		private readonly List<Vector3> _rightButtonVertices = new List<Vector3>();
-		private VertexPositionColorTexture[] _leftButtonRenderVertices;
-		private VertexPositionColorTexture[] _rightButtonRenderVertices;
+		private VertexPositionColorTexture[] _leftButtonRenderVertices = {};
+		private VertexPositionColorTexture[] _rightButtonRenderVertices = {};
 
 		public CameraRayResults LeftButtonHoveredResults;
 		public CameraRayResults RightButtonHoveredResults;
