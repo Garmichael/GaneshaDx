@@ -114,6 +114,8 @@ namespace GaneshaDx.UserInterface {
 					_openFileDialog.Folder = _openFileDialog.FilePath;
 
 					Configuration.Properties.LoadFolder = _openFileDialog.Folder;
+					_saveAsDialog.Folder = _openFileDialog.Folder;
+					
 					Configuration.SaveConfiguration();
 
 					List<string> pathSegments = _openFileDialog.FilePath.Split('\\').ToList();
