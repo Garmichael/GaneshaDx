@@ -156,6 +156,12 @@ namespace GaneshaDx.UserInterface.GuiForms {
 						Selection.SelectAllPolygons();
 					}
 
+					if (ImGui.MenuItem("Focus on Selection", "Z", false, MapData.MapIsLoaded)) {
+						StageCamera.FocusOnSelection();
+					}
+					
+					ImGui.Separator();
+					
 					if (ImGui.MenuItem(
 						"Grow Polygon Selection",
 						"+",
@@ -247,18 +253,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				}
 
 				if (ImGui.BeginMenu("View")) {
-					ImGui.MenuItem("Gns Data", "G", ref Gui.ShowGnsDataWindow, MapData.MapIsLoaded);
 					
-					ImGui.MenuItem("Polygon List", "P", ref Gui.ShowPolygonListWindow, MapData.MapIsLoaded);
-
-					ImGui.MenuItem("Camera Controls", "C", ref Gui.ShowCameraControlWindow, MapData.MapIsLoaded);
-
-					if (ImGui.MenuItem("Focus on Selection", "Z", false, MapData.MapIsLoaded)) {
-						StageCamera.FocusOnSelection();
-					}
-
-					ImGui.Separator();
-
 					bool beforeOrthoModeChange = Configuration.Properties.RenderFftOrtho;
 					ImGui.MenuItem(
 						"FFT Ortho Mode",
@@ -322,8 +317,16 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					
 					ImGui.Separator();
 
-					bool canEditMeshAnimations = MapData.MapIsLoaded &&
-					                             CurrentMapState.StateData.MeshAnimationSet != null;
+					if (ImGui.MenuItem(
+						    "Manage Mesh Resources",
+						    "M",
+						    false,
+						    MapData.MapIsLoaded)
+					   ) {
+						Gui.ToggleManageResourcesWindow();
+					}
+					
+					bool canEditMeshAnimations = MapData.MapIsLoaded && CurrentMapState.StateData.MeshAnimationSet != null;
 
 					if (ImGui.MenuItem(
 						"Edit Mesh Animations",
@@ -334,16 +337,13 @@ namespace GaneshaDx.UserInterface.GuiForms {
 						Gui.ShowMeshAnimationsWindow = !Gui.ShowMeshAnimationsWindow;
 					}
 
-					if (ImGui.MenuItem(
-						"Manage Mesh Resources",
-						"M",
-						false,
-						MapData.MapIsLoaded)
-					) {
-						Gui.ToggleManageResourcesWindow();
-					}
-
 					ImGui.MenuItem("Show Raw Terrain Data", "Ctrl + T", ref Gui.ShowRawTerrainDataWindow, MapData.MapIsLoaded);
+
+					ImGui.MenuItem("Gns Data", "G", ref Gui.ShowGnsDataWindow, MapData.MapIsLoaded);
+					
+					ImGui.MenuItem("Polygon List", "P", ref Gui.ShowPolygonListWindow, MapData.MapIsLoaded);
+
+					ImGui.MenuItem("Camera Controls", "C", ref Gui.ShowCameraControlWindow, MapData.MapIsLoaded);
 
 					ImGui.Separator();
 
