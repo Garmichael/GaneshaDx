@@ -16,16 +16,15 @@ namespace GaneshaDx.UserInterface.GuiForms {
 		private const int WindowWidth = LeftPanelWidth + RightPanelWidth;
 		private const int FooterHeight = 80;
 		private const int WindowHeight = 570;
-		private static int _windowHeightWithUnknownsShown = 570;
+		private const int WindowHeightWithUnknownsShown = 640;
 
 		private static int _selectedFrameState;
 		private static int _selectedMeshId;
 		private static int _selectedStateId;
 
-		public static int StateActivelyPlaying = 0;
+		private static int _stateActivelyPlaying;
 		
 		public static void Render() {
-			_windowHeightWithUnknownsShown = 640;
 			
 			bool windowIsOpen = true;
 
@@ -33,7 +32,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			ImGui.GetStyle().WindowRounding = 3;
 			ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[2]);
 			int windowHeight = Configuration.Properties.ShowUnknownValues
-				? _windowHeightWithUnknownsShown
+				? WindowHeightWithUnknownsShown
 				: WindowHeight;
 			ImGui.SetNextWindowSize(new Vector2(WindowWidth, windowHeight));
 
@@ -445,12 +444,12 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			GuiStyle.SetNewUiToDefaultStyle();
 
 			ImGui.SetNextItemWidth(80);
-			int beforeStateActivelyPlaying = StateActivelyPlaying;
+			int beforeStateActivelyPlaying = _stateActivelyPlaying;
 			string[] labels = new[] { "State 0", "State 1", "State 2", "State 3", "State 4", "State 5", "State 6", "State 7" };
-			ImGui.Combo("##SelectedMeshType", ref StateActivelyPlaying, labels, labels.Length);
+			ImGui.Combo("##SelectedMeshType", ref _stateActivelyPlaying, labels, labels.Length);
 
-			if (beforeStateActivelyPlaying != StateActivelyPlaying) {
-				MeshAnimationController.PlayAnimations(StateActivelyPlaying);
+			if (beforeStateActivelyPlaying != _stateActivelyPlaying) {
+				MeshAnimationController.PlayAnimations(_stateActivelyPlaying);
 			}
 
 			ImGui.SameLine();
@@ -478,7 +477,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 			ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
 			if (ImGui.Button("P##MeshAnimationPlay")) {
-				MeshAnimationController.PlayAnimations(StateActivelyPlaying);
+				MeshAnimationController.PlayAnimations(_stateActivelyPlaying);
 			}
 			ImGui.PopFont();
 		}
