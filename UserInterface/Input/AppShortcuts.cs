@@ -83,6 +83,10 @@ namespace GaneshaDx.UserInterface.Input {
 						}
 					}
 
+					if (AppInput.KeyJustPressed(Keys.G)) {
+						Gui.ShowGnsDataWindow = !Gui.ShowGnsDataWindow;
+					}
+
 					if (AppInput.KeyJustPressed(Keys.P)) {
 						Gui.ShowPolygonListWindow = !Gui.ShowPolygonListWindow;
 					}
@@ -262,6 +266,10 @@ namespace GaneshaDx.UserInterface.Input {
 				}
 
 				if (AppInput.ControlHeld && AppInput.ShiftHeld && !AppInput.AltHeld) {
+					if (AppInput.KeyJustPressed(Keys.S)) {
+						MyraGui.OpenSaveAsFileDialog();
+					}
+
 					if (AppInput.KeyJustPressed(Keys.E)) {
 						Gui.ShowExportGlbWindow = !Gui.ShowExportGlbWindow;
 					}

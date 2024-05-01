@@ -20,7 +20,7 @@ namespace GaneshaDx.Resources {
 		private static string _mapFolder;
 		public static string MapName { get; private set; }
 
-		private static List<byte> _rawGnsData;
+		public static Gns Gns;
 		public static List<MapResource> AllResources;
 		public static List<MapResource> MeshResources;
 		public static List<MapResource> TextureResources;
@@ -33,7 +33,8 @@ namespace GaneshaDx.Resources {
 			MapName = mapName;
 			_mapFolder = mapFolder;
 
-			_rawGnsData = File.ReadAllBytes(_mapFolder + "\\" + MapName + ".GNS").ToList();
+			List<byte> gnsData = File.ReadAllBytes(_mapFolder + "\\" + MapName + ".GNS").ToList();
+			Gns = new Gns(gnsData);
 
 			ProcessAllResources();
 			SetResourceFileData(_mapFolder + "\\" + MapName);
@@ -57,17 +58,17 @@ namespace GaneshaDx.Resources {
 		}
 
 		private static void ProcessAllResources() {
-			for (int index = 0; index < _rawGnsData.Count; index++) {
+			for (int index = 0; index < Gns.RawData.Count; index++) {
 				List<byte> resourceRawData = new List<byte>();
 
 				int lengthOfResource = 20;
 
-				while (index + lengthOfResource > _rawGnsData.Count) {
+				while (index + lengthOfResource > Gns.RawData.Count) {
 					lengthOfResource--;
 				}
 
 				for (int resourceIndex = 0; resourceIndex < lengthOfResource; resourceIndex++) {
-					resourceRawData.Add(_rawGnsData[index + resourceIndex]);
+					resourceRawData.Add(Gns.RawData[index + resourceIndex]);
 				}
 
 				MapResource mapResource = new MapResource(resourceRawData);
@@ -258,6 +259,10 @@ namespace GaneshaDx.Resources {
 
 			string mapRoot = mapFolder + "\\" + MapName;
 
+			Stream gnsStream = File.Create(mapRoot + ".gns" + backupExtension);
+			gnsStream.Write(Gns.RawData.ToArray());
+			gnsStream.Dispose();
+			
 			foreach (MapResource textureResource in TextureResources) {
 				TextureResourceData data = (TextureResourceData) textureResource.ResourceData;
 				data.RebuildRawData();
@@ -279,6 +284,12 @@ namespace GaneshaDx.Resources {
 			TimeSinceLastSave = Stage.GameTime.TotalGameTime.TotalSeconds;
 
 			OverlayConsole.AddMessage(isAutoSave ? "Map Auto-Saved" : "Map Saved");
+		}
+
+		public static void SaveMapAs(string newFolder, string mapName) {
+			_mapFolder = newFolder;
+			MapName = mapName;
+			SaveMap();
 		}
 	}
 }

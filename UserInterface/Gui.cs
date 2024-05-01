@@ -26,6 +26,7 @@ namespace GaneshaDx.UserInterface {
 		public static bool ShowDebugAnimatedMeshWindow;
 		public static bool ShowMeshAnimationsWindow;
 		public static bool ShowExportGlbWindow;
+		public static bool ShowGnsDataWindow;
 
 		public static void Render() {
 			Stage.GraphicsDevice.Clear(Color.Transparent);
@@ -92,6 +93,10 @@ namespace GaneshaDx.UserInterface {
 
 						if (GuiWindowMapWarning.ShouldRender()) {
 							GuiWindowMapWarning.Render();
+						}
+
+						if (ShowGnsDataWindow) {
+							GuiWindowGnsData.Render();
 						}
 					}
 

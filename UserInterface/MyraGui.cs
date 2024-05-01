@@ -12,6 +12,7 @@ namespace GaneshaDx.UserInterface {
 		public static Desktop Desktop;
 		private static bool _modalIsOpen;
 		private static FileDialog _openFileDialog;
+		private static FileDialog _saveAsDialog;
 		private static FileDialog _exportGlbDialog;
 		private static string _lastGlbFileLocation;
 
@@ -32,6 +33,7 @@ namespace GaneshaDx.UserInterface {
 			MyraEnvironment.Game = Stage.Ganesha;
 
 			BuildOpenFileDialog();
+			BuildSaveAsFileDialog();
 			BuildExportGlbFileDialog();
 
 			BuildImportTextureFileDialog();
@@ -68,7 +70,12 @@ namespace GaneshaDx.UserInterface {
 			_exportTextureDialog.ShowModal(Desktop);
 			_modalIsOpen = true;
 		}
-
+		
+		public static void OpenSaveAsFileDialog() {
+			_saveAsDialog.ShowModal(Desktop);
+			_modalIsOpen = true;
+		}
+		
 		public static void OpenExportGlbFileDialog(string fileName) {
 			_exportGlbDialog.FilePath = fileName;
 			_exportGlbDialog.ShowModal(Desktop);
@@ -126,6 +133,27 @@ namespace GaneshaDx.UserInterface {
 			};
 		}
 
+		private static void BuildSaveAsFileDialog() {
+			_saveAsDialog = new FileDialog(FileDialogMode.SaveFile) {
+				Folder = Configuration.Properties.LoadFolder
+			};
+
+			_saveAsDialog.Closed += (s, a) => {
+				if (_saveAsDialog.Result) {
+					string filePath = _saveAsDialog.FilePath;
+					_saveAsDialog.Folder = filePath;
+					Configuration.Properties.LoadFolder = filePath;
+
+					List<string> pathSegments = filePath.Split('\\').ToList();
+					string fileName = pathSegments.Last();
+
+					MapData.SaveMapAs(_saveAsDialog.Folder, fileName);
+				}
+
+				_modalIsOpen = false;
+			};
+		}
+		
 		private static void BuildExportGlbFileDialog() {
 			_lastGlbFileLocation = Configuration.Properties.LoadFolder;
 				

@@ -26,7 +26,9 @@ namespace GaneshaDx.UserInterface.GuiForms {
 						MapData.SaveMap();
 					}
 
-					if (ImGui.MenuItem("Save As", "Ctrl + Shift + S", false, false)) { }
+					if (ImGui.MenuItem("Save As", "Ctrl + Shift + S", false, MapData.MapIsLoaded)) {
+						MyraGui.OpenSaveAsFileDialog();
+					}
 
 					ImGui.Separator();
 
@@ -245,6 +247,8 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				}
 
 				if (ImGui.BeginMenu("View")) {
+					ImGui.MenuItem("Gns Data", "G", ref Gui.ShowGnsDataWindow, MapData.MapIsLoaded);
+					
 					ImGui.MenuItem("Polygon List", "P", ref Gui.ShowPolygonListWindow, MapData.MapIsLoaded);
 
 					ImGui.MenuItem("Camera Controls", "C", ref Gui.ShowCameraControlWindow, MapData.MapIsLoaded);
