@@ -149,6 +149,11 @@ namespace GaneshaDx.UserInterface {
 					List<string> pathSegments = filePath.Split('\\').ToList();
 					string fileName = pathSegments.Last();
 
+					List<string> fileNameSegments = fileName.Split('.').ToList();
+					if (fileNameSegments.Last().ToLower() == "gns") {
+						fileName = fileName.Remove(fileName.Length - 4);
+					}
+					
 					MapData.SaveMapAs(_saveAsDialog.Folder, fileName);
 				}
 

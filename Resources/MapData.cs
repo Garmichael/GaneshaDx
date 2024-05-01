@@ -259,7 +259,7 @@ namespace GaneshaDx.Resources {
 
 			string mapRoot = mapFolder + "\\" + MapName;
 
-			Stream gnsStream = File.Create(mapRoot + ".gns" + backupExtension);
+			Stream gnsStream = File.Create(mapRoot + ".GNS" + backupExtension);
 			gnsStream.Write(Gns.RawData.ToArray());
 			gnsStream.Dispose();
 			
