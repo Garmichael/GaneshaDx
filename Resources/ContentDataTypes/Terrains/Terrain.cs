@@ -23,64 +23,101 @@ namespace GaneshaDx.Resources.ContentDataTypes.Terrains {
 			}
 		}
 
-		public void ResizeTerrain(int newSizeX, int newSizeZ) {
+		public void ResizeTerrain(int newSizeX, int newSizeZ, bool resizeFromFront) {
 			if (newSizeX < SizeX) {
 				foreach (List<TerrainTile> row in Level0Tiles) {
 					while (row.Count > newSizeX) {
-						row.RemoveAt(row.Count - 1);
+						if (resizeFromFront) {
+							row.RemoveAt(0);
+						} else {
+							row.RemoveAt(row.Count - 1);
+						}
 					}
 				}
 
 				foreach (List<TerrainTile> row in Level1Tiles) {
 					while (row.Count > newSizeX) {
-						row.RemoveAt(row.Count - 1);
+						if (resizeFromFront) {
+							row.RemoveAt(0);
+						} else {
+							row.RemoveAt(row.Count - 1);
+						}
 					}
 				}
 			} else if (newSizeX > SizeX) {
 				for (int rowIndex = 0; rowIndex < Level0Tiles.Count; rowIndex++) {
 					List<TerrainTile> row = Level0Tiles[rowIndex];
+
 					while (row.Count < newSizeX) {
-						row.Add(new TerrainTile {
+						TerrainTile newTerrainTile = new TerrainTile {
 							Level = 0,
 							IndexX = row.Count,
 							IndexZ = rowIndex
-						});
+						};
+
+						if (resizeFromFront) {
+							row.Insert(0, newTerrainTile);
+						} else {
+							row.Add(newTerrainTile);
+						}
 					}
 				}
 
 				for (int rowIndex = 0; rowIndex < Level1Tiles.Count; rowIndex++) {
 					List<TerrainTile> row = Level1Tiles[rowIndex];
+
 					while (row.Count < newSizeX) {
-						row.Add(new TerrainTile {
+						TerrainTile newTerrainTile = new TerrainTile {
 							Level = 1,
 							IndexX = row.Count,
 							IndexZ = rowIndex
-						});
+						};
+
+						if (resizeFromFront) {
+							row.Insert(0, newTerrainTile);
+						} else {
+							row.Add(newTerrainTile);
+						}
 					}
 				}
 			}
 
+
 			if (newSizeZ < SizeZ) {
 				while (Level0Tiles.Count > newSizeZ) {
-					Level0Tiles.RemoveAt(Level0Tiles.Count - 1);
+					if (resizeFromFront) {
+						Level0Tiles.RemoveAt(0);
+					} else {
+						Level0Tiles.RemoveAt(Level0Tiles.Count - 1);
+					}
 				}
 
 				while (Level1Tiles.Count > newSizeZ) {
-					Level1Tiles.RemoveAt(Level1Tiles.Count - 1);
+					if (resizeFromFront) {
+						Level1Tiles.RemoveAt(0);
+					} else {
+						Level1Tiles.RemoveAt(Level1Tiles.Count - 1);
+					}
 				}
 			} else if (newSizeZ > SizeZ) {
 				while (Level0Tiles.Count < newSizeZ) {
 					List<TerrainTile> row = new List<TerrainTile>();
 
 					for (int i = 0; i < newSizeX; i++) {
-						row.Add(new TerrainTile {
+						TerrainTile newTerrainTile = new TerrainTile {
 							Level = 0,
 							IndexX = i,
 							IndexZ = Level0Tiles.Count
-						});
+						};
+
+						row.Add(newTerrainTile);
 					}
 
-					Level0Tiles.Add(row);
+					if (resizeFromFront) {
+						Level0Tiles.Insert(0, row);
+					} else {
+						Level0Tiles.Add(row);
+					}
 				}
 
 				while (Level1Tiles.Count < newSizeZ) {
@@ -94,10 +131,33 @@ namespace GaneshaDx.Resources.ContentDataTypes.Terrains {
 						});
 					}
 
-					Level1Tiles.Add(row);
+					if (resizeFromFront) {
+						Level1Tiles.Insert(0, row);
+					} else {
+						Level1Tiles.Add(row);
+					}
 				}
 			}
 
+			for (int rowIndex = 0; rowIndex < Level0Tiles.Count; rowIndex++) {
+				List<TerrainTile> row = Level0Tiles[rowIndex];
+
+				for (int colIndex = 0; colIndex < row.Count; colIndex++) {
+					TerrainTile terrainTile = row[colIndex];
+					terrainTile.IndexX = colIndex;
+					terrainTile.IndexZ = rowIndex;
+				}
+			}
+
+			for (int rowIndex = 0; rowIndex < Level1Tiles.Count; rowIndex++) {
+				List<TerrainTile> row = Level1Tiles[rowIndex];
+
+				for (int colIndex = 0; colIndex < row.Count; colIndex++) {
+					TerrainTile terrainTile = row[colIndex];
+					terrainTile.IndexX = colIndex;
+					terrainTile.IndexZ = rowIndex;
+				}
+			}
 
 			SizeX = newSizeX;
 			SizeZ = newSizeZ;
@@ -111,7 +171,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.Terrains {
 
 		public List<byte> GetRawData() {
 			List<byte> rawData = new List<byte>();
-			List<List<List<TerrainTile>>> allLevels = new List<List<List<TerrainTile>>> {Level0Tiles, Level1Tiles};
+			List<List<List<TerrainTile>>> allLevels = new List<List<List<TerrainTile>>> { Level0Tiles, Level1Tiles };
 
 			foreach (List<List<TerrainTile>> terrainLevel in allLevels) {
 				foreach (List<TerrainTile> row in terrainLevel) {

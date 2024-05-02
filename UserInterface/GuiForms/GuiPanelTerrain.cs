@@ -650,6 +650,8 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			}
 		}
 
+		private static bool _resizeFromFront = false;
+		
 		private static void RenderResizeTerrainPanel() {
 			GuiStyle.SetNewUiToDefaultStyle();
 			GuiStyle.SetElementStyle(ElementStyle.Header);
@@ -695,6 +697,11 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 					ImGui.NextColumn();
 
+					ImGui.Text("Insert/Delete from Front");
+					ImGui.NextColumn();
+					ImGui.Checkbox("###insertAtFront", ref _resizeFromFront);
+					ImGui.NextColumn();
+					
 					GuiStyle.AddSpace();
 					if (ImGui.Button("Cancel")) {
 						ResizeTerrainMode = false;
@@ -706,7 +713,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					if (ImGui.Button("Resize", new Vector2(GuiStyle.WidgetWidth, 20))) {
 						ResizeTerrainMode = false;
 						Selection.SelectedTerrainTiles.Clear();
-						CurrentMapState.StateData.Terrain.ResizeTerrain(_resizeXSize, _resizeZSize);
+						CurrentMapState.StateData.Terrain.ResizeTerrain(_resizeXSize, _resizeZSize, _resizeFromFront);
 					}
 
 					ImGui.Columns(1);
