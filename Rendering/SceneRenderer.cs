@@ -56,7 +56,8 @@ namespace GaneshaDx.Rendering {
 				}
 
 				if (uvAnimation.UvAnimationMode != UvAnimationMode.ForwardLooping &&
-				    uvAnimation.UvAnimationMode != UvAnimationMode.ForwardAndReverseLooping
+				    uvAnimation.UvAnimationMode != UvAnimationMode.ForwardAndReverseLooping && 
+				    !Configuration.Properties.PlaysScriptedTextureAnimations
 				   ) {
 					continue;
 				}
