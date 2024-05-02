@@ -268,6 +268,18 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 				if (ImGui.BeginMenu("View")) {
 					
+					bool beforeHighlightSelectedPoly = Configuration.Properties.HighlightSelectedPoly;
+					ImGui.MenuItem(
+						"Highlight Selected Poly",
+						"I",
+						ref Configuration.Properties.HighlightSelectedPoly,
+						MapData.MapIsLoaded
+					);
+
+					if (beforeHighlightSelectedPoly != Configuration.Properties.HighlightSelectedPoly) {
+						Configuration.SaveConfiguration();
+					}
+					
 					bool beforeOrthoModeChange = Configuration.Properties.RenderFftOrtho;
 					ImGui.MenuItem(
 						"FFT Ortho Mode",
@@ -343,6 +355,10 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					
 					ImGui.Separator();
 
+					ImGui.MenuItem("Camera Controls", "C", ref Gui.ShowCameraControlWindow, MapData.MapIsLoaded);
+					
+					ImGui.MenuItem("Polygon List", "P", ref Gui.ShowPolygonListWindow, MapData.MapIsLoaded);
+
 					if (ImGui.MenuItem(
 						    "Manage Mesh Resources",
 						    "M",
@@ -367,10 +383,6 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 					ImGui.MenuItem("Gns Data", "G", ref Gui.ShowGnsDataWindow, MapData.MapIsLoaded);
 					
-					ImGui.MenuItem("Polygon List", "P", ref Gui.ShowPolygonListWindow, MapData.MapIsLoaded);
-
-					ImGui.MenuItem("Camera Controls", "C", ref Gui.ShowCameraControlWindow, MapData.MapIsLoaded);
-
 					ImGui.Separator();
 
 					if (ImGui.MenuItem(

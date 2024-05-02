@@ -39,7 +39,7 @@ namespace GaneshaDx.Common {
 			public bool InvertedRotation;
 			public bool RenderAlphaAsSemiTransparent;
 			public bool AllowBackfaceSelection;
-			public bool HighlightSelectionOnTexturePage = true;
+			public bool HighlightSelectedPoly = true;
 			public bool TexturePreviewShowUnselectedUvs = true;
 			public int TexturePreviewShiftArrowDistance = 20;
 			public float TranslateAxisControlSpeed = 0.33f;

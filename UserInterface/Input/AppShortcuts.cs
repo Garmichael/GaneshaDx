@@ -169,6 +169,11 @@ namespace GaneshaDx.UserInterface.Input {
 						Configuration.Properties.PlaysScriptedTextureAnimations = !Configuration.Properties.PlaysScriptedTextureAnimations;
 						Configuration.SaveConfiguration();
 					}
+
+					if (AppInput.KeyJustPressed(Keys.I)) {
+						Configuration.Properties.HighlightSelectedPoly = !Configuration.Properties.HighlightSelectedPoly;
+						Configuration.SaveConfiguration();
+					}
 				}
 
 				if (justControlHeld) {

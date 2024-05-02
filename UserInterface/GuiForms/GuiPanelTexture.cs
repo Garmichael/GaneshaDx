@@ -420,21 +420,6 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 				ImGui.NextColumn();
 
-				ImGui.Text("Highlight Selected Polys");
-				ImGui.NextColumn();
-
-				ImGui.PushItemWidth(GuiStyle.CheckBoxWidth);
-				bool beforeHighSelection = Configuration.Properties.HighlightSelectionOnTexturePage;
-				ImGui.Checkbox(
-					"###TexturePreviewOptionHighlightPoly",
-					ref Configuration.Properties.HighlightSelectionOnTexturePage
-				);
-				if (beforeHighSelection != Configuration.Properties.HighlightSelectionOnTexturePage) {
-					Configuration.SaveConfiguration();
-				}
-
-				ImGui.NextColumn();
-
 				ImGui.Columns(1);
 				ImGui.Unindent();
 				GuiStyle.AddSpace();
