@@ -3,7 +3,6 @@
 ### General Engine
 
     [4] [1] File -> New
-    [4] [1] File -> Save As
     [4] [3] Build new File Browser in ImGui
     [2] [5] Undo
     [1] [3] Auto-Export Screenshots (four angles, plus Top-down, hidden UI)
@@ -11,15 +10,14 @@
 
 ### Animated Meshes
 
-    [2] [8] Investigate Format
-    [2] [5] Rendering Animation
+    [2] [8] Investigate Format. Need to know what Unk9 and Unk17 are.
+    [2] [5] Rendering Animation. Need to render Unk9 and Unk17. Need to figure out a better way to render states 2+
 
 ### Resource Management
 
     [1] [3] Adding / Removing states
         Write GNS when saving
-        Figure out how to number XFiles
-            Maybe manually define XFile?
+        Figure out how to number XFiles (Maybe manually define XFile?)
     [1] [4] Copy / Paste
     [1] [3] Integrate Overridden Mesh Files and Removeable Objects
 
