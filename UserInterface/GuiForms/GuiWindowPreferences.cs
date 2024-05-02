@@ -17,7 +17,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			                               ImGuiWindowFlags.NoCollapse;
 
 			
-			ImGui.SetNextWindowSize(new Vector2(300, 480));
+			ImGui.SetNextWindowSize(new Vector2(300, 430));
 			
 			ImGui.Begin("Preferences", ref windowIsOpen, flags);
 			{
@@ -93,20 +93,6 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				ImGui.InputInt("###PreferencesNormalIndicatorLength", ref Configuration.Properties.NormalIndicatorLength);
 				ImGui.NextColumn();
 				
-				ImGui.Text("Alpha as Semi-Transparent");
-				ImGui.NextColumn();
-
-				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
-				ImGui.Checkbox("###PreferencesAlpha", ref Configuration.Properties.RenderAlphaAsSemiTransparent);
-				ImGui.NextColumn();
-
-				ImGui.Text("Select Backfaces");
-				ImGui.NextColumn();
-
-				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
-				ImGui.Checkbox("###PreferencesBackfaces", ref Configuration.Properties.AllowBackfaceSelection);
-				ImGui.NextColumn();
-
 				ImGui.Text("Expanded Compass");
 				ImGui.NextColumn();
 

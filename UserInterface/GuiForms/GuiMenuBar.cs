@@ -162,6 +162,20 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					
 					ImGui.Separator();
 					
+					bool beforeAllowBackSelection = Configuration.Properties.AllowBackfaceSelection;
+					ImGui.MenuItem(
+						"Select BackFaces",
+						"B",
+						ref Configuration.Properties.AllowBackfaceSelection,
+						MapData.MapIsLoaded
+					);
+
+					if (beforeAllowBackSelection != Configuration.Properties.AllowBackfaceSelection) {
+						Configuration.SaveConfiguration();
+					}
+					
+					ImGui.Separator();
+					
 					if (ImGui.MenuItem(
 						"Grow Polygon Selection",
 						"+",
@@ -298,7 +312,19 @@ namespace GaneshaDx.UserInterface.GuiForms {
 						MapData.MapIsLoaded
 					);
 
-					if (beforeHideInvisiblePolys != Configuration.Properties.HideNormalIndicators) {
+					if (beforeHideIndicatorNormals != Configuration.Properties.HideNormalIndicators) {
+						Configuration.SaveConfiguration();
+					}
+
+					bool before = Configuration.Properties.RenderAlphaAsSemiTransparent;
+					ImGui.MenuItem(
+						"Alpha as Semi-Transparent",
+						"J",
+						ref Configuration.Properties.RenderAlphaAsSemiTransparent,
+						MapData.MapIsLoaded
+					);
+
+					if (before != Configuration.Properties.RenderAlphaAsSemiTransparent) {
 						Configuration.SaveConfiguration();
 					}
 

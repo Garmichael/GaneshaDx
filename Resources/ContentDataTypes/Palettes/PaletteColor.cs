@@ -36,7 +36,7 @@ namespace GaneshaDx.Resources.ContentDataTypes.Palettes {
 
 			return IsTransparent && red == 0 && green == 0 && blue == 0
 				? Configuration.Properties.RenderAlphaAsSemiTransparent && obeySemiTransparentConfig
-					? new Color(128, 128, 128, 32)
+					? new Color(128, 128, 128, 128)
 					: new Color(0, 0, 0, 0)
 				: new Color(red, green, blue, 255);
 		}

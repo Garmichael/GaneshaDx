@@ -19,7 +19,12 @@ namespace GaneshaDx.UserInterface.Input {
 			}
 
 			if (MapData.MapIsLoaded && !MyraGui.IsActive) {
-				if (!AppInput.ControlHeld && !AppInput.ShiftHeld && !AppInput.AltHeld) {
+				bool noneHeld = !AppInput.ControlHeld && !AppInput.ShiftHeld && !AppInput.AltHeld;
+				bool justControlHeld = AppInput.ControlHeld && !AppInput.ShiftHeld && !AppInput.AltHeld;
+				bool controlShiftHeld = AppInput.ControlHeld && AppInput.ShiftHeld && !AppInput.AltHeld;
+				bool justShiftHeld = !AppInput.ControlHeld && AppInput.ShiftHeld && !AppInput.AltHeld;
+				
+				if (noneHeld) {
 					if (AppInput.KeyJustPressed(Keys.D1)) {
 						Gui.SelectedTab = RightPanelTab.Polygon;
 					}
@@ -72,6 +77,16 @@ namespace GaneshaDx.UserInterface.Input {
 
 					if (AppInput.KeyJustPressed(Keys.N)) {
 						Configuration.Properties.HideNormalIndicators = !Configuration.Properties.HideNormalIndicators;
+						Configuration.SaveConfiguration();
+					}
+
+					if (AppInput.KeyJustPressed(Keys.J)) {
+						Configuration.Properties.RenderAlphaAsSemiTransparent = !Configuration.Properties.RenderAlphaAsSemiTransparent;
+						Configuration.SaveConfiguration();
+					}
+
+					if (AppInput.KeyJustPressed(Keys.B)) {
+						Configuration.Properties.AllowBackfaceSelection = !Configuration.Properties.AllowBackfaceSelection;
 						Configuration.SaveConfiguration();
 					}
 
@@ -156,7 +171,7 @@ namespace GaneshaDx.UserInterface.Input {
 					}
 				}
 
-				if (AppInput.ControlHeld && !AppInput.ShiftHeld && !AppInput.AltHeld) {
+				if (justControlHeld) {
 					if (AppInput.KeyJustPressed(Keys.S)) {
 						MapData.SaveMap();
 					}
@@ -265,7 +280,7 @@ namespace GaneshaDx.UserInterface.Input {
 					}
 				}
 
-				if (AppInput.ControlHeld && AppInput.ShiftHeld && !AppInput.AltHeld) {
+				if (controlShiftHeld) {
 					if (AppInput.KeyJustPressed(Keys.S)) {
 						MyraGui.OpenSaveAsFileDialog();
 					}
@@ -281,7 +296,7 @@ namespace GaneshaDx.UserInterface.Input {
 					}
 				}
 
-				if (!AppInput.ControlHeld && AppInput.ShiftHeld && !AppInput.AltHeld) {
+				if (justShiftHeld) {
 					if (AppInput.KeyJustPressed(Keys.F)) {
 						if (Gui.Widget == WidgetSelectionMode.PolygonEdgeTranslate) {
 							TransformWidget.SelectNextEdge(AppInput.ShiftHeld);
