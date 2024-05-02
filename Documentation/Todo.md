@@ -21,6 +21,10 @@
     [1] [4] Copy / Paste
     [1] [3] Integrate Overridden Mesh Files and Removeable Objects
 
+### GNS Editing
+    [2] [8] Investigate Format. Need to understand how Overridden Mesh Files and Removeable Objects work
+    [2] [4] Build Ui for Editing GNS
+
 ### No Known Solution / Probably Won't Implement
 
     [2] [2] Render non-red tiles on top when both are the same height
