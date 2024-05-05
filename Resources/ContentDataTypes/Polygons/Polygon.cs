@@ -488,8 +488,11 @@ namespace GaneshaDx.Resources.ContentDataTypes.Polygons {
 			_texture2D = IsTextured switch {
 				true when !Configuration.Properties.RenderPolygonsInLightingMode => CurrentMapState.StateData.Texture,
 				true when Configuration.Properties.RenderPolygonsInLightingMode => UniversalTextures.GreyTexture,
-				false => IsSelected ? UniversalTextures.SelectedBlackTexture :
-					IsHovered ? UniversalTextures.HoveredBlackTexture : UniversalTextures.BlackTexture,
+				false => IsSelected && Configuration.Properties.HighlightSelectedPoly
+					? UniversalTextures.SelectedBlackTexture 
+					: IsHovered 
+						? UniversalTextures.HoveredBlackTexture 
+						: UniversalTextures.BlackTexture,
 				_ => _texture2D
 			};
 		}

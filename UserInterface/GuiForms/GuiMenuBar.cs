@@ -270,7 +270,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					
 					bool beforeHighlightSelectedPoly = Configuration.Properties.HighlightSelectedPoly;
 					ImGui.MenuItem(
-						"Highlight Selected Poly",
+						"Highlight Selected Polygons",
 						"I",
 						ref Configuration.Properties.HighlightSelectedPoly,
 						MapData.MapIsLoaded
