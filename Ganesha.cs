@@ -63,11 +63,11 @@ namespace GaneshaDx {
 			Stage.UpdateEffects();
 			Background.Render();
 			SceneRenderer.Render();
+			FpsCounter.Render();
 			TransformWidget.Render();
 			RotationWidget.Render();
 			OverlayConsole.Render();
 			MyraGui.Render();
-			FpsCounter.DrawFps();
 
 			Stage.SpriteBatch.Begin(
 				SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp,

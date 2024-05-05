@@ -59,6 +59,7 @@ namespace GaneshaDx.Common {
 			public float AutoMapRatio = 0.679f;
 			public bool HideNormalIndicators = false;
 			public int NormalIndicatorLength = 50;
+			public bool ShowGameViewOverlay = false;
 		}
 	}
 }

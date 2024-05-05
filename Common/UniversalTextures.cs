@@ -11,6 +11,7 @@ namespace GaneshaDx.Common {
 		public static readonly Texture2D GreenTexture;
 		public static readonly Texture2D WhiteTexture;
 		public static readonly Texture2D RedTexture;
+		public static readonly Texture2D SemiTransparentBlackTexture;
 
 		static UniversalTextures() {
 			GreyTexture = MakeTexture(new Color(0.5f, 0.5f, 0.5f, 1));
@@ -20,6 +21,7 @@ namespace GaneshaDx.Common {
 			WhiteTexture = MakeTexture(Color.White);
 			GreenTexture = MakeTexture(Color.LightGreen);
 			RedTexture = MakeTexture(Color.Red);
+			SemiTransparentBlackTexture = MakeTexture(new Color(0, 0, 0, 0.75f));
 		}
 
 		private static Texture2D MakeTexture(Color color, int width = 1, int height = 1) {

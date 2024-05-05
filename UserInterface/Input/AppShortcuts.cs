@@ -123,6 +123,11 @@ namespace GaneshaDx.UserInterface.Input {
 						Configuration.SaveConfiguration();
 					}
 
+					if (AppInput.KeyJustPressed(Keys.Y)) {
+						Configuration.Properties.ShowGameViewOverlay = !Configuration.Properties.ShowGameViewOverlay;
+						Configuration.SaveConfiguration();
+					}
+					
 					if (AppInput.KeyJustPressed(Keys.F)) {
 						if (Gui.Widget == WidgetSelectionMode.PolygonEdgeTranslate) {
 							TransformWidget.SelectNextEdge(AppInput.ShiftHeld);

@@ -244,6 +244,7 @@ namespace GaneshaDx.Rendering {
 			}
 
 			if (!Stage.ScreenshotMode) {
+				GameViewOverlay.Render();
 				RenderLightIndicators();
 				RenderCompass();
 			}

@@ -292,6 +292,18 @@ namespace GaneshaDx.UserInterface.GuiForms {
 						Configuration.SaveConfiguration();
 					}
 
+					bool beforeShowGameViewOverlay = Configuration.Properties.ShowGameViewOverlay;
+					ImGui.MenuItem(
+						"Show Game View Overlay",
+						"Y",
+						ref Configuration.Properties.ShowGameViewOverlay,
+						MapData.MapIsLoaded
+					);
+
+					if (beforeShowGameViewOverlay != Configuration.Properties.ShowGameViewOverlay) {
+						Configuration.SaveConfiguration();
+					}
+					
 					bool beforeLightingModeChange = Configuration.Properties.RenderPolygonsInLightingMode;
 					ImGui.MenuItem(
 						"Lighting Mode",
