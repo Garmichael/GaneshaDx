@@ -75,7 +75,7 @@ namespace GaneshaDx.UserInterface {
 
 					if (Gui.Widget == WidgetSelectionMode.PolygonVertexTranslate ||
 					    Gui.Widget == WidgetSelectionMode.PolygonEdgeTranslate
-					) {
+					   ) {
 						if (AppInput.ControlHeld) {
 							Gui.Widget = WidgetSelectionMode.PolygonTranslate;
 						}
@@ -83,7 +83,7 @@ namespace GaneshaDx.UserInterface {
 
 					if (Gui.Widget != WidgetSelectionMode.PolygonVertexTranslate &&
 					    Gui.Widget != WidgetSelectionMode.PolygonEdgeTranslate
-					) {
+					   ) {
 						if (!AppInput.ControlHeld && SelectedPolygons.Count == 1) {
 							for (int polyIndex = 0; polyIndex < HoveredPolygons.Count; polyIndex++) {
 								Polygon polygon = HoveredPolygons[polyIndex];
@@ -242,7 +242,7 @@ namespace GaneshaDx.UserInterface {
 				}
 			}
 		}
-		
+
 		public static void SelectOverlappingPolygons() {
 			SelectedPolygons.Clear();
 
@@ -283,7 +283,7 @@ namespace GaneshaDx.UserInterface {
 				}
 			}
 		}
-		
+
 		public static void SelectAllPolygons() {
 			Polygon firstPolygon = null;
 			if (SelectedPolygons.Count > 0) {
@@ -503,6 +503,9 @@ namespace GaneshaDx.UserInterface {
 
 			foreach (List<TerrainTile> terrainTiles in allTiles) {
 				foreach (TerrainTile terrainTile in terrainTiles) {
+					bool terrainTileIsHidden = Configuration.Properties.HideRedTiles &&
+					                         (terrainTile.Impassable || terrainTile.Unselectable);
+
 					CameraRayResults triangleAIntersects = CameraRay.GetResults(
 						new List<Vector3> {
 							terrainTile.Vertices[0],
@@ -528,7 +531,9 @@ namespace GaneshaDx.UserInterface {
 					}
 
 					if (triangleAIntersects.HasHit || triangleBIntersects.HasHit) {
-						HoveredTerrainTiles.Add(terrainTile);
+						if (!terrainTileIsHidden) {
+							HoveredTerrainTiles.Add(terrainTile);
+						}
 					}
 				}
 			}

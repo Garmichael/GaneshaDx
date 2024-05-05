@@ -328,6 +328,18 @@ namespace GaneshaDx.UserInterface.GuiForms {
 						Configuration.SaveConfiguration();
 					}
 
+					bool beforeHideRedTiles = Configuration.Properties.HideRedTiles;
+					ImGui.MenuItem(
+						"Hide Red Terrain Tiles",
+						"U",
+						ref Configuration.Properties.HideRedTiles,
+						MapData.MapIsLoaded
+					);
+
+					if (beforeHideRedTiles != Configuration.Properties.HideRedTiles) {
+						Configuration.SaveConfiguration();
+					}
+
 					bool beforeHideIndicatorNormals = Configuration.Properties.HideNormalIndicators;
 					ImGui.MenuItem(
 						"Hide Vertex Normal Indicators",

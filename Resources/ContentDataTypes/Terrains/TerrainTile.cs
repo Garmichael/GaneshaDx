@@ -54,6 +54,10 @@ namespace GaneshaDx.Resources.ContentDataTypes.Terrains {
 		private VertexPositionColorTexture[] _renderVertices;
 
 		public void Render() {
+			if (Configuration.Properties.HideRedTiles && (Impassable || Unselectable)) {
+				return;
+			}
+			
 			SetRenderVertices();
 
 			Stage.UntexturedVertexBuffer.SetData(_renderVertices);

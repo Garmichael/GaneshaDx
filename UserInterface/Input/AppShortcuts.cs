@@ -127,6 +127,11 @@ namespace GaneshaDx.UserInterface.Input {
 						Configuration.Properties.ShowGameViewOverlay = !Configuration.Properties.ShowGameViewOverlay;
 						Configuration.SaveConfiguration();
 					}
+
+					if (AppInput.KeyJustPressed(Keys.U)) {
+						Configuration.Properties.HideRedTiles = !Configuration.Properties.HideRedTiles;
+						Configuration.SaveConfiguration();
+					}
 					
 					if (AppInput.KeyJustPressed(Keys.F)) {
 						if (Gui.Widget == WidgetSelectionMode.PolygonEdgeTranslate) {

@@ -60,6 +60,7 @@ namespace GaneshaDx.Common {
 			public bool HideNormalIndicators = false;
 			public int NormalIndicatorLength = 50;
 			public bool ShowGameViewOverlay = false;
+			public bool HideRedTiles = false;
 		}
 	}
 }
