@@ -172,9 +172,20 @@ namespace GaneshaDx.Resources.ContentDataTypes.Terrains {
 				returnColor.R += 32;
 			}
 
+			bool shouldBeHoveredColor = Selection.HoveredTerrainTiles.Count > 0 && Selection.HoveredTerrainTiles[0] == this;
+
+			if (Selection.HoveredTerrainTiles.Count > 0 && Selection.HoveredTerrainTiles[0] != this) {
+				bool otherLevelHovered = Selection.HoveredTerrainTiles[0].IndexX == IndexX &&
+				                         Selection.HoveredTerrainTiles[0].IndexZ == IndexZ;
+
+				if (otherLevelHovered) {
+					shouldBeHoveredColor = true;
+				}
+			}
+			
 			if (Selection.SelectedTerrainTiles.Contains(this)) {
 				returnColor = new Color(128, 128, 255, 255);
-			} else if (Selection.HoveredTerrainTiles.Count > 0 && Selection.HoveredTerrainTiles[0] == this) {
+			} else if (shouldBeHoveredColor) {
 				returnColor = new Color(200, 200, 128, 255);
 			}
 
