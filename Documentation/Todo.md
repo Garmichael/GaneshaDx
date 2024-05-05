@@ -31,4 +31,3 @@
     [1] [1] Allow Alt-Click to change First Terrain Tile
     [3] [2] Build Number-Border for Terrain
     [3] [4] Figure out a color picker solution for the 32x32x32 color depth thing
-    [5] [2] Game View shadow overlay
