@@ -15,19 +15,17 @@
 
 ### Resource Management
 
-    [1] [3] Adding / Removing states
-        Write GNS when saving
-        Figure out how to number XFiles (Maybe manually define XFile?)
+    [1] [3] Adding / Removing states. Figure out how to number XFiles (Maybe manually define XFile?)
     [1] [4] Copy / Paste
-    [1] [3] Integrate Overridden Mesh Files and Removeable Objects
+    [1] [3] Integrate Overridden Mesh Files and Removeable Objects. Need to investigate Format.
 
 ### GNS Editing
+
     [2] [8] Investigate Format. Need to understand how Overridden Mesh Files and Removeable Objects work
     [2] [4] Build Ui for Editing GNS
 
 ### No Known Solution / Probably Won't Implement
 
-    [2] [2] Render non-red tiles on top when both are the same height
     [1] [1] Allow Alt-Click to change First Terrain Tile
     [3] [2] Build Number-Border for Terrain
     [3] [4] Figure out a color picker solution for the 32x32x32 color depth thing
