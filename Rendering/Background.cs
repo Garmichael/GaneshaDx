@@ -8,7 +8,8 @@ namespace GaneshaDx.Rendering {
 		private static Texture2D _background;
 		private static readonly Texture2D GaneshaLogo;
 		private static readonly Texture2D StormGardenStudioLogo;
-
+		private static SpriteFont _font;
+		
 		static Background() {
 			GaneshaLogo = Stage.Content.Load<Texture2D>("GaneshaLogo");
 			StormGardenStudioLogo = Stage.Content.Load<Texture2D>("StormGardenStudioLogo");
@@ -33,11 +34,20 @@ namespace GaneshaDx.Rendering {
 		}
 
 		private static void DrawTitleScreen() {
+			_font ??= Stage.Content.Load<SpriteFont>("DebugFont");
+			float versionNumberBrightness = .2f;
+			Stage.SpriteBatch.DrawString(
+				_font, 
+				"Ver. " + Program.Version,
+				new Vector2(15, Stage.WholeViewport.Height  - 30), 
+				new Color(versionNumberBrightness,versionNumberBrightness,versionNumberBrightness,1)
+				);
+			
 			Stage.SpriteBatch.Draw(
 				GaneshaLogo,
 				new Vector2(
-					Stage.WholeViewport.Width / 2 - GaneshaLogo.Width / 2,
-					Stage.WholeViewport.Height / 3 - GaneshaLogo.Height / 3
+					Stage.WholeViewport.Width / 2f - GaneshaLogo.Width / 2f,
+					Stage.WholeViewport.Height / 3f - GaneshaLogo.Height / 3f
 				),
 				GaneshaLogo.Bounds,
 				Color.White
@@ -46,7 +56,7 @@ namespace GaneshaDx.Rendering {
 			Stage.SpriteBatch.Draw(
 				StormGardenStudioLogo,
 				new Vector2(
-					Stage.WholeViewport.Width / 2 - StormGardenStudioLogo.Width / 2,
+					Stage.WholeViewport.Width / 2f - StormGardenStudioLogo.Width / 2f,
 					Stage.WholeViewport.Height - StormGardenStudioLogo.Height - 10
 				),
 				GaneshaLogo.Bounds,
