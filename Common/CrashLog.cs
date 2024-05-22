@@ -9,10 +9,10 @@ namespace GaneshaDx.Common {
 
 			FileStream stream = new FileStream(logfile, FileMode.Create);
 			string stackTrace = exception.StackTrace;
-			stackTrace = stackTrace != null
-				? stackTrace.Replace("C:\\Users\\Garmy\\Documents\\GaneshaX\\", "...")
-				: "No Stack Trace Data";
-
+			if (stackTrace == null) {
+				stackTrace = "No Stacktrace Data";
+			}
+			
 			using (StreamWriter writer = new StreamWriter(stream, Encoding.Default)) {
 				writer.WriteLine(DateTime.Now + ": " + exception.Message);
 				writer.WriteLine(stackTrace);

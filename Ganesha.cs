@@ -1,25 +1,32 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using GaneshaDx.Common;
 using GaneshaDx.Environment;
 using GaneshaDx.Rendering;
+using GaneshaDx.Resources;
 using GaneshaDx.UserInterface;
 using GaneshaDx.UserInterface.GuiForms;
 using GaneshaDx.UserInterface.Input;
 using GaneshaDx.UserInterface.Widgets;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Myra.Graphics2D.UI;
-
 
 namespace GaneshaDx {
 	public class Ganesha : Game {
 		private readonly GraphicsDeviceManager _graphics;
+		private readonly string _mapToOpenOnLoad;
+		private bool _openMapOnLoad;
 
 		public Ganesha(string[] args) {
-			Debug.Print("\n\n\nHEy there");
-			foreach (string arg in args) {
-				Debug.Print("\n" + arg);
+			Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory); 
+			
+			if (args.Length > 0) {
+				_mapToOpenOnLoad = args[0];
+				_openMapOnLoad = true;
 			}
+
 			_graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
 			Window.AllowUserResizing = true;
@@ -55,6 +62,11 @@ namespace GaneshaDx {
 			AutoSaver.Update();
 
 			base.Update(gameTime);
+			
+			if (_openMapOnLoad) {
+				_openMapOnLoad = false;
+				MapData.LoadMapDataFromFullPath(_mapToOpenOnLoad);
+			}
 		}
 
 		protected override void Draw(GameTime gameTime) {
@@ -79,7 +91,7 @@ namespace GaneshaDx {
 				SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp,
 				DepthStencilState.Default, RasterizerState.CullNone
 			);
-			
+
 			Stage.SpriteBatch.Draw(Stage.ImGuiRenderTarget, GraphicsDevice.PresentationParameters.Bounds, Color.White);
 
 			if (GuiWindowTexturePreview.ShouldRenderTexture) {

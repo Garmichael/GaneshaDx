@@ -25,6 +25,27 @@ namespace GaneshaDx.Resources {
 		public static List<MapResource> MeshResources;
 		public static List<MapResource> TextureResources;
 
+		public static void LoadMapDataFromFullPath(string gnsPath) {
+			List<string> pathSegments = gnsPath.Split('\\').ToList();
+			string fileName = pathSegments.Last();
+			List<string> fileSegments = fileName.Split('.').ToList();
+
+			if (fileSegments.Last().ToLower() != "gns") {
+				return;
+			}
+				
+			fileSegments.RemoveAt(fileSegments.Count - 1);
+			string mapName =string.Join("\\", fileSegments);
+				
+			pathSegments.RemoveAt(pathSegments.Count - 1);
+			string folder = string.Join("\\", pathSegments);
+
+			Configuration.Properties.LoadFolder = folder;
+			Configuration.SaveConfiguration();
+			
+			LoadMapDataFromFiles(folder, mapName);
+		}
+		
 		public static void LoadMapDataFromFiles(string mapFolder, string mapName) {
 			MapIsLoaded = false;
 			AllResources = new List<MapResource>();

@@ -1,4 +1,6 @@
-﻿using GaneshaDx.Common;
+﻿using System.Diagnostics;
+using GaneshaDx.Common;
+using GaneshaDx.Resources;
 using GaneshaDx.UserInterface;
 using GaneshaDx.UserInterface.GuiDefinitions;
 using ImGuiHandler.MonoGame;
@@ -98,7 +100,7 @@ namespace GaneshaDx.Environment {
 
 			UpdateRenderTargets();
 			Window.ClientSizeChanged += WindowSizeChanged;
-			// Window.FileDrop += 
+			Window.FileDrop += DroppedFileIn;
 		}
 
 		public static void Update(GameTime gameTime) {
@@ -170,6 +172,10 @@ namespace GaneshaDx.Environment {
 				false,
 				GraphicsDevice.PresentationParameters.BackBufferFormat,
 				DepthFormat.Depth24);
+		}
+
+		private static void DroppedFileIn(object sender, FileDropEventArgs e) {
+			MapData.LoadMapDataFromFullPath(e.Files[0]);
 		}
 	}
 }
