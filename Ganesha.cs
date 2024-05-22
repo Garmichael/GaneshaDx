@@ -1,4 +1,5 @@
-﻿using GaneshaDx.Common;
+﻿using System.Diagnostics;
+using GaneshaDx.Common;
 using GaneshaDx.Environment;
 using GaneshaDx.Rendering;
 using GaneshaDx.UserInterface;
@@ -7,13 +8,18 @@ using GaneshaDx.UserInterface.Input;
 using GaneshaDx.UserInterface.Widgets;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Myra.Graphics2D.UI;
 
 
 namespace GaneshaDx {
 	public class Ganesha : Game {
 		private readonly GraphicsDeviceManager _graphics;
 
-		public Ganesha() {
+		public Ganesha(string[] args) {
+			Debug.Print("\n\n\nHEy there");
+			foreach (string arg in args) {
+				Debug.Print("\n" + arg);
+			}
 			_graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
 			Window.AllowUserResizing = true;

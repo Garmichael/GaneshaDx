@@ -6,11 +6,11 @@ namespace GaneshaDx {
 		public const string Version = "0.93";
 
 		[STAThread]
-		private static void Main() {
+		private static void Main(string[] args) {
 #if !DEBUG
 			try {
 #endif
-				using Ganesha ganesha = new Ganesha();
+				using Ganesha ganesha = new Ganesha(args);
 				ganesha.Run();
 #if !DEBUG
 			} catch (Exception exception) {

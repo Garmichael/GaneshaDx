@@ -98,6 +98,7 @@ namespace GaneshaDx.Environment {
 
 			UpdateRenderTargets();
 			Window.ClientSizeChanged += WindowSizeChanged;
+			// Window.FileDrop += 
 		}
 
 		public static void Update(GameTime gameTime) {
