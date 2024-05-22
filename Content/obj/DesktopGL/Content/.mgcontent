@@ -4,10 +4,10 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/Garmy/Documents/WorkFiles/GaneshaDx/Content/DebugFont.spritefont</File>
-    <File>C:/Users/Garmy/Documents/WorkFiles/GaneshaDx/Content/FFTPolygonShader.fx</File>
-    <File>C:/Users/Garmy/Documents/WorkFiles/GaneshaDx/Content/GaneshaLogo.png</File>
-    <File>C:/Users/Garmy/Documents/WorkFiles/GaneshaDx/Content/StormGardenStudioLogo.png</File>
+    <File>C:/Users/Garmy/Documents/Work Files/GaneshaDx/Content/DebugFont.spritefont</File>
+    <File>C:/Users/Garmy/Documents/Work Files/GaneshaDx/Content/FFTPolygonShader.fx</File>
+    <File>C:/Users/Garmy/Documents/Work Files/GaneshaDx/Content/GaneshaLogo.png</File>
+    <File>C:/Users/Garmy/Documents/Work Files/GaneshaDx/Content/StormGardenStudioLogo.png</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />

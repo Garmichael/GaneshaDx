@@ -15,13 +15,13 @@ namespace GaneshaDx.UserInterface.Widgets {
 
 		private readonly List<Vector3> _arrowDefinition;
 		private readonly List<Vector3> _axisVertices = new List<Vector3>();
-		private VertexPositionColorTexture[] _axisPoleRenderVertices = {};
+		private VertexPositionColorTexture[] _axisPoleRenderVertices = { };
 
 		private readonly List<Vector3> _rotationButtonDefinition;
 		private readonly List<Vector3> _leftButtonVertices = new List<Vector3>();
 		private readonly List<Vector3> _rightButtonVertices = new List<Vector3>();
-		private VertexPositionColorTexture[] _leftButtonRenderVertices = {};
-		private VertexPositionColorTexture[] _rightButtonRenderVertices = {};
+		private VertexPositionColorTexture[] _leftButtonRenderVertices = { };
+		private VertexPositionColorTexture[] _rightButtonRenderVertices = { };
 
 		public CameraRayResults LeftButtonHoveredResults;
 		public CameraRayResults RightButtonHoveredResults;
@@ -74,7 +74,6 @@ namespace GaneshaDx.UserInterface.Widgets {
 		}
 
 		public void Update() {
-			// _center = Selection.CenterOfSelection;
 			SetCenter();
 
 			BuildAxisPoleVertices();
@@ -203,7 +202,7 @@ namespace GaneshaDx.UserInterface.Widgets {
 			if (_rightButtonRenderVertices.Length != _rightButtonVertices.Count) {
 				_rightButtonRenderVertices = new VertexPositionColorTexture[_rightButtonVertices.Count];
 			}
-			
+
 			for (int vertexIndex = 0; vertexIndex < _leftButtonVertices.Count; vertexIndex++) {
 				_leftButtonRenderVertices[vertexIndex] = new VertexPositionColorTexture(
 					_center + _leftButtonVertices[vertexIndex],
@@ -228,7 +227,10 @@ namespace GaneshaDx.UserInterface.Widgets {
 			Stage.BasicEffect.TextureEnabled = false;
 			Stage.BasicEffect.VertexColorEnabled = true;
 
-			if (_axisPoleRenderVertices != null && _leftButtonVertices != null && _rightButtonVertices != null) {
+			if (_axisPoleRenderVertices.Length > 0 &&
+			    _leftButtonVertices.Count > 0 &&
+			    _rightButtonVertices.Count > 0
+			   ) {
 				RenderAxisPole();
 				RenderButtons();
 			}

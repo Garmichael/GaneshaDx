@@ -1,6 +1,6 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"C:/Users/Garmy/Documents/WorkFiles/GaneshaDx/Content/DebugFont.spritefont","C:/Users/Garmy/Documents/WorkFiles/GaneshaDx/Content/bin/DesktopGL/Content/DebugFont.xnb","FontDescriptionProcessor","SpriteFontContent",2068,21538,0.1721237
-"C:/Users/Garmy/Documents/WorkFiles/GaneshaDx/Content/FFTPolygonShader.fx","C:/Users/Garmy/Documents/WorkFiles/GaneshaDx/Content/bin/DesktopGL/Content/FFTPolygonShader.xnb","EffectProcessor","CompiledEffectContent",22851,28751,8.303864
-"C:/Users/Garmy/Documents/WorkFiles/GaneshaDx/Content/GaneshaLogo.png","C:/Users/Garmy/Documents/WorkFiles/GaneshaDx/Content/bin/DesktopGL/Content/GaneshaLogo.xnb","TextureProcessor","Texture2DContent",11538,320085,0.0162515
-"C:/Users/Garmy/Documents/WorkFiles/GaneshaDx/Content/icomoon.ttf","C:\Users\Garmy\Documents\WorkFiles\GaneshaDx\Content\bin\DesktopGL\Content\icomoon.ttf","CopyItem","File",2312,2312,0.0016389
-"C:/Users/Garmy/Documents/WorkFiles/GaneshaDx/Content/StormGardenStudioLogo.png","C:/Users/Garmy/Documents/WorkFiles/GaneshaDx/Content/bin/DesktopGL/Content/StormGardenStudioLogo.xnb","TextureProcessor","Texture2DContent",3965,35285,0.0022042
+"C:/Users/Garmy/Documents/Work Files/GaneshaDx/Content/DebugFont.spritefont","C:/Users/Garmy/Documents/Work Files/GaneshaDx/Content/bin/DesktopGL/Content/DebugFont.xnb","FontDescriptionProcessor","SpriteFontContent",2068,21538,0.2165644
+"C:/Users/Garmy/Documents/Work Files/GaneshaDx/Content/FFTPolygonShader.fx","C:/Users/Garmy/Documents/Work Files/GaneshaDx/Content/bin/DesktopGL/Content/FFTPolygonShader.xnb","EffectProcessor","CompiledEffectContent",22851,28751,10.278243
+"C:/Users/Garmy/Documents/Work Files/GaneshaDx/Content/GaneshaLogo.png","C:/Users/Garmy/Documents/Work Files/GaneshaDx/Content/bin/DesktopGL/Content/GaneshaLogo.xnb","TextureProcessor","Texture2DContent",11538,320085,0.0169187
+"C:/Users/Garmy/Documents/Work Files/GaneshaDx/Content/icomoon.ttf","C:\Users\Garmy\Documents\Work Files\GaneshaDx\Content\bin\DesktopGL\Content\icomoon.ttf","CopyItem","File",2312,2312,0.0018847
+"C:/Users/Garmy/Documents/Work Files/GaneshaDx/Content/StormGardenStudioLogo.png","C:/Users/Garmy/Documents/Work Files/GaneshaDx/Content/bin/DesktopGL/Content/StormGardenStudioLogo.xnb","TextureProcessor","Texture2DContent",3965,35285,0.0027912

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>C:/Users/Garmy/Documents/WorkFiles/GaneshaDx/Content/DebugFont.spritefont</SourceFile>
-  <SourceTime>2024-02-15T11:22:57.5637308-08:00</SourceTime>
-  <DestFile>C:/Users/Garmy/Documents/WorkFiles/GaneshaDx/Content/bin/DesktopGL/Content/DebugFont.xnb</DestFile>
-  <DestTime>2024-02-15T11:25:53.6159012-08:00</DestTime>
+  <SourceFile>C:/Users/Garmy/Documents/Work Files/GaneshaDx/Content/DebugFont.spritefont</SourceFile>
+  <SourceTime>2024-05-22T09:54:18.794952-07:00</SourceTime>
+  <DestFile>C:/Users/Garmy/Documents/Work Files/GaneshaDx/Content/bin/DesktopGL/Content/DebugFont.xnb</DestFile>
+  <DestTime>2024-05-22T09:58:57.1593309-07:00</DestTime>
   <Importer>FontDescriptionImporter</Importer>
   <ImporterTime>2020-08-10T09:17:54-07:00</ImporterTime>
   <Processor>FontDescriptionProcessor</Processor>
