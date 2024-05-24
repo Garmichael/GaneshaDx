@@ -159,6 +159,11 @@ public static class GuiWindowFileBrowser {
 			_selectedFile = MapData.MapName + ".glb";
 		} else if (_dialogBox == DialogBoxes.ExportTexture) {
 			_selectedFile = MapData.MapName + "." + CurrentMapState.StateData.StateTextureResource.XFile + ".png";
+		} else if (_dialogBox == DialogBoxes.ExportUvMap) {
+			_selectedFile = MapData.MapName + "." +
+			                CurrentMapState.StateData.StateTextureResource.XFile +
+			                ".uvMap" +
+			                ".png";
 		}
 
 		SetFolderPathFromFullPath(Configuration.Properties.LoadFolder);
@@ -474,7 +479,7 @@ public static class GuiWindowFileBrowser {
 			}, {
 				DialogBoxes.ExportPalette, () => { }
 			}, {
-				DialogBoxes.ExportUvMap, () => { }
+				DialogBoxes.ExportUvMap, () => { MapData.ExportUvMap(filePath); }
 			}
 		};
 

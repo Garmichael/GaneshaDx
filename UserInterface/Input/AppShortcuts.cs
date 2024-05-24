@@ -222,12 +222,7 @@ namespace GaneshaDx.UserInterface.Input {
 					}
 
 					if (AppInput.KeyJustPressed(Keys.U)) {
-						string fileName = MapData.MapName + "." +
-						                  CurrentMapState.StateData.StateTextureResource.XFile +
-						                  ".uvMap" +
-						                  ".png";
-
-						MyraGui.OpenExportUvMapFileDialog(fileName);
+						GuiWindowFileBrowser.Open(GuiWindowFileBrowser.DialogBoxes.ExportUvMap);
 					}
 
 					if (AppInput.KeyJustPressed(Keys.R)) {

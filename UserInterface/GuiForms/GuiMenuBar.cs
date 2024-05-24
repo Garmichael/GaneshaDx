@@ -126,12 +126,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					}
 
 					if (ImGui.MenuItem("Export UV Map", "Ctrl + U", false, MapData.MapIsLoaded)) {
-						string fileName = MapData.MapName + "." +
-						                  CurrentMapState.StateData.StateTextureResource.XFile +
-						                  ".uvMap" +
-						                  ".png";
-
-						MyraGui.OpenExportUvMapFileDialog(fileName);
+						GuiWindowFileBrowser.Open(GuiWindowFileBrowser.DialogBoxes.ExportUvMap);
 					}
 
 					ImGui.Separator();
