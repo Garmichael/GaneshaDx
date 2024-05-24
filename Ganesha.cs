@@ -10,10 +10,12 @@ using GaneshaDx.UserInterface.Input;
 using GaneshaDx.UserInterface.Widgets;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Octokit;
 
 namespace GaneshaDx;
 
 public class Ganesha : Game {
+	public bool AppIsOutdated = false;
 	private readonly GraphicsDeviceManager _graphics;
 	private readonly string _mapToOpenOnLoad;
 	private bool _openMapOnLoad;
@@ -42,7 +44,9 @@ public class Ganesha : Game {
 
 		Stage.SetStage(this, GraphicsDevice, _graphics, new SpriteBatch(GraphicsDevice), Content, Window);
 		Background.SetAsGradient(Utilities.GetColorFromHex("0a0e16"), Color.Black);
-			
+
+		_ = UpdateChecker.CheckForUpdate();
+
 		base.Initialize();
 	}
 
@@ -85,7 +89,6 @@ public class Ganesha : Game {
 			SceneRenderer.Render();
 			TransformWidget.Render();
 			RotationWidget.Render();
-
 		} else {
 			_postponingRenderCount--;
 			if (_postponingRenderCount <= 0) {
@@ -93,11 +96,11 @@ public class Ganesha : Game {
 				_postponingRenderCount = 0;
 			}
 		}
-			
+
 		Stage.GraphicsDevice.Viewport = Stage.WholeViewport;
 		OverlayConsole.Render();
 		FpsCounter.Render();
-			
+
 		Stage.SpriteBatch.Begin(
 			SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp,
 			DepthStencilState.Default, RasterizerState.CullNone

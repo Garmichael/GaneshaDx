@@ -107,6 +107,10 @@ public static class Gui {
 						GuiWindowMapWarning.Render();
 					}
 
+					if (GuiWindowUpdateAvailable.ShouldRender()) {
+						GuiWindowUpdateAvailable.Render();
+					}
+
 					if (ShowGnsDataWindow) {
 						GuiWindowGnsData.Render();
 					}
