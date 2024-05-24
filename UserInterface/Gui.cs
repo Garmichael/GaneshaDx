@@ -27,10 +27,15 @@ namespace GaneshaDx.UserInterface {
 		public static bool ShowMeshAnimationsWindow;
 		public static bool ShowExportGlbWindow;
 		public static bool ShowGnsDataWindow;
+		public static bool ShowOpenFileWindow;
 
 		public static void Render() {
 			Stage.GraphicsDevice.Clear(Color.Transparent);
 
+			if (!Stage.Ganesha.IsActive) {
+				return;	
+			}
+			
 			if (AppInput.ControlHeld && AppInput.ShiftHeld && AppInput.AltHeld && AppInput.KeyJustPressed(Keys.D)) {
 				_showDebugPanel = !_showDebugPanel;
 			}
@@ -52,7 +57,11 @@ namespace GaneshaDx.UserInterface {
 				} else {
 					GuiMenuBar.Render();
 					GuiWindowTexturePreview.Render();
-
+	
+					if(ShowOpenFileWindow){
+						GuiWindowFileBrowser.Render();
+					}
+					
 					if (MapData.MapIsLoaded) {
 						RenderTabPanel();
 						RenderMainPanel();

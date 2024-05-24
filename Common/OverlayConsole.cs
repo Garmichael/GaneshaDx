@@ -37,21 +37,8 @@ namespace GaneshaDx.Common {
 
 			Stage.SpriteBatch.Begin();
 
-			if (Messages.Count > 0) {
-				Rectangle backgroundBounds = new Rectangle(
-					new Point(0, 0), new Point(Stage.ModelingViewport.Width, messageHeight * Messages.Count)
-				);
-
-				Stage.SpriteBatch.Draw(
-					BackgroundTexture,
-					new Vector2(0, top - 5),
-					backgroundBounds,
-					Color.White
-				);
-			}
-
 			foreach (OverlayMessage message in Messages) {
-				Vector2 displayPosition = new Vector2(left, top + 2);
+				Vector2 displayPosition = new Vector2(left, top + 40);
 				Stage.SpriteBatch.DrawString(Font, message.Text, displayPosition - new Vector2(1, -1), Color.Black);
 				Stage.SpriteBatch.DrawString(Font, message.Text, displayPosition, Color.White);
 				top += messageHeight;

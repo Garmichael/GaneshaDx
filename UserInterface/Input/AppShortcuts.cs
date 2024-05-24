@@ -4,6 +4,7 @@ using GaneshaDx.Environment;
 using GaneshaDx.Resources;
 using GaneshaDx.Resources.ContentDataTypes.Polygons;
 using GaneshaDx.UserInterface.GuiDefinitions;
+using GaneshaDx.UserInterface.GuiForms;
 using GaneshaDx.UserInterface.Widgets;
 using Microsoft.Xna.Framework.Input;
 
@@ -11,7 +12,7 @@ namespace GaneshaDx.UserInterface.Input {
 	public static class AppShortcuts {
 		public static void Update() {
 			if (!MyraGui.IsActive && AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.O)) {
-				MyraGui.OpenOpenFileDialog();
+				GuiWindowFileBrowser.Open("gns");
 			}
 
 			if (AppInput.KeyJustPressed(Keys.F12)) {

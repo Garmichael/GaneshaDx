@@ -18,10 +18,12 @@ namespace GaneshaDx {
 		private readonly GraphicsDeviceManager _graphics;
 		private readonly string _mapToOpenOnLoad;
 		private bool _openMapOnLoad;
+		private bool _postponingRender;
+		private int _postponingRenderCount;
 
 		public Ganesha(string[] args) {
-			Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory); 
-			
+			Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
+
 			if (args.Length > 0) {
 				_mapToOpenOnLoad = args[0];
 				_openMapOnLoad = true;
@@ -62,7 +64,7 @@ namespace GaneshaDx {
 			AutoSaver.Update();
 
 			base.Update(gameTime);
-			
+
 			if (_openMapOnLoad) {
 				_openMapOnLoad = false;
 				MapData.LoadMapDataFromFullPath(_mapToOpenOnLoad);
@@ -78,15 +80,25 @@ namespace GaneshaDx {
 
 			GraphicsDevice.SetRenderTarget(null);
 			GraphicsDevice.Clear(Color.Black);
-			Stage.UpdateEffects();
-			Background.Render();
-			SceneRenderer.Render();
-			FpsCounter.Render();
-			TransformWidget.Render();
-			RotationWidget.Render();
-			OverlayConsole.Render();
-			MyraGui.Render();
 
+			if (!_postponingRender) {
+				Stage.UpdateEffects();
+				Background.Render();
+				SceneRenderer.Render();
+				TransformWidget.Render();
+				RotationWidget.Render();
+				MyraGui.Render();
+			} else {
+				_postponingRenderCount--;
+				if (_postponingRenderCount <= 0) {
+					_postponingRender = false;
+					_postponingRenderCount = 0;
+				}
+			}
+
+			OverlayConsole.Render();
+			FpsCounter.Render();
+			
 			Stage.SpriteBatch.Begin(
 				SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp,
 				DepthStencilState.Default, RasterizerState.CullNone
@@ -101,6 +113,11 @@ namespace GaneshaDx {
 			Stage.SpriteBatch.End();
 
 			base.Draw(gameTime);
+		}
+
+		public void PostponeRender(int frames) {
+			_postponingRender = true;
+			_postponingRenderCount = frames;
 		}
 	}
 }

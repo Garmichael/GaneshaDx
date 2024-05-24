@@ -146,6 +146,7 @@ namespace GaneshaDx.UserInterface.GuiDefinitions {
 			currentStyle.FrameRounding = 3;
 			currentStyle.ItemSpacing = new Vector2(8, 4);
 			currentStyle.WindowBorderSize = 0;
+			currentStyle.ButtonTextAlign = new Vector2(0.5f, 0.5f);
 		}
 
 		public static void SetElementStyle(ElementStyle elementStyle) {
@@ -184,6 +185,33 @@ namespace GaneshaDx.UserInterface.GuiDefinitions {
 				colors[(int) ImGuiCol.Text] = ColorPalette[ColorName.Darkest];
 			}
 
+			if (elementStyle == ElementStyle.ButtonFileBrowserDirectory) {
+				colors[(int) ImGuiCol.Button] = ColorPalette[ColorName.Transparent];
+				colors[(int) ImGuiCol.ButtonHovered] = ColorPalette[ColorName.Darker];
+				colors[(int) ImGuiCol.ButtonActive] = ColorPalette[ColorName.Transparent];
+				colors[(int) ImGuiCol.Text] = ColorPalette[ColorName.Highlighted];
+				currentStyle.FrameRounding = 0;
+				currentStyle.ButtonTextAlign = new Vector2(0, 0.5f);
+			}
+
+			if (elementStyle == ElementStyle.ButtonFileBrowserFile) {
+				colors[(int) ImGuiCol.Button] = ColorPalette[ColorName.Transparent];
+				colors[(int) ImGuiCol.ButtonHovered] = ColorPalette[ColorName.Darker];
+				colors[(int) ImGuiCol.ButtonActive] = ColorPalette[ColorName.Darker];
+				colors[(int) ImGuiCol.Text] = ColorPalette[ColorName.Lightest];
+				currentStyle.FrameRounding = 0;
+				currentStyle.ButtonTextAlign = new Vector2(0, 0.5f);
+			}
+
+			if (elementStyle == ElementStyle.ButtonFileBrowserFileSelected) {
+				colors[(int) ImGuiCol.Button] = ColorPalette[ColorName.Dark];
+				colors[(int) ImGuiCol.ButtonHovered] = ColorPalette[ColorName.Dark];
+				colors[(int) ImGuiCol.ButtonActive] = ColorPalette[ColorName.Dark];
+				colors[(int) ImGuiCol.Text] = ColorPalette[ColorName.Lightest];
+				currentStyle.FrameRounding = 0;
+				currentStyle.ButtonTextAlign = new Vector2(0, 0.5f);
+			}
+			
 			if (elementStyle == ElementStyle.CheckboxDisabled) {
 				colors[(int) ImGuiCol.FrameBg] = ColorPalette[ColorName.Darkest];
 				colors[(int) ImGuiCol.FrameBgHovered] = ColorPalette[ColorName.Darkest];

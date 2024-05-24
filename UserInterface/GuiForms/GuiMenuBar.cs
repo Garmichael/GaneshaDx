@@ -19,7 +19,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					if (ImGui.MenuItem("New", "Ctrl+Shift + N", false, false)) { }
 
 					if (ImGui.MenuItem("Open", "Ctrl + O")) {
-						MyraGui.OpenOpenFileDialog();
+						GuiWindowFileBrowser.Open("gns");
 					}
 
 					if (ImGui.MenuItem("Save", "Ctrl + S", false, MapData.MapIsLoaded)) {

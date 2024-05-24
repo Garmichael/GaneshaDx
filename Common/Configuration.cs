@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
@@ -15,7 +16,11 @@ namespace GaneshaDx.Common {
 				SaveConfiguration();
 			} else {
 				string json = File.ReadAllText(ConfigurationFile);
-				Properties = JsonConvert.DeserializeObject<ConfigurationProperties>(json);
+				try {
+					Properties = JsonConvert.DeserializeObject<ConfigurationProperties>(json);
+				} catch {
+					Properties = new ConfigurationProperties();
+				}
 			}
 		}
 
@@ -61,6 +66,7 @@ namespace GaneshaDx.Common {
 			public int NormalIndicatorLength = 50;
 			public bool ShowGameViewOverlay = false;
 			public bool HideRedTiles = false;
+			public readonly List<string> PinnedFileBrowserFolders = new();
 		}
 	}
 }
