@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using GaneshaDx.Common;
 using GaneshaDx.Environment;
@@ -19,7 +20,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					if (ImGui.MenuItem("New", "Ctrl+Shift + N", false, false)) { }
 
 					if (ImGui.MenuItem("Open", "Ctrl + O")) {
-						GuiWindowFileBrowser.Open("gns");
+						GuiWindowFileBrowser.Open(GuiWindowFileBrowser.DialogBoxes.OpenMap);
 					}
 
 					if (ImGui.MenuItem("Save", "Ctrl + S", false, MapData.MapIsLoaded)) {
@@ -110,7 +111,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					ImGui.Separator();
 					
 					if (ImGui.MenuItem("Import Texture", "Ctrl + I", false, MapData.MapIsLoaded)) {
-						MyraGui.OpenImportTextureFileDialog();
+						GuiWindowFileBrowser.Open(GuiWindowFileBrowser.DialogBoxes.ImportTexture);
 					}
 
 					if (ImGui.MenuItem("Export Texture", "Ctrl + E", false, MapData.MapIsLoaded)) {
@@ -121,10 +122,11 @@ namespace GaneshaDx.UserInterface.GuiForms {
 						MyraGui.OpenExportTextureFileDialog(fileName);
 					}
 
-					bool canReimportTexture = MapData.MapIsLoaded && MyraGui.LastImportedTextureFile != "";
+					bool canReimportTexture = MapData.MapIsLoaded && 
+					                          GuiWindowFileBrowser.LastImportedTextureFile != String.Empty;
 
 					if (ImGui.MenuItem("Re-Import Texture", "Ctrl + R", false, canReimportTexture)) {
-						MapData.ImportTexture(MyraGui.LastImportedTextureFile);
+						MapData.ImportTexture(GuiWindowFileBrowser.LastImportedTextureFile);
 					}
 
 					if (ImGui.MenuItem("Export UV Map", "Ctrl + U", false, MapData.MapIsLoaded)) {

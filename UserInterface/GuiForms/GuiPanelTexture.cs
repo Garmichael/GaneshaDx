@@ -457,7 +457,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				GuiStyle.SetNewUiToDefaultStyle();
 
 				if (ImGui.Button("Import Texture", new Vector2(buttonWidth, buttonHeight))) {
-					MyraGui.OpenImportTextureFileDialog();
+					GuiWindowFileBrowser.Open(GuiWindowFileBrowser.DialogBoxes.ImportTexture);
 				}
 
 				ImGui.SameLine();

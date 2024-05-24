@@ -34,6 +34,12 @@ public static class GuiWindowFileBrowser {
 		{ SizableElements.FooterFileLabel, new Vector2(225, 0) }
 	};
 
+	public enum DialogBoxes {
+		OpenMap,
+		ImportTexture
+	}
+
+	private static DialogBoxes _dialogBox;
 	private static Vector2 _centeredWindowPosition;
 	private static bool _resetWindowPosition;
 
@@ -47,6 +53,8 @@ public static class GuiWindowFileBrowser {
 	private static string _selectedFile = string.Empty;
 
 	private static string CurrentFullPath => _currentDrive + string.Join("\\", FolderPath);
+
+	public static string LastImportedTextureFile = String.Empty;
 
 	public static void Render() {
 		bool windowIsOpen = true;
@@ -94,14 +102,21 @@ public static class GuiWindowFileBrowser {
 		}
 	}
 
-	public static void Open(string filter) {
+	public static void Open(DialogBoxes dialogBox) {
+		_dialogBox = dialogBox;
+
 		_centeredWindowPosition = new Vector2(
 			Stage.ModelingViewport.Width / 2f - Sizes[SizableElements.Window].X / 2f,
 			Stage.ModelingViewport.Height / 2f - Sizes[SizableElements.Window].Y / 2f
 		);
 		_resetWindowPosition = true;
 
-		_filter = filter;
+		if (_dialogBox == DialogBoxes.OpenMap) {
+			_filter = "gns";
+		} else if (_dialogBox == DialogBoxes.ImportTexture) {
+			_filter = "png";
+		}
+
 		SetFolderPathFromFullPath(Configuration.Properties.LoadFolder);
 		RefreshFileList();
 		Gui.ShowOpenFileWindow = true;
@@ -172,7 +187,7 @@ public static class GuiWindowFileBrowser {
 				}
 			}
 
-			
+
 			GuiStyle.SetNewUiToDefaultStyle();
 		}
 
@@ -219,7 +234,7 @@ public static class GuiWindowFileBrowser {
 
 					if (ImGui.Button("     " + file, Sizes[SizableElements.MainFilesItem])) {
 						if (_selectedFile == file) {
-							OpenFile();
+							LoadFile();
 						} else {
 							_selectedFile = file;
 						}
@@ -241,8 +256,8 @@ public static class GuiWindowFileBrowser {
 		ImGui.Columns(3, "footerColumns", false);
 		ImGui.SetColumnWidth(0, Sizes[SizableElements.FooterLeftSpacing].X);
 		ImGui.SetColumnWidth(1, Sizes[SizableElements.FooterFileLabel].X);
-		
-		
+
+
 		int index = Configuration.Properties.PinnedFileBrowserFolders.IndexOf(CurrentFullPath);
 
 		bool folderIsSpecialFolder = CurrentFullPath == System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments) ||
@@ -262,7 +277,7 @@ public static class GuiWindowFileBrowser {
 				Configuration.SaveConfiguration();
 			}
 		}
-		
+
 		ImGui.NextColumn();
 
 		GuiStyle.AddSpace(1);
@@ -285,7 +300,7 @@ public static class GuiWindowFileBrowser {
 
 		if (ImGui.Button("Open")) {
 			if (_selectedFile != String.Empty) {
-				OpenFile();
+				LoadFile();
 			}
 		}
 
@@ -338,11 +353,18 @@ public static class GuiWindowFileBrowser {
 		}
 	}
 
-	private static void OpenFile() {
-		Selection.SelectedPolygons.Clear();
-		Selection.HoveredPolygons.Clear();
-		Stage.Ganesha.PostponeRender(1);
-		MapData.LoadMapDataFromFullPath(CurrentFullPath + "\\" + _selectedFile);
+	private static void LoadFile() {
+		string filePath = CurrentFullPath + "\\" + _selectedFile;
+		if (_dialogBox == DialogBoxes.OpenMap) {
+			Selection.SelectedPolygons.Clear();
+			Selection.HoveredPolygons.Clear();
+			Stage.Ganesha.PostponeRender(1);
+			MapData.LoadMapDataFromFullPath(filePath);
+		} else if (_dialogBox == DialogBoxes.ImportTexture) {
+			LastImportedTextureFile = filePath;
+			MapData.ImportTexture(filePath);
+		}
+
 		Gui.ShowOpenFileWindow = false;
 	}
 }

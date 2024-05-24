@@ -12,7 +12,7 @@ namespace GaneshaDx.UserInterface.Input {
 	public static class AppShortcuts {
 		public static void Update() {
 			if (!MyraGui.IsActive && AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.O)) {
-				GuiWindowFileBrowser.Open("gns");
+				GuiWindowFileBrowser.Open(GuiWindowFileBrowser.DialogBoxes.OpenMap);
 			}
 
 			if (AppInput.KeyJustPressed(Keys.F12)) {
@@ -214,7 +214,7 @@ namespace GaneshaDx.UserInterface.Input {
 					}
 
 					if (AppInput.KeyJustPressed(Keys.I)) {
-						MyraGui.OpenImportTextureFileDialog();
+						GuiWindowFileBrowser.Open(GuiWindowFileBrowser.DialogBoxes.ImportTexture);
 					}
 
 					if (AppInput.KeyJustPressed(Keys.E)) {
@@ -235,8 +235,8 @@ namespace GaneshaDx.UserInterface.Input {
 					}
 
 					if (AppInput.KeyJustPressed(Keys.R)) {
-						if (MyraGui.LastImportedTextureFile != "") {
-							MapData.ImportTexture(MyraGui.LastImportedTextureFile);
+						if (GuiWindowFileBrowser.LastImportedTextureFile != string.Empty) {
+							MapData.ImportTexture(GuiWindowFileBrowser.LastImportedTextureFile);
 						}
 					}
 
