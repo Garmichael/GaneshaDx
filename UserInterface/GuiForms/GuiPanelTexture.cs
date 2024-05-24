@@ -584,11 +584,13 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				ImGui.SameLine();
 
 				if (ImGui.Button("X##export" + paletteIndex)) {
-					string fileName = MapData.MapName + "." +
-					                  CurrentMapState.StateData.StateMeshResources[0].XFile +
-					                  ".act";
-
-					MyraGui.OpenExportPaletteFileDialog(fileName, paletteIndex, "main");
+					GuiWindowFileBrowser.Open(
+						GuiWindowFileBrowser.DialogBoxes.ExportPalette,
+						new Dictionary<string, string> {
+							{ "PaletteId", paletteIndex.ToString() },
+							{ "PaletteType", "main" }
+						}
+					);
 				}
 
 				ImGui.PopFont();
@@ -624,7 +626,13 @@ namespace GaneshaDx.UserInterface.GuiForms {
 			GuiStyle.SetNewUiToDefaultStyle();
 
 			if (ImGui.Button("Export Default Palette")) {
-				MyraGui.OpenExportPaletteFileDialog("default.act", -1, "main");
+				GuiWindowFileBrowser.Open(
+					GuiWindowFileBrowser.DialogBoxes.ExportPalette,
+					new Dictionary<string, string> {
+						{ "PaletteId", "-1"},
+						{ "PaletteType", "animation" }
+					}
+				);
 			}
 		}
 
@@ -801,11 +809,13 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				ImGui.SameLine();
 
 				if (ImGui.Button("X##exportA" + paletteIndex)) {
-					string fileName = MapData.MapName + "." +
-					                  CurrentMapState.StateData.StateMeshResources[0].XFile +
-					                  ".act";
-
-					MyraGui.OpenExportPaletteFileDialog(fileName, paletteIndex, "animation");
+					GuiWindowFileBrowser.Open(
+						GuiWindowFileBrowser.DialogBoxes.ExportPalette,
+						new Dictionary<string, string> {
+							{ "PaletteId", paletteIndex.ToString() },
+							{ "PaletteType", "animation" }
+						}
+					);
 				}
 
 				ImGui.PopFont();

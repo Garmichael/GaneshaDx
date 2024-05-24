@@ -155,16 +155,17 @@ public static class GuiWindowFileBrowser {
 		_clearsSelectedFileOnNavigation = !BoxesWithInputText.Contains(_dialogBox);
 		_filter = DialogBoxFilters[_dialogBox];
 
-		if (_dialogBox == DialogBoxes.ExportGlb) {
-			_selectedFile = MapData.MapName + ".glb";
-		} else if (_dialogBox == DialogBoxes.ExportTexture) {
-			_selectedFile = MapData.MapName + "." + CurrentMapState.StateData.StateTextureResource.XFile + ".png";
-		} else if (_dialogBox == DialogBoxes.ExportUvMap) {
-			_selectedFile = MapData.MapName + "." +
-			                CurrentMapState.StateData.StateTextureResource.XFile +
-			                ".uvMap" +
-			                ".png";
-		}
+		_selectedFile = _dialogBox switch {
+			DialogBoxes.ExportGlb => MapData.MapName + ".glb",
+			DialogBoxes.ExportTexture => MapData.MapName + "." + CurrentMapState.StateData.StateTextureResource.XFile + ".png",
+			DialogBoxes.ExportUvMap => MapData.MapName + "." + CurrentMapState.StateData.StateTextureResource.XFile + ".uvMap" + ".png",
+			DialogBoxes.ExportPalette => _additionalData?["PaletteId"] == "-1"
+				? "default.act"
+				: MapData.MapName + "." + CurrentMapState.StateData.StateMeshResources[0].XFile +
+				  (_additionalData != null ? "." + _additionalData["PaletteId"] : "") +
+				  ".act",
+			_ => _selectedFile
+		};
 
 		SetFolderPathFromFullPath(Configuration.Properties.LoadFolder);
 		RefreshFileList();
@@ -477,7 +478,13 @@ public static class GuiWindowFileBrowser {
 				DialogBoxes.ExportTexture,
 				() => { MapData.ExportTexture(filePath); }
 			}, {
-				DialogBoxes.ExportPalette, () => { }
+				DialogBoxes.ExportPalette, () => {
+					MapData.ExportPalette(
+						filePath,
+						int.Parse(_additionalData["PaletteId"]),
+						_additionalData["PaletteType"]
+					);
+				}
 			}, {
 				DialogBoxes.ExportUvMap, () => { MapData.ExportUvMap(filePath); }
 			}
