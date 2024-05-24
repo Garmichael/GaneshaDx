@@ -582,7 +582,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 				if (ImGui.Button("Z##import" + paletteIndex)) {
 					GuiWindowFileBrowser.Open(
-						GuiWindowFileBrowser.DialogBoxes.ImportPallete,
+						GuiWindowFileBrowser.DialogBoxes.ImportPalette,
 						new Dictionary<string, string> {
 							{ "PaletteId", paletteIndex.ToString() },
 							{ "PaletteType", "main" }
@@ -799,7 +799,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 				if (ImGui.Button("Z##importA" + paletteIndex)) {
 					GuiWindowFileBrowser.Open(
-						GuiWindowFileBrowser.DialogBoxes.ImportPallete,
+						GuiWindowFileBrowser.DialogBoxes.ImportPalette,
 						new Dictionary<string, string> {
 							{ "PaletteId", paletteIndex.ToString() },
 							{ "PaletteType", "animation" }

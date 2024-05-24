@@ -32,15 +32,15 @@ namespace GaneshaDx.UserInterface {
 		public static void BuildUi() {
 			MyraEnvironment.Game = Stage.Ganesha;
 
-			BuildOpenFileDialog();
+			BuildOpenFileDialog();				//Done
 			BuildSaveAsFileDialog();
 			BuildExportGlbFileDialog();
 
-			BuildImportTextureFileDialog();
+			BuildImportTextureFileDialog();		//Done
 			BuildExportTextureFileDialog();
 			BuildExportUvMapFileDialog();
 
-			BuildImportPaletteFileDialog();
+			BuildImportPaletteFileDialog();		//Done
 			BuildExportPaletteFileDialog();
 
 			Desktop = new Desktop();

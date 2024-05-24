@@ -20,7 +20,8 @@ public static class GuiWindowFileBrowser {
 		MainFilesContainer,
 		MainFilesItem,
 		FooterLeftSpacing,
-		FooterFileLabel
+		FooterFileLabel,
+		FooterButton
 	}
 
 	private static readonly Dictionary<SizableElements, Vector2> Sizes = new() {
@@ -31,13 +32,19 @@ public static class GuiWindowFileBrowser {
 		{ SizableElements.MainFilesContainer, new Vector2(340, 200) },
 		{ SizableElements.MainFilesItem, new Vector2(320, 20) },
 		{ SizableElements.FooterLeftSpacing, new Vector2(150, 0) },
-		{ SizableElements.FooterFileLabel, new Vector2(225, 0) }
+		{ SizableElements.FooterFileLabel, new Vector2(200, 0) },
+		{ SizableElements.FooterButton, new Vector2(60, 20) }
 	};
 
 	public enum DialogBoxes {
 		OpenMap,
 		ImportTexture,
-		ImportPallete
+		ImportPalette,
+		SaveMapAs,
+		ExportGlb,
+		ExportTexture,
+		ExportUvMap,
+		ExportPalette
 	}
 
 	private static DialogBoxes _dialogBox;
@@ -52,12 +59,22 @@ public static class GuiWindowFileBrowser {
 	private static string[] _currentFolderFiles = Array.Empty<string>();
 	private static string[] _currentFolderFolders = Array.Empty<string>();
 	private static string _selectedFile = string.Empty;
-
 	private static string CurrentFullPath => _currentDrive + string.Join("\\", FolderPath);
 
 	public static string LastImportedTextureFile = String.Empty;
 
 	private static Dictionary<string, string> _additionalData;
+
+	private static readonly Dictionary<DialogBoxes, string> SelectionButtonLabels = new() {
+		{ DialogBoxes.OpenMap, "Export" },
+		{ DialogBoxes.ImportPalette, "Import" },
+		{ DialogBoxes.ImportTexture, "Import" },
+		{ DialogBoxes.SaveMapAs, "Save"},
+		{ DialogBoxes.ExportGlb, "Export"},
+		{ DialogBoxes.ExportTexture, "Export"},
+		{ DialogBoxes.ExportUvMap, "Export"},
+		{ DialogBoxes.ExportPalette, "Export"},
+	};
 
 	public static void Render() {
 		bool windowIsOpen = true;
@@ -119,7 +136,7 @@ public static class GuiWindowFileBrowser {
 			_filter = "gns";
 		} else if (_dialogBox == DialogBoxes.ImportTexture) {
 			_filter = "png";
-		} else if (_dialogBox == DialogBoxes.ImportPallete) {
+		} else if (_dialogBox == DialogBoxes.ImportPalette) {
 			_filter = "act";
 		}
 
@@ -294,7 +311,10 @@ public static class GuiWindowFileBrowser {
 
 		ImGui.NextColumn();
 
-		if (ImGui.Button("Cancel")) {
+		float widthNeeded = Sizes[SizableElements.FooterButton].X * 2 + 10;
+		ImGui.SetCursorPosX(ImGui.GetCursorPosX() + ImGui.GetContentRegionAvail().X - widthNeeded);
+
+		if (ImGui.Button("Cancel", Sizes[SizableElements.FooterButton])) {
 			Gui.ShowOpenFileWindow = false;
 		}
 
@@ -304,7 +324,7 @@ public static class GuiWindowFileBrowser {
 			GuiStyle.SetElementStyle(ElementStyle.ButtonDisabled);
 		}
 
-		if (ImGui.Button("Open")) {
+		if (ImGui.Button(SelectionButtonLabels[_dialogBox], Sizes[SizableElements.FooterButton])) {
 			if (_selectedFile != String.Empty) {
 				LoadFile();
 			}
@@ -369,7 +389,7 @@ public static class GuiWindowFileBrowser {
 		} else if (_dialogBox == DialogBoxes.ImportTexture) {
 			LastImportedTextureFile = filePath;
 			MapData.ImportTexture(filePath);
-		} else if (_dialogBox == DialogBoxes.ImportPallete) {
+		} else if (_dialogBox == DialogBoxes.ImportPalette) {
 			MapData.ImportPalette(
 				filePath,
 				int.Parse(_additionalData["PaletteId"]),
