@@ -54,6 +54,10 @@ namespace GaneshaDx.UserInterface.GuiForms {
 		private static void GetWarnings() {
 			Warnings.Clear();
 
+			
+			if (CurrentMapState.StateMeshMapResources.Count == 0) {
+				Warnings.Add("The Selected State Does Not Exist");
+			}
 
 			int totalTexturedQuads = Utilities.GetTotalPolygonCount(PolygonType.TexturedQuad);
 			if (totalTexturedQuads > MaxTexturedQuads) {

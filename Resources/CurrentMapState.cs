@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using GaneshaDx.Common;
 using GaneshaDx.Rendering;
 using GaneshaDx.Resources.ContentDataTypes;
@@ -12,7 +11,7 @@ namespace GaneshaDx.Resources {
 	public static class CurrentMapState {
 		public static MapStateData StateData;
 		private static readonly List<MapResource> InitialMeshMapResources = new List<MapResource>();
-		private static readonly List<MapResource> StateMeshMapResources = new List<MapResource>();
+		public static readonly List<MapResource> StateMeshMapResources = new List<MapResource>();
 		private static MapResource _initialTextureMapResource;
 		private static MapResource _stateTextureMapResource;
 
@@ -89,10 +88,6 @@ namespace GaneshaDx.Resources {
 					_stateTextureMapResource = resource;
 					break;
 				}
-			}
-
-			if (StateMeshMapResources.Count == 0) {
-				OverlayConsole.AddMessage("THIS STATE DOESNT EXIST");
 			}
 		}
 

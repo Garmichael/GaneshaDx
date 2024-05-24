@@ -31,7 +31,7 @@ namespace GaneshaDx.Common {
 		public static void Render() {
 			if (MapData.MapIsLoaded && Configuration.Properties.ShowFps) {
 				Stage.SpriteBatch.Begin();
-				Vector2 fpsDisplayPosition = new Vector2(10, Stage.ModelingViewport.Height - 25);
+				Vector2 fpsDisplayPosition = new Vector2(10, Stage.ModelingViewport.Height - 5);
 				Stage.SpriteBatch.DrawString(_font, _message, fpsDisplayPosition - new Vector2(1, -1), Color.Black);
 				Stage.SpriteBatch.DrawString(_font, _message, fpsDisplayPosition, Color.White);
 				Stage.SpriteBatch.End();
