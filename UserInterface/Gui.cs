@@ -15,6 +15,8 @@ namespace GaneshaDx.UserInterface {
 		public static RightPanelTab SelectedTab = RightPanelTab.Map;
 		public static WidgetSelectionMode Widget = WidgetSelectionMode.PolygonTranslate;
 
+		public static bool LockModeling;
+		
 		private static bool _showDebugPanel;
 		public static bool ShowCameraControlWindow;
 		public static bool ShowPreferencesWindow;
@@ -43,7 +45,7 @@ namespace GaneshaDx.UserInterface {
 			Stage.ImGuiRenderer.BeforeLayout(Stage.GameTime.ElapsedGameTime);
 			{
 				GuiStyle.SetNewUiToDefaultStyle();
-				MyraGui.LockModeling = false;
+				LockModeling = false;
 
 				if (_showDebugPanel) {
 					ImGui.ShowDemoWindow();
@@ -51,9 +53,9 @@ namespace GaneshaDx.UserInterface {
 
 				if (_showManageResourcesWindow) {
 					GuiWindowManageResources.Render();
-					MyraGui.LockModeling = true;
+					LockModeling = true;
 				} else if (Stage.ScreenshotMode) {
-					MyraGui.LockModeling = true;
+					LockModeling = true;
 				} else {
 					GuiMenuBar.Render();
 					GuiWindowTexturePreview.Render();
@@ -114,7 +116,7 @@ namespace GaneshaDx.UserInterface {
 					}
 
 					if (ImGui.GetIO().WantCaptureKeyboard || ImGui.GetIO().WantCaptureMouse) {
-						MyraGui.LockModeling = true;
+						LockModeling = true;
 					}
 				}
 			}

@@ -26,7 +26,7 @@ namespace GaneshaDx.UserInterface {
 		public static List<TerrainTile> HoveredTerrainTiles = new List<TerrainTile>();
 
 		public static void Update() {
-			if (!MapData.MapIsLoaded || MyraGui.IsActive) {
+			if (!MapData.MapIsLoaded || Gui.LockModeling) {
 				return;
 			}
 
@@ -504,7 +504,7 @@ namespace GaneshaDx.UserInterface {
 			foreach (List<TerrainTile> terrainTiles in allTiles) {
 				foreach (TerrainTile terrainTile in terrainTiles) {
 					bool terrainTileIsHidden = Configuration.Properties.HideRedTiles &&
-					                         (terrainTile.Impassable || terrainTile.Unselectable);
+					                           (terrainTile.Impassable || terrainTile.Unselectable);
 
 					CameraRayResults triangleAIntersects = CameraRay.GetResults(
 						new List<Vector3> {

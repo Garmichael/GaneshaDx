@@ -56,7 +56,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				ImGui.NextColumn();
 
 				if (ImGui.Button("Copy to Clipboard", new Vector2(columnTwo - 10, 20))) {
-					Clipboard.SetText(_rawData);
+					ClipboardService.SetText(_rawData);
 				}
 
 				ImGui.NextColumn();

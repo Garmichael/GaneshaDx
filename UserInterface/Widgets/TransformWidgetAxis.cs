@@ -77,7 +77,7 @@ namespace GaneshaDx.UserInterface.Widgets {
 
 			BuildAxisVertices();
 			
-			if (!MyraGui.LockModeling) {
+			if (!Gui.LockModeling) {
 				HandleInput();
 			}
 

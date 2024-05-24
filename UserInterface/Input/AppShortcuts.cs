@@ -11,15 +11,15 @@ using Microsoft.Xna.Framework.Input;
 namespace GaneshaDx.UserInterface.Input {
 	public static class AppShortcuts {
 		public static void Update() {
-			if (!MyraGui.IsActive && AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.O)) {
+			if (!Gui.LockModeling && AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.O)) {
 				GuiWindowFileBrowser.Open(GuiWindowFileBrowser.DialogBoxes.OpenMap);
 			}
-
-			if (AppInput.KeyJustPressed(Keys.F12)) {
+			
+			if (MapData.MapIsLoaded && AppInput.KeyJustPressed(Keys.F12)) {
 				Stage.ToggleScreenshotMode();
 			}
-
-			if (MapData.MapIsLoaded && !MyraGui.IsActive) {
+			
+			if (MapData.MapIsLoaded && !Gui.LockModeling) {
 				bool noneHeld = !AppInput.ControlHeld && !AppInput.ShiftHeld && !AppInput.AltHeld;
 				bool justControlHeld = AppInput.ControlHeld && !AppInput.ShiftHeld && !AppInput.AltHeld;
 				bool controlShiftHeld = AppInput.ControlHeld && AppInput.ShiftHeld && !AppInput.AltHeld;

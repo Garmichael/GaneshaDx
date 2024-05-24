@@ -181,7 +181,7 @@ namespace GaneshaDx.Environment {
 		}
 
 		private static void HandleInput() {
-			if (!Stage.ScreenshotMode && (MyraGui.IsActive || !AppInput.MouseIsWithinModelViewport)) {
+			if (!Stage.ScreenshotMode && (Gui.LockModeling || !AppInput.MouseIsWithinModelViewport)) {
 				return;
 			}
 

@@ -43,8 +43,7 @@ namespace GaneshaDx {
 
 			Stage.SetStage(this, GraphicsDevice, _graphics, new SpriteBatch(GraphicsDevice), Content, Window);
 			Background.SetAsGradient(Utilities.GetColorFromHex("0a0e16"), Color.Black);
-			MyraGui.BuildUi();
-
+			
 			base.Initialize();
 		}
 
@@ -87,7 +86,7 @@ namespace GaneshaDx {
 				SceneRenderer.Render();
 				TransformWidget.Render();
 				RotationWidget.Render();
-				MyraGui.Render();
+
 			} else {
 				_postponingRenderCount--;
 				if (_postponingRenderCount <= 0) {
@@ -95,7 +94,8 @@ namespace GaneshaDx {
 					_postponingRenderCount = 0;
 				}
 			}
-
+			
+			Stage.GraphicsDevice.Viewport = Stage.WholeViewport;
 			OverlayConsole.Render();
 			FpsCounter.Render();
 			

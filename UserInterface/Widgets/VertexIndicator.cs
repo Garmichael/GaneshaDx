@@ -4,7 +4,6 @@ using GaneshaDx.Environment;
 using GaneshaDx.Resources.ContentDataTypes.Polygons;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Myra.Graphics2D.UI;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 using Vector3 = Microsoft.Xna.Framework.Vector3;
 

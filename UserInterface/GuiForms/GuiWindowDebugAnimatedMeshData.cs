@@ -149,13 +149,13 @@ namespace GaneshaDx.UserInterface.GuiForms {
 									bytes.Add(x.ToString());
 								}
 
-								Clipboard.SetText(string.Join(",", bytes));
+								ClipboardService.SetText(string.Join(",", bytes));
 							}
 
 							ImGui.SameLine();
 
 							if (ImGui.Button("Paste##instructionSet_" + setIndex)) {
-								string bytes = Clipboard.GetText();
+								string bytes = ClipboardService.GetText();
 								string[] byteArray = bytes.Split(",");
 								for (int index = 0; index < byteArray.Length; index++) {
 									string entry = byteArray[index];
@@ -246,13 +246,13 @@ namespace GaneshaDx.UserInterface.GuiForms {
 									bytes.Add(x.ToString());
 								}
 
-								Clipboard.SetText(string.Join(",", bytes));
+								ClipboardService.SetText(string.Join(",", bytes));
 							}
 
 							ImGui.SameLine();
 
 							if (ImGui.Button("Paste##linkSet_" + setIndex)) {
-								string bytes = Clipboard.GetText();
+								string bytes = ClipboardService.GetText();
 								string[] byteArray = bytes.Split(",");
 								for (int index = 0; index < byteArray.Length; index++) {
 									string entry = byteArray[index];
@@ -350,13 +350,13 @@ namespace GaneshaDx.UserInterface.GuiForms {
 							bytes.Add(x.ToString());
 						}
 
-						Clipboard.SetText(string.Join(",", bytes));
+						ClipboardService.SetText(string.Join(",", bytes));
 					}
 
 					ImGui.SameLine();
 
 					if (ImGui.Button("Paste##UnknownChunk")) {
-						string bytes = Clipboard.GetText();
+						string bytes = ClipboardService.GetText();
 						string[] byteArray = bytes.Split(",");
 						for (int index = 0; index < byteArray.Length; index++) {
 							string entry = byteArray[index];
