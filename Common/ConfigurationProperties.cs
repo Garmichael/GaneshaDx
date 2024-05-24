@@ -31,7 +31,7 @@ public class ConfigurationProperties {
 	public bool RenderFftOrtho = false;
 	public bool HideHiddenPolysByFacing = false;
 	public bool PlaysScriptedTextureAnimations = false;
-	public bool ExpandCompassToTerrainLength = true;
+	public bool ExpandCompassToTerrainLength = false;
 	public float AutoMapRatio = 0.679f;
 	public bool HideNormalIndicators = false;
 	public int NormalIndicatorLength = 50;
