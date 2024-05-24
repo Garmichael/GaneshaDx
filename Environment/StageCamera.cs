@@ -18,7 +18,7 @@ public static class StageCamera {
 	public static Vector3 CamTarget = new(-200, 0, 200);
 	public static double CameraHorizontalAngle = -45f;
 	public static double CameraHeightAngle = 45f;
-	public static double ZoomLevel = 1;
+	public static double ZoomLevel = 0.5f;
 	public const float TopElevation = 90f - 39.37f;
 	public const float BottomElevation = 90f - 26.54f;
 	public const float CameraSpinSpeed = 10;
