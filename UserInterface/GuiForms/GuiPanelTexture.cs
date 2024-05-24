@@ -178,7 +178,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 				if (Configuration.Properties.ShowUnknownValues) {
 					GuiStyle.AddSpace();
-					
+
 					ImGui.NextColumn();
 					ImGui.Text("Texture Source (3=map)");
 					int unknown6B = Selection.SelectedPolygons[0].TextureSource;
@@ -192,7 +192,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 							selectedPolygon.TextureSource = Utilities.Clamp(selectedPolygon.TextureSource, 0, 255);
 						}
 					}
-					
+
 					ImGui.NextColumn();
 					ImGui.Text("Unknown3");
 					ImGui.NextColumn();
@@ -581,7 +581,13 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				ImGui.GetStyle().Colors[(int) ImGuiCol.Button] = GuiStyle.ColorPalette[ColorName.Transparent];
 
 				if (ImGui.Button("Z##import" + paletteIndex)) {
-					MyraGui.OpenImportPaletteFileDialog(paletteIndex, "main");
+					GuiWindowFileBrowser.Open(
+						GuiWindowFileBrowser.DialogBoxes.ImportPallete,
+						new Dictionary<string, string> {
+							{ "PaletteId", paletteIndex.ToString() },
+							{ "PaletteType", "main" }
+						}
+					);
 				}
 
 				ImGui.SameLine();
@@ -792,7 +798,13 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				ImGui.GetStyle().Colors[(int) ImGuiCol.Button] = GuiStyle.ColorPalette[ColorName.Transparent];
 
 				if (ImGui.Button("Z##importA" + paletteIndex)) {
-					MyraGui.OpenImportPaletteFileDialog(paletteIndex, "animation");
+					GuiWindowFileBrowser.Open(
+						GuiWindowFileBrowser.DialogBoxes.ImportPallete,
+						new Dictionary<string, string> {
+							{ "PaletteId", paletteIndex.ToString() },
+							{ "PaletteType", "animation" }
+						}
+					);
 				}
 
 				ImGui.SameLine();

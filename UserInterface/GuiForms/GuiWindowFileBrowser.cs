@@ -36,7 +36,8 @@ public static class GuiWindowFileBrowser {
 
 	public enum DialogBoxes {
 		OpenMap,
-		ImportTexture
+		ImportTexture,
+		ImportPallete
 	}
 
 	private static DialogBoxes _dialogBox;
@@ -55,6 +56,8 @@ public static class GuiWindowFileBrowser {
 	private static string CurrentFullPath => _currentDrive + string.Join("\\", FolderPath);
 
 	public static string LastImportedTextureFile = String.Empty;
+
+	private static Dictionary<string, string> _additionalData;
 
 	public static void Render() {
 		bool windowIsOpen = true;
@@ -102,8 +105,9 @@ public static class GuiWindowFileBrowser {
 		}
 	}
 
-	public static void Open(DialogBoxes dialogBox) {
+	public static void Open(DialogBoxes dialogBox, Dictionary<string, string> additionalData = null) {
 		_dialogBox = dialogBox;
+		_additionalData = additionalData;
 
 		_centeredWindowPosition = new Vector2(
 			Stage.ModelingViewport.Width / 2f - Sizes[SizableElements.Window].X / 2f,
@@ -115,6 +119,8 @@ public static class GuiWindowFileBrowser {
 			_filter = "gns";
 		} else if (_dialogBox == DialogBoxes.ImportTexture) {
 			_filter = "png";
+		} else if (_dialogBox == DialogBoxes.ImportPallete) {
+			_filter = "act";
 		}
 
 		SetFolderPathFromFullPath(Configuration.Properties.LoadFolder);
@@ -363,6 +369,12 @@ public static class GuiWindowFileBrowser {
 		} else if (_dialogBox == DialogBoxes.ImportTexture) {
 			LastImportedTextureFile = filePath;
 			MapData.ImportTexture(filePath);
+		} else if (_dialogBox == DialogBoxes.ImportPallete) {
+			MapData.ImportPalette(
+				filePath,
+				int.Parse(_additionalData["PaletteId"]),
+				_additionalData["PaletteType"]
+			);
 		}
 
 		Gui.ShowOpenFileWindow = false;
