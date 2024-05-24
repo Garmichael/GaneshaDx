@@ -25,14 +25,14 @@ public static class GuiWindowFileBrowser {
 	}
 
 	private static readonly Dictionary<SizableElements, Vector2> Sizes = new() {
-		{ SizableElements.Window, new Vector2(500, 294) },
+		{ SizableElements.Window, new Vector2(500, 300) },
 		{ SizableElements.LeftColumn, new Vector2(140, 0) },
 		{ SizableElements.SpecialFoldersContainer, new Vector2(120, 200) },
 		{ SizableElements.SpecialFoldersItem, new Vector2(120, 20) },
 		{ SizableElements.MainFilesContainer, new Vector2(340, 200) },
 		{ SizableElements.MainFilesItem, new Vector2(320, 20) },
 		{ SizableElements.FooterLeftSpacing, new Vector2(150, 0) },
-		{ SizableElements.FooterFileLabel, new Vector2(200, 0) },
+		{ SizableElements.FooterFileLabel, new Vector2(180, 0) },
 		{ SizableElements.FooterButton, new Vector2(60, 20) }
 	};
 
@@ -66,14 +66,14 @@ public static class GuiWindowFileBrowser {
 	private static Dictionary<string, string> _additionalData;
 
 	private static readonly Dictionary<DialogBoxes, string> SelectionButtonLabels = new() {
-		{ DialogBoxes.OpenMap, "Export" },
+		{ DialogBoxes.OpenMap, "Open" },
 		{ DialogBoxes.ImportPalette, "Import" },
 		{ DialogBoxes.ImportTexture, "Import" },
-		{ DialogBoxes.SaveMapAs, "Save"},
-		{ DialogBoxes.ExportGlb, "Export"},
-		{ DialogBoxes.ExportTexture, "Export"},
-		{ DialogBoxes.ExportUvMap, "Export"},
-		{ DialogBoxes.ExportPalette, "Export"},
+		{ DialogBoxes.SaveMapAs, "Save" },
+		{ DialogBoxes.ExportGlb, "Export" },
+		{ DialogBoxes.ExportTexture, "Export" },
+		{ DialogBoxes.ExportUvMap, "Export" },
+		{ DialogBoxes.ExportPalette, "Export" },
 	};
 
 	public static void Render() {
@@ -132,7 +132,7 @@ public static class GuiWindowFileBrowser {
 		);
 		_resetWindowPosition = true;
 
-		if (_dialogBox == DialogBoxes.OpenMap) {
+		if (_dialogBox == DialogBoxes.OpenMap || _dialogBox == DialogBoxes.SaveMapAs) {
 			_filter = "gns";
 		} else if (_dialogBox == DialogBoxes.ImportTexture) {
 			_filter = "png";
@@ -304,21 +304,24 @@ public static class GuiWindowFileBrowser {
 		ImGui.NextColumn();
 
 		GuiStyle.AddSpace(1);
-		ImGui.Text(
-			_selectedFile == String.Empty
-				? "None Selected"
-				: _selectedFile);
+
+		if (_dialogBox == DialogBoxes.SaveMapAs) {
+			string fileName = _selectedFile;
+			ImGui.SetNextItemWidth(Sizes[SizableElements.FooterFileLabel].X - 20);
+			ImGui.InputText("##fileNameBox", ref fileName, 100);
+			_selectedFile = fileName;
+		} else {
+			ImGui.Text(
+				_selectedFile == String.Empty
+					? "None Selected"
+					: _selectedFile);
+		}
 
 		ImGui.NextColumn();
 
+		GuiStyle.AddSpace(2);
 		float widthNeeded = Sizes[SizableElements.FooterButton].X * 2 + 10;
 		ImGui.SetCursorPosX(ImGui.GetCursorPosX() + ImGui.GetContentRegionAvail().X - widthNeeded);
-
-		if (ImGui.Button("Cancel", Sizes[SizableElements.FooterButton])) {
-			Gui.ShowOpenFileWindow = false;
-		}
-
-		ImGui.SameLine();
 
 		if (_selectedFile == String.Empty) {
 			GuiStyle.SetElementStyle(ElementStyle.ButtonDisabled);
@@ -331,6 +334,12 @@ public static class GuiWindowFileBrowser {
 		}
 
 		GuiStyle.SetNewUiToDefaultStyle();
+		
+		ImGui.SameLine();
+
+		if (ImGui.Button("Cancel", Sizes[SizableElements.FooterButton])) {
+			Gui.ShowOpenFileWindow = false;
+		}
 
 		ImGui.Columns(1);
 	}
@@ -395,6 +404,15 @@ public static class GuiWindowFileBrowser {
 				int.Parse(_additionalData["PaletteId"]),
 				_additionalData["PaletteType"]
 			);
+		} else if (_dialogBox == DialogBoxes.SaveMapAs) {
+			string mapName = _selectedFile;
+			List<string> fileNameSegments = mapName.Split('.').ToList();
+
+			if (fileNameSegments.Count > 1 && fileNameSegments.Last().ToLower() == "gns") {
+				mapName = mapName.Remove(mapName.Length - 4);
+			}
+
+			MapData.SaveMapAs(CurrentFullPath, mapName);
 		}
 
 		Gui.ShowOpenFileWindow = false;

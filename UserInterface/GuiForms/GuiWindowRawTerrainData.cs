@@ -43,7 +43,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 
 				GuiStyle.SetNewUiToDefaultStyle();
 				ImGui.SetNextItemWidth(_windowWidth - ImGui.GetStyle().WindowPadding.X * 2);
-				ImGui.InputText("##hey", ref _rawData, UInt32.MaxValue);
+				ImGui.InputText("##RawTerrainDataTextBox", ref _rawData, UInt32.MaxValue);
 
 				ImGui.Columns(3, "RawTerrainButtons", false);
 

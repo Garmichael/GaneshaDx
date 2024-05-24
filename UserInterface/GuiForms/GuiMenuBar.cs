@@ -28,7 +28,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					}
 
 					if (ImGui.MenuItem("Save As", "Ctrl + Shift + S", false, MapData.MapIsLoaded)) {
-						MyraGui.OpenSaveAsFileDialog();
+						GuiWindowFileBrowser.Open(GuiWindowFileBrowser.DialogBoxes.SaveMapAs);
 					}
 
 					ImGui.Separator();

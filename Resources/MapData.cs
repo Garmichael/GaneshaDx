@@ -303,7 +303,8 @@ namespace GaneshaDx.Resources {
 			}
 
 			TimeSinceLastSave = Stage.GameTime.TotalGameTime.TotalSeconds;
-
+			Stage.Window.Title = "GaneshaDx - " + MapName;
+			
 			OverlayConsole.AddMessage(isAutoSave ? "Map Auto-Saved" : "Map Saved");
 		}
 

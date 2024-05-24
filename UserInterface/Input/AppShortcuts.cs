@@ -298,7 +298,7 @@ namespace GaneshaDx.UserInterface.Input {
 
 				if (controlShiftHeld) {
 					if (AppInput.KeyJustPressed(Keys.S)) {
-						MyraGui.OpenSaveAsFileDialog();
+						GuiWindowFileBrowser.Open(GuiWindowFileBrowser.DialogBoxes.SaveMapAs);
 					}
 
 					if (AppInput.KeyJustPressed(Keys.E)) {
