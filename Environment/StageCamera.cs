@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using GaneshaDx.Common;
+using GaneshaDx.Resources;
 using GaneshaDx.Resources.ContentDataTypes.Polygons;
 using GaneshaDx.Resources.ContentDataTypes.Terrains;
 using GaneshaDx.UserInterface;
@@ -17,7 +18,7 @@ public static class StageCamera {
 	public static Vector3 CamPosition;
 	public static Vector3 CamTarget = new(-200, 0, 200);
 	public static double CameraHorizontalAngle = -45f;
-	public static double CameraHeightAngle = 45f;
+	public static double CameraHeightAngle = 90f - 26.54f;
 	public static double ZoomLevel = 0.5f;
 	public const float TopElevation = 90f - 39.37f;
 	public const float BottomElevation = 90f - 26.54f;
@@ -80,6 +81,18 @@ public static class StageCamera {
 		AnimateSpinningCamera();
 		HandleInput();
 		SetCameraState();
+	}
+
+	public static void Reset() {
+		CamTarget = new Vector3(
+			-CurrentMapState.StateData.Terrain.SizeX / 2f * 28,
+			75f,
+			CurrentMapState.StateData.Terrain.SizeZ / 2f * 28
+		);
+
+		CameraHorizontalAngle = -135f;
+		CameraHeightAngle = 90f - 26.54f;
+		ZoomLevel = 0.36f;
 	}
 
 	public static void FocusOnSelection() {

@@ -77,6 +77,7 @@ public static class MapData {
 		Gui.ShowDebugAnimatedMeshWindow = false;
 		GuiPanelTerrain.ResizeTerrainMode = false;
 		GuiPanelMeshSelector.SelectedMesh = MeshType.PrimaryMesh;
+		StageCamera.Reset();
 	}
 
 	private static void ProcessAllResources() {
