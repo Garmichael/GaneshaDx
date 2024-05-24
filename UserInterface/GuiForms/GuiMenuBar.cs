@@ -115,11 +115,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 					}
 
 					if (ImGui.MenuItem("Export Texture", "Ctrl + E", false, MapData.MapIsLoaded)) {
-						string fileName = MapData.MapName + "." +
-						                  CurrentMapState.StateData.StateTextureResource.XFile +
-						                  ".png";
-
-						MyraGui.OpenExportTextureFileDialog(fileName);
+						GuiWindowFileBrowser.Open(GuiWindowFileBrowser.DialogBoxes.ExportTexture);
 					}
 
 					bool canReimportTexture = MapData.MapIsLoaded && 

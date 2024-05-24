@@ -463,11 +463,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				ImGui.SameLine();
 
 				if (ImGui.Button("Export Texture", new Vector2(buttonWidth, buttonHeight))) {
-					string fileName = MapData.MapName + "." +
-					                  CurrentMapState.StateData.StateTextureResource.XFile +
-					                  ".png";
-
-					MyraGui.OpenExportTextureFileDialog(fileName);
+					GuiWindowFileBrowser.Open(GuiWindowFileBrowser.DialogBoxes.ExportTexture);
 				}
 
 				if (ImGui.Button("Export Uv Map", new Vector2(buttonWidth, buttonHeight))) {

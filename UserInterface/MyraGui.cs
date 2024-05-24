@@ -34,10 +34,10 @@ namespace GaneshaDx.UserInterface {
 
 			BuildOpenFileDialog();				//Done
 			BuildSaveAsFileDialog();			//Done
-			BuildExportGlbFileDialog();
+			BuildExportGlbFileDialog();			//Done
 
 			BuildImportTextureFileDialog();		//Done
-			BuildExportTextureFileDialog();
+			BuildExportTextureFileDialog();		//Done
 			BuildExportUvMapFileDialog();
 
 			BuildImportPaletteFileDialog();		//Done

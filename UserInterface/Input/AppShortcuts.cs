@@ -218,11 +218,7 @@ namespace GaneshaDx.UserInterface.Input {
 					}
 
 					if (AppInput.KeyJustPressed(Keys.E)) {
-						string fileName = MapData.MapName + "." +
-						                  CurrentMapState.StateData.StateTextureResource.XFile +
-						                  ".png";
-
-						MyraGui.OpenExportTextureFileDialog(fileName);
+						GuiWindowFileBrowser.Open(GuiWindowFileBrowser.DialogBoxes.ExportTexture);
 					}
 
 					if (AppInput.KeyJustPressed(Keys.U)) {

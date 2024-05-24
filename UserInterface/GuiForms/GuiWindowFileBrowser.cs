@@ -77,6 +77,17 @@ public static class GuiWindowFileBrowser {
 		{ DialogBoxes.ExportPalette, "Export" },
 	};
 
+	private static readonly Dictionary<DialogBoxes, string> DialogBoxFilters = new() {
+		{ DialogBoxes.OpenMap, "gns" },
+		{ DialogBoxes.SaveMapAs, "gns" },
+		{ DialogBoxes.ImportTexture, "png" },
+		{ DialogBoxes.ExportUvMap, "png" },
+		{ DialogBoxes.ExportTexture, "png" },
+		{ DialogBoxes.ImportPalette, "act" },
+		{ DialogBoxes.ExportPalette, "act" },
+		{ DialogBoxes.ExportGlb, "gns" }
+	};
+
 	private static readonly List<DialogBoxes> BoxesWithInputText = new() {
 		DialogBoxes.SaveMapAs,
 		DialogBoxes.ExportGlb,
@@ -140,18 +151,14 @@ public static class GuiWindowFileBrowser {
 			Stage.ModelingViewport.Height / 2f - Sizes[SizableElements.Window].Y / 2f
 		);
 		_resetWindowPosition = true;
-		_clearsSelectedFileOnNavigation = true;
 
-		if (_dialogBox == DialogBoxes.OpenMap || _dialogBox == DialogBoxes.SaveMapAs) {
-			_filter = "gns";
-		} else if (_dialogBox == DialogBoxes.ImportTexture) {
-			_filter = "png";
-		} else if (_dialogBox == DialogBoxes.ImportPalette) {
-			_filter = "act";
-		} else if (_dialogBox == DialogBoxes.ExportGlb) {
-			_filter = "glb";
+		_clearsSelectedFileOnNavigation = !BoxesWithInputText.Contains(_dialogBox);
+		_filter = DialogBoxFilters[_dialogBox];
+
+		if (_dialogBox == DialogBoxes.ExportGlb) {
 			_selectedFile = MapData.MapName + ".glb";
-			_clearsSelectedFileOnNavigation = false;
+		} else if (_dialogBox == DialogBoxes.ExportTexture) {
+			_selectedFile = MapData.MapName + "." + CurrentMapState.StateData.StateTextureResource.XFile + ".png";
 		}
 
 		SetFolderPathFromFullPath(Configuration.Properties.LoadFolder);
@@ -271,7 +278,7 @@ public static class GuiWindowFileBrowser {
 
 					if (ImGui.Button("     " + file, Sizes[SizableElements.MainFilesItem])) {
 						if (_selectedFile == file) {
-							LoadFile();
+							ConfirmDialogBox();
 						} else {
 							_selectedFile = file;
 						}
@@ -344,7 +351,7 @@ public static class GuiWindowFileBrowser {
 
 		if (ImGui.Button(SelectionButtonLabels[_dialogBox], Sizes[SizableElements.FooterButton])) {
 			if (_selectedFile != String.Empty) {
-				LoadFile();
+				ConfirmDialogBox();
 			}
 		}
 
@@ -405,47 +412,74 @@ public static class GuiWindowFileBrowser {
 		}
 	}
 
-	private static void LoadFile() {
-		string filePath = CurrentFullPath + "\\" + _selectedFile;
-		if (_dialogBox == DialogBoxes.OpenMap) {
-			Selection.SelectedPolygons.Clear();
-			Selection.HoveredPolygons.Clear();
-			Stage.Ganesha.PostponeRender(1);
-			MapData.LoadMapDataFromFullPath(filePath);
-		} else if (_dialogBox == DialogBoxes.ImportTexture) {
-			LastImportedTextureFile = filePath;
-			MapData.ImportTexture(filePath);
-		} else if (_dialogBox == DialogBoxes.ImportPalette) {
-			MapData.ImportPalette(
-				filePath,
-				int.Parse(_additionalData["PaletteId"]),
-				_additionalData["PaletteType"]
-			);
-		} else if (_dialogBox == DialogBoxes.SaveMapAs) {
-			string mapName = _selectedFile;
-			List<string> fileNameSegments = mapName.Split('.').ToList();
-
-			if (fileNameSegments.Count > 1 && fileNameSegments.Last().ToLower() == "gns") {
-				mapName = mapName.Remove(mapName.Length - 4);
-			}
-
-			MapData.SaveMapAs(CurrentFullPath, mapName);
-		} else if (_dialogBox == DialogBoxes.ExportGlb) {
-			string mapName = _selectedFile;
-			List<string> fileNameSegments = mapName.Split('.').ToList();
-
-			if (fileNameSegments.Last().ToLower() != "glb") {
-				_selectedFile += ".glb";
-			}
-
-			MapData.ExportGlb(CurrentFullPath + "\\" + _selectedFile);
-		}
-
-		Gui.ShowOpenFileWindow = false;
-	}
-
-	public static string RemoveInvalidFilenameCharacters(string input) {
+	private static string RemoveInvalidFilenameCharacters(string input) {
 		char[] invalidChars = Path.GetInvalidFileNameChars();
 		return string.Concat(input.Split(invalidChars));
+	}
+
+	private static void ConfirmDialogBox() {
+		string filePath = CurrentFullPath + "\\" + _selectedFile;
+
+		Dictionary<DialogBoxes, Action> operations = new() {
+			{
+				DialogBoxes.OpenMap,
+				() => {
+					Selection.SelectedPolygons.Clear();
+					Selection.HoveredPolygons.Clear();
+					Stage.Ganesha.PostponeRender(1);
+					MapData.LoadMapDataFromFullPath(filePath);
+				}
+			}, {
+				DialogBoxes.ImportTexture,
+				() => {
+					LastImportedTextureFile = filePath;
+					MapData.ImportTexture(filePath);
+				}
+			}, {
+				DialogBoxes.ImportPalette,
+				() => {
+					MapData.ImportPalette(
+						filePath,
+						int.Parse(_additionalData["PaletteId"]),
+						_additionalData["PaletteType"]
+					);
+				}
+			}, {
+				DialogBoxes.SaveMapAs,
+				() => {
+					string mapName = _selectedFile;
+					List<string> fileNameSegments = mapName.Split('.').ToList();
+
+					if (fileNameSegments.Count > 1 && fileNameSegments.Last().ToLower() == "gns") {
+						mapName = mapName.Remove(mapName.Length - 4);
+					}
+
+					MapData.SaveMapAs(CurrentFullPath, mapName);
+				}
+			}, {
+				DialogBoxes.ExportGlb,
+				() => {
+					string mapName = _selectedFile;
+					List<string> fileNameSegments = mapName.Split('.').ToList();
+
+					if (fileNameSegments.Last().ToLower() != "glb") {
+						_selectedFile += ".glb";
+					}
+
+					MapData.ExportGlb(CurrentFullPath + "\\" + _selectedFile);
+				}
+			}, {
+				DialogBoxes.ExportTexture,
+				() => { MapData.ExportTexture(filePath); }
+			}, {
+				DialogBoxes.ExportPalette, () => { }
+			}, {
+				DialogBoxes.ExportUvMap, () => { }
+			}
+		};
+
+		operations[_dialogBox]();
+
+		Gui.ShowOpenFileWindow = false;
 	}
 }
