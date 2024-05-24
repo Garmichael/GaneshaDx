@@ -33,19 +33,19 @@ namespace GaneshaDx.Resources {
 			if (fileSegments.Last().ToLower() != "gns") {
 				return;
 			}
-				
+
 			fileSegments.RemoveAt(fileSegments.Count - 1);
-			string mapName =string.Join("\\", fileSegments);
-				
+			string mapName = string.Join(".", fileSegments);
+
 			pathSegments.RemoveAt(pathSegments.Count - 1);
 			string folder = string.Join("\\", pathSegments);
 
 			Configuration.Properties.LoadFolder = folder;
 			Configuration.SaveConfiguration();
-			
+
 			LoadMapDataFromFiles(folder, mapName);
 		}
-		
+
 		public static void LoadMapDataFromFiles(string mapFolder, string mapName) {
 			MapIsLoaded = false;
 			AllResources = new List<MapResource>();
@@ -262,16 +262,17 @@ namespace GaneshaDx.Resources {
 
 		public static void SaveMap(bool isAutoSave = false) {
 			string mapFolder = _mapFolder;
-			string backupExtension = "";
+			string backupNotation = "";
 
 			if (isAutoSave) {
 				mapFolder += "\\gdx_autosave\\";
 				DateTime time = DateTime.Now;
-				backupExtension = ".bak." +
-				                  time.Date.DayOfYear + "-" +
-				                  time.Date.Year + "-" +
-				                  time.Hour + "-" +
-				                  time.Minute;
+				backupNotation = " (" +
+				                 time.Date.Year + "-" +
+				                 time.Date.DayOfYear + "--" +
+				                 time.Hour + "-" +
+				                 time.Minute +
+				                 ")";
 
 				if (!Directory.Exists(mapFolder)) {
 					Directory.CreateDirectory(mapFolder);
@@ -280,15 +281,15 @@ namespace GaneshaDx.Resources {
 
 			string mapRoot = mapFolder + "\\" + MapName;
 
-			Stream gnsStream = File.Create(mapRoot + ".GNS" + backupExtension);
+			Stream gnsStream = File.Create(mapRoot + backupNotation + ".GNS");
 			gnsStream.Write(Gns.RawData.ToArray());
 			gnsStream.Dispose();
-			
+
 			foreach (MapResource textureResource in TextureResources) {
 				TextureResourceData data = (TextureResourceData) textureResource.ResourceData;
 				data.RebuildRawData();
 
-				Stream stream = File.Create(mapRoot + "." + textureResource.XFile + backupExtension);
+				Stream stream = File.Create(mapRoot + backupNotation + "." + textureResource.XFile);
 				stream.Write(data.RawData.ToArray());
 				stream.Dispose();
 			}
@@ -297,14 +298,14 @@ namespace GaneshaDx.Resources {
 				MeshResourceData data = (MeshResourceData) mehResource.ResourceData;
 				data.RebuildRawData();
 
-				Stream stream = File.Create(mapRoot + "." + mehResource.XFile + backupExtension);
+				Stream stream = File.Create(mapRoot + backupNotation + "." + mehResource.XFile);
 				stream.Write(data.RawData.ToArray());
 				stream.Dispose();
 			}
 
 			TimeSinceLastSave = Stage.GameTime.TotalGameTime.TotalSeconds;
 			Stage.Window.Title = "GaneshaDx - " + MapName;
-			
+
 			OverlayConsole.AddMessage(isAutoSave ? "Map Auto-Saved" : "Map Saved");
 		}
 
