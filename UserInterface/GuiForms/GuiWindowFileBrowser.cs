@@ -35,19 +35,7 @@ public static class GuiWindowFileBrowser {
 		{ SizableElements.FooterFileLabel, new Vector2(180, 0) },
 		{ SizableElements.FooterButton, new Vector2(60, 20) }
 	};
-
-	public enum DialogBoxes {
-		OpenMap,
-		ImportTexture,
-		ImportPalette,
-		SaveMapAs,
-		ExportGlb,
-		ExportTexture,
-		ExportUvMap,
-		ExportPalette
-	}
-
-	private static DialogBoxes _dialogBox;
+	
 	private static Vector2 _centeredWindowPosition;
 	private static bool _resetWindowPosition;
 
@@ -65,7 +53,31 @@ public static class GuiWindowFileBrowser {
 	public static string LastImportedTextureFile = String.Empty;
 
 	private static Dictionary<string, string> _additionalData;
+	
+	public enum DialogBoxes {
+		OpenMap,
+		ImportTexture,
+		ImportPalette,
+		SaveMapAs,
+		ExportGlb,
+		ExportTexture,
+		ExportUvMap,
+		ExportPalette
+	}
 
+	private static DialogBoxes _dialogBox = DialogBoxes.OpenMap;
+	
+	private static readonly Dictionary<DialogBoxes, string> WindowTitles = new() {
+		{ DialogBoxes.OpenMap, "Open Map" },
+		{ DialogBoxes.SaveMapAs, "Save Map As.." },
+		{ DialogBoxes.ImportTexture, "Import Texture" },
+		{ DialogBoxes.ExportUvMap, "Export Uv Map" },
+		{ DialogBoxes.ExportTexture, "Export Texture" },
+		{ DialogBoxes.ImportPalette, "Import Palette" },
+		{ DialogBoxes.ExportPalette, "Export Palette" },
+		{ DialogBoxes.ExportGlb, "Export GLB" }
+	};
+	
 	private static readonly Dictionary<DialogBoxes, string> SelectionButtonLabels = new() {
 		{ DialogBoxes.OpenMap, "Open" },
 		{ DialogBoxes.ImportPalette, "Import" },
@@ -113,7 +125,7 @@ public static class GuiWindowFileBrowser {
 		const ImGuiWindowFlags flags = ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.HorizontalScrollbar |
 		                               ImGuiWindowFlags.NoResize;
 
-		ImGui.Begin("Open Map", ref windowIsOpen, flags);
+		ImGui.Begin(WindowTitles[_dialogBox], ref windowIsOpen, flags);
 		{
 			ImGui.PopFont();
 			GuiStyle.SetNewUiToDefaultStyle();
