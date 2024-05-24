@@ -33,7 +33,7 @@ namespace GaneshaDx.UserInterface {
 			MyraEnvironment.Game = Stage.Ganesha;
 
 			BuildOpenFileDialog();				//Done
-			BuildSaveAsFileDialog();
+			BuildSaveAsFileDialog();			//Done
 			BuildExportGlbFileDialog();
 
 			BuildImportTextureFileDialog();		//Done

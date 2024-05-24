@@ -54,6 +54,7 @@ public static class GuiWindowFileBrowser {
 	private static string _filter = ".gns";
 	private static string _currentDrive = "C:\\";
 	private static readonly List<string> FolderPath = new();
+	private static bool _clearsSelectedFileOnNavigation = true;
 
 	private static string[] _drives = Array.Empty<string>();
 	private static string[] _currentFolderFiles = Array.Empty<string>();
@@ -74,6 +75,14 @@ public static class GuiWindowFileBrowser {
 		{ DialogBoxes.ExportTexture, "Export" },
 		{ DialogBoxes.ExportUvMap, "Export" },
 		{ DialogBoxes.ExportPalette, "Export" },
+	};
+
+	private static readonly List<DialogBoxes> BoxesWithInputText = new() {
+		DialogBoxes.SaveMapAs,
+		DialogBoxes.ExportGlb,
+		DialogBoxes.ExportPalette,
+		DialogBoxes.ExportTexture,
+		DialogBoxes.ExportUvMap,
 	};
 
 	public static void Render() {
@@ -131,6 +140,7 @@ public static class GuiWindowFileBrowser {
 			Stage.ModelingViewport.Height / 2f - Sizes[SizableElements.Window].Y / 2f
 		);
 		_resetWindowPosition = true;
+		_clearsSelectedFileOnNavigation = true;
 
 		if (_dialogBox == DialogBoxes.OpenMap || _dialogBox == DialogBoxes.SaveMapAs) {
 			_filter = "gns";
@@ -138,6 +148,10 @@ public static class GuiWindowFileBrowser {
 			_filter = "png";
 		} else if (_dialogBox == DialogBoxes.ImportPalette) {
 			_filter = "act";
+		} else if (_dialogBox == DialogBoxes.ExportGlb) {
+			_filter = "glb";
+			_selectedFile = MapData.MapName + ".glb";
+			_clearsSelectedFileOnNavigation = false;
 		}
 
 		SetFolderPathFromFullPath(Configuration.Properties.LoadFolder);
@@ -305,10 +319,11 @@ public static class GuiWindowFileBrowser {
 
 		GuiStyle.AddSpace(1);
 
-		if (_dialogBox == DialogBoxes.SaveMapAs) {
+		if (BoxesWithInputText.Contains(_dialogBox)) {
 			string fileName = _selectedFile;
 			ImGui.SetNextItemWidth(Sizes[SizableElements.FooterFileLabel].X - 20);
 			ImGui.InputText("##fileNameBox", ref fileName, 100);
+			fileName = RemoveInvalidFilenameCharacters(fileName);
 			_selectedFile = fileName;
 		} else {
 			ImGui.Text(
@@ -334,7 +349,7 @@ public static class GuiWindowFileBrowser {
 		}
 
 		GuiStyle.SetNewUiToDefaultStyle();
-		
+
 		ImGui.SameLine();
 
 		if (ImGui.Button("Cancel", Sizes[SizableElements.FooterButton])) {
@@ -356,7 +371,9 @@ public static class GuiWindowFileBrowser {
 		_drives = Array.Empty<string>();
 		_currentFolderFiles = Array.Empty<string>();
 		_currentFolderFolders = Array.Empty<string>();
-		_selectedFile = String.Empty;
+		if (_clearsSelectedFileOnNavigation) {
+			_selectedFile = String.Empty;
+		}
 
 		_drives = Directory.GetLogicalDrives();
 
@@ -413,8 +430,22 @@ public static class GuiWindowFileBrowser {
 			}
 
 			MapData.SaveMapAs(CurrentFullPath, mapName);
+		} else if (_dialogBox == DialogBoxes.ExportGlb) {
+			string mapName = _selectedFile;
+			List<string> fileNameSegments = mapName.Split('.').ToList();
+
+			if (fileNameSegments.Last().ToLower() != "glb") {
+				_selectedFile += ".glb";
+			}
+
+			MapData.ExportGlb(CurrentFullPath + "\\" + _selectedFile);
 		}
 
 		Gui.ShowOpenFileWindow = false;
+	}
+
+	public static string RemoveInvalidFilenameCharacters(string input) {
+		char[] invalidChars = Path.GetInvalidFileNameChars();
+		return string.Concat(input.Split(invalidChars));
 	}
 }

@@ -34,9 +34,7 @@ namespace GaneshaDx.UserInterface.GuiForms {
 				GuiStyle.AddSpace();
 
 				if (ImGui.Button("Export")) {
-					string fileName = MapData.MapName + ".glb";
-
-					MyraGui.OpenExportGlbFileDialog(fileName);
+					GuiWindowFileBrowser.Open(GuiWindowFileBrowser.DialogBoxes.ExportGlb);
 					windowIsOpen = false;
 				}
 
