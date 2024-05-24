@@ -7,151 +7,151 @@ using GaneshaDx.Resources.ResourceContent;
 using GaneshaDx.UserInterface;
 using GaneshaDx.UserInterface.GuiForms;
 
-namespace GaneshaDx.Resources {
-	public static class CurrentMapState {
-		public static MapStateData StateData;
-		private static readonly List<MapResource> InitialMeshMapResources = new List<MapResource>();
-		public static readonly List<MapResource> StateMeshMapResources = new List<MapResource>();
-		private static MapResource _initialTextureMapResource;
-		private static MapResource _stateTextureMapResource;
+namespace GaneshaDx.Resources;
 
-		public static void SetState(MapArrangementState mapArrangementState, MapTime mapTime, MapWeather mapWeather) {
-			StateData = new MapStateData {
-				MapArrangementState = mapArrangementState,
-				MapTime = mapTime,
-				MapWeather = mapWeather
-			};
+public static class CurrentMapState {
+	public static MapStateData StateData;
+	private static readonly List<MapResource> InitialMeshMapResources = new();
+	public static readonly List<MapResource> StateMeshMapResources = new();
+	private static MapResource _initialTextureMapResource;
+	private static MapResource _stateTextureMapResource;
 
-			GuiPanelTexture.CurrentPanelMode = GuiPanelTexture.PanelMode.UVs;
-			SetInitialMeshData();
-			SetInitialTextureData();
-			AssignStateResources();
-			SetCurrentMapStateReferences();
-			SceneRenderer.Reset();
+	public static void SetState(MapArrangementState mapArrangementState, MapTime mapTime, MapWeather mapWeather) {
+		StateData = new MapStateData {
+			MapArrangementState = mapArrangementState,
+			MapTime = mapTime,
+			MapWeather = mapWeather
+		};
 
-			Background.SetAsGradient(StateData.BackgroundTopColor, StateData.BackgroundBottomColor);
+		GuiPanelTexture.CurrentPanelMode = GuiPanelTexture.PanelMode.UVs;
+		SetInitialMeshData();
+		SetInitialTextureData();
+		AssignStateResources();
+		SetCurrentMapStateReferences();
+		SceneRenderer.Reset();
+
+		Background.SetAsGradient(StateData.BackgroundTopColor, StateData.BackgroundBottomColor);
+	}
+
+	public static void ResetState() {
+		SetState(StateData.MapArrangementState, StateData.MapTime, StateData.MapWeather);
+	}
+
+	private static void SetInitialMeshData() {
+		InitialMeshMapResources.Clear();
+
+		foreach (MapResource resource in MapData.MeshResources) {
+			bool resourceIsDefault = resource.MapArrangementState == MapArrangementState.Primary &&
+			                         resource.MapTime == MapTime.Day &&
+			                         resource.MapWeather == MapWeather.None;
+
+			if (resourceIsDefault) {
+				InitialMeshMapResources.Add(resource);
+			}
 		}
+	}
 
-		public static void ResetState() {
-			SetState(StateData.MapArrangementState, StateData.MapTime, StateData.MapWeather);
+	private static void SetInitialTextureData() {
+		_initialTextureMapResource = null;
+
+		foreach (MapResource resource in MapData.TextureResources) {
+			bool resourceIsDefault = resource.MapArrangementState == MapArrangementState.Primary &&
+			                         resource.MapTime == MapTime.Day &&
+			                         resource.MapWeather == MapWeather.None;
+
+			if (resourceIsDefault) {
+				_initialTextureMapResource = resource;
+				break;
+			}
 		}
+	}
 
-		private static void SetInitialMeshData() {
-			InitialMeshMapResources.Clear();
+	private static void AssignStateResources() {
+		StateMeshMapResources.Clear();
+		_stateTextureMapResource = null;
 
-			foreach (MapResource resource in MapData.MeshResources) {
-				bool resourceIsDefault = resource.MapArrangementState == MapArrangementState.Primary &&
-				                         resource.MapTime == MapTime.Day &&
-				                         resource.MapWeather == MapWeather.None;
+		foreach (MapResource resource in MapData.MeshResources) {
+			bool resourceMatchesState = resource.MapArrangementState == StateData.MapArrangementState &&
+			                            resource.MapTime == StateData.MapTime &&
+			                            resource.MapWeather == StateData.MapWeather;
 
-				if (resourceIsDefault) {
-					InitialMeshMapResources.Add(resource);
-				}
+			if (resourceMatchesState) {
+				StateMeshMapResources.Add(resource);
 			}
 		}
 
-		private static void SetInitialTextureData() {
-			_initialTextureMapResource = null;
+		foreach (MapResource resource in MapData.TextureResources) {
+			bool resourceMatchesState = resource.MapArrangementState == StateData.MapArrangementState &&
+			                            resource.MapTime == StateData.MapTime &&
+			                            resource.MapWeather == StateData.MapWeather;
 
-			foreach (MapResource resource in MapData.TextureResources) {
-				bool resourceIsDefault = resource.MapArrangementState == MapArrangementState.Primary &&
-				                         resource.MapTime == MapTime.Day &&
-				                         resource.MapWeather == MapWeather.None;
-
-				if (resourceIsDefault) {
-					_initialTextureMapResource = resource;
-					break;
-				}
+			if (resourceMatchesState) {
+				_stateTextureMapResource = resource;
+				break;
 			}
 		}
+	}
 
-		private static void AssignStateResources() {
-			StateMeshMapResources.Clear();
-			_stateTextureMapResource = null;
+	private static void SetCurrentMapStateReferences() {
+		MapResource stateTextureResource = _stateTextureMapResource ?? _initialTextureMapResource;
 
-			foreach (MapResource resource in MapData.MeshResources) {
-				bool resourceMatchesState = resource.MapArrangementState == StateData.MapArrangementState &&
-				                            resource.MapTime == StateData.MapTime &&
-				                            resource.MapWeather == StateData.MapWeather;
+		StateData.SetStateResources(
+			InitialMeshMapResources,
+			StateMeshMapResources,
+			stateTextureResource
+		);
+	}
 
-				if (resourceMatchesState) {
-					StateMeshMapResources.Add(resource);
-				}
-			}
+	public static void CloneSelection() {
+		List<Polygon> newPolygons = new();
 
-			foreach (MapResource resource in MapData.TextureResources) {
-				bool resourceMatchesState = resource.MapArrangementState == StateData.MapArrangementState &&
-				                            resource.MapTime == StateData.MapTime &&
-				                            resource.MapWeather == StateData.MapWeather;
+		foreach (Polygon polygon in Selection.SelectedPolygons) {
+			Polygon newPolygon = polygon.CreateClone();
 
-				if (resourceMatchesState) {
-					_stateTextureMapResource = resource;
-					break;
-				}
-			}
-		}
+			Dictionary<PolygonType, List<Polygon>> meshBucket = StateData.PolygonCollection[polygon.MeshType];
 
-		private static void SetCurrentMapStateReferences() {
-			MapResource stateTextureResource = _stateTextureMapResource ?? _initialTextureMapResource;
-
-			StateData.SetStateResources(
-				InitialMeshMapResources,
-				StateMeshMapResources,
-				stateTextureResource
-			);
-		}
-
-		public static void CloneSelection() {
-			List<Polygon> newPolygons = new List<Polygon>();
-
-			foreach (Polygon polygon in Selection.SelectedPolygons) {
-				Polygon newPolygon = polygon.CreateClone();
-
-				Dictionary<PolygonType, List<Polygon>> meshBucket = StateData.PolygonCollection[polygon.MeshType];
-
-				if (newPolygon.IsQuad) {
-					if (newPolygon.IsTextured) {
-						meshBucket[PolygonType.TexturedQuad].Add(newPolygon);
-					} else {
-						meshBucket[PolygonType.UntexturedQuad].Add(newPolygon);
-					}
+			if (newPolygon.IsQuad) {
+				if (newPolygon.IsTextured) {
+					meshBucket[PolygonType.TexturedQuad].Add(newPolygon);
 				} else {
-					if (newPolygon.IsTextured) {
-						meshBucket[PolygonType.TexturedTriangle].Add(newPolygon);
-					} else {
-						meshBucket[PolygonType.UntexturedTriangle].Add(newPolygon);
-					}
+					meshBucket[PolygonType.UntexturedQuad].Add(newPolygon);
 				}
-
-				newPolygons.Add(newPolygon);
-			}
-
-			Selection.SelectedPolygons.Clear();
-
-			foreach (Polygon polygon in newPolygons) {
-				Selection.SelectedPolygons.Add(polygon);
-			}
-		}
-
-		public static void DeleteSelection() {
-			foreach (Polygon polygon in Selection.SelectedPolygons) {
-				Dictionary<PolygonType, List<Polygon>> meshContainer = StateData.PolygonCollection[polygon.MeshType];
-				if (polygon.IsQuad) {
-					if (polygon.IsTextured) {
-						meshContainer[PolygonType.TexturedQuad].Remove(polygon);
-					} else {
-						meshContainer[PolygonType.UntexturedQuad].Remove(polygon);
-					}
+			} else {
+				if (newPolygon.IsTextured) {
+					meshBucket[PolygonType.TexturedTriangle].Add(newPolygon);
 				} else {
-					if (polygon.IsTextured) {
-						meshContainer[PolygonType.TexturedTriangle].Remove(polygon);
-					} else {
-						meshContainer[PolygonType.UntexturedTriangle].Remove(polygon);
-					}
+					meshBucket[PolygonType.UntexturedTriangle].Add(newPolygon);
 				}
 			}
 
-			Selection.SelectedPolygons.Clear();
+			newPolygons.Add(newPolygon);
 		}
+
+		Selection.SelectedPolygons.Clear();
+
+		foreach (Polygon polygon in newPolygons) {
+			Selection.SelectedPolygons.Add(polygon);
+		}
+	}
+
+	public static void DeleteSelection() {
+		foreach (Polygon polygon in Selection.SelectedPolygons) {
+			Dictionary<PolygonType, List<Polygon>> meshContainer = StateData.PolygonCollection[polygon.MeshType];
+			if (polygon.IsQuad) {
+				if (polygon.IsTextured) {
+					meshContainer[PolygonType.TexturedQuad].Remove(polygon);
+				} else {
+					meshContainer[PolygonType.UntexturedQuad].Remove(polygon);
+				}
+			} else {
+				if (polygon.IsTextured) {
+					meshContainer[PolygonType.TexturedTriangle].Remove(polygon);
+				} else {
+					meshContainer[PolygonType.UntexturedTriangle].Remove(polygon);
+				}
+			}
+		}
+
+		Selection.SelectedPolygons.Clear();
 	}
 }

@@ -2,23 +2,23 @@
 using System.IO;
 using System.Text;
 
-namespace GaneshaDx.Common {
-	public static class CrashLog {
-		public static void Write(Exception exception) {
-			const string logfile = "CrashLog.txt";
+namespace GaneshaDx.Common;
 
-			FileStream stream = new FileStream(logfile, FileMode.Create);
-			string stackTrace = exception.StackTrace;
-			if (stackTrace == null) {
-				stackTrace = "No Stacktrace Data";
-			}
-			
-			using (StreamWriter writer = new StreamWriter(stream, Encoding.Default)) {
-				writer.WriteLine(DateTime.Now + ": " + exception.Message);
-				writer.WriteLine(stackTrace);
-			}
+public static class CrashLog {
+	public static void Write(Exception exception) {
+		const string logfile = "CrashLog.txt";
 
-			stream.Dispose();
+		FileStream stream = new(logfile, FileMode.Create);
+		string stackTrace = exception.StackTrace;
+		if (stackTrace == null) {
+			stackTrace = "No Stacktrace Data";
 		}
+			
+		using (StreamWriter writer = new(stream, Encoding.Default)) {
+			writer.WriteLine(DateTime.Now + ": " + exception.Message);
+			writer.WriteLine(stackTrace);
+		}
+
+		stream.Dispose();
 	}
 }

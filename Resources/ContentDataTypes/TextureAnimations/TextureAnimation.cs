@@ -1,3 +1,3 @@
-﻿namespace GaneshaDx.Resources.ContentDataTypes.TextureAnimations {
-	public class TextureAnimation { }
-}
+﻿namespace GaneshaDx.Resources.ContentDataTypes.TextureAnimations;
+
+public class TextureAnimation { }

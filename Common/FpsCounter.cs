@@ -4,40 +4,40 @@ using GaneshaDx.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace GaneshaDx.Common {
-	public static class FpsCounter {
-		private const double MessageFrequency = 1.0f;
-		private static double _frames;
-		private static double _elapsed;
-		private static double _last;
-		private static double _now;
-		private static string _message = "";
-		private static SpriteFont _font;
+namespace GaneshaDx.Common;
 
-		public static void Update() {
-			_font ??= Stage.Content.Load<SpriteFont>("DebugFont");
+public static class FpsCounter {
+	private const double MessageFrequency = 1.0f;
+	private static double _frames;
+	private static double _elapsed;
+	private static double _last;
+	private static double _now;
+	private static string _message = "";
+	private static SpriteFont _font;
 
-			_now = Stage.GameTime.TotalGameTime.TotalSeconds;
-			_elapsed = _now - _last;
+	public static void Update() {
+		_font ??= Stage.Content.Load<SpriteFont>("DebugFont");
 
-			if (_elapsed > MessageFrequency) {
-				_message = (_frames / _elapsed).ToString(CultureInfo.InvariantCulture).Substring(0, 4) + "fps";
-				_elapsed = 0;
-				_frames = 0;
-				_last = _now;
-			}
+		_now = Stage.GameTime.TotalGameTime.TotalSeconds;
+		_elapsed = _now - _last;
+
+		if (_elapsed > MessageFrequency) {
+			_message = (_frames / _elapsed).ToString(CultureInfo.InvariantCulture).Substring(0, 4) + "fps";
+			_elapsed = 0;
+			_frames = 0;
+			_last = _now;
+		}
+	}
+
+	public static void Render() {
+		if (MapData.MapIsLoaded && Configuration.Properties.ShowFps) {
+			Stage.SpriteBatch.Begin();
+			Vector2 fpsDisplayPosition = new(10, Stage.ModelingViewport.Height - 5);
+			Stage.SpriteBatch.DrawString(_font, _message, fpsDisplayPosition - new Vector2(1, -1), Color.Black);
+			Stage.SpriteBatch.DrawString(_font, _message, fpsDisplayPosition, Color.White);
+			Stage.SpriteBatch.End();
 		}
 
-		public static void Render() {
-			if (MapData.MapIsLoaded && Configuration.Properties.ShowFps) {
-				Stage.SpriteBatch.Begin();
-				Vector2 fpsDisplayPosition = new Vector2(10, Stage.ModelingViewport.Height - 5);
-				Stage.SpriteBatch.DrawString(_font, _message, fpsDisplayPosition - new Vector2(1, -1), Color.Black);
-				Stage.SpriteBatch.DrawString(_font, _message, fpsDisplayPosition, Color.White);
-				Stage.SpriteBatch.End();
-			}
-
-			_frames++;
-		}
+		_frames++;
 	}
 }

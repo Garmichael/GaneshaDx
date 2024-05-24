@@ -1,52 +1,51 @@
 ﻿using System.Numerics;
-using GaneshaDx.Resources;
 using GaneshaDx.UserInterface.GuiDefinitions;
 using ImGuiNET;
 
-namespace GaneshaDx.UserInterface.GuiForms {
-	public class GuiWindowExportGlb {
-		public static bool ExportUnlit = false;
+namespace GaneshaDx.UserInterface.GuiForms;
 
-		public static void Render() {
-			bool windowIsOpen = true;
-			GuiStyle.SetNewUiToDefaultStyle();
-			ImGui.GetStyle().WindowRounding = 4;
-			ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[2]);
-			const ImGuiWindowFlags flags = ImGuiWindowFlags.NoResize |
-			                               ImGuiWindowFlags.AlwaysAutoResize |
-			                               ImGuiWindowFlags.NoCollapse;
+public static class GuiWindowExportGlb {
+	public static bool ExportUnlit;
 
-			ImGui.SetNextWindowSize(new Vector2(270, 100));
-			ImGui.Begin("Export Glb", ref windowIsOpen, flags);
-			{
-				ImGui.PopFont();
+	public static void Render() {
+		bool windowIsOpen = true;
+		GuiStyle.SetNewUiToDefaultStyle();
+		ImGui.GetStyle().WindowRounding = 4;
+		ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[2]);
+		const ImGuiWindowFlags flags = ImGuiWindowFlags.NoResize |
+		                               ImGuiWindowFlags.AlwaysAutoResize |
+		                               ImGuiWindowFlags.NoCollapse;
 
-				ImGui.Columns(2, "GlbOptionsSettings", false);
-				ImGui.SetColumnWidth(0, 200);
-				ImGui.SetColumnWidth(1, GuiStyle.WidgetWidth + 10);
+		ImGui.SetNextWindowSize(new Vector2(270, 100));
+		ImGui.Begin("Export Glb", ref windowIsOpen, flags);
+		{
+			ImGui.PopFont();
 
-				ImGui.Text("Export with Unlit Materials");
-				ImGui.NextColumn();
-				ImGui.Checkbox("##exportAsUnlit", ref ExportUnlit);
-				ImGui.NextColumn();
+			ImGui.Columns(2, "GlbOptionsSettings", false);
+			ImGui.SetColumnWidth(0, 200);
+			ImGui.SetColumnWidth(1, GuiStyle.WidgetWidth + 10);
 
-				ImGui.NextColumn();
-				GuiStyle.AddSpace();
+			ImGui.Text("Export with Unlit Materials");
+			ImGui.NextColumn();
+			ImGui.Checkbox("##exportAsUnlit", ref ExportUnlit);
+			ImGui.NextColumn();
 
-				if (ImGui.Button("Export")) {
-					GuiWindowFileBrowser.Open(GuiWindowFileBrowser.DialogBoxes.ExportGlb);
-					windowIsOpen = false;
-				}
+			ImGui.NextColumn();
+			GuiStyle.AddSpace();
 
-				ImGui.NextColumn();
-
-				ImGui.Columns(1);
+			if (ImGui.Button("Export")) {
+				GuiWindowFileBrowser.Open(GuiWindowFileBrowser.DialogBoxes.ExportGlb);
+				windowIsOpen = false;
 			}
-			ImGui.End();
 
-			if (!windowIsOpen) {
-				Gui.ShowExportGlbWindow = false;
-			}
+			ImGui.NextColumn();
+
+			ImGui.Columns(1);
+		}
+		ImGui.End();
+
+		if (!windowIsOpen) {
+			Gui.ShowExportGlbWindow = false;
 		}
 	}
 }
