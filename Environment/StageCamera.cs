@@ -203,17 +203,17 @@ public static class StageCamera {
 			HandleZooming();
 		}
 
-		bool swappedControls = Configuration.Properties.SwapCameraControls;
+		bool handleRotation = Configuration.Properties.SwapCameraControls
+			? (!AppInput.AltHeld && AppInput.RightMouseHeld) ||
+			  (AppInput.AltHeld && AppInput.MiddleMouseHeld)
+			: (!AppInput.AltHeld && AppInput.MiddleMouseHeld) ||
+			  (AppInput.AltHeld && AppInput.RightMouseHeld);
 
-		bool handleRotation = !swappedControls && AppInput.MiddleMouseHeld ||
-		                      swappedControls && AppInput.RightMouseHeld ||
-		                      AppInput.AltHeld && !swappedControls && AppInput.RightMouseHeld ||
-		                      AppInput.AltHeld && swappedControls && AppInput.MiddleMouseHeld;
-
-		bool handlePanning = !swappedControls && AppInput.RightMouseHeld ||
-		                     swappedControls && AppInput.MiddleMouseHeld ||
-		                     AppInput.AltHeld && !swappedControls && AppInput.MiddleMouseHeld ||
-		                     AppInput.AltHeld && swappedControls && AppInput.RightMouseHeld;
+		bool handlePanning = Configuration.Properties.SwapCameraControls
+			? (!AppInput.AltHeld && AppInput.MiddleMouseHeld) ||
+			  (AppInput.AltHeld && AppInput.RightMouseHeld)
+			: (!AppInput.AltHeld && AppInput.RightMouseHeld) ||
+			  (AppInput.AltHeld && AppInput.MiddleMouseHeld);
 
 		if (handleRotation) {
 			HandleRotation();
