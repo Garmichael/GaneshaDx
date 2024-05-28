@@ -25,6 +25,7 @@ public static class AppShortcuts {
 			bool justControlHeld = AppInput.ControlHeld && !AppInput.ShiftHeld && !AppInput.AltHeld;
 			bool controlShiftHeld = AppInput.ControlHeld && AppInput.ShiftHeld && !AppInput.AltHeld;
 			bool justShiftHeld = !AppInput.ControlHeld && AppInput.ShiftHeld && !AppInput.AltHeld;
+			bool controlShiftAltHeld = AppInput.ControlHeld && AppInput.ShiftHeld && AppInput.AltHeld;
 				
 			if (noneHeld) {
 				if (AppInput.KeyJustPressed(Keys.D1)) {
@@ -304,6 +305,13 @@ public static class AppShortcuts {
 				}
 			}
 
+			if (controlShiftAltHeld) {
+				if (AppInput.KeyJustPressed(Keys.A)) {
+					if (Gui.SelectedTab != RightPanelTab.Terrain) {
+						Selection.SelectPolygonsWithOverlappingVertices();
+					}
+				}
+			}
 			if (justShiftHeld) {
 				if (AppInput.KeyJustPressed(Keys.F)) {
 					if (Gui.Widget == WidgetSelectionMode.PolygonEdgeTranslate) {

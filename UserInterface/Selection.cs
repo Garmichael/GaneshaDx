@@ -285,6 +285,44 @@ public static class Selection {
 		}
 	}
 
+	public static void SelectPolygonsWithOverlappingVertices() {
+		SelectedPolygons.Clear();
+		List<PolygonType> polygonTypes = new() {
+			PolygonType.TexturedQuad,
+			PolygonType.UntexturedQuad,
+			PolygonType.TexturedTriangle,
+			PolygonType.UntexturedTriangle
+		};
+
+		foreach (PolygonType polygonType in polygonTypes) {
+			List<Polygon> currentBucket = CurrentMapState.StateData.PolygonCollection[GuiPanelMeshSelector.SelectedMesh][polygonType];
+
+			foreach (Polygon polygon in currentBucket) {
+				bool vertex0Overlaps = false;
+				bool vertex1Overlaps = false;
+				bool vertex2Overlaps = false;
+
+				if (polygonType == PolygonType.TexturedQuad || polygonType == PolygonType.UntexturedQuad) {
+					vertex0Overlaps = (polygon.Vertices[0].Position - polygon.Vertices[1].Position).Length() <= 0.001 ||
+					                  (polygon.Vertices[0].Position - polygon.Vertices[2].Position).Length() <= 0.001 ||
+					                  (polygon.Vertices[0].Position - polygon.Vertices[3].Position).Length() <= 0.001;
+					vertex1Overlaps = (polygon.Vertices[1].Position - polygon.Vertices[2].Position).Length() <= 0.001 ||
+					                  (polygon.Vertices[1].Position - polygon.Vertices[3].Position).Length() <= 0.001;
+					vertex2Overlaps = (polygon.Vertices[2].Position - polygon.Vertices[3].Position).Length() <= 0.001;
+				} else {
+					vertex0Overlaps = (polygon.Vertices[0].Position - polygon.Vertices[1].Position).Length() <= 0.001 ||
+					                  (polygon.Vertices[0].Position - polygon.Vertices[2].Position).Length() <= 0.001;
+					vertex1Overlaps = (polygon.Vertices[1].Position - polygon.Vertices[2].Position).Length() <= 0.001;
+				}
+
+				if (vertex0Overlaps || vertex1Overlaps || vertex2Overlaps) {
+					SelectedPolygons.Add(polygon);
+				}
+			}
+		}
+	}
+
+
 	public static void SelectAllPolygons() {
 		Polygon firstPolygon = null;
 		if (SelectedPolygons.Count > 0) {

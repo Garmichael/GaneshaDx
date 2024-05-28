@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using System.Text.RegularExpressions;
 using GaneshaDx.Common;
 using GaneshaDx.Environment;
@@ -9,6 +8,7 @@ using GaneshaDx.Resources;
 using GaneshaDx.Resources.ContentDataTypes.Terrains;
 using GaneshaDx.UserInterface.GuiDefinitions;
 using ImGuiNET;
+using Vector2 = System.Numerics.Vector2;
 
 namespace GaneshaDx.UserInterface.GuiForms;
 
@@ -22,8 +22,12 @@ public static class GuiPanelTerrain {
 			RenderTerrainTileProperties();
 		}
 
-		RenderTerrainRenderOptions();
+		if (!ResizeTerrainMode) {
+			RenderGreyboxingForm();
+		}
+
 		RenderResizeTerrainPanel();
+		RenderTerrainRenderOptions();
 	}
 
 	private static void RenderTerrainTileProperties() {
@@ -190,18 +194,18 @@ public static class GuiPanelTerrain {
 
 				ImGui.NextColumn();
 				ImGui.Text("Shading");
-					
+
 				ImGui.NextColumn();
-					
+
 				List<string> shadingTypes = Enum.GetNames(typeof(TerrainDarkness)).ToList();
 				for (int shadingTypeIndex = 0; shadingTypeIndex < shadingTypes.Count; shadingTypeIndex++) {
 					shadingTypes[shadingTypeIndex] =
 						Regex.Replace(shadingTypes[shadingTypeIndex], "(\\B[A-Z])", " $1");
 				}
-					
+
 				int beforeShading = tiles[tileIndex].Shading;
-				
-				ImGui.PushItemWidth(GuiStyle.WidgetWidth);	
+
+				ImGui.PushItemWidth(GuiStyle.WidgetWidth);
 				ImGui.Combo(
 					"###ShadingType" + tileIndex,
 					ref tiles[tileIndex].Shading,
@@ -209,7 +213,7 @@ public static class GuiPanelTerrain {
 					shadingTypes.Count
 				);
 				ImGui.PopItemWidth();
-					
+
 				if (beforeShading != tiles[tileIndex].Shading) {
 					foreach (TerrainTile otherTerrainTile in Selection.SelectedTerrainTiles) {
 						if (otherTerrainTile != tiles[tileIndex] &&
@@ -220,14 +224,14 @@ public static class GuiPanelTerrain {
 					}
 				}
 
-					
+
 				ImGui.NextColumn();
 				GuiStyle.AddSpace();
-					
+
 				ImGui.Text("Pass Through Only");
 				ImGui.NextColumn();
 				GuiStyle.AddSpace();
-					
+
 				ImGui.PushItemWidth(GuiStyle.CheckBoxWidth);
 				bool beforeUnknown6A = tiles[tileIndex].PassThroughOnly;
 				ImGui.Checkbox("###unknown6a" + tileIndex, ref tiles[tileIndex].PassThroughOnly);
@@ -240,10 +244,10 @@ public static class GuiPanelTerrain {
 						}
 					}
 				}
-					
+
 				ImGui.NextColumn();
 				ImGui.Text("Impassable");
-					
+
 				ImGui.NextColumn();
 				ImGui.PushItemWidth(GuiStyle.CheckBoxWidth);
 				bool beforeImpassable = tiles[tileIndex].Impassable;
@@ -281,14 +285,14 @@ public static class GuiPanelTerrain {
 				if (Configuration.Properties.ShowUnknownValues) {
 					GuiStyle.AddSpace();
 					ImGui.Text("Unknown0A");
-						
+
 					ImGui.NextColumn();
 					GuiStyle.AddSpace();
-						
+
 					int beforeUnknown0A = tiles[tileIndex].Unknown0A;
 					ImGui.InputInt("###Unknown0A" + tileIndex, ref tiles[tileIndex].Unknown0A, 1);
 					tiles[tileIndex].Unknown0A = Utilities.Min(tiles[tileIndex].Unknown0A, 0);
-						
+
 					if (beforeUnknown0A != tiles[tileIndex].Unknown0A) {
 						foreach (TerrainTile otherTerrainTile in Selection.SelectedTerrainTiles) {
 							if (otherTerrainTile != tiles[tileIndex] &&
@@ -298,16 +302,16 @@ public static class GuiPanelTerrain {
 							}
 						}
 					}
-						
+
 					ImGui.NextColumn();
-						
+
 					ImGui.Text("Unknown0B");
 					ImGui.NextColumn();
-						
+
 					int beforeUnknown0B = tiles[tileIndex].Unknown0B;
 					ImGui.InputInt("###Unknown0B" + tileIndex, ref tiles[tileIndex].Unknown0B, 1);
 					tiles[tileIndex].Unknown0B = Utilities.Min(tiles[tileIndex].Unknown0B, 0);
-						
+
 					if (beforeUnknown0B != tiles[tileIndex].Unknown0B) {
 						foreach (TerrainTile otherTerrainTile in Selection.SelectedTerrainTiles) {
 							if (otherTerrainTile != tiles[tileIndex] &&
@@ -317,17 +321,17 @@ public static class GuiPanelTerrain {
 							}
 						}
 					}
-						
+
 					ImGui.NextColumn();
-						
+
 					ImGui.Text("Unknown1");
 					ImGui.NextColumn();
-						
+
 					int beforeUnknown1 = tiles[tileIndex].Unknown1;
 					ImGui.InputInt("###Unknown1" + tileIndex, ref tiles[tileIndex].Unknown1, 1);
 					tiles[tileIndex].Unknown1 = Utilities.Min(tiles[tileIndex].Unknown1, 0);
-						
-					if (beforeUnknown0A != tiles[tileIndex].Unknown1) {
+
+					if (beforeUnknown1 != tiles[tileIndex].Unknown1) {
 						foreach (TerrainTile otherTerrainTile in Selection.SelectedTerrainTiles) {
 							if (otherTerrainTile != tiles[tileIndex] &&
 							    otherTerrainTile.Level == tiles[tileIndex].Level
@@ -336,17 +340,17 @@ public static class GuiPanelTerrain {
 							}
 						}
 					}
-						
+
 					ImGui.NextColumn();
-						
+
 					ImGui.Text("Unknown5");
 					ImGui.NextColumn();
-						
+
 					int beforeUnknown5 = tiles[tileIndex].Unknown5;
 					ImGui.InputInt("###Unknown5" + tileIndex, ref tiles[tileIndex].Unknown5, 1);
 					tiles[tileIndex].Unknown5 = Utilities.Min(tiles[tileIndex].Unknown5, 0);
-						
-					if (beforeUnknown0A != tiles[tileIndex].Unknown5) {
+
+					if (beforeUnknown5 != tiles[tileIndex].Unknown5) {
 						foreach (TerrainTile otherTerrainTile in Selection.SelectedTerrainTiles) {
 							if (otherTerrainTile != tiles[tileIndex] &&
 							    otherTerrainTile.Level == tiles[tileIndex].Level
@@ -355,7 +359,7 @@ public static class GuiPanelTerrain {
 							}
 						}
 					}
-					
+
 					ImGui.NextColumn();
 
 					ImGui.Text("Unknown 6B");
@@ -373,8 +377,9 @@ public static class GuiPanelTerrain {
 							}
 						}
 					}
+
 					ImGui.NextColumn();
-						
+
 					ImGui.Text("Unknown 6C");
 					ImGui.NextColumn();
 
@@ -591,6 +596,28 @@ public static class GuiPanelTerrain {
 		}
 	}
 
+	private static void RenderGreyboxingForm() {
+		GuiStyle.SetNewUiToDefaultStyle();
+		GuiStyle.SetElementStyle(ElementStyle.Header);
+
+		if (ImGui.CollapsingHeader("Greyboxing", ImGuiTreeNodeFlags.DefaultOpen)) {
+			GuiStyle.SetNewUiToDefaultStyle();
+			ImGui.Indent();
+
+			ImGui.Text("Greyboxing will delete all the polygons in the");
+			ImGui.Text("Primary Mesh, and then build new level geometry");
+			ImGui.Text("based on the terrain. Use this to prototype your");
+			ImGui.Text("map before building your own details.");
+			
+			if (ImGui.Button("Greybox Mesh")) {
+				Greyboxer.Greybox();
+			}
+
+			ImGui.Unindent();
+			GuiStyle.AddSpace();
+		}
+	}
+
 	private static void RenderTerrainRenderOptions() {
 		GuiStyle.SetNewUiToDefaultStyle();
 		GuiStyle.SetElementStyle(ElementStyle.Header);
@@ -651,8 +678,8 @@ public static class GuiPanelTerrain {
 		}
 	}
 
-	private static bool _resizeFromFront = false;
-		
+	private static bool _resizeFromFront;
+
 	private static void RenderResizeTerrainPanel() {
 		GuiStyle.SetNewUiToDefaultStyle();
 		GuiStyle.SetElementStyle(ElementStyle.Header);
@@ -702,7 +729,7 @@ public static class GuiPanelTerrain {
 				ImGui.NextColumn();
 				ImGui.Checkbox("###insertAtFront", ref _resizeFromFront);
 				ImGui.NextColumn();
-					
+
 				GuiStyle.AddSpace();
 				if (ImGui.Button("Cancel")) {
 					ResizeTerrainMode = false;
@@ -728,6 +755,7 @@ public static class GuiPanelTerrain {
 			}
 
 			ImGui.Unindent();
+			GuiStyle.AddSpace();
 		}
 	}
 }

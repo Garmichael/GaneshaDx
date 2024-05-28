@@ -1,11 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using GaneshaDx.Common;
 using GaneshaDx.Rendering;
 using GaneshaDx.Resources.ContentDataTypes;
 using GaneshaDx.Resources.ContentDataTypes.Polygons;
+using GaneshaDx.Resources.ContentDataTypes.Terrains;
 using GaneshaDx.Resources.ResourceContent;
 using GaneshaDx.UserInterface;
 using GaneshaDx.UserInterface.GuiForms;
+using Microsoft.Xna.Framework;
 
 namespace GaneshaDx.Resources;
 
@@ -153,5 +157,68 @@ public static class CurrentMapState {
 		}
 
 		Selection.SelectedPolygons.Clear();
+	}
+
+	public static void DeleteAllPolygons(MeshType meshType) {
+		Dictionary<PolygonType, List<Polygon>> meshContainer = StateData.PolygonCollection[meshType];
+
+		meshContainer[PolygonType.TexturedQuad].Clear();
+		meshContainer[PolygonType.UntexturedQuad].Clear();
+		meshContainer[PolygonType.TexturedTriangle].Clear();
+		meshContainer[PolygonType.UntexturedTriangle].Clear();
+	}
+
+	public static Polygon CreatePolygon(List<Vertex> vertices, List<Vector2> uvs, MeshType selectedMeshType, bool addToBucket = true) {
+		if (vertices.Count != 3 && vertices.Count != 4) {
+			return null;
+		}
+
+		if (uvs.Count != 0 && uvs.Count != vertices.Count) {
+			return null;
+		}
+
+		bool newPolygonIsQuad = vertices.Count == 4;
+		bool newPolygonIsTextured = uvs.Count > 0;
+
+		Polygon newPolygon = new() {
+			Vertices = vertices,
+			MeshType = selectedMeshType,
+			RenderingProperties = new PolygonRenderingProperties(),
+			UvCoordinates = uvs,
+			PolygonType = newPolygonIsQuad
+				? newPolygonIsTextured
+					? PolygonType.TexturedQuad
+					: PolygonType.UntexturedQuad
+				: newPolygonIsTextured
+					? PolygonType.TexturedTriangle
+					: PolygonType.UntexturedTriangle,
+			TerrainLevel = 0,
+			TerrainX = 255,
+			TerrainZ = 127
+		};
+
+		if (addToBucket) {
+			Dictionary<PolygonType, List<Polygon>> selectedMesh = StateData.PolygonCollection[selectedMeshType];
+
+			if (newPolygon.IsQuad) {
+				if (newPolygon.IsTextured) {
+					selectedMesh[PolygonType.TexturedQuad].Add(newPolygon);
+				} else {
+					selectedMesh[PolygonType.UntexturedQuad].Add(newPolygon);
+				}
+			} else {
+				if (newPolygon.IsTextured) {
+					selectedMesh[PolygonType.TexturedTriangle].Add(newPolygon);
+				} else {
+					selectedMesh[PolygonType.UntexturedTriangle].Add(newPolygon);
+				}
+			}
+
+			Selection.SelectedPolygons.Clear();
+			Selection.SelectedPolygons.Add(newPolygon);
+			newPolygon.GuessNormals();
+		}
+
+		return newPolygon;
 	}
 }

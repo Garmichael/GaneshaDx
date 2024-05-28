@@ -191,6 +191,16 @@ public static class GuiMenuBar {
 					Selection.SelectOverlappingPolygons();
 				}
 
+				if (ImGui.MenuItem(
+					    "Select Overlapping Vertices",
+					    "Ctrl + Shift + Alt + A",
+					    false,
+					    MapData.MapIsLoaded &&
+					    Gui.SelectedTab != RightPanelTab.Terrain
+				    )) {
+					Selection.SelectPolygonsWithOverlappingVertices();
+				}
+
 				ImGui.Separator();
 
 				if (ImGui.MenuItem("Select All Terrain Tiles", "Ctrl + A", false,
