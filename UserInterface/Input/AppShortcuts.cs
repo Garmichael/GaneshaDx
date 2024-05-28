@@ -303,6 +303,10 @@ public static class AppShortcuts {
 						Selection.SelectOverlappingPolygons();
 					}
 				}
+
+				if (AppInput.KeyJustPressed(Keys.R)) {
+					MapData.ReloadCurrentMap();
+				}
 			}
 
 			if (controlShiftAltHeld) {

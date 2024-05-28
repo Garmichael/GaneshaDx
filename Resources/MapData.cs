@@ -26,6 +26,10 @@ public static class MapData {
 	public static List<MapResource> MeshResources;
 	public static List<MapResource> TextureResources;
 
+	public static void ReloadCurrentMap() {
+		LoadMapDataFromFullPath(_mapFolder + "\\" + MapName + ".gns");
+	}
+	
 	public static void LoadMapDataFromFullPath(string gnsPath) {
 		List<string> pathSegments = gnsPath.Split('\\').ToList();
 		string fileName = pathSegments.Last();
@@ -72,6 +76,8 @@ public static class MapData {
 	}
 
 	private static void ResetEditorState() {
+		Selection.SelectedPolygons.Clear();
+		Selection.SelectedTerrainTiles.Clear();
 		Gui.SelectedTab = RightPanelTab.Map;
 		Gui.ShowMeshAnimationsWindow = false;
 		Gui.ShowDebugAnimatedMeshWindow = false;

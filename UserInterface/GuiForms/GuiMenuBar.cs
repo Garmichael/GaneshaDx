@@ -23,6 +23,10 @@ public static class GuiMenuBar {
 				if (ImGui.MenuItem("Open", "Ctrl + O")) {
 					GuiWindowFileBrowser.Open(GuiWindowFileBrowser.DialogBoxes.OpenMap);
 				}
+				
+				if (ImGui.MenuItem("Reload Map", "Ctrl + Shift + R", false, MapData.MapIsLoaded)) {
+					MapData.ReloadCurrentMap();
+				}
 
 				if (ImGui.MenuItem("Save", "Ctrl + S", false, MapData.MapIsLoaded)) {
 					MapData.SaveMap();
