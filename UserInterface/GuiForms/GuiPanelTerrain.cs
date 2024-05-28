@@ -16,19 +16,22 @@ public static class GuiPanelTerrain {
 	public static bool ResizeTerrainMode;
 	private static int _resizeXSize;
 	private static int _resizeZSize;
+	private static bool _resizeFromFront;
 	private static bool _writeGreyboxTexture = true;
 	private static bool _writeGreyboxPalettes = true;
+	private static bool _greyboxSinglePolyWalls;
 
 	public static void Render() {
 		if (Selection.SelectedTerrainTiles.Count > 0 && !ResizeTerrainMode) {
 			RenderTerrainTileProperties();
 		}
 
+		RenderResizeTerrainPanel();
+
 		if (!ResizeTerrainMode) {
 			RenderGreyboxingForm();
 		}
 
-		RenderResizeTerrainPanel();
 		RenderTerrainRenderOptions();
 	}
 
@@ -606,36 +609,50 @@ public static class GuiPanelTerrain {
 			GuiStyle.SetNewUiToDefaultStyle();
 			ImGui.Indent();
 
-			ImGui.Text("Greyboxing will delete all the polygons in the");
-			ImGui.Text("Primary Mesh, and then build new level geometry");
-			ImGui.Text("based on the terrain. Use this to prototype your");
-			ImGui.Text("map before building your own details.");
+			GuiStyle.SetElementStyle(ElementStyle.Header);
+			if(ImGui.CollapsingHeader("About Greyboxing", ImGuiTreeNodeFlags.Bullet)){
+				GuiStyle.SetNewUiToDefaultStyle();
+				ImGui.Text("Greyboxing will delete all the polygons in the");
+				ImGui.Text("Primary Mesh, and then build new level geometry");
+				ImGui.Text("based on the terrain. Use this to prototype your");
+				ImGui.Text("map before building your own details.");
+				GuiStyle.AddSpace();
+				ImGui.Text("Updating the texture and palette will paint ");
+				ImGui.Text("onto the texture and setting the first two ");
+				ImGui.Text("colors of the first two palettes to make the");
+				ImGui.Text("Greybox easier to read");
+			}
+
+			GuiStyle.SetNewUiToDefaultStyle();
+
 			GuiStyle.AddSpace();
-			ImGui.Text("Updating the texture and palette will paint ");
-			ImGui.Text("onto the texture and setting the first two ");
-			ImGui.Text("colors of the first two palettes to make the");
-			ImGui.Text("Greybox easier to read");
 			
 			ImGui.Columns(2, "Greybox Settings", false);
-			
+
 			ImGui.SetColumnWidth(0, GuiStyle.LabelWidth - 20);
 			ImGui.SetColumnWidth(1, GuiStyle.WidgetWidth + 30);
 
-			ImGui.Text("Write to Texture");
+			ImGui.Text("Paint on Texture");
 			ImGui.NextColumn();
-			
+
 			ImGui.Checkbox("##writeGreyboxTexture", ref _writeGreyboxTexture);
 			ImGui.NextColumn();
-			
-			ImGui.Text("Write to Palettes");
+
+			ImGui.Text("Modify Palettes");
 			ImGui.NextColumn();
-			
+
 			ImGui.Checkbox("##writeGreyboxPalette", ref _writeGreyboxPalettes);
 			ImGui.NextColumn();
-			
+
+			ImGui.Text("Single-Poly Walls");
+			ImGui.NextColumn();
+
+			ImGui.Checkbox("##SinglePolyWalls", ref _greyboxSinglePolyWalls);
+			ImGui.NextColumn();
+
 			ImGui.Columns(1);
 			if (ImGui.Button("Greybox Mesh")) {
-				Greyboxer.Greybox(_writeGreyboxTexture, _writeGreyboxPalettes);
+				Greyboxer.Greybox(_writeGreyboxTexture, _writeGreyboxPalettes, _greyboxSinglePolyWalls);
 			}
 
 			ImGui.Unindent();
@@ -702,8 +719,6 @@ public static class GuiPanelTerrain {
 			GuiStyle.AddSpace();
 		}
 	}
-
-	private static bool _resizeFromFront;
 
 	private static void RenderResizeTerrainPanel() {
 		GuiStyle.SetNewUiToDefaultStyle();
