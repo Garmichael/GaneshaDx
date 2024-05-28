@@ -131,11 +131,11 @@ public static class Greyboxer {
 				Polygon surfacePolygon = surfaceMap[rowIndex][colIndex];
 
 				if (rowIndex < surfaceMap.Count - 1) {
-					BuildGreyboxWall("North", surfacePolygon.Vertices, surfaceMap[rowIndex + 1][colIndex].Vertices);
+					BuildGreyboxWall("North", surfacePolygon.Vertices, surfaceMap[rowIndex + 1][colIndex].Vertices, false);
 				}
 
 				if (colIndex < row.Count - 1) {
-					BuildGreyboxWall("East", surfacePolygon.Vertices, surfaceMap[rowIndex][colIndex + 1].Vertices);
+					BuildGreyboxWall("East", surfacePolygon.Vertices, surfaceMap[rowIndex][colIndex + 1].Vertices, false);
 				}
 
 				List<Vertex> baseFloor = new() {
@@ -179,7 +179,7 @@ public static class Greyboxer {
 		}
 	}
 
-	private static void BuildGreyboxWall(string direction, List<Vertex> surfaceVertices, List<Vertex> destinationVertices, bool untextured = false) {
+	private static void BuildGreyboxWall(string direction, List<Vertex> surfaceVertices, List<Vertex> destinationVertices, bool untextured) {
 		Vector3 topLeft = new();
 		Vector3 topRight = new();
 		Vector3 bottomLeft = new();
@@ -228,7 +228,7 @@ public static class Greyboxer {
 		BuildVerticalPolygon(vertices, untextured);
 	}
 
-	private static void BuildVerticalPolygon(List<Vector3> vertices, bool useUntextured) {
+	private static void BuildVerticalPolygon(List<Vector3> vertices, bool untextured) {
 		bool leftOverlaps = (vertices[0] - vertices[2]).Length() <= 0.001;
 		bool rightOverlaps = (vertices[1] - vertices[3]).Length() <= 0.001;
 
@@ -251,10 +251,10 @@ public static class Greyboxer {
 			vertices.RemoveAt(vertices.Count - 1);
 		}
 
-		VerticallySlicePolygon(vertices);
+		VerticallySlicePolygon(vertices, untextured);
 	}
 
-	private static void VerticallySlicePolygon(List<Vector3> vertices) {
+	private static void VerticallySlicePolygon(List<Vector3> vertices, bool untextured) {
 		bool isXAligned = (int) vertices[0].Z == (int) vertices[1].Z;
 
 		Dictionary<int, List<Vector3>> columns = new();
@@ -292,17 +292,17 @@ public static class Greyboxer {
 		                 (int) vertices[2].Y != (int) vertices[3].Y;
 
 		if (isTriangle) {
-			MakeTriangle(vertices, isXAligned);
+			MakeTriangle(vertices, isXAligned, untextured);
 		} else if (isRect) {
-			MakeRectangles(vertices);
+			MakeRectangles(vertices, untextured);
 		} else if (isIsoscelesTrapezoid) {
-			MakeIsoscelesTrapezoid(vertices, isXAligned);
+			MakeIsoscelesTrapezoid(vertices, isXAligned, untextured);
 		} else if (isRhombus) {
-			MakeRhombus(vertices, isXAligned);
+			MakeRhombus(vertices, isXAligned, untextured);
 		}
 	}
 
-	private static void MakeIsoscelesTrapezoid(List<Vector3> vertices, bool isXAligned) {
+	private static void MakeIsoscelesTrapezoid(List<Vector3> vertices, bool isXAligned, bool untextured) {
 		bool pointEndUp = (int) vertices[0].Y != (int) vertices[1].Y;
 
 		List<Vector3> triangleVertices = new();
@@ -354,11 +354,11 @@ public static class Greyboxer {
 			}
 		}
 
-		MakeTriangle(triangleVertices, isXAligned);
-		MakeRectangles(rectangleVertices);
+		MakeTriangle(triangleVertices, isXAligned, untextured);
+		MakeRectangles(rectangleVertices, untextured);
 	}
 
-	private static void MakeTriangle(List<Vector3> vertices, bool isXAligned) {
+	private static void MakeTriangle(List<Vector3> vertices, bool isXAligned, bool untextured) {
 		bool leftLong = isXAligned
 			? (int) vertices[0].X == (int) vertices[2].X
 			: (int) vertices[0].Z == (int) vertices[2].Z;
@@ -383,7 +383,7 @@ public static class Greyboxer {
 					new Vertex(vertices[0] - new Vector3(0, (segmentIndex + 1) * 12, 0), Color.Blue, true),
 				};
 
-				Polygon addedPolygon = CurrentMapState.CreatePolygon(verticesToBuild, uvs, MeshType.PrimaryMesh);
+				Polygon addedPolygon = CurrentMapState.CreatePolygon(verticesToBuild, untextured ? new List<Vector2>() : uvs, MeshType.PrimaryMesh);
 				addedPolygon.PaletteId = 1;
 			}
 		} else {
@@ -400,13 +400,13 @@ public static class Greyboxer {
 					new Vertex(vertices[1] - new Vector3(0, (segmentIndex + 1) * 12, 0), Color.Blue, true),
 				};
 
-				Polygon addedPolygon = CurrentMapState.CreatePolygon(verticesToBuild, uvs, MeshType.PrimaryMesh);
+				Polygon addedPolygon = CurrentMapState.CreatePolygon(verticesToBuild, untextured ? new List<Vector2>() : uvs, MeshType.PrimaryMesh);
 				addedPolygon.PaletteId = 1;
 			}
 		}
 	}
 
-	private static void MakeRectangles(List<Vector3> vertices) {
+	private static void MakeRectangles(List<Vector3> vertices, bool untextured) {
 		int height = (int) Math.Abs(vertices[0].Y - vertices[2].Y);
 		int segments = height / 12;
 
@@ -425,12 +425,12 @@ public static class Greyboxer {
 				new Vertex(vertices[1] - new Vector3(0, (segmentIndex + 1) * 12, 0), Color.Yellow, true)
 			};
 
-			Polygon addedPolygon = CurrentMapState.CreatePolygon(verticesToBuild, uvs, MeshType.PrimaryMesh);
+			Polygon addedPolygon = CurrentMapState.CreatePolygon(verticesToBuild, untextured ? new List<Vector2>() : uvs, MeshType.PrimaryMesh);
 			addedPolygon.PaletteId = 1;
 		}
 	}
 
-	private static void MakeRhombus(List<Vector3> vertices, bool isXAligned) {
+	private static void MakeRhombus(List<Vector3> vertices, bool isXAligned, bool untextured) {
 		bool topPointEndLeft = vertices[0].Y > vertices[1].Y;
 		bool bottomPointEndLeft = vertices[2].Y < vertices[3].Y;
 
@@ -444,23 +444,23 @@ public static class Greyboxer {
 					vertices[0] + Vector3.Zero,
 					vertices[1] + Vector3.Zero,
 					vertices[2] + Vector3.Zero
-				}, isXAligned);
+				}, isXAligned, untextured);
 				MakeTriangle(new List<Vector3> {
 					vertices[2] + Vector3.Zero,
 					vertices[1] + Vector3.Zero,
 					vertices[3] + Vector3.Zero
-				}, isXAligned);
+				}, isXAligned, untextured);
 			} else {
 				MakeTriangle(new List<Vector3> {
 					vertices[0] + Vector3.Zero,
 					vertices[1] + Vector3.Zero,
 					vertices[3] + Vector3.Zero
-				}, isXAligned);
+				}, isXAligned, untextured);
 				MakeTriangle(new List<Vector3> {
 					vertices[0] + Vector3.Zero,
 					vertices[3] + Vector3.Zero,
 					vertices[2] + Vector3.Zero
-				}, isXAligned);
+				}, isXAligned, untextured);
 			}
 
 			return;
@@ -499,9 +499,9 @@ public static class Greyboxer {
 				bottomTriangleVertices.Add(vertices[3] + Vector3.Zero);
 			}
 
-			MakeTriangle(topTriangleVertices, isXAligned);
-			MakeRectangles(rectangleVertices);
-			MakeTriangle(bottomTriangleVertices, isXAligned);
+			MakeTriangle(topTriangleVertices, isXAligned, untextured);
+			MakeRectangles(rectangleVertices, untextured);
+			MakeTriangle(bottomTriangleVertices, isXAligned, untextured);
 		} else {
 			if (topPointEndLeft) {
 				topTriangleVertices.Add(vertices[0] + Vector3.Zero);
@@ -531,9 +531,9 @@ public static class Greyboxer {
 				bottomTriangleVertices.Add(vertices[3] + Vector3.Zero);
 			}
 
-			MakeTriangle(topTriangleVertices, isXAligned);
-			MakeRectangles(rectangleVertices);
-			MakeTriangle(bottomTriangleVertices, isXAligned);
+			MakeTriangle(topTriangleVertices, isXAligned, untextured);
+			MakeRectangles(rectangleVertices, untextured);
+			MakeTriangle(bottomTriangleVertices, isXAligned, untextured);
 		}
 	}
 
