@@ -42,7 +42,7 @@ public static class GuiWindowFileBrowser {
 	private static string _filter = ".gns";
 	private static string _currentDrive = "C:\\";
 	private static readonly List<string> FolderPath = new();
-	private static bool _clearsSelectedFileOnNavigation = true;
+	private static bool _clearsSelectedFileOnNavigation;
 
 	private static string[] _drives = Array.Empty<string>();
 	private static string[] _currentFolderFiles = Array.Empty<string>();
@@ -164,10 +164,10 @@ public static class GuiWindowFileBrowser {
 		);
 		_resetWindowPosition = true;
 
-		_clearsSelectedFileOnNavigation = !BoxesWithInputText.Contains(_dialogBox);
 		_filter = DialogBoxFilters[_dialogBox];
 
 		_selectedFile = _dialogBox switch {
+			DialogBoxes.OpenMap => MapData.MapIsLoaded ? MapData.MapName + ".gns" : "",
 			DialogBoxes.ExportGlb => MapData.MapName + ".glb",
 			DialogBoxes.ExportTexture => MapData.MapName + "." + CurrentMapState.StateData.StateTextureResource.XFile + ".png",
 			DialogBoxes.ExportUvMap => MapData.MapName + "." + CurrentMapState.StateData.StateTextureResource.XFile + ".uvMap" + ".png",
@@ -179,8 +179,12 @@ public static class GuiWindowFileBrowser {
 			_ => _selectedFile
 		};
 
+		_clearsSelectedFileOnNavigation = false;
+		
 		SetFolderPathFromFullPath(Configuration.Properties.LoadFolder);
 		RefreshFileList();
+		
+		_clearsSelectedFileOnNavigation = !BoxesWithInputText.Contains(_dialogBox);
 		Gui.ShowOpenFileWindow = true;
 	}
 
@@ -289,7 +293,7 @@ public static class GuiWindowFileBrowser {
 
 				if (extension == _filter) {
 					GuiStyle.SetElementStyle(
-						_selectedFile == file
+						string.Equals(_selectedFile, file, StringComparison.CurrentCultureIgnoreCase)
 							? ElementStyle.ButtonFileBrowserFileSelected
 							: ElementStyle.ButtonFileBrowserFile
 					);
