@@ -2,18 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using GaneshaDx.Resources;
+using GaneshaDx.Resources.ContentDataTypes.Palettes;
 using GaneshaDx.Resources.ContentDataTypes.Polygons;
 using GaneshaDx.Resources.ContentDataTypes.Terrains;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace GaneshaDx.Common;
 
 public static class Greyboxer {
-	public static void Greybox() {
+	public static void Greybox(bool modifyTexture, bool modifyPalettes) {
 		CurrentMapState.DeleteAllPolygons(MeshType.PrimaryMesh);
 
 		List<List<Polygon>> surfaceMap = GreyboxSurface();
 		GreyboxVerticals(surfaceMap);
+
+		if (modifyTexture) {
+			PaintTexture();
+		}
+
+		if (modifyPalettes) {
+			SetPalette();
+		}
 	}
 
 	private static List<List<Polygon>> GreyboxSurface() {
@@ -99,13 +109,13 @@ public static class Greyboxer {
 
 				List<Vector2> horizontalUvs = new() {
 					new Vector2(9, 9),
-					new Vector2(27, 9),
-					new Vector2(9, 27),
-					new Vector2(27, 27)
+					new Vector2(37, 9),
+					new Vector2(9, 37),
+					new Vector2(37, 37)
 				};
 
 				Polygon addedPolygon = CurrentMapState.CreatePolygon(vertices, horizontalUvs, MeshType.PrimaryMesh);
-				addedPolygon.PaletteId = 1;
+				addedPolygon.PaletteId = 0;
 				surfaceMap.Last().Add(addedPolygon);
 			}
 		}
@@ -241,25 +251,6 @@ public static class Greyboxer {
 			vertices.RemoveAt(vertices.Count - 1);
 		}
 
-		List<Vector2> uvs = new() {
-			new Vector2(9, 27),
-			new Vector2(27, 27),
-			new Vector2(9, 39)
-		};
-
-		if (vertices.Count == 4) {
-			uvs.Add(new Vector2(27, 39));
-		}
-
-		// Polygon addedPolygon = CreatePolygon(
-		// 	vertices,
-		// 	useUntextured ? new List<Vector2>() : uvs,
-		// 	MeshType.PrimaryMesh
-		// );
-
-		// addedPolygon.PaletteId = 1;
-		// addedPolygon.GuessNormals();
-
 		VerticallySlicePolygon(vertices);
 	}
 
@@ -311,15 +302,135 @@ public static class Greyboxer {
 		}
 	}
 
-	private static void MakeRhombus(List<Vector3> vertices, bool isXAligned) {
-		//✅ Get top point side
-		//✅ Get bottom point side
-		//✅ If same side, two triangles and a rect
-		//If different sides, check inside overlap
-		//	if inside overlap is same, then two triangles
-		//	if inside overlap is not overlap, two triangles and a rect
-		//	if inside overlap is overlap, two triangles at angle
+	private static void MakeIsoscelesTrapezoid(List<Vector3> vertices, bool isXAligned) {
+		bool pointEndUp = (int) vertices[0].Y != (int) vertices[1].Y;
 
+		List<Vector3> triangleVertices = new();
+		List<Vector3> rectangleVertices = new();
+
+		if (pointEndUp) {
+			bool pointEndLeft = (int) vertices[0].Y > (int) vertices[1].Y;
+
+			if (pointEndLeft) {
+				triangleVertices.Add(vertices[0] + Vector3.Zero);
+				triangleVertices.Add(vertices[1] + Vector3.Zero);
+				triangleVertices.Add(new Vector3(vertices[0].X, vertices[1].Y, vertices[0].Z));
+
+				rectangleVertices.Add(new Vector3(vertices[0].X, vertices[1].Y, vertices[0].Z));
+				rectangleVertices.Add(vertices[1] + Vector3.Zero);
+				rectangleVertices.Add(vertices[2] + Vector3.Zero);
+				rectangleVertices.Add(vertices[3] + Vector3.Zero);
+			} else {
+				triangleVertices.Add(vertices[0] + Vector3.Zero);
+				triangleVertices.Add(vertices[1] + Vector3.Zero);
+				triangleVertices.Add(new Vector3(vertices[1].X, vertices[0].Y, vertices[1].Z));
+
+				rectangleVertices.Add(vertices[0] + Vector3.Zero);
+				rectangleVertices.Add(new Vector3(vertices[1].X, vertices[0].Y, vertices[1].Z));
+				rectangleVertices.Add(vertices[2] + Vector3.Zero);
+				rectangleVertices.Add(vertices[3] + Vector3.Zero);
+			}
+		} else {
+			bool pointEndLeft = (int) vertices[2].Y < (int) vertices[3].Y;
+
+			if (pointEndLeft) {
+				triangleVertices.Add(new Vector3(vertices[0].X, vertices[3].Y, vertices[0].Z));
+				triangleVertices.Add(vertices[3] + Vector3.Zero);
+				triangleVertices.Add(vertices[2] + Vector3.Zero);
+
+				rectangleVertices.Add(vertices[0] + Vector3.Zero);
+				rectangleVertices.Add(vertices[1] + Vector3.Zero);
+				triangleVertices.Add(new Vector3(vertices[0].X, vertices[3].Y, vertices[0].Z));
+				rectangleVertices.Add(vertices[3] + Vector3.Zero);
+			} else {
+				triangleVertices.Add(vertices[2] + Vector3.Zero);
+				triangleVertices.Add(new Vector3(vertices[1].X, vertices[2].Y, vertices[1].Z));
+				triangleVertices.Add(vertices[3] + Vector3.Zero);
+
+				rectangleVertices.Add(vertices[0] + Vector3.Zero);
+				rectangleVertices.Add(vertices[1] + Vector3.Zero);
+				rectangleVertices.Add(vertices[2] + Vector3.Zero);
+				triangleVertices.Add(new Vector3(vertices[1].X, vertices[2].Y, vertices[1].Z));
+			}
+		}
+
+		MakeTriangle(triangleVertices, isXAligned);
+		MakeRectangles(rectangleVertices);
+	}
+
+	private static void MakeTriangle(List<Vector3> vertices, bool isXAligned) {
+		bool leftLong = isXAligned
+			? (int) vertices[0].X == (int) vertices[2].X
+			: (int) vertices[0].Z == (int) vertices[2].Z;
+
+		int height = leftLong
+			? (int) Math.Abs(vertices[0].Y - vertices[2].Y)
+			: (int) Math.Abs(vertices[1].Y - vertices[2].Y);
+
+		int segments = height / 12;
+
+		if (leftLong) {
+			for (int segmentIndex = 0; segmentIndex < segments; segmentIndex++) {
+				List<Vector2> uvs = new() {
+					new Vector2(9, 37),
+					new Vector2(37, 37),
+					new Vector2(9, 49)
+				};
+
+				List<Vertex> verticesToBuild = new() {
+					new Vertex(vertices[0] - new Vector3(0, segmentIndex * 12, 0), Color.Red, true),
+					new Vertex(vertices[1] + Vector3.Zero, Color.Green, true),
+					new Vertex(vertices[0] - new Vector3(0, (segmentIndex + 1) * 12, 0), Color.Blue, true),
+				};
+
+				Polygon addedPolygon = CurrentMapState.CreatePolygon(verticesToBuild, uvs, MeshType.PrimaryMesh);
+				addedPolygon.PaletteId = 1;
+			}
+		} else {
+			for (int segmentIndex = 0; segmentIndex < segments; segmentIndex++) {
+				List<Vector2> uvs = new() {
+					new Vector2(9, 37),
+					new Vector2(37, 37),
+					new Vector2(9, 49)
+				};
+
+				List<Vertex> verticesToBuild = new() {
+					new Vertex(vertices[0] + Vector3.Zero, Color.Red, true),
+					new Vertex(vertices[1] - new Vector3(0, segmentIndex * 12, 0), Color.Green, true),
+					new Vertex(vertices[1] - new Vector3(0, (segmentIndex + 1) * 12, 0), Color.Blue, true),
+				};
+
+				Polygon addedPolygon = CurrentMapState.CreatePolygon(verticesToBuild, uvs, MeshType.PrimaryMesh);
+				addedPolygon.PaletteId = 1;
+			}
+		}
+	}
+
+	private static void MakeRectangles(List<Vector3> vertices) {
+		int height = (int) Math.Abs(vertices[0].Y - vertices[2].Y);
+		int segments = height / 12;
+
+		for (int segmentIndex = 0; segmentIndex < segments; segmentIndex++) {
+			List<Vector2> uvs = new() {
+				new Vector2(9, 37),
+				new Vector2(37, 37),
+				new Vector2(9, 49),
+				new Vector2(37, 49)
+			};
+
+			List<Vertex> verticesToBuild = new() {
+				new Vertex(vertices[0] - new Vector3(0, segmentIndex * 12, 0), Color.Red, true),
+				new Vertex(vertices[1] - new Vector3(0, segmentIndex * 12, 0), Color.Green, true),
+				new Vertex(vertices[0] - new Vector3(0, (segmentIndex + 1) * 12, 0), Color.Blue, true),
+				new Vertex(vertices[1] - new Vector3(0, (segmentIndex + 1) * 12, 0), Color.Yellow, true)
+			};
+
+			Polygon addedPolygon = CurrentMapState.CreatePolygon(verticesToBuild, uvs, MeshType.PrimaryMesh);
+			addedPolygon.PaletteId = 1;
+		}
+	}
+
+	private static void MakeRhombus(List<Vector3> vertices, bool isXAligned) {
 		bool topPointEndLeft = vertices[0].Y > vertices[1].Y;
 		bool bottomPointEndLeft = vertices[2].Y < vertices[3].Y;
 
@@ -426,131 +537,50 @@ public static class Greyboxer {
 		}
 	}
 
-	private static void MakeIsoscelesTrapezoid(List<Vector3> vertices, bool isXAligned) {
-		bool pointEndUp = (int) vertices[0].Y != (int) vertices[1].Y;
+	private static void PaintTexture() {
+		Texture2D texture2D = CurrentMapState.StateData.Texture;
+		Color[] textureColors = new Color[texture2D.Width * texture2D.Height];
+		texture2D.GetData(textureColors);
 
-		List<Vector3> triangleVertices = new();
-		List<Vector3> rectangleVertices = new();
+		Color color0 = new(0, 0, 0, 1);
+		Color color1 = new(17, 17, 17, 1);
 
-		if (pointEndUp) {
-			bool pointEndLeft = (int) vertices[0].Y > (int) vertices[1].Y;
-
-			if (pointEndLeft) {
-				triangleVertices.Add(vertices[0] + Vector3.Zero);
-				triangleVertices.Add(vertices[1] + Vector3.Zero);
-				triangleVertices.Add(new Vector3(vertices[0].X, vertices[1].Y, vertices[0].Z));
-
-				rectangleVertices.Add(new Vector3(vertices[0].X, vertices[1].Y, vertices[0].Z));
-				rectangleVertices.Add(vertices[1] + Vector3.Zero);
-				rectangleVertices.Add(vertices[2] + Vector3.Zero);
-				rectangleVertices.Add(vertices[3] + Vector3.Zero);
-			} else {
-				triangleVertices.Add(vertices[0] + Vector3.Zero);
-				triangleVertices.Add(vertices[1] + Vector3.Zero);
-				triangleVertices.Add(new Vector3(vertices[1].X, vertices[0].Y, vertices[1].Z));
-
-				rectangleVertices.Add(vertices[0] + Vector3.Zero);
-				rectangleVertices.Add(new Vector3(vertices[1].X, vertices[0].Y, vertices[1].Z));
-				rectangleVertices.Add(vertices[2] + Vector3.Zero);
-				rectangleVertices.Add(vertices[3] + Vector3.Zero);
-			}
-		} else {
-			bool pointEndLeft = (int) vertices[2].Y < (int) vertices[3].Y;
-
-			if (pointEndLeft) {
-				triangleVertices.Add(new Vector3(vertices[0].X, vertices[3].Y, vertices[0].Z));
-				triangleVertices.Add(vertices[3] + Vector3.Zero);
-				triangleVertices.Add(vertices[2] + Vector3.Zero);
-
-				rectangleVertices.Add(vertices[0] + Vector3.Zero);
-				rectangleVertices.Add(vertices[1] + Vector3.Zero);
-				triangleVertices.Add(new Vector3(vertices[0].X, vertices[3].Y, vertices[0].Z));
-				rectangleVertices.Add(vertices[3] + Vector3.Zero);
-			} else {
-				triangleVertices.Add(vertices[2] + Vector3.Zero);
-				triangleVertices.Add(new Vector3(vertices[1].X, vertices[2].Y, vertices[1].Z));
-				triangleVertices.Add(vertices[3] + Vector3.Zero);
-
-				rectangleVertices.Add(vertices[0] + Vector3.Zero);
-				rectangleVertices.Add(vertices[1] + Vector3.Zero);
-				rectangleVertices.Add(vertices[2] + Vector3.Zero);
-				triangleVertices.Add(new Vector3(vertices[1].X, vertices[2].Y, vertices[1].Z));
+		for (int x = 8; x <= 38; x++) {
+			for (int y = 8; y <= 38; y++) {
+				if (x <= 9 || x >= 36 || y <= 9 || y >= 36) {
+					SetPixel(x, y, color0, textureColors);
+				} else {
+					SetPixel(x, y, color1, textureColors);
+				}
 			}
 		}
 
-		MakeTriangle(triangleVertices, isXAligned);
-		MakeRectangles(rectangleVertices);
+		for (int x = 8; x <= 38; x++) {
+			for (int y = 38; y <= 49; y++) {
+				if (x <= 9 || x >= 36 || y <= 37 || y >= 48) {
+					SetPixel(x, y, color0, textureColors);
+				} else {
+					SetPixel(x, y, color1, textureColors);
+				}
+			}
+		}
+
+		texture2D.SetData(textureColors);
 	}
 
-	private static void MakeRectangles(List<Vector3> vertices) {
-		int height = (int) Math.Abs(vertices[0].Y - vertices[2].Y);
-		int segments = height / 12;
-
-		for (int segmentIndex = 0; segmentIndex < segments; segmentIndex++) {
-			List<Vector2> uvs = new() {
-				new Vector2(9, 9),
-				new Vector2(27, 9),
-				new Vector2(9, 27),
-				new Vector2(27, 27)
-			};
-
-			List<Vertex> verticesToBuild = new() {
-				new Vertex(vertices[0] - new Vector3(0, segmentIndex * 12, 0), Color.Red, true),
-				new Vertex(vertices[1] - new Vector3(0, segmentIndex * 12, 0), Color.Green, true),
-				new Vertex(vertices[0] - new Vector3(0, (segmentIndex + 1) * 12, 0), Color.Blue, true),
-				new Vertex(vertices[1] - new Vector3(0, (segmentIndex + 1) * 12, 0), Color.Yellow, true)
-			};
-
-			Polygon addedPolygon = CurrentMapState.CreatePolygon(verticesToBuild, uvs, MeshType.PrimaryMesh);
-			addedPolygon.PaletteId = 1;
-		}
+	private static void SetPalette() {
+		CurrentMapState.StateData.Palettes[0].Colors[0] = new PaletteColor(new Color(0, 74, 0, 1));
+		CurrentMapState.StateData.Palettes[0].Colors[1] = new PaletteColor(new Color(0, 58, 0, 1));
+		CurrentMapState.StateData.Palettes[1].Colors[0] = new PaletteColor(new Color(74, 58, 0, 1));
+		CurrentMapState.StateData.Palettes[1].Colors[1] = new PaletteColor(new Color(66, 49, 0, 1));
 	}
 
-	private static void MakeTriangle(List<Vector3> vertices, bool isXAligned) {
-		bool leftLong = isXAligned
-			? (int) vertices[0].X == (int) vertices[2].X
-			: (int) vertices[0].Z == (int) vertices[2].Z;
+	private static void SetPixel(int x, int y, Color color, Color[] textureColors) {
+		int index = GetColorIndex(x, y);
+		textureColors[index] = color;
+	}
 
-		int height = leftLong
-			? (int) Math.Abs(vertices[0].Y - vertices[2].Y)
-			: (int) Math.Abs(vertices[1].Y - vertices[2].Y);
-
-		int segments = height / 12;
-
-		if (leftLong) {
-			for (int segmentIndex = 0; segmentIndex < segments; segmentIndex++) {
-				List<Vector2> uvs = new() {
-					new Vector2(9, 27),
-					new Vector2(27, 27),
-					new Vector2(9, 39)
-				};
-
-				List<Vertex> verticesToBuild = new() {
-					new Vertex(vertices[0] - new Vector3(0, segmentIndex * 12, 0), Color.Red, true),
-					new Vertex(vertices[1] + Vector3.Zero, Color.Green, true),
-					new Vertex(vertices[0] - new Vector3(0, (segmentIndex + 1) * 12, 0), Color.Blue, true),
-				};
-
-				Polygon addedPolygon = CurrentMapState.CreatePolygon(verticesToBuild, uvs, MeshType.PrimaryMesh);
-				addedPolygon.PaletteId = 1;
-			}
-		} else {
-			for (int segmentIndex = 0; segmentIndex < segments; segmentIndex++) {
-				List<Vector2> uvs = new() {
-					new Vector2(9, 27),
-					new Vector2(27, 27),
-					new Vector2(9, 39)
-				};
-
-				List<Vertex> verticesToBuild = new() {
-					new Vertex(vertices[0] + Vector3.Zero, Color.Red, true),
-					new Vertex(vertices[1] - new Vector3(0, segmentIndex * 12, 0), Color.Green, true),
-					new Vertex(vertices[1] - new Vector3(0, (segmentIndex + 1) * 12, 0), Color.Blue, true),
-				};
-
-				Polygon addedPolygon = CurrentMapState.CreatePolygon(verticesToBuild, uvs, MeshType.PrimaryMesh);
-				addedPolygon.PaletteId = 1;
-			}
-		}
+	private static int GetColorIndex(int x, int y) {
+		return y * 256 + x;
 	}
 }

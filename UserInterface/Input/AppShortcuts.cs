@@ -312,6 +312,7 @@ public static class AppShortcuts {
 					}
 				}
 			}
+			
 			if (justShiftHeld) {
 				if (AppInput.KeyJustPressed(Keys.F)) {
 					if (Gui.Widget == WidgetSelectionMode.PolygonEdgeTranslate) {
