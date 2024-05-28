@@ -56,7 +56,7 @@ public static class GuiWindowManageResources {
 
 		ImGui.Begin("Manage Mesh Resources", ref windowIsOpen, flags);
 		{
-			ImGui.BeginChild("ScrollWindowMMR", new Vector2(1475, (MapData.MeshResources.Count + 1) * 30), false);
+			ImGui.BeginChild("ScrollWindowMMR", new Vector2(1475, (MapData.MeshResources.Count + 1) * 30));
 			ImGui.PopFont();
 			ImGui.Columns(_columnHeaders.Count, "ManageResourcesGrid", false);
 

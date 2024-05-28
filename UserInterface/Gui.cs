@@ -34,16 +34,12 @@ public static class Gui {
 
 	public static void Render() {
 		Stage.GraphicsDevice.Clear(Color.Transparent);
-
-		if (!Stage.Ganesha.IsActive) {
-			return;	
-		}
 			
 		if (AppInput.ControlHeld && AppInput.ShiftHeld && AppInput.AltHeld && AppInput.KeyJustPressed(Keys.D)) {
 			_showDebugPanel = !_showDebugPanel;
 		}
 
-		Stage.ImGuiRenderer.BeforeLayout(Stage.GameTime.ElapsedGameTime);
+		Stage.ImGuiRenderer.BeforeLayout(Stage.GameTime);
 		{
 			GuiStyle.SetNewUiToDefaultStyle();
 			LockModeling = false;

@@ -176,7 +176,7 @@ public static class GuiWindowFileBrowser {
 				: MapData.MapName + "." + CurrentMapState.StateData.StateMeshResources[0].XFile +
 				  (_additionalData != null ? "." + _additionalData["PaletteId"] : "") +
 				  ".act",
-			_ => _selectedFile
+			_ => ""
 		};
 
 		_clearsSelectedFileOnNavigation = false;

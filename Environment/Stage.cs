@@ -1,7 +1,6 @@
 ﻿using GaneshaDx.Resources;
 using GaneshaDx.UserInterface;
 using GaneshaDx.UserInterface.GuiDefinitions;
-using ImGuiHandler.MonoGame;
 using ImGuiNET;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -33,7 +32,7 @@ public static class Stage {
 	public static GameTime GameTime;
 	public static VertexBuffer UntexturedVertexBuffer;
 	public static VertexBuffer PolygonVertexBuffer;
-	public static MonoGameImGuiRenderer ImGuiRenderer;
+	public static ImGuiRenderer ImGuiRenderer;
 	public static bool FullModelingViewportMode;
 	public static RenderTarget2D ImGuiRenderTarget;
 	public static RenderTarget2D UvPreviewRenderTarget;
@@ -88,15 +87,18 @@ public static class Stage {
 
 		FftPolygonEffect = Content.Load<Effect>("FFTPolygonShader");
 
-		ImGuiRenderer = new MonoGameImGuiRenderer(Ganesha);
+		ImGuiRenderer = new ImGuiRenderer(Ganesha);
+		ImGuiRenderer.RebuildFontAtlas();
+		
 		ImGuiIOPtr io = ImGui.GetIO();
 		io.Fonts.AddFontFromFileTTF("./Content/Roboto-Medium.ttf", 14.0f, null, io.Fonts.GetGlyphRangesCyrillic());
 		io.Fonts.AddFontFromFileTTF("./Content/Roboto-Medium.ttf", 16.0f, null, io.Fonts.GetGlyphRangesCyrillic());
 		io.Fonts.AddFontFromFileTTF("./Content/icomoon.ttf", 16.0f, null, io.Fonts.GetGlyphRangesCyrillic());
 		io.Fonts.Build();
 		io.ConfigWindowsMoveFromTitleBarOnly = true;
-		ImGuiRenderer.Initialize();
 
+		ImGuiRenderer.RebuildFontAtlas();
+		
 		UpdateRenderTargets();
 		Window.ClientSizeChanged += WindowSizeChanged;
 		Window.FileDrop += DroppedFileIn;

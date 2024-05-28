@@ -4,6 +4,7 @@
         <TargetFramework>net6.0</TargetFramework>
         <PublishReadyToRun>false</PublishReadyToRun>
         <TieredCompilation>false</TieredCompilation>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
     <PropertyGroup>
         <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -25,8 +26,7 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="FreeImage.Standard" Version="4.3.9-beta4" />
-        <PackageReference Include="ImGui.NET" Version="1.78.0" />
-        <PackageReference Include="ImGuiHandler.MonoGame" Version="1.1.1" />
+        <PackageReference Include="ImGui.NET" Version="1.90.6.1" />
         <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
         <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
