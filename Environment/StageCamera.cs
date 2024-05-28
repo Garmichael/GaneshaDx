@@ -92,7 +92,7 @@ public static class StageCamera {
 
 		CameraHorizontalAngle = -135f;
 		CameraHeightAngle = 90f - 26.54f;
-		ZoomLevel = 0.36f;
+		ZoomLevel = 0.5f;
 	}
 
 	public static void FocusOnSelection() {
