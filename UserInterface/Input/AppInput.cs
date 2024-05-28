@@ -46,6 +46,10 @@ public static class AppInput {
 	public static bool MouseIsWithinModelViewport;
 
 	public static void Update() {
+		if (!Stage.Ganesha.IsActive) {
+			return;
+		}
+		
 		_lastKeyboardState = ThisKeyboardState;
 		_lastMouseState = ThisMouseState;
 		_lastMousePosition = ThisMousePosition;
