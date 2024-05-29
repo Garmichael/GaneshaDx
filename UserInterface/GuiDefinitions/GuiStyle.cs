@@ -201,7 +201,16 @@ public static class GuiStyle {
 		if (elementStyle == ElementStyle.ButtonFileBrowserDirectory) {
 			colors[(int) ImGuiCol.Button] = ColorPalette[ColorName.Transparent];
 			colors[(int) ImGuiCol.ButtonHovered] = ColorPalette[ColorName.Darker];
-			colors[(int) ImGuiCol.ButtonActive] = ColorPalette[ColorName.Transparent];
+			colors[(int) ImGuiCol.ButtonActive] = ColorPalette[ColorName.Darker];
+			colors[(int) ImGuiCol.Text] = ColorPalette[ColorName.Highlighted];
+			currentStyle.FrameRounding = 0;
+			currentStyle.ButtonTextAlign = new Vector2(0, 0.5f);
+		}
+
+		if (elementStyle == ElementStyle.ButtonFileBrowserDirectorySelected) {
+			colors[(int) ImGuiCol.Button] = ColorPalette[ColorName.Dark];
+			colors[(int) ImGuiCol.ButtonHovered] = ColorPalette[ColorName.Darker];
+			colors[(int) ImGuiCol.ButtonActive] = ColorPalette[ColorName.Darker];
 			colors[(int) ImGuiCol.Text] = ColorPalette[ColorName.Highlighted];
 			currentStyle.FrameRounding = 0;
 			currentStyle.ButtonTextAlign = new Vector2(0, 0.5f);

@@ -13,6 +13,7 @@ public enum ElementStyle {
 	ButtonSelected,
 	ButtonDisabled,
 	ButtonFileBrowserDirectory,
+	ButtonFileBrowserDirectorySelected,
 	ButtonFileBrowserFile,
 	ButtonFileBrowserFileSelected,
 	CheckboxDisabled,

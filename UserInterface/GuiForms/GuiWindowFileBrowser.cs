@@ -35,7 +35,7 @@ public static class GuiWindowFileBrowser {
 		{ SizableElements.FooterFileLabel, new Vector2(180, 0) },
 		{ SizableElements.FooterButton, new Vector2(60, 20) }
 	};
-	
+
 	private static Vector2 _centeredWindowPosition;
 	private static bool _resetWindowPosition;
 
@@ -48,12 +48,13 @@ public static class GuiWindowFileBrowser {
 	private static string[] _currentFolderFiles = Array.Empty<string>();
 	private static string[] _currentFolderFolders = Array.Empty<string>();
 	private static string _selectedFile = string.Empty;
+	private static string _selectedFolder = string.Empty;
 	private static string CurrentFullPath => _currentDrive + string.Join("\\", FolderPath);
 
 	public static string LastImportedTextureFile = String.Empty;
 
 	private static Dictionary<string, string> _additionalData;
-	
+
 	public enum DialogBoxes {
 		OpenMap,
 		ImportTexture,
@@ -66,7 +67,7 @@ public static class GuiWindowFileBrowser {
 	}
 
 	private static DialogBoxes _dialogBox = DialogBoxes.OpenMap;
-	
+
 	private static readonly Dictionary<DialogBoxes, string> WindowTitles = new() {
 		{ DialogBoxes.OpenMap, "Open Map" },
 		{ DialogBoxes.SaveMapAs, "Save Map As.." },
@@ -77,7 +78,7 @@ public static class GuiWindowFileBrowser {
 		{ DialogBoxes.ExportPalette, "Export Palette" },
 		{ DialogBoxes.ExportGlb, "Export GLB" }
 	};
-	
+
 	private static readonly Dictionary<DialogBoxes, string> SelectionButtonLabels = new() {
 		{ DialogBoxes.OpenMap, "Open" },
 		{ DialogBoxes.ImportPalette, "Import" },
@@ -114,7 +115,7 @@ public static class GuiWindowFileBrowser {
 		GuiStyle.SetNewUiToDefaultStyle();
 		ImGui.GetStyle().WindowRounding = 3;
 		GuiStyle.SetFont(Fonts.Large);
-		
+
 		ImGui.SetNextWindowSize(Sizes[SizableElements.Window]);
 
 		if (_resetWindowPosition) {
@@ -180,10 +181,10 @@ public static class GuiWindowFileBrowser {
 		};
 
 		_clearsSelectedFileOnNavigation = false;
-		
+
 		SetFolderPathFromFullPath(Configuration.Properties.LoadFolder);
 		RefreshFileList();
-		
+
 		_clearsSelectedFileOnNavigation = !BoxesWithInputText.Contains(_dialogBox);
 		Gui.ShowOpenFileWindow = true;
 	}
@@ -200,64 +201,93 @@ public static class GuiWindowFileBrowser {
 	private static void RenderLocationsPanel() {
 		ImGui.BeginChild("SpecialFoldersList", Sizes[SizableElements.SpecialFoldersContainer]);
 		{
-			GuiStyle.SetElementStyle(ElementStyle.ButtonFileBrowserDirectory);
-
-			foreach (string drive in _drives) {
-				if (ImGui.Button(drive, Sizes[SizableElements.SpecialFoldersItem])) {
-					_currentDrive = drive;
-					FolderPath.Clear();
-					RefreshFileList();
-				}
-			}
-
 			GuiStyle.SetNewUiToDefaultStyle();
-
-			GuiStyle.SetElementStyle(ElementStyle.ButtonFileBrowserDirectory);
-
-			string userFolderName = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile).Split("\\").Last();
-			if (ImGui.Button(userFolderName, Sizes[SizableElements.SpecialFoldersItem])) {
-				string folder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile);
-				SetFolderPathFromFullPath(folder);
-				RefreshFileList();
-			}
-
-			if (ImGui.Button("Desktop", Sizes[SizableElements.SpecialFoldersItem])) {
-				string folder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.DesktopDirectory);
-				SetFolderPathFromFullPath(folder);
-				RefreshFileList();
-			}
-
-			if (ImGui.Button("Documents", Sizes[SizableElements.SpecialFoldersItem])) {
-				string folder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
-				SetFolderPathFromFullPath(folder);
-				RefreshFileList();
-			}
-
+			
+			RenderPinnedFoldersList();
 			if (Configuration.Properties.PinnedFileBrowserFolders.Count > 0) {
 				GuiStyle.AddSpace();
-
-				foreach (string pinnedFolder in Configuration.Properties.PinnedFileBrowserFolders) {
-					bool directoryGone = !Directory.Exists(pinnedFolder);
-
-					if (!directoryGone) {
-						string label = pinnedFolder.Split("\\").Last();
-						if (ImGui.Button(label + "###" + pinnedFolder, Sizes[SizableElements.SpecialFoldersItem])) {
-							SetFolderPathFromFullPath(pinnedFolder);
-							RefreshFileList();
-						}
-					} else {
-						Configuration.Properties.PinnedFileBrowserFolders.Remove(pinnedFolder);
-						Configuration.SaveConfiguration();
-						break;
-					}
-				}
 			}
 
-
+			RenderSpecialFoldersList();
+			GuiStyle.AddSpace();
+			
+			RenderDriveList();
+		
 			GuiStyle.SetNewUiToDefaultStyle();
 		}
 
 		ImGui.EndChild();
+	}
+
+	private static void RenderPinnedFoldersList() {
+		if (Configuration.Properties.PinnedFileBrowserFolders.Count > 0) {
+			GuiStyle.AddSpace();
+
+			foreach (string pinnedFolder in Configuration.Properties.PinnedFileBrowserFolders) {
+				bool directoryGone = !Directory.Exists(pinnedFolder);
+
+				if (!directoryGone) {
+					string label = pinnedFolder.Split("\\").Last();
+					GuiStyle.SetElementStyle(
+						string.Equals(_selectedFolder, label, StringComparison.CurrentCultureIgnoreCase)
+							? ElementStyle.ButtonFileBrowserDirectorySelected
+							: ElementStyle.ButtonFileBrowserDirectory
+					);
+
+
+					if (ImGui.Button(label + "###" + pinnedFolder, Sizes[SizableElements.SpecialFoldersItem])) {
+						_selectedFolder = label;
+						SetFolderPathFromFullPath(pinnedFolder);
+						RefreshFileList();
+					}
+				} else {
+					Configuration.Properties.PinnedFileBrowserFolders.Remove(pinnedFolder);
+					Configuration.SaveConfiguration();
+					break;
+				}
+			}
+		}
+	}
+
+	private static void RenderSpecialFoldersList() {
+		List<string> specialFolders = new() {
+			System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile),
+			System.Environment.GetFolderPath(System.Environment.SpecialFolder.DesktopDirectory),
+			System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
+		};
+
+		foreach (string specialFolderLocation in specialFolders) {
+			string specialFolderName = specialFolderLocation.Split("\\").Last();
+			GuiStyle.SetElementStyle(
+				string.Equals(_selectedFolder, specialFolderName, StringComparison.CurrentCultureIgnoreCase)
+					? ElementStyle.ButtonFileBrowserDirectorySelected
+					: ElementStyle.ButtonFileBrowserDirectory
+			);
+
+			if (ImGui.Button(specialFolderName, Sizes[SizableElements.SpecialFoldersItem])) {
+				_selectedFolder = specialFolderName;
+				SetFolderPathFromFullPath(specialFolderLocation);
+				RefreshFileList();
+			}
+		}
+	}
+
+	private static void RenderDriveList() {
+		foreach (string drive in _drives) {
+			GuiStyle.SetElementStyle(
+				string.Equals(_currentDrive, drive, StringComparison.CurrentCultureIgnoreCase) &&
+				FolderPath.Count == 0
+					? ElementStyle.ButtonFileBrowserDirectorySelected
+					: ElementStyle.ButtonFileBrowserDirectory
+			);
+
+			if (ImGui.Button(drive, Sizes[SizableElements.SpecialFoldersItem])) {
+				_currentDrive = drive;
+				_selectedFolder = String.Empty;
+				FolderPath.Clear();
+				RefreshFileList();
+			}
+		}
 	}
 
 	private static void RenderFileList() {
@@ -276,7 +306,11 @@ public static class GuiWindowFileBrowser {
 			GuiStyle.SetNewUiToDefaultStyle();
 
 			foreach (string folder in _currentFolderFolders) {
-				GuiStyle.SetElementStyle(ElementStyle.ButtonFileBrowserDirectory);
+				GuiStyle.SetElementStyle(
+					string.Equals(_selectedFolder, folder, StringComparison.CurrentCultureIgnoreCase)
+						? ElementStyle.ButtonFileBrowserDirectorySelected
+						: ElementStyle.ButtonFileBrowserDirectory
+				);
 
 				if (folder.Substring(0, 1) != "$") {
 					if (ImGui.Button(folder, Sizes[SizableElements.MainFilesItem])) {
@@ -311,8 +345,12 @@ public static class GuiWindowFileBrowser {
 			}
 
 			if (folderClicked != string.Empty) {
-				FolderPath.Add(folderClicked);
-				RefreshFileList();
+				if (_selectedFolder == folderClicked) {
+					FolderPath.Add(folderClicked);
+					RefreshFileList();
+				}
+
+				_selectedFolder = folderClicked;
 			}
 		}
 		ImGui.EndChild();
@@ -391,8 +429,12 @@ public static class GuiWindowFileBrowser {
 	private static void GoUpToParentDir() {
 		if (FolderPath.Count > 0) {
 			FolderPath.RemoveAt(FolderPath.Count - 1);
+		} else {
+			_currentDrive = _drives[0];
 		}
 
+		_selectedFolder = String.Empty;
+		
 		RefreshFileList();
 	}
 
@@ -400,7 +442,7 @@ public static class GuiWindowFileBrowser {
 		_drives = Array.Empty<string>();
 		_currentFolderFiles = Array.Empty<string>();
 		_currentFolderFolders = Array.Empty<string>();
-		
+
 		if (_clearsSelectedFileOnNavigation) {
 			_selectedFile = String.Empty;
 		}
