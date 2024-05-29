@@ -610,17 +610,23 @@ public static class GuiPanelTerrain {
 			ImGui.Indent();
 
 			GuiStyle.SetElementStyle(ElementStyle.Header);
-			if(ImGui.CollapsingHeader("About Greyboxing", ImGuiTreeNodeFlags.Bullet)){
+			GuiStyle.SetFont(Fonts.Default);
+			if(ImGui.CollapsingHeader("About Greyboxing")){
+				ImGui.Indent();
 				GuiStyle.SetNewUiToDefaultStyle();
-				ImGui.Text("Greyboxing will delete all the polygons in the");
-				ImGui.Text("Primary Mesh, and then build new level geometry");
-				ImGui.Text("based on the terrain. Use this to prototype your");
-				ImGui.Text("map before building your own details.");
+				ImGui.Text("Greyboxing will delete all the polygons in");
+				ImGui.Text("the Primary Mesh, and then build new level");
+				ImGui.Text("geometry based on the terrain. Use this to");
+				ImGui.Text("prototype your map before building your");
+				ImGui.Text("own details.");
 				GuiStyle.AddSpace();
-				ImGui.Text("Updating the texture and palette will paint ");
-				ImGui.Text("onto the texture and setting the first two ");
-				ImGui.Text("colors of the first two palettes to make the");
-				ImGui.Text("Greybox easier to read");
+				ImGui.Text("Painting the Texture will update the map ");
+				ImGui.Text("texture on Page 0 in the top left corner."); 
+				GuiStyle.AddSpace();
+				ImGui.Text("Modifying the Palette will overwrite the ");
+				ImGui.Text("first and second colors of the first two ");
+				ImGui.Text("palettes.");
+				ImGui.Unindent();
 			}
 
 			GuiStyle.SetNewUiToDefaultStyle();
