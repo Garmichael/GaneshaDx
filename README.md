@@ -16,10 +16,15 @@ My other projects can be found at [My Studio Site](https://www.stormgardenstudio
 
 # Tutorials
 
-You can view a series of [Youtube Tutorial Videos](https://www.youtube.com/watch?v=eJm1jh5mnG0&list=PLh_iA7J_8dx3XcC5xZU3MkRoYFrsLOe0D) to get help you get started.
+You can view a series of [YouTube Tutorial Videos](https://www.youtube.com/watch?v=eJm1jh5mnG0&list=PLh_iA7J_8dx3XcC5xZU3MkRoYFrsLOe0D) to get help you get started.
 
+
+![Alt text](/Documentation/Screenshot_1.png?raw=true "Screenshot 2")
 ---
 
 # Todo List
 
 The most up-to-date Todo List can be found [here](https://github.com/Garmichael/GaneshaDx/blob/main/Documentation/Todo.md).
+
+
+![Alt text](/Documentation/Screenshot_1.png?raw=true "Screenshot 3")
