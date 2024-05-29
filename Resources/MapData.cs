@@ -6,6 +6,7 @@ using GaneshaDx.Common;
 using GaneshaDx.Environment;
 using GaneshaDx.Rendering;
 using GaneshaDx.Resources.ContentDataTypes.Palettes;
+using GaneshaDx.Resources.GnsData;
 using GaneshaDx.Resources.ResourceContent;
 using GaneshaDx.UserInterface;
 using GaneshaDx.UserInterface.GuiDefinitions;
