@@ -14,6 +14,7 @@ namespace GaneshaDx.UserInterface.GuiForms;
 public static class GuiWindowFileBrowser {
 	private enum SizableElements {
 		Window,
+		AddressBarWidth,
 		LeftColumn,
 		SpecialFoldersContainer,
 		SpecialFoldersItem,
@@ -26,8 +27,9 @@ public static class GuiWindowFileBrowser {
 
 	private static readonly Dictionary<SizableElements, Vector2> Sizes = new() {
 		{ SizableElements.Window, new Vector2(500, 300) },
+		{ SizableElements.AddressBarWidth, new Vector2(440, 0) },
 		{ SizableElements.LeftColumn, new Vector2(140, 0) },
-		{ SizableElements.SpecialFoldersContainer, new Vector2(120, 200) },
+		{ SizableElements.SpecialFoldersContainer, new Vector2(130, 200) },
 		{ SizableElements.SpecialFoldersItem, new Vector2(120, 20) },
 		{ SizableElements.MainFilesContainer, new Vector2(340, 200) },
 		{ SizableElements.MainFilesItem, new Vector2(320, 20) },
@@ -195,14 +197,25 @@ public static class GuiWindowFileBrowser {
 		}
 
 		ImGui.SameLine();
-		ImGui.Text(CurrentFullPath);
+		
+		string before = CurrentFullPath;
+		string currentPath = CurrentFullPath;
+		ImGui.SetNextItemWidth(Sizes[SizableElements.AddressBarWidth].X);
+		
+		ImGui.InputText("##addressBar", ref currentPath, 1000);
+		
+		bool inputIsActive = ImGui.IsItemActive();
+		if (before != currentPath && !inputIsActive) {
+			SetFolderPathFromFullPath(currentPath);
+			RefreshFileList();
+		}
 	}
 
 	private static void RenderLocationsPanel() {
 		ImGui.BeginChild("SpecialFoldersList", Sizes[SizableElements.SpecialFoldersContainer]);
 		{
 			GuiStyle.SetNewUiToDefaultStyle();
-			
+
 			RenderPinnedFoldersList();
 			if (Configuration.Properties.PinnedFileBrowserFolders.Count > 0) {
 				GuiStyle.AddSpace();
@@ -210,9 +223,9 @@ public static class GuiWindowFileBrowser {
 
 			RenderSpecialFoldersList();
 			GuiStyle.AddSpace();
-			
+
 			RenderDriveList();
-		
+
 			GuiStyle.SetNewUiToDefaultStyle();
 		}
 
@@ -434,7 +447,7 @@ public static class GuiWindowFileBrowser {
 		}
 
 		_selectedFolder = String.Empty;
-		
+
 		RefreshFileList();
 	}
 
