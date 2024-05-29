@@ -4,7 +4,7 @@ using GaneshaDx.Common;
 namespace GaneshaDx;
 
 public static class Program {
-	public const string Version = "0.94.1";
+	public const string Version = "0.94.2";
 
 	[STAThread]
 	private static void Main(string[] args) {
