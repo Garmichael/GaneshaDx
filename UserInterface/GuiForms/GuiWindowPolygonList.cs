@@ -39,7 +39,7 @@ public static class GuiWindowPolygonList {
 			GuiStyle.SetNewUiToDefaultStyle();
 			GuiStyle.SetElementStyle(ElementStyle.Header);
 
-			if (ImGui.CollapsingHeader("Untextured Triangles (" + untexturedTriangles.Count + ")")) {
+			if (ImGui.CollapsingHeader("Untextured Triangles (" + untexturedTriangles.Count + " / 64)")) {
 				GuiStyle.SetNewUiToDefaultStyle();
 				ImGui.Indent();
 				for (int index = 0; index < untexturedTriangles.Count; index++) {
@@ -54,22 +54,7 @@ public static class GuiWindowPolygonList {
 
 			GuiStyle.SetNewUiToDefaultStyle();
 			GuiStyle.SetElementStyle(ElementStyle.Header);
-			if (ImGui.CollapsingHeader("Textured Triangles (" + texturedTriangles.Count + ")")) {
-				GuiStyle.SetNewUiToDefaultStyle();
-				ImGui.Indent();
-				for (int index = 0; index < texturedTriangles.Count; index++) {
-					Polygon polygon = texturedTriangles[index];
-					if (ImGui.Button("Textured Triangle " + index + "##" + "texturedTriangle" + index)) {
-						Selection.SelectPolygon(polygon);
-					}
-				}
-
-				ImGui.Unindent();
-			}
-
-			GuiStyle.SetNewUiToDefaultStyle();
-			GuiStyle.SetElementStyle(ElementStyle.Header);
-			if (ImGui.CollapsingHeader("Untextured Quads (" + untexturedQuads.Count + ")")) {
+			if (ImGui.CollapsingHeader("Untextured Quads (" + untexturedQuads.Count + " / 256)")) {
 				GuiStyle.SetNewUiToDefaultStyle();
 				ImGui.Indent();
 				for (int index = 0; index < untexturedQuads.Count; index++) {
@@ -84,7 +69,22 @@ public static class GuiWindowPolygonList {
 
 			GuiStyle.SetNewUiToDefaultStyle();
 			GuiStyle.SetElementStyle(ElementStyle.Header);
-			if (ImGui.CollapsingHeader("Textured Quads (" + texturedQuads.Count + ")")) {
+			if (ImGui.CollapsingHeader("Textured Triangles (" + texturedTriangles.Count + " / 360)")) {
+				GuiStyle.SetNewUiToDefaultStyle();
+				ImGui.Indent();
+				for (int index = 0; index < texturedTriangles.Count; index++) {
+					Polygon polygon = texturedTriangles[index];
+					if (ImGui.Button("Textured Triangle " + index + "##" + "texturedTriangle" + index)) {
+						Selection.SelectPolygon(polygon);
+					}
+				}
+
+				ImGui.Unindent();
+			}
+
+			GuiStyle.SetNewUiToDefaultStyle();
+			GuiStyle.SetElementStyle(ElementStyle.Header);
+			if (ImGui.CollapsingHeader("Textured Quads (" + texturedQuads.Count + " / 710)")) {
 				GuiStyle.SetNewUiToDefaultStyle();
 				ImGui.Indent();
 				for (int index = 0; index < texturedQuads.Count; index++) {
