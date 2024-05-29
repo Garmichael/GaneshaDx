@@ -4,6 +4,8 @@
 
 GaneshaDX is a map editor for Final Fantasy Tactics for Playstation (PSX).
 
+![Alt text](/Documentation/Screenshot_1.png?raw=true "Screenshot 1")
+
 Check the [Releases Page](https://github.com/Garmichael/GaneshaDx/releases) for the most recent download.
 
 If you'd like to support the development of this, and other projects I work on, consider supporting me through [My Venmo](https://www.venmo.com/Garmichael).
