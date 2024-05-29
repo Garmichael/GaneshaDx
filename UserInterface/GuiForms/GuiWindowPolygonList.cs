@@ -14,7 +14,7 @@ public static class GuiWindowPolygonList {
 		GuiStyle.SetNewUiToDefaultStyle();
 		ImGui.GetStyle().WindowRounding = 4;
 		ImGui.GetStyle().FrameRounding = 0;
-		ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[2]);
+		GuiStyle.SetFont(Fonts.Large);
 		const ImGuiWindowFlags flags = ImGuiWindowFlags.NoResize |
 		                               ImGuiWindowFlags.AlwaysAutoResize |
 		                               ImGuiWindowFlags.NoCollapse;
@@ -22,7 +22,7 @@ public static class GuiWindowPolygonList {
 		ImGui.SetNextWindowSize(new Vector2(250, 400));
 		ImGui.Begin("Polygon List", ref windowIsOpen, flags);
 		{
-			ImGui.PopFont();
+			GuiStyle.SetFont(Fonts.Default);
 
 			List<Polygon> untexturedTriangles = CurrentMapState.StateData.PolygonCollection
 				[GuiPanelMeshSelector.SelectedMesh][PolygonType.UntexturedTriangle];
@@ -101,7 +101,7 @@ public static class GuiWindowPolygonList {
 			ImGui.Columns(1);
 		}
 		ImGui.End();
-
+		
 		if (!windowIsOpen) {
 			Gui.ShowPolygonListWindow = false;
 		}

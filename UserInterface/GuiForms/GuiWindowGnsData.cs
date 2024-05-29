@@ -15,13 +15,12 @@ public static class GuiWindowGnsData {
 
 		GuiStyle.SetNewUiToDefaultStyle();
 		ImGui.GetStyle().WindowRounding = 3;
-		ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[2]);
+		GuiStyle.SetFont(Fonts.Large);
 
 		ImGui.SetNextWindowSize(new Vector2(WindowWidth, _windowHeight));
 
 		ImGui.Begin("GNS Data", ref windowIsOpen);
 		{
-			ImGui.PopFont();
 			GuiStyle.SetNewUiToDefaultStyle();
 			ImGui.GetStyle().FrameRounding = 0;
 			RenderGnsData();
@@ -30,7 +29,6 @@ public static class GuiWindowGnsData {
 			_windowHeight = Utilities.Min(_windowHeight, 200);
 		}
 		ImGui.End();
-
 
 		if (!windowIsOpen) {
 			Gui.ShowGnsDataWindow = false;

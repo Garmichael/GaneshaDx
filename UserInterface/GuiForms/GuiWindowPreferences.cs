@@ -12,17 +12,17 @@ public static class GuiWindowPreferences {
 		GuiStyle.SetNewUiToDefaultStyle();
 		ImGui.GetStyle().WindowRounding = 4;
 		ImGui.GetStyle().FrameRounding = 0;
-		ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[2]);
+		GuiStyle.SetFont(Fonts.Large);
+
 		const ImGuiWindowFlags flags = ImGuiWindowFlags.NoResize |
 		                               ImGuiWindowFlags.AlwaysAutoResize |
 		                               ImGuiWindowFlags.NoCollapse;
 
-			
 		ImGui.SetNextWindowSize(new Vector2(300, 430));
-			
+
 		ImGui.Begin("Preferences", ref windowIsOpen, flags);
 		{
-			ImGui.PopFont();
+			GuiStyle.SetFont(Fonts.Default);
 			ImGui.Columns(2, "PreferencesControls", false);
 			ImGui.SetColumnWidth(0, GuiStyle.LabelWidth + 30);
 			ImGui.SetColumnWidth(1, GuiStyle.WidgetWidth + 10);
@@ -33,7 +33,7 @@ public static class GuiWindowPreferences {
 			ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
 			ImGui.Checkbox("###PreferencesSwapCameraControls", ref Configuration.Properties.SwapCameraControls);
 			ImGui.NextColumn();
-				
+
 			ImGui.Text("Control+Drag Modifier");
 			ImGui.NextColumn();
 
@@ -85,7 +85,7 @@ public static class GuiWindowPreferences {
 			ImGui.NextColumn();
 
 			GuiStyle.AddSpace();
-				
+
 			ImGui.Text("Normal Indicator Length");
 			ImGui.NextColumn();
 
@@ -93,14 +93,14 @@ public static class GuiWindowPreferences {
 			ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
 			ImGui.InputInt("###PreferencesNormalIndicatorLength", ref Configuration.Properties.NormalIndicatorLength);
 			ImGui.NextColumn();
-				
+
 			ImGui.Text("Expanded Compass");
 			ImGui.NextColumn();
 
 			ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
 			ImGui.Checkbox("###PreferencesExpandedCompass", ref Configuration.Properties.ExpandCompassToTerrainLength);
 			ImGui.NextColumn();
-				
+
 			ImGui.Text("Show FPS");
 			ImGui.NextColumn();
 
@@ -108,15 +108,15 @@ public static class GuiWindowPreferences {
 			ImGui.Checkbox("###PreferencesShowFPS", ref Configuration.Properties.ShowFps);
 			GuiStyle.AddSpace();
 			ImGui.NextColumn();
-				
-				
+
+
 			ImGui.Text("Show Unknown Values");
 			ImGui.NextColumn();
 
 			ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
 			ImGui.Checkbox("###PreferencesShowUnknownValues", ref Configuration.Properties.ShowUnknownValues);
 			ImGui.NextColumn();
-				
+
 			GuiStyle.AddSpace();
 			ImGui.Text("AutoSave");
 			ImGui.NextColumn();

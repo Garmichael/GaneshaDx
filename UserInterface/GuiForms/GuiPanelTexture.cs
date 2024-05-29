@@ -569,7 +569,7 @@ public static class GuiPanelTexture {
 			style.FrameRounding = 0;
 			style.FrameBorderSize = 0;
 
-			ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
+			GuiStyle.SetFont(Fonts.Icon);
 			ImGui.GetStyle().Colors[(int) ImGuiCol.Button] = GuiStyle.ColorPalette[ColorName.Transparent];
 
 			if (ImGui.Button("Z##import" + paletteIndex)) {
@@ -794,7 +794,7 @@ public static class GuiPanelTexture {
 			style.FrameRounding = 0;
 			style.FrameBorderSize = 0;
 
-			ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
+			GuiStyle.SetFont(Fonts.Icon);
 			ImGui.GetStyle().Colors[(int) ImGuiCol.Button] = GuiStyle.ColorPalette[ColorName.Transparent];
 
 			if (ImGui.Button("Z##importA" + paletteIndex)) {
@@ -820,7 +820,6 @@ public static class GuiPanelTexture {
 			}
 
 			ImGui.PopFont();
-
 			ImGui.NextColumn();
 		}
 

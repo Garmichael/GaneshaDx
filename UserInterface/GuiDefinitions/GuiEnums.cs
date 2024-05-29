@@ -38,3 +38,9 @@ public enum ColorName {
 	Lightest,
 	Debug
 }
+
+public enum Fonts {
+	Default,
+	Large,
+	Icon
+}

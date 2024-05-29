@@ -43,11 +43,12 @@ public static class GuiWindowTexturePreview {
 
 		ImGui.SetNextWindowSize(_textureWindowSize);
 		ImGui.GetStyle().WindowRounding = 5;
-		ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[2]);
-
+		GuiStyle.SetFont(Fonts.Large);
+		
 		ImGui.Begin("Texture");
 		{
-			ImGui.PopFont();
+			GuiStyle.SetFont(Fonts.Default);
+			
 			ShouldRenderTexture = true;
 
 			if (!ImGui.IsWindowCollapsed()) {

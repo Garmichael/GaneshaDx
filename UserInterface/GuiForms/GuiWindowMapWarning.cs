@@ -28,7 +28,6 @@ public static class GuiWindowMapWarning {
 		GuiStyle.SetNewUiToDefaultStyle();
 		ImGui.GetStyle().WindowRounding = 0;
 		ImGui.GetStyle().FrameRounding = 0;
-		ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[2]);
 		const ImGuiWindowFlags flags = ImGuiWindowFlags.NoResize |
 		                               ImGuiWindowFlags.AlwaysAutoResize |
 		                               ImGuiWindowFlags.NoCollapse |
@@ -42,6 +41,7 @@ public static class GuiWindowMapWarning {
 
 		ImGui.Begin("Map Warnings", flags);
 		{
+			GuiStyle.SetFont(Fonts.Large);
 			ImGuiStylePtr style = ImGui.GetStyle();
 			style.Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.Selected];
 
@@ -49,13 +49,12 @@ public static class GuiWindowMapWarning {
 				ImGui.Text(warning);
 			}
 		}
-		ImGui.End();
 	}
 
 	private static void GetWarnings() {
 		Warnings.Clear();
 
-			
+
 		if (CurrentMapState.StateMeshMapResources.Count == 0) {
 			Warnings.Add("The Selected State Does Not Exist");
 		}

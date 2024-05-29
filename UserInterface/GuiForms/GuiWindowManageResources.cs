@@ -46,7 +46,7 @@ public static class GuiWindowManageResources {
 		GuiStyle.SetNewUiToDefaultStyle();
 		ImGui.GetStyle().ItemSpacing = new Vector2(2, 2);
 		ImGui.GetStyle().WindowRounding = 0;
-		ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[2]);
+		GuiStyle.SetFont(Fonts.Large);
 		const ImGuiWindowFlags flags = ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.HorizontalScrollbar |
 		                               ImGuiWindowFlags.NoResize |
 		                               ImGuiWindowFlags.NoMove;
@@ -56,8 +56,8 @@ public static class GuiWindowManageResources {
 
 		ImGui.Begin("Manage Mesh Resources", ref windowIsOpen, flags);
 		{
+			GuiStyle.SetFont(Fonts.Default);
 			ImGui.BeginChild("ScrollWindowMMR", new Vector2(1475, (MapData.MeshResources.Count + 1) * 30));
-			ImGui.PopFont();
 			ImGui.Columns(_columnHeaders.Count, "ManageResourcesGrid", false);
 
 			for (int columnIndex = 0; columnIndex < _columnHeaders.Count; columnIndex++) {

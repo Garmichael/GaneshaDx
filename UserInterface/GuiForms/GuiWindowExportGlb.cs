@@ -8,10 +8,11 @@ public static class GuiWindowExportGlb {
 	public static bool ExportUnlit;
 
 	public static void Render() {
+		;
 		bool windowIsOpen = true;
 		GuiStyle.SetNewUiToDefaultStyle();
 		ImGui.GetStyle().WindowRounding = 4;
-		ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[2]);
+		GuiStyle.SetFont(Fonts.Large);
 		const ImGuiWindowFlags flags = ImGuiWindowFlags.NoResize |
 		                               ImGuiWindowFlags.AlwaysAutoResize |
 		                               ImGuiWindowFlags.NoCollapse;
@@ -19,7 +20,7 @@ public static class GuiWindowExportGlb {
 		ImGui.SetNextWindowSize(new Vector2(270, 100));
 		ImGui.Begin("Export Glb", ref windowIsOpen, flags);
 		{
-			ImGui.PopFont();
+			GuiStyle.SetFont(Fonts.Default);
 
 			ImGui.Columns(2, "GlbOptionsSettings", false);
 			ImGui.SetColumnWidth(0, 200);

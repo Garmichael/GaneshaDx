@@ -13,13 +13,13 @@ namespace GaneshaDx.UserInterface.GuiForms;
 public static class GuiWindowRawTerrainData {
 	private const int WindowWidth = 400;
 	private static string _rawData = "";
-		
+
 	public static void Render() {
 		bool windowIsOpen = true;
 		GuiStyle.SetNewUiToDefaultStyle();
 		ImGui.GetStyle().WindowRounding = 4;
 		ImGui.GetStyle().FrameRounding = 0;
-		ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[2]);
+		GuiStyle.SetFont(Fonts.Large);
 		const ImGuiWindowFlags flags = ImGuiWindowFlags.NoResize |
 		                               ImGuiWindowFlags.AlwaysAutoResize |
 		                               ImGuiWindowFlags.NoCollapse;
@@ -27,7 +27,7 @@ public static class GuiWindowRawTerrainData {
 		ImGui.SetNextWindowSize(new Vector2(WindowWidth, 125));
 		ImGui.Begin("Terrain Data", ref windowIsOpen, flags);
 		{
-			ImGui.PopFont();
+			GuiStyle.SetFont(Fonts.Default);
 			ImGui.PushTextWrapPos();
 			ImGui.Text("Use this code when setting up an FFHacktics Wiki page for your Map.");
 			ImGui.GetStyle().Colors[(int) ImGuiCol.Button] = GuiStyle.ColorPalette[ColorName.Transparent];

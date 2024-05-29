@@ -14,16 +14,16 @@ public static class GuiWindowDebugAnimatedMeshData {
 	public static void Render() {
 		GuiStyle.SetNewUiToDefaultStyle();
 		ImGui.GetStyle().WindowRounding = 3;
-		ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[2]);
+		GuiStyle.SetFont(Fonts.Large);
 
 		bool windowIsOpen = true;
 
 		ImGui.Begin("Animation Bytes", ref windowIsOpen);
 		{
+			GuiStyle.SetFont(Fonts.Default);
 			ImGui.Checkbox("Show Unused? ", ref _showUnused);
 
 			MeshAnimationSet set = CurrentMapState.StateData.MeshAnimationSet;
-			ImGui.PopFont();
 
 			if (ImGui.CollapsingHeader("Headers")) {
 				const int inputWidth = 40;

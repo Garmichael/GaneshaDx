@@ -20,7 +20,8 @@ public static class GuiWindowAddPolygon {
 		GuiStyle.SetNewUiToDefaultStyle();
 		ImGui.GetStyle().WindowRounding = 3;
 		ImGui.GetStyle().FrameRounding = 0;
-		ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[2]);
+
+		GuiStyle.SetFont(Fonts.Large);
 
 		const ImGuiWindowFlags flags = ImGuiWindowFlags.NoResize |
 		                               ImGuiWindowFlags.AlwaysAutoResize |
@@ -28,7 +29,7 @@ public static class GuiWindowAddPolygon {
 
 		ImGui.Begin("Add New Polygon", ref windowIsOpen, flags);
 		{
-			ImGui.PopFont();
+			GuiStyle.SetFont(Fonts.Default);
 			ImGui.Columns(2, "AddNewPolygonColumns", false);
 			ImGui.SetColumnWidth(0, GuiStyle.LabelWidth + 10);
 			ImGui.SetColumnWidth(1, GuiStyle.WidgetWidth + 10);

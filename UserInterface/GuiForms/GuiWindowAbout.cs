@@ -10,7 +10,8 @@ public static class GuiWindowAbout {
 		GuiStyle.SetNewUiToDefaultStyle();
 		ImGui.GetStyle().WindowRounding = 4;
 		ImGui.GetStyle().FrameRounding = 0;
-		ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[2]);
+
+		GuiStyle.SetFont(Fonts.Large);
 		const ImGuiWindowFlags flags = ImGuiWindowFlags.NoResize |
 		                               ImGuiWindowFlags.AlwaysAutoResize |
 		                               ImGuiWindowFlags.NoCollapse;
@@ -18,17 +19,17 @@ public static class GuiWindowAbout {
 		ImGui.SetNextWindowSize(new Vector2(260, 210));
 		ImGui.Begin("About GaneshaDx", ref windowIsOpen, flags);
 		{
-			ImGui.PopFont();
+			GuiStyle.SetFont(Fonts.Default);
 			ImGui.Text("GaneshaDx");
 			ImGui.Text("Final Fantasy Tactics Map Editor");
 			GuiStyle.AddSpace();
-				
+
 			ImGui.Text("Version " + Program.Version);
 			GuiStyle.AddSpace();
-				
+
 			ImGui.Text("Developed by Garret Bright");
 			ImGui.Text("GLB Exporter by CalamityCoder");
-				
+
 			GuiStyle.AddSpace();
 			ImGui.Text("Copyright 2021 - Present");
 			ImGui.Text("Storm Garden Studio");

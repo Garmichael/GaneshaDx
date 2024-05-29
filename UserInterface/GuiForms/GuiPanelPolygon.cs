@@ -51,7 +51,8 @@ public static class GuiPanelPolygon {
 			GuiStyle.SetNewUiToDefaultStyle();
 		}
 
-		ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
+		GuiStyle.SetFont(Fonts.Icon);
+
 		if (ImGui.Button("Q##selectionMode")) {
 			Gui.Widget = WidgetSelectionMode.Select;
 		}
@@ -72,7 +73,8 @@ public static class GuiPanelPolygon {
 			GuiStyle.SetNewUiToDefaultStyle();
 		}
 
-		ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
+		GuiStyle.SetFont(Fonts.Icon);
+
 		if (ImGui.Button("W##translateMode")) {
 			Gui.Widget = WidgetSelectionMode.PolygonTranslate;
 		}
@@ -93,7 +95,8 @@ public static class GuiPanelPolygon {
 			GuiStyle.SetNewUiToDefaultStyle();
 		}
 
-		ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
+		GuiStyle.SetFont(Fonts.Icon);
+
 		if (ImGui.Button("E##rotateMode")) {
 			Gui.Widget = WidgetSelectionMode.PolygonRotate;
 		}
@@ -114,7 +117,8 @@ public static class GuiPanelPolygon {
 			GuiStyle.SetNewUiToDefaultStyle();
 		}
 
-		ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
+		GuiStyle.SetFont(Fonts.Icon);
+
 		if (ImGui.Button("R##vertexMode")) {
 			Gui.Widget = WidgetSelectionMode.PolygonVertexTranslate;
 		}
@@ -135,13 +139,14 @@ public static class GuiPanelPolygon {
 			GuiStyle.SetNewUiToDefaultStyle();
 		}
 
-		ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
+		GuiStyle.SetFont(Fonts.Icon);
 
 		if (ImGui.Button("T##edgeMode")) {
 			Gui.Widget = WidgetSelectionMode.PolygonEdgeTranslate;
 		}
 
 		ImGui.PopFont();
+		
 		if (ImGui.IsItemHovered()) {
 			ImGui.BeginTooltip();
 			ImGui.Text("Translate Edge");

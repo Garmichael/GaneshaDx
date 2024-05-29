@@ -13,21 +13,28 @@ public static class GuiStyle {
 	public const int LabelWidth = 140;
 	public const int WidgetWidth = 111;
 	public const int CheckBoxWidth = 30;
+
+	public static readonly Dictionary<Fonts, ImFontPtr> Fonts = new() {
+		{ GuiDefinitions.Fonts.Default, ImGui.GetIO().Fonts.Fonts[1] },
+		{ GuiDefinitions.Fonts.Large, ImGui.GetIO().Fonts.Fonts[2] },
+		{ GuiDefinitions.Fonts.Icon, ImGui.GetIO().Fonts.Fonts[3] }
+	};
+
 	private static readonly Dictionary<int, Vector4> DefaultColors = new();
 
 	public static readonly Dictionary<ColorName, Vector4> ColorPalette = new() {
-		{ColorName.Clickable, Utilities.ConvertVector4(Utilities.GetColorFromHex("3077C1").ToVector4())},
-		{ColorName.Highlighted, Utilities.ConvertVector4(Utilities.GetColorFromHex("45AEE9").ToVector4())},
-		{ColorName.Selected, Utilities.ConvertVector4(Utilities.GetColorFromHex("f76363").ToVector4())},
-		{ColorName.HighlightedText, Utilities.ConvertVector4(Utilities.GetColorFromHex("45AEE9").ToVector4())},
-		{ColorName.Darkest, Utilities.ConvertVector4(Utilities.GetColorFromHex("1f2123").ToVector4())},
-		{ColorName.Darker, Utilities.ConvertVector4(Utilities.GetColorFromHex("2f3136").ToVector4())},
-		{ColorName.Dark, Utilities.ConvertVector4(Utilities.GetColorFromHex("36393e").ToVector4())},
-		{ColorName.Light, Utilities.ConvertVector4(Utilities.GetColorFromHex("484b51").ToVector4())},
-		{ColorName.Lighter, Utilities.ConvertVector4(Utilities.GetColorFromHex("c3c5cc").ToVector4())},
-		{ColorName.Lightest, Utilities.ConvertVector4(Utilities.GetColorFromHex("eceef7").ToVector4())},
-		{ColorName.Debug, Utilities.ConvertVector4(Utilities.GetColorFromHex("ca03fc").ToVector4())},
-		{ColorName.Transparent, new Vector4(0, 0, 0, 0)}
+		{ ColorName.Clickable, Utilities.ConvertVector4(Utilities.GetColorFromHex("3077C1").ToVector4()) },
+		{ ColorName.Highlighted, Utilities.ConvertVector4(Utilities.GetColorFromHex("45AEE9").ToVector4()) },
+		{ ColorName.Selected, Utilities.ConvertVector4(Utilities.GetColorFromHex("f76363").ToVector4()) },
+		{ ColorName.HighlightedText, Utilities.ConvertVector4(Utilities.GetColorFromHex("45AEE9").ToVector4()) },
+		{ ColorName.Darkest, Utilities.ConvertVector4(Utilities.GetColorFromHex("1f2123").ToVector4()) },
+		{ ColorName.Darker, Utilities.ConvertVector4(Utilities.GetColorFromHex("2f3136").ToVector4()) },
+		{ ColorName.Dark, Utilities.ConvertVector4(Utilities.GetColorFromHex("36393e").ToVector4()) },
+		{ ColorName.Light, Utilities.ConvertVector4(Utilities.GetColorFromHex("484b51").ToVector4()) },
+		{ ColorName.Lighter, Utilities.ConvertVector4(Utilities.GetColorFromHex("c3c5cc").ToVector4()) },
+		{ ColorName.Lightest, Utilities.ConvertVector4(Utilities.GetColorFromHex("eceef7").ToVector4()) },
+		{ ColorName.Debug, Utilities.ConvertVector4(Utilities.GetColorFromHex("ca03fc").ToVector4()) },
+		{ ColorName.Transparent, new Vector4(0, 0, 0, 0) }
 	};
 
 	public const ImGuiColorEditFlags ColorBoxFlags = ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.NoLabel;
@@ -87,6 +94,10 @@ public static class GuiStyle {
 		DefaultColors.Add((int) ImGuiCol.ModalWindowDimBg, new Vector4(0.80f, 0.80f, 0.80f, 0.35f));
 	}
 
+	public static void SetFont(Fonts font) {
+		ImGui.PushFont(Fonts[font]);
+	}
+
 	public static void SetNewUiToDefaultStyle() {
 		ImGuiIOPtr io = ImGui.GetIO();
 		ImGuiStylePtr currentStyle = ImGui.GetStyle();
@@ -140,14 +151,15 @@ public static class GuiStyle {
 		// colors[(int) ImGuiCol.NavWindowingHighlight] = DefaultColors[(int) ImGuiCol.NavWindowingHighlight];
 		// colors[(int) ImGuiCol.NavWindowingDimBg] = DefaultColors[(int) ImGuiCol.NavWindowingDimBg];
 		// colors[(int) ImGuiCol.ModalWindowDimBg] = DefaultColors[(int) ImGuiCol.ModalWindowDimBg];
-
-		ImGui.PushFont(io.Fonts.Fonts[1]);
+		
 		currentStyle.WindowPadding = new Vector2(8, 8);
 		currentStyle.FramePadding = new Vector2(8, 3);
 		currentStyle.FrameRounding = 3;
 		currentStyle.ItemSpacing = new Vector2(8, 4);
 		currentStyle.WindowBorderSize = 0;
 		currentStyle.ButtonTextAlign = new Vector2(0.5f, 0.5f);
+		
+		SetFont(GuiDefinitions.Fonts.Default);
 	}
 
 	public static void SetElementStyle(ElementStyle elementStyle) {
@@ -161,7 +173,7 @@ public static class GuiStyle {
 			colors[(int) ImGuiCol.ButtonActive] = ColorPalette[ColorName.Highlighted];
 			colors[(int) ImGuiCol.Text] = DefaultColors[(int) ImGuiCol.Text];
 			currentStyle.FrameRounding = 0;
-			ImGui.PushFont(io.Fonts.Fonts[2]);
+			SetFont(GuiDefinitions.Fonts.Large);
 		}
 
 		if (elementStyle == ElementStyle.ButtonTabSelected) {
@@ -169,7 +181,7 @@ public static class GuiStyle {
 			colors[(int) ImGuiCol.ButtonHovered] = ColorPalette[ColorName.Transparent];
 			colors[(int) ImGuiCol.ButtonActive] = ColorPalette[ColorName.Transparent];
 			colors[(int) ImGuiCol.Text] = ColorPalette[ColorName.HighlightedText];
-			ImGui.PushFont(io.Fonts.Fonts[2]);
+			SetFont(GuiDefinitions.Fonts.Large);
 		}
 
 		if (elementStyle == ElementStyle.ButtonSelected) {
@@ -212,7 +224,7 @@ public static class GuiStyle {
 			currentStyle.FrameRounding = 0;
 			currentStyle.ButtonTextAlign = new Vector2(0, 0.5f);
 		}
-			
+
 		if (elementStyle == ElementStyle.CheckboxDisabled) {
 			colors[(int) ImGuiCol.FrameBg] = ColorPalette[ColorName.Darkest];
 			colors[(int) ImGuiCol.FrameBgHovered] = ColorPalette[ColorName.Darkest];
@@ -225,7 +237,7 @@ public static class GuiStyle {
 			colors[(int) ImGuiCol.FrameBgHovered] = ColorPalette[ColorName.Dark];
 			colors[(int) ImGuiCol.FrameBgActive] = ColorPalette[ColorName.Dark];
 		}
-			
+
 		if (elementStyle == ElementStyle.InvisibleWindowStyle) {
 			colors[(int) ImGuiCol.WindowBg] = Vector4.Zero;
 		}
@@ -240,7 +252,7 @@ public static class GuiStyle {
 			colors[(int) ImGuiCol.Header] = ColorPalette[ColorName.Transparent];
 			colors[(int) ImGuiCol.HeaderActive] = ColorPalette[ColorName.Transparent];
 			colors[(int) ImGuiCol.HeaderHovered] = ColorPalette[ColorName.Transparent];
-			ImGui.PushFont(io.Fonts.Fonts[2]);
+			SetFont(GuiDefinitions.Fonts.Large);
 		}
 
 		if (elementStyle == ElementStyle.WindowNoPadding) {

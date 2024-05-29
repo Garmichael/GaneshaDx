@@ -31,7 +31,7 @@ public static class GuiWindowEditMeshAnimations {
 
 		GuiStyle.SetNewUiToDefaultStyle();
 		ImGui.GetStyle().WindowRounding = 3;
-		ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[2]);
+		GuiStyle.SetFont(Fonts.Large);
 		int windowHeight = Configuration.Properties.ShowUnknownValues
 			? WindowHeightWithUnknownsShown
 			: WindowHeight;
@@ -311,7 +311,8 @@ public static class GuiWindowEditMeshAnimations {
 		ImGui.SetColumnWidth(3, inputWidth + 30);
 
 		ImGui.PushStyleColor(ImGuiCol.Text, GuiStyle.ColorPalette[ColorName.HighlightedText]);
-		ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[2]);
+		GuiStyle.SetFont(Fonts.Large);
+		
 		ImGui.Text(type);
 
 		ImGui.NextColumn();
@@ -460,8 +461,8 @@ public static class GuiWindowEditMeshAnimations {
 		} else {
 			GuiStyle.SetNewUiToDefaultStyle();
 		}
-
-		ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
+		
+		GuiStyle.SetFont(Fonts.Icon);
 		if (ImGui.Button("O##MeshAnimationStop")) {
 			MeshAnimationController.StopAnimations();
 		}
@@ -475,8 +476,8 @@ public static class GuiWindowEditMeshAnimations {
 		} else {
 			GuiStyle.SetNewUiToDefaultStyle();
 		}
-
-		ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[3]);
+		
+		GuiStyle.SetFont(Fonts.Icon);
 		if (ImGui.Button("P##MeshAnimationPlay")) {
 			MeshAnimationController.PlayAnimations(_stateActivelyPlaying);
 		}

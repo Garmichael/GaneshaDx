@@ -14,7 +14,7 @@ namespace GaneshaDx.UserInterface.GuiForms;
 public static class GuiMenuBar {
 	public static void Render() {
 		GuiStyle.SetNewUiToDefaultStyle();
-		ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[2]);
+		GuiStyle.SetFont(Fonts.Large);
 
 		if (ImGui.BeginMainMenuBar()) {
 			if (ImGui.BeginMenu("File")) {

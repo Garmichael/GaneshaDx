@@ -113,8 +113,8 @@ public static class GuiWindowFileBrowser {
 
 		GuiStyle.SetNewUiToDefaultStyle();
 		ImGui.GetStyle().WindowRounding = 3;
-		ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[2]);
-
+		GuiStyle.SetFont(Fonts.Large);
+		
 		ImGui.SetNextWindowSize(Sizes[SizableElements.Window]);
 
 		if (_resetWindowPosition) {
@@ -127,7 +127,7 @@ public static class GuiWindowFileBrowser {
 
 		ImGui.Begin(WindowTitles[_dialogBox], ref windowIsOpen, flags);
 		{
-			ImGui.PopFont();
+			GuiStyle.SetFont(Fonts.Default);
 			GuiStyle.SetNewUiToDefaultStyle();
 			ImGui.GetStyle().FrameRounding = 0;
 

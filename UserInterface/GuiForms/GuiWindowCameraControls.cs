@@ -24,12 +24,12 @@ public static class GuiWindowCameraControls {
 
 		GuiStyle.SetNewUiToDefaultStyle();
 		ImGui.GetStyle().WindowRounding = 3;
-		ImGui.PushFont(ImGui.GetIO().Fonts.Fonts[2]);
 		ImGui.SetNextWindowSize(new Vector2(windowWidth, windowHeight));
+		GuiStyle.SetFont(Fonts.Large);
 
 		ImGui.Begin("Camera Controls", ref windowIsOpen, ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse);
 		{
-			ImGui.PopFont();
+			GuiStyle.SetFont(Fonts.Default);
 			ImGui.Columns(5, "CameraControlsColumns", false);
 			ImGui.SetColumnWidth(0, directionWidth + 10);
 			ImGui.SetColumnWidth(1, directionWidth + 10);
