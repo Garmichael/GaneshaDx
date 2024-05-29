@@ -400,6 +400,7 @@ public static class GuiWindowFileBrowser {
 		_drives = Array.Empty<string>();
 		_currentFolderFiles = Array.Empty<string>();
 		_currentFolderFolders = Array.Empty<string>();
+		
 		if (_clearsSelectedFileOnNavigation) {
 			_selectedFile = String.Empty;
 		}
@@ -429,6 +430,7 @@ public static class GuiWindowFileBrowser {
 	private static void SetFolderPathFromFullPath(string folder) {
 		string[] folderPaths = folder.Split("\\");
 		FolderPath.Clear();
+		_currentDrive = folderPaths[0] + "\\";
 		for (int index = 1; index < folderPaths.Length; index++) {
 			FolderPath.Add(folderPaths[index]);
 		}
