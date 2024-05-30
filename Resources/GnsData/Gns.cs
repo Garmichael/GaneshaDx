@@ -5,7 +5,7 @@ namespace GaneshaDx.Resources.GnsData;
 public class Gns {
 	public readonly List<byte> RawData;
 
-	private const int ResourceRow = 34;
+	private readonly List<int> _resourceRowIndicators = new() { 34, 48, 112 };
 	private const int ResourceRowLength = 20;
 	private const int UnknownRowLength = 28;
 
@@ -18,13 +18,11 @@ public class Gns {
 	}
 
 	private void ProcessData() {
-		for (int currentByteIndex = 0; currentByteIndex < RawData.Count; currentByteIndex++) {
-			bool isResourceRow = RawData[currentByteIndex] == ResourceRow;
+		for (int currentByteIndex = 0; currentByteIndex < RawData.Count;) {
+			bool isResourceRow = _resourceRowIndicators.Contains(RawData[currentByteIndex]);
 
 			if (isResourceRow) {
-				List<byte> resourceRowData = new();
-				resourceRowData.AddRange(RawData.GetRange(currentByteIndex, ResourceRowLength));
-				_resourceRows.Add(new GnsResourceRow(resourceRowData));
+				_resourceRows.Add(new GnsResourceRow(RawData.GetRange(currentByteIndex, ResourceRowLength)));
 				currentByteIndex += ResourceRowLength;
 			} else {
 				_gnsUnknownRow = new GnsUnknownRow(RawData.GetRange(currentByteIndex, UnknownRowLength));

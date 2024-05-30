@@ -40,10 +40,15 @@ public static class GuiWindowPolygonList {
 			GuiStyle.SetElementStyle(ElementStyle.Header);
 
 			if (ImGui.CollapsingHeader("Untextured Triangles (" + untexturedTriangles.Count + " / 64)")) {
-				GuiStyle.SetNewUiToDefaultStyle();
 				ImGui.Indent();
 				for (int index = 0; index < untexturedTriangles.Count; index++) {
+					GuiStyle.SetNewUiToDefaultStyle();
 					Polygon polygon = untexturedTriangles[index];
+
+					if (Selection.SelectedPolygons.Contains(polygon)) {
+						GuiStyle.SetElementStyle(ElementStyle.ButtonSelected);
+					}
+
 					if (ImGui.Button("Untextured Triangle " + index + "##" + "untexturedTriangle" + index)) {
 						Selection.SelectPolygon(polygon);
 					}
@@ -58,7 +63,13 @@ public static class GuiWindowPolygonList {
 				GuiStyle.SetNewUiToDefaultStyle();
 				ImGui.Indent();
 				for (int index = 0; index < untexturedQuads.Count; index++) {
+					GuiStyle.SetNewUiToDefaultStyle();
 					Polygon polygon = untexturedQuads[index];
+
+					if (Selection.SelectedPolygons.Contains(polygon)) {
+						GuiStyle.SetElementStyle(ElementStyle.ButtonSelected);
+					}
+
 					if (ImGui.Button("Untextured Quad" + index + "##" + "untexturedQuad" + index)) {
 						Selection.SelectPolygon(polygon);
 					}
@@ -73,7 +84,13 @@ public static class GuiWindowPolygonList {
 				GuiStyle.SetNewUiToDefaultStyle();
 				ImGui.Indent();
 				for (int index = 0; index < texturedTriangles.Count; index++) {
+					GuiStyle.SetNewUiToDefaultStyle();
 					Polygon polygon = texturedTriangles[index];
+
+					if (Selection.SelectedPolygons.Contains(polygon)) {
+						GuiStyle.SetElementStyle(ElementStyle.ButtonSelected);
+					}
+
 					if (ImGui.Button("Textured Triangle " + index + "##" + "texturedTriangle" + index)) {
 						Selection.SelectPolygon(polygon);
 					}
@@ -85,10 +102,15 @@ public static class GuiWindowPolygonList {
 			GuiStyle.SetNewUiToDefaultStyle();
 			GuiStyle.SetElementStyle(ElementStyle.Header);
 			if (ImGui.CollapsingHeader("Textured Quads (" + texturedQuads.Count + " / 710)")) {
-				GuiStyle.SetNewUiToDefaultStyle();
 				ImGui.Indent();
 				for (int index = 0; index < texturedQuads.Count; index++) {
+					GuiStyle.SetNewUiToDefaultStyle();
 					Polygon polygon = texturedQuads[index];
+
+					if (Selection.SelectedPolygons.Contains(polygon)) {
+						GuiStyle.SetElementStyle(ElementStyle.ButtonSelected);
+					}
+
 					if (ImGui.Button("Textured Quad " + index + "##" + "texturedQuad" + index)) {
 						Selection.SelectPolygon(polygon);
 					}
@@ -101,7 +123,7 @@ public static class GuiWindowPolygonList {
 			ImGui.Columns(1);
 		}
 		ImGui.End();
-		
+
 		if (!windowIsOpen) {
 			Gui.ShowPolygonListWindow = false;
 		}
