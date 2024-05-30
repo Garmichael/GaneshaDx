@@ -41,7 +41,9 @@ public static class Greyboxer {
 			for (int indexX = 0; indexX < CurrentMapState.StateData.Terrain.SizeX; indexX++) {
 				TerrainTile level0TerrainTile = level0TerrainTiles[indexZ][indexX];
 				TerrainTile level1TerrainTile = level1TerrainTiles[indexZ][indexX];
-				TerrainTile terrainTile = level0TerrainTile.Height + level0TerrainTile.Depth > level1TerrainTile.Height + level1TerrainTile.Depth
+				int terrain0Height = level0TerrainTile.Height + level0TerrainTile.Depth + level0TerrainTile.SlopeHeight;
+				int terrain1Height = level1TerrainTile.Height + level1TerrainTile.Depth + level1TerrainTile.SlopeHeight;
+				TerrainTile terrainTile = terrain0Height > terrain1Height
 					? level0TerrainTiles[indexZ][indexX]
 					: level1TerrainTiles[indexZ][indexX];
 
@@ -297,7 +299,7 @@ public static class Greyboxer {
 			verticesToBuild.Add(new Vertex(vertices[3] + Vector3.Zero, Color.Yellow, true));
 			uvs.Add(new Vector2(37, 49));
 		}
-		
+
 		Polygon addedPolygon = CurrentMapState.CreatePolygon(verticesToBuild, untextured ? new List<Vector2>() : uvs, MeshType.PrimaryMesh);
 		addedPolygon.PaletteId = 1;
 	}
