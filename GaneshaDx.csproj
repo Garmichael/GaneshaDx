@@ -33,6 +33,7 @@
         <PackageReference Include="Octokit" Version="11.0.1" />
         <PackageReference Include="SharpGLTF.Core" Version="1.0.0-alpha0026" />
         <PackageReference Include="SharpGLTF.Toolkit" Version="1.0.0-alpha0026" />
+        <PackageReference Include="squirrel.windows" Version="2.0.1" />
         <PackageReference Include="TextCopy" Version="6.2.1" />
     </ItemGroup>
     <Target Name="RestoreDotnetTools" BeforeTargets="Restore">

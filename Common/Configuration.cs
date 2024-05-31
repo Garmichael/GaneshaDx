@@ -5,35 +5,64 @@ using Newtonsoft.Json;
 namespace GaneshaDx.Common;
 
 public static class Configuration {
-	private const string ConfigurationFile = "Preferences.json";
-	private static string _configurationPath;
+	private static string ApplicationDataFolderPath => System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData);
+	private static readonly string ApplicationFolderName = @"\GaneshaDx\";
+	private static readonly string ConfigurationFileName = "Preferences.json";
+	private static string ConfigurationFilePath => ApplicationDataFolderPath + ApplicationFolderName + ConfigurationFileName;
+
 	public static ConfigurationProperties Properties;
 
 	public static void LoadConfiguration() {
-		_configurationPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData) + "\\GaneshaDx" + "\\";
-		if (!File.Exists(_configurationPath + ConfigurationFile)) {
-			if (!Directory.Exists(_configurationPath)) {
-				Directory.CreateDirectory(_configurationPath);
-			}
-			
+		if (PreferencesFileExists()) {
+			Properties = ReadFromPreferencesFile();
+		} else {
 			Properties = new ConfigurationProperties();
 			SaveConfiguration();
-		} else {
-			string json = File.ReadAllText(ConfigurationFile);
-			try {
-				Properties = JsonConvert.DeserializeObject<ConfigurationProperties>(json);
-			} catch {
-				Properties = new ConfigurationProperties();
-			}
 		}
 	}
 
 	public static void SaveConfiguration() {
-		FileStream stream = new(_configurationPath + ConfigurationFile, FileMode.Create);
+		if (!PreferencesFileExists()) {
+			CreatePreferencesFile();
+		}
+
+		WriteToPreferencesFile();
+	}
+
+	private static ConfigurationProperties ReadFromPreferencesFile() {
+		ConfigurationProperties properties;
+		string json;
+
+		try {
+			json = File.ReadAllText(ConfigurationFilePath);
+		} catch {
+			return new ConfigurationProperties();
+		}
+
+		try {
+			properties = JsonConvert.DeserializeObject<ConfigurationProperties>(json);
+		} catch {
+			properties = new ConfigurationProperties();
+		}
+
+		return properties;
+	}
+
+	private static void WriteToPreferencesFile() {
+		FileStream stream = new(ConfigurationFilePath, FileMode.Create);
 		using (StreamWriter writer = new(stream, Encoding.Default)) {
 			writer.WriteLine(JsonConvert.SerializeObject(Properties, Formatting.Indented));
 		}
 
 		stream.Dispose();
+	}
+
+	private static bool PreferencesFileExists() {
+		bool fileExists = File.Exists(ConfigurationFilePath);
+		return fileExists;
+	}
+
+	private static void CreatePreferencesFile() {
+		Directory.CreateDirectory(ApplicationDataFolderPath + ApplicationFolderName);
 	}
 }
