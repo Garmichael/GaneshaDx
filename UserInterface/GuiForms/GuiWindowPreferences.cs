@@ -118,7 +118,7 @@ public static class GuiWindowPreferences {
 			ImGui.NextColumn();
 
 			GuiStyle.AddSpace();
-			ImGui.Text("AutoSave");
+			ImGui.Text("Save Backups Automatically");
 			ImGui.NextColumn();
 
 			GuiStyle.AddSpace();
@@ -126,7 +126,7 @@ public static class GuiWindowPreferences {
 			ImGui.Checkbox("###PreferencesAutoSave", ref Configuration.Properties.AutoSaveEnabled);
 			ImGui.NextColumn();
 
-			ImGui.Text("AutoSave Every X Minutes");
+			ImGui.Text("Backup Every X Minutes");
 			ImGui.NextColumn();
 
 			ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);

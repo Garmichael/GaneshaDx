@@ -315,7 +315,7 @@ public static class MapData {
 		TimeSinceLastSave = Stage.GameTime.TotalGameTime.TotalSeconds;
 		Stage.Window.Title = "GaneshaDx - " + MapName;
 
-		OverlayConsole.AddMessage(isAutoSave ? "Map Auto-Saved" : "Map Saved");
+		OverlayConsole.AddMessage(isAutoSave ? "Map Backed up to \\gdx_autosave\\" +  MapName + backupNotation : "Map Saved");
 	}
 
 	public static void SaveMapAs(string newFolder, string mapName) {
