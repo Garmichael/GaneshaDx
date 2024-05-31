@@ -71,6 +71,27 @@ public static class GuiPanelTerrain {
 
 		GuiStyle.SetNewUiToDefaultStyle();
 
+		if (ImGui.Button("Reset Tile")) {
+			foreach (TerrainTile resettingTile in Selection.SelectedTerrainTiles) {
+				resettingTile.Height = 0;
+				resettingTile.Depth = 0;
+				resettingTile.Shading = 0;
+				resettingTile.SlopeHeight = 0;
+				resettingTile.SlopeType = TerrainSlopeType.Flat;
+				resettingTile.PassThroughOnly = false;
+				resettingTile.Unselectable = false;
+				resettingTile.Impassable = false;
+				resettingTile.RotatesNortheastBottom = false;
+				resettingTile.RotatesNortheastTop = false;
+				resettingTile.RotatesNorthwestBottom = false;
+				resettingTile.RotatesNorthwestTop = false;
+				resettingTile.RotatesSoutheastBottom = false;
+				resettingTile.RotatesSoutheastTop = false;
+				resettingTile.RotatesSouthwestBottom = false;
+				resettingTile.RotatesSouthwestTop = false;
+			}
+		}
+		
 		for (int tileIndex = 0; tileIndex < 2; tileIndex++) {
 			GuiStyle.SetNewUiToDefaultStyle();
 			GuiStyle.SetElementStyle(ElementStyle.Header);
