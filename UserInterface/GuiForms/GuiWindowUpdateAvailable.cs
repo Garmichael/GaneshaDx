@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Numerics;
-using GaneshaDx.Environment;
+using GaneshaDx.Common;
 using GaneshaDx.UserInterface.GuiDefinitions;
 using ImGuiNET;
 
@@ -8,7 +8,7 @@ namespace GaneshaDx.UserInterface.GuiForms;
 
 public static class GuiWindowUpdateAvailable {
 	public static bool ShouldRender() {
-		return Stage.Ganesha.AppIsOutdated;
+		return UpdateChecker.AppIsOutdated;
 	}
 
 	public static void Render() {
@@ -22,26 +22,26 @@ public static class GuiWindowUpdateAvailable {
 		                               ImGuiWindowFlags.NoTitleBar |
 		                               ImGuiWindowFlags.NoCollapse;
 
-		ImGui.SetNextWindowSize(new Vector2(200, 70));
+		ImGui.SetNextWindowSize(new Vector2(235, 70));
 		ImGui.SetNextWindowPos(new Vector2(0, 50));
 
 		ImGui.Begin("Update Modal", flags);
 		{
 			ImGuiStylePtr style = ImGui.GetStyle();
 			style.Colors[(int) ImGuiCol.Text] = GuiStyle.ColorPalette[ColorName.Selected];
-			ImGui.Text("    A new version is available");
+			ImGui.Text("    A new version has downloaded");
 
 			GuiStyle.AddSpace();
-			ImGui.Text("        ");
+			ImGui.Text("                ");
 
 			GuiStyle.SetNewUiToDefaultStyle();
 			ImGui.SameLine();
 
-			if (ImGui.Button("Download Update")) {
-				Process.Start(new ProcessStartInfo {
-					FileName = "https://github.com/Garmichael/GaneshaDx/releases",
-					UseShellExecute = true
-				});
+			if (ImGui.Button("Install Update")) {
+				
+				Process process = new();
+				process.StartInfo.FileName = UpdateChecker.InstallerFilePath;
+				process.Start();
 			}
 		}
 		ImGui.End();
