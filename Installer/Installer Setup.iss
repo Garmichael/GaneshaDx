@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Ganesha Dx"
-#define MyAppVersion "0.0.0"
+#define MyAppVersion "0.94.3"
 #define MyAppPublisher "Storm Garden Studio"
 #define MyAppURL "https://www.stormgardenstudio.com/"
 #define MyAppExeName "GaneshaDx.exe"
@@ -32,7 +32,11 @@ SetupIconFile=C:\Users\Garmy\Documents\Work Files\GaneshaDx\Icon.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern   
+DefaultGroupName=Ganesha Dx
 UninstallDisplayIcon={app}\GaneshaDx.exe
+BackSolid=yes
+BackColor=clRed
+BackColor2=clGreen
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -54,7 +58,6 @@ Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
-Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
