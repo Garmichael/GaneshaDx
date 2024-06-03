@@ -71,7 +71,7 @@ public static class GuiPanelTerrain {
 
 		GuiStyle.SetNewUiToDefaultStyle();
 
-		if (ImGui.Button("Reset Tile")) {
+		if (GuiStyle.CenteredButton("Reset Selected Tiles")) {
 			foreach (TerrainTile resettingTile in Selection.SelectedTerrainTiles) {
 				resettingTile.Height = 0;
 				resettingTile.Depth = 0;
@@ -91,6 +91,8 @@ public static class GuiPanelTerrain {
 				resettingTile.RotatesSouthwestTop = false;
 			}
 		}
+		
+		GuiStyle.AddSpace();
 		
 		for (int tileIndex = 0; tileIndex < 2; tileIndex++) {
 			GuiStyle.SetNewUiToDefaultStyle();

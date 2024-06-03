@@ -276,4 +276,18 @@ public static class GuiStyle {
 	public static void AddSpace(float height = 10f) {
 		ImGui.Dummy(new Vector2(0, height));
 	}
+	
+	public static bool CenteredButton(string label, float alignment = 0.5f)
+	{
+		ImGuiStylePtr style = ImGui.GetStyle();
+
+		float size = ImGui.CalcTextSize(label).X + style.FramePadding.X * 2.0f;
+		float avail = ImGui.GetContentRegionAvail().X;
+
+		float off = (avail - size) * alignment;
+		if (off > 0.0f)
+			ImGui.SetCursorPosX(ImGui.GetCursorPosX() + off);
+
+		return ImGui.Button(label);
+	}
 }
