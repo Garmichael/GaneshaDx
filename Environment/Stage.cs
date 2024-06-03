@@ -148,12 +148,7 @@ public static class Stage {
 
 	private static void WindowSizeChanged(object sender, System.EventArgs e) {
 		Window.ClientSizeChanged -= WindowSizeChanged;
-		Graphics.PreferredBackBufferWidth = Window.ClientBounds.Width < 100 ? 100 : Window.ClientBounds.Width;
-		Graphics.PreferredBackBufferHeight = Window.ClientBounds.Height < 100 ? 100 : Window.ClientBounds.Height;
-		Graphics.ApplyChanges();
-
 		UpdateRenderTargets();
-
 		Window.ClientSizeChanged += WindowSizeChanged;
 	}
 
