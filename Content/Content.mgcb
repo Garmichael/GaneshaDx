@@ -13,12 +13,12 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin DebugFont.spritefont
+#begin OverlayFont.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
-/build:DebugFont.spritefont
+/build:OverlayFont.spritefont
 
 #begin FFTPolygonShader.fx
 /importer:EffectImporter

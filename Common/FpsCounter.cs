@@ -16,7 +16,7 @@ public static class FpsCounter {
 	private static SpriteFont _font;
 
 	public static void Update() {
-		_font ??= Stage.Content.Load<SpriteFont>("DebugFont");
+		_font ??= Stage.Content.Load<SpriteFont>("OverlayFont");
 
 		_now = Stage.GameTime.TotalGameTime.TotalSeconds;
 		_elapsed = _now - _last;

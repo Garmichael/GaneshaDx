@@ -35,7 +35,7 @@ public static class Background {
 	}
 
 	private static void DrawTitleScreen() {
-		_font ??= Stage.Content.Load<SpriteFont>("DebugFont");
+		_font ??= Stage.Content.Load<SpriteFont>("OverlayFont");
 		float versionNumberBrightness = .2f;
 		Stage.SpriteBatch.DrawString(
 			_font, 

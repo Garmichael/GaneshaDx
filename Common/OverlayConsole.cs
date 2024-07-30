@@ -11,7 +11,7 @@ public static class OverlayConsole {
 	private static readonly SpriteFont Font;
 
 	static OverlayConsole() {
-		Font = Stage.Content.Load<SpriteFont>("DebugFont");
+		Font = Stage.Content.Load<SpriteFont>("OverlayFont");
 	}
 
 	public static void Update() {
