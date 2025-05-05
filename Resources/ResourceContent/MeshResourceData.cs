@@ -739,7 +739,12 @@ public class MeshResourceData : ResourceData {
 							? CommonLists.TerrainSlopeTypes[RawData[_currentByteIndex + 4]]
 							: TerrainSlopeType.Flat;
 
-					int unknown5 = RawData[_currentByteIndex + 5];
+					binary = Utilities.GetBinaryFromInt(RawData[_currentByteIndex + 5]);
+					
+					bool unknown5A = Utilities.GetIntFromBinary(binary.Substring(0, 1)) == 1;
+					bool unknown5B = Utilities.GetIntFromBinary(binary.Substring(1, 1)) == 1;
+					bool unknown5C = Utilities.GetIntFromBinary(binary.Substring(2, 1)) == 1;
+					int thickness = Utilities.GetIntFromBinary(binary.Substring(3, 5));
 
 					binary = Utilities.GetBinaryFromInt(RawData[_currentByteIndex + 6]);
 
@@ -787,7 +792,10 @@ public class MeshResourceData : ResourceData {
 						Unknown0A = unknown0A,
 						Unknown0B = unknown0B,
 						Unknown1 = unknown1,
-						Unknown5 = unknown5,
+						Unknown5A = unknown5A,
+						Unknown5B = unknown5B,
+						Unknown5C = unknown5C,
+						Thickness = thickness,
 						Unknown6B = unknown6B,
 						Unknown6C = unknown6C,
 						Unknown6D = unknown6D,

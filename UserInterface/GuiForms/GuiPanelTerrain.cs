@@ -150,6 +150,26 @@ public static class GuiPanelTerrain {
 
 				ImGui.NextColumn();
 
+				ImGui.Text("Thickness");
+				ImGui.NextColumn();
+
+				ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+				int beforeThickness = tiles[tileIndex].Thickness;
+				ImGui.InputInt("Thickness" + tileIndex, ref tiles[tileIndex].Thickness, 1);
+				tiles[tileIndex].Thickness = Utilities.Clamp(tiles[tileIndex].Thickness, 0, 31);
+
+				if (beforeThickness != tiles[tileIndex].Thickness) {
+					foreach (TerrainTile otherTerrainTile in Selection.SelectedTerrainTiles) {
+						if (otherTerrainTile != tiles[tileIndex] &&
+						    otherTerrainTile.Level == tiles[tileIndex].Level
+						   ) {
+							otherTerrainTile.Thickness = tiles[tileIndex].Thickness;
+						}
+					}
+				}
+
+				ImGui.NextColumn();
+
 				GuiStyle.AddSpace();
 				ImGui.Text("Slope Type");
 				ImGui.NextColumn();
@@ -370,26 +390,61 @@ public static class GuiPanelTerrain {
 					}
 
 					ImGui.NextColumn();
-
-					ImGui.Text("Unknown5");
+					
+					ImGui.Text("Unknown 5A");
 					ImGui.NextColumn();
 
-					int beforeUnknown5 = tiles[tileIndex].Unknown5;
-					ImGui.InputInt("###Unknown5" + tileIndex, ref tiles[tileIndex].Unknown5, 1);
-					tiles[tileIndex].Unknown5 = Utilities.Min(tiles[tileIndex].Unknown5, 0);
-
-					if (beforeUnknown5 != tiles[tileIndex].Unknown5) {
+					ImGui.PushItemWidth(GuiStyle.CheckBoxWidth);
+					bool beforeUnknown5A = tiles[tileIndex].Unknown5A;
+					ImGui.Checkbox("###unknown5a" + tileIndex, ref tiles[tileIndex].Unknown5A);
+					if (beforeUnknown5A != tiles[tileIndex].Unknown5A) {
 						foreach (TerrainTile otherTerrainTile in Selection.SelectedTerrainTiles) {
 							if (otherTerrainTile != tiles[tileIndex] &&
 							    otherTerrainTile.Level == tiles[tileIndex].Level
 							   ) {
-								otherTerrainTile.Unknown5 = tiles[tileIndex].Unknown5;
+								otherTerrainTile.Unknown5A = tiles[tileIndex].Unknown5A;
 							}
 						}
 					}
 
 					ImGui.NextColumn();
+					
+					ImGui.Text("Unknown 5B");
+					ImGui.NextColumn();
 
+					ImGui.PushItemWidth(GuiStyle.CheckBoxWidth);
+					bool beforeUnknown5B = tiles[tileIndex].Unknown5B;
+					ImGui.Checkbox("###unknown5b" + tileIndex, ref tiles[tileIndex].Unknown5B);
+					if (beforeUnknown5B != tiles[tileIndex].Unknown5B) {
+						foreach (TerrainTile otherTerrainTile in Selection.SelectedTerrainTiles) {
+							if (otherTerrainTile != tiles[tileIndex] &&
+							    otherTerrainTile.Level == tiles[tileIndex].Level
+							   ) {
+								otherTerrainTile.Unknown5B = tiles[tileIndex].Unknown5B;
+							}
+						}
+					}
+
+					ImGui.NextColumn();
+					
+					ImGui.Text("Unknown 5C");
+					ImGui.NextColumn();
+
+					ImGui.PushItemWidth(GuiStyle.CheckBoxWidth);
+					bool beforeUnknown5C = tiles[tileIndex].Unknown5C;
+					ImGui.Checkbox("###unknown5b" + tileIndex, ref tiles[tileIndex].Unknown5C);
+					if (beforeUnknown5C != tiles[tileIndex].Unknown5C) {
+						foreach (TerrainTile otherTerrainTile in Selection.SelectedTerrainTiles) {
+							if (otherTerrainTile != tiles[tileIndex] &&
+							    otherTerrainTile.Level == tiles[tileIndex].Level
+							   ) {
+								otherTerrainTile.Unknown5C = tiles[tileIndex].Unknown5C;
+							}
+						}
+					}
+
+					ImGui.NextColumn();
+					
 					ImGui.Text("Unknown 6B");
 					ImGui.NextColumn();
 

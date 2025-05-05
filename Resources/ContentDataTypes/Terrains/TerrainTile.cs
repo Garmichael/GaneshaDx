@@ -12,6 +12,7 @@ public class TerrainTile {
 	public TerrainSurfaceType SurfaceType;
 	public int Shading;
 	public int Height;
+	public int Thickness;
 	public int Depth;
 	public int SlopeHeight;
 	public TerrainSlopeType SlopeType;
@@ -33,7 +34,9 @@ public class TerrainTile {
 	public int Unknown0A;
 	public int Unknown0B;
 	public int Unknown1;
-	public int Unknown5;
+	public bool Unknown5A;
+	public bool Unknown5B;
+	public bool Unknown5C;
 	public bool Unknown6B;
 	public bool Unknown6C;
 	public bool Unknown6D;
@@ -227,7 +230,11 @@ public class TerrainTile {
 
 		rawData.Add((byte) slopeTypeId);
 
-		rawData.Add((byte) Unknown5);
+		binary = (Unknown5A ? "1" : "0") +
+		         (Unknown5B ? "1" : "0") +
+		         (Unknown5C ? "1" : "0") +
+		         Utilities.GetBinaryFromInt(Thickness, 5);
+		rawData.Add((byte) Utilities.GetIntFromBinary(binary));
 
 		binary = (PassThroughOnly ? "1" : "0") +
 		         (Unknown6B ? "1" : "0") +
