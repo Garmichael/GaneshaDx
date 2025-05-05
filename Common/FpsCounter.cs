@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using GaneshaDx.Environment;
 using GaneshaDx.Resources;
+using GaneshaDx.UserInterface.GuiDefinitions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -32,7 +33,10 @@ public static class FpsCounter {
 	public static void Render() {
 		if (MapData.MapIsLoaded && Configuration.Properties.ShowFps) {
 			Stage.SpriteBatch.Begin();
-			Vector2 fpsDisplayPosition = new(10, Stage.ModelingViewport.Height - 5);
+			Vector2 fpsDisplayPosition = new(
+				(Configuration.Properties.PutPanelOnLeft ? GuiStyle.RightPanelWidth : 0) + 10,
+				Stage.ModelingViewport.Height - 5
+			);
 			Stage.SpriteBatch.DrawString(_font, _message, fpsDisplayPosition - new Vector2(1, -1), Color.Black);
 			Stage.SpriteBatch.DrawString(_font, _message, fpsDisplayPosition, Color.White);
 			Stage.SpriteBatch.End();
