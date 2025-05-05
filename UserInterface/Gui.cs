@@ -17,7 +17,7 @@ public static class Gui {
 	public static WidgetSelectionMode Widget = WidgetSelectionMode.PolygonTranslate;
 
 	public static bool LockModeling;
-		
+
 	private static bool _showDebugPanel;
 	public static bool ShowCameraControlWindow;
 	public static bool ShowPreferencesWindow;
@@ -33,7 +33,7 @@ public static class Gui {
 
 	public static void Render() {
 		Stage.GraphicsDevice.Clear(Color.Transparent);
-			
+
 		if (AppInput.ControlHeld && AppInput.ShiftHeld && AppInput.AltHeld && AppInput.KeyJustPressed(Keys.D)) {
 			_showDebugPanel = !_showDebugPanel;
 		}
@@ -55,7 +55,7 @@ public static class Gui {
 			} else {
 				GuiMenuBar.Render();
 				GuiWindowTexturePreview.Render();
-					
+
 				if (MapData.MapIsLoaded) {
 					RenderTabPanel();
 					RenderMainPanel();
@@ -128,7 +128,10 @@ public static class Gui {
 		ImGui.GetStyle().Colors[(int) ImGuiCol.WindowBg] = GuiStyle.ColorPalette[ColorName.Darker];
 
 		ImGui.SetNextWindowSize(new Vector2(GuiStyle.RightPanelWidth, GuiStyle.TabPanelHeight));
-		ImGui.SetNextWindowPos(new Vector2(Stage.Width - GuiStyle.RightPanelWidth, GuiStyle.MenuBarHeight));
+		ImGui.SetNextWindowPos(Configuration.Properties.PutPanelOnLeft
+			? new Vector2(0, GuiStyle.MenuBarHeight)
+			: new Vector2(Stage.Width - GuiStyle.RightPanelWidth, GuiStyle.MenuBarHeight)
+		);
 
 		ImGui.Begin("Tab Panel", GuiStyle.FixedWindowFlags | ImGuiWindowFlags.NoBringToFrontOnFocus);
 		{
@@ -181,7 +184,11 @@ public static class Gui {
 		const int top = GuiStyle.TabPanelHeight + GuiStyle.MenuBarHeight;
 
 		ImGui.SetNextWindowSize(new Vector2(GuiStyle.RightPanelWidth, Stage.Height - top));
-		ImGui.SetNextWindowPos(new Vector2(Stage.Width - GuiStyle.RightPanelWidth, top));
+
+		ImGui.SetNextWindowPos(Configuration.Properties.PutPanelOnLeft
+			? new Vector2(0, top)
+			: new Vector2(Stage.Width - GuiStyle.RightPanelWidth, top)
+		);
 
 		GuiStyle.SetNewUiToDefaultStyle();
 		ImGui.GetStyle().FrameRounding = 0;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using GaneshaDx.Environment;
+using GaneshaDx.UserInterface.GuiDefinitions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -28,7 +29,7 @@ public static class OverlayConsole {
 
 	public static void Render() {
 		int top = 0;
-		const int left = 10;
+		int left = (Configuration.Properties.PutPanelOnLeft ? GuiStyle.RightPanelWidth : 0) + 10;
 		const int messageHeight = 28;
 
 		Stage.SpriteBatch.Begin();

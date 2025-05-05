@@ -1,4 +1,5 @@
-﻿using GaneshaDx.Resources;
+﻿using GaneshaDx.Common;
+using GaneshaDx.Resources;
 using GaneshaDx.UserInterface;
 using GaneshaDx.UserInterface.GuiDefinitions;
 using ImGuiNET;
@@ -121,6 +122,11 @@ public static class Stage {
 			ModelingViewport.Width = Width - GuiStyle.RightPanelWidth;
 			ModelingViewport.Height = Height - 20;
 			ModelingViewport.X = 0;
+
+			if (Configuration.Properties.PutPanelOnLeft) {
+				ModelingViewport.X = GuiStyle.RightPanelWidth;
+			}
+			
 			ModelingViewport.Y = 20;
 		}
 

@@ -18,7 +18,7 @@ public static class GuiWindowPreferences {
 		                               ImGuiWindowFlags.AlwaysAutoResize |
 		                               ImGuiWindowFlags.NoCollapse;
 
-		ImGui.SetNextWindowSize(new Vector2(300, 430));
+		ImGui.SetNextWindowSize(new Vector2(300, 450));
 
 		ImGui.Begin("Preferences", ref windowIsOpen, flags);
 		{
@@ -27,6 +27,13 @@ public static class GuiWindowPreferences {
 			ImGui.SetColumnWidth(0, GuiStyle.LabelWidth + 30);
 			ImGui.SetColumnWidth(1, GuiStyle.WidgetWidth + 10);
 
+			ImGui.Text("Panel on Left Side");
+			ImGui.NextColumn();
+
+			ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);
+			ImGui.Checkbox("###PreferencesPanelOnLeftSide", ref Configuration.Properties.PutPanelOnLeft);
+			ImGui.NextColumn();
+			
 			ImGui.Text("Swap Camera Buttons");
 			ImGui.NextColumn();
 

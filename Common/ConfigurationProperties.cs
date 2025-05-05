@@ -35,4 +35,5 @@ public class ConfigurationProperties {
 	public int NormalIndicatorLength = 50;
 	public bool ShowGameViewOverlay = false;
 	public bool HideRedTiles = false;
+	public bool PutPanelOnLeft = false;
 }
