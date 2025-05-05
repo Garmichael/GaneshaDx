@@ -458,17 +458,17 @@ public static class GuiPanelTexture {
 			GuiStyle.SetNewUiToDefaultStyle();
 
 			if (ImGui.Button("Import Texture", new Vector2(buttonWidth, buttonHeight))) {
-				GuiWindowFileBrowser.Open(GuiWindowFileBrowser.DialogBoxes.ImportTexture);
+				FileBrowser.ImportTextureDialog();
 			}
 
 			ImGui.SameLine();
 
 			if (ImGui.Button("Export Texture", new Vector2(buttonWidth, buttonHeight))) {
-				GuiWindowFileBrowser.Open(GuiWindowFileBrowser.DialogBoxes.ExportTexture);
+				FileBrowser.ExportTextureDialog();
 			}
 
 			if (ImGui.Button("Export Uv Map", new Vector2(buttonWidth, buttonHeight))) {
-				GuiWindowFileBrowser.Open(GuiWindowFileBrowser.DialogBoxes.ExportUvMap);
+				FileBrowser.ExportUvsDialog();
 			}
 
 			ImGui.Columns(1);
@@ -573,25 +573,13 @@ public static class GuiPanelTexture {
 			ImGui.GetStyle().Colors[(int) ImGuiCol.Button] = GuiStyle.ColorPalette[ColorName.Transparent];
 
 			if (ImGui.Button("Z##import" + paletteIndex)) {
-				GuiWindowFileBrowser.Open(
-					GuiWindowFileBrowser.DialogBoxes.ImportPalette,
-					new Dictionary<string, string> {
-						{ "PaletteId", paletteIndex.ToString() },
-						{ "PaletteType", "main" }
-					}
-				);
+				FileBrowser.ImportPalette(paletteIndex, "main");
 			}
 
 			ImGui.SameLine();
 
 			if (ImGui.Button("X##export" + paletteIndex)) {
-				GuiWindowFileBrowser.Open(
-					GuiWindowFileBrowser.DialogBoxes.ExportPalette,
-					new Dictionary<string, string> {
-						{ "PaletteId", paletteIndex.ToString() },
-						{ "PaletteType", "main" }
-					}
-				);
+				FileBrowser.ExportPalette(paletteIndex, "main");
 			}
 
 			ImGui.PopFont();
@@ -627,13 +615,7 @@ public static class GuiPanelTexture {
 		GuiStyle.SetNewUiToDefaultStyle();
 
 		if (ImGui.Button("Export Default Palette")) {
-			GuiWindowFileBrowser.Open(
-				GuiWindowFileBrowser.DialogBoxes.ExportPalette,
-				new Dictionary<string, string> {
-					{ "PaletteId", "-1"},
-					{ "PaletteType", "animation" }
-				}
-			);
+			FileBrowser.ExportPalette(-1, "default");
 		}
 	}
 
@@ -798,25 +780,13 @@ public static class GuiPanelTexture {
 			ImGui.GetStyle().Colors[(int) ImGuiCol.Button] = GuiStyle.ColorPalette[ColorName.Transparent];
 
 			if (ImGui.Button("Z##importA" + paletteIndex)) {
-				GuiWindowFileBrowser.Open(
-					GuiWindowFileBrowser.DialogBoxes.ImportPalette,
-					new Dictionary<string, string> {
-						{ "PaletteId", paletteIndex.ToString() },
-						{ "PaletteType", "animation" }
-					}
-				);
+				FileBrowser.ImportPalette(paletteIndex, "animation");
 			}
 
 			ImGui.SameLine();
 
 			if (ImGui.Button("X##exportA" + paletteIndex)) {
-				GuiWindowFileBrowser.Open(
-					GuiWindowFileBrowser.DialogBoxes.ExportPalette,
-					new Dictionary<string, string> {
-						{ "PaletteId", paletteIndex.ToString() },
-						{ "PaletteType", "animation" }
-					}
-				);
+				FileBrowser.ExportPalette(paletteIndex, "animation");
 			}
 
 			ImGui.PopFont();

@@ -13,7 +13,7 @@ namespace GaneshaDx.UserInterface.Input;
 public static class AppShortcuts {
 	public static void Update() {
 		if (!Gui.LockModeling && AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.O)) {
-			GuiWindowFileBrowser.Open(GuiWindowFileBrowser.DialogBoxes.OpenMap);
+			FileBrowser.OpenMapDialog();
 		}
 			
 		if (MapData.MapIsLoaded && AppInput.KeyJustPressed(Keys.F12)) {
@@ -216,20 +216,20 @@ public static class AppShortcuts {
 				}
 
 				if (AppInput.KeyJustPressed(Keys.I)) {
-					GuiWindowFileBrowser.Open(GuiWindowFileBrowser.DialogBoxes.ImportTexture);
+					FileBrowser.ImportTextureDialog();
 				}
 
 				if (AppInput.KeyJustPressed(Keys.E)) {
-					GuiWindowFileBrowser.Open(GuiWindowFileBrowser.DialogBoxes.ExportTexture);
+					FileBrowser.ExportTextureDialog();
 				}
 
 				if (AppInput.KeyJustPressed(Keys.U)) {
-					GuiWindowFileBrowser.Open(GuiWindowFileBrowser.DialogBoxes.ExportUvMap);
+					FileBrowser.ExportUvsDialog();
 				}
 
 				if (AppInput.KeyJustPressed(Keys.R)) {
-					if (GuiWindowFileBrowser.LastImportedTextureFile != string.Empty) {
-						MapData.ImportTexture(GuiWindowFileBrowser.LastImportedTextureFile);
+					if (FileBrowser.LastImportedTextureFile != string.Empty) {
+						MapData.ImportTexture(FileBrowser.LastImportedTextureFile);
 					}
 				}
 
@@ -291,7 +291,7 @@ public static class AppShortcuts {
 
 			if (controlShiftHeld) {
 				if (AppInput.KeyJustPressed(Keys.S)) {
-					GuiWindowFileBrowser.Open(GuiWindowFileBrowser.DialogBoxes.SaveMapAs);
+					FileBrowser.SaveMapAsDialog();
 				}
 
 				if (AppInput.KeyJustPressed(Keys.E)) {

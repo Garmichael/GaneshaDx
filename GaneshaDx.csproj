@@ -29,6 +29,7 @@
         <PackageReference Include="ImGui.NET" Version="1.90.6.1" />
         <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
         <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
+        <PackageReference Include="NativeFileDialogExtendedSharp" Version="0.1.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="Octokit" Version="11.0.1" />
         <PackageReference Include="SharpGLTF.Core" Version="1.0.0" />

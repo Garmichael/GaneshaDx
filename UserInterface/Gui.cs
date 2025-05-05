@@ -30,7 +30,6 @@ public static class Gui {
 	public static bool ShowMeshAnimationsWindow;
 	public static bool ShowExportGlbWindow;
 	public static bool ShowGnsDataWindow;
-	public static bool ShowOpenFileWindow;
 
 	public static void Render() {
 		Stage.GraphicsDevice.Clear(Color.Transparent);
@@ -56,10 +55,6 @@ public static class Gui {
 			} else {
 				GuiMenuBar.Render();
 				GuiWindowTexturePreview.Render();
-	
-				if(ShowOpenFileWindow){
-					GuiWindowFileBrowser.Render();
-				}
 					
 				if (MapData.MapIsLoaded) {
 					RenderTabPanel();

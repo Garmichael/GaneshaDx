@@ -46,10 +46,6 @@ public static class AppInput {
 	public static bool MouseIsWithinModelViewport;
 
 	public static void Update() {
-		if (!Stage.Ganesha.IsActive) {
-			return;
-		}
-		
 		_lastKeyboardState = ThisKeyboardState;
 		_lastMouseState = ThisMouseState;
 		_lastMousePosition = ThisMousePosition;
@@ -59,6 +55,10 @@ public static class AppInput {
 		ThisKeyboardState = Keyboard.GetState();
 		ThisMouseState = Mouse.GetState();
 
+		if (!Stage.Ganesha.IsActive) {
+			return;
+		}
+
 		ThisMousePosition = ThisMouseState.Position.ToVector2();
 		ThisScrollValue = ThisMouseState.ScrollWheelValue;
 		LeftMouseClicked = ThisMouseState.LeftButton == ButtonState.Pressed &&
@@ -66,19 +66,19 @@ public static class AppInput {
 		LeftMouseReleased = ThisMouseState.LeftButton == ButtonState.Released &&
 		                    _lastMouseState.LeftButton == ButtonState.Pressed;
 		LeftMouseHeld = ThisMouseState.LeftButton == ButtonState.Pressed;
-			
+
 		RightMouseClicked = ThisMouseState.RightButton == ButtonState.Pressed &&
 		                    _lastMouseState.RightButton == ButtonState.Released;
 		RightMouseReleased = ThisMouseState.RightButton == ButtonState.Released &&
 		                     _lastMouseState.RightButton == ButtonState.Pressed;
 		RightMouseHeld = ThisMouseState.RightButton == ButtonState.Pressed;
-			
+
 		MiddleMouseClicked = ThisMouseState.MiddleButton == ButtonState.Pressed &&
 		                     _lastMouseState.MiddleButton == ButtonState.Released;
 		MiddleMouseReleased = ThisMouseState.MiddleButton == ButtonState.Released &&
 		                      _lastMouseState.MiddleButton == ButtonState.Pressed;
 		MiddleMouseHeld = ThisMouseState.MiddleButton == ButtonState.Pressed;
-			
+
 		MouseIsWithinModelViewport =
 			ThisMousePosition.Y > Stage.ModelingViewport.Y &&
 			ThisMousePosition.Y < Stage.ModelingViewport.Y + Stage.ModelingViewport.Height &&

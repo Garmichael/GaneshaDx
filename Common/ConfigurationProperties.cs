@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Vector3 = System.Numerics.Vector3;
 
 namespace GaneshaDx.Common;
@@ -7,7 +6,6 @@ namespace GaneshaDx.Common;
 public class ConfigurationProperties {
 	public bool ShowFps = true;
 	public bool ShowUnknownValues = false;
-	public string LoadFolder = @"C:\";
 	public float PanningSensitivity = 1f;
 	public float RotationSensitivity = 1f;
 	public float ZoomStrength = 1.2f;
@@ -37,5 +35,4 @@ public class ConfigurationProperties {
 	public int NormalIndicatorLength = 50;
 	public bool ShowGameViewOverlay = false;
 	public bool HideRedTiles = false;
-	public readonly List<string> PinnedFileBrowserFolders = new();
 }

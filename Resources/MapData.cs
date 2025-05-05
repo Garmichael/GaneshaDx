@@ -19,7 +19,7 @@ public static class MapData {
 	public static bool MapIsLoaded;
 	public static double TimeSinceLastSave;
 
-	private static string _mapFolder;
+	public static string MapFolder;
 	public static string MapName { get; private set; }
 
 	public static Gns Gns;
@@ -28,43 +28,31 @@ public static class MapData {
 	public static List<MapResource> TextureResources;
 
 	public static void ReloadCurrentMap() {
-		LoadMapDataFromFullPath(_mapFolder + "\\" + MapName + ".gns");
+		LoadMapDataFromFullPath(MapFolder + Path.DirectorySeparatorChar + MapName + ".gns");
+		OverlayConsole.AddMessage("Map Reloaded");
 	}
 	
 	public static void LoadMapDataFromFullPath(string gnsPath) {
-		List<string> pathSegments = gnsPath.Split('\\').ToList();
-		string fileName = pathSegments.Last();
-		List<string> fileSegments = fileName.Split('.').ToList();
-
-		if (fileSegments.Last().ToLower() != "gns") {
+		string extension = Path.GetExtension(gnsPath);
+		
+		if (extension.ToLower() != ".gns") {
+			OverlayConsole.AddMessage("Map File is not a .GNS file");
 			return;
 		}
 
-		fileSegments.RemoveAt(fileSegments.Count - 1);
-		string mapName = string.Join(".", fileSegments);
-
-		pathSegments.RemoveAt(pathSegments.Count - 1);
-		string folder = string.Join("\\", pathSegments);
-
-		Configuration.Properties.LoadFolder = folder;
-		Configuration.SaveConfiguration();
-
-		LoadMapDataFromFiles(folder, mapName);
-	}
-
-	public static void LoadMapDataFromFiles(string mapFolder, string mapName) {
 		MapIsLoaded = false;
 		AllResources = new List<MapResource>();
 		MeshResources = new List<MapResource>();
 		TextureResources = new List<MapResource>();
-		MapName = mapName;
-		_mapFolder = mapFolder;
+		
+		MapName = Path.GetFileNameWithoutExtension(gnsPath);
+		MapFolder = Path.GetDirectoryName(gnsPath);
 
-		List<byte> gnsData = File.ReadAllBytes(_mapFolder + "\\" + MapName + ".GNS").ToList();
+		List<byte> gnsData = File.ReadAllBytes(gnsPath).ToList();
 		Gns = new Gns(gnsData);
 
 		ProcessAllResources();
-		SetResourceFileData(_mapFolder + "\\" + MapName);
+		SetResourceFileData(MapFolder + Path.DirectorySeparatorChar + MapName);
 
 		if (AllResourcesLoaded()) {
 			Stage.Window.Title = "GaneshaDx - " + MapName;
@@ -270,11 +258,11 @@ public static class MapData {
 	}
 
 	public static void SaveMap(bool isAutoSave = false) {
-		string mapFolder = _mapFolder;
+		string mapFolder = MapFolder;
 		string backupNotation = "";
 
 		if (isAutoSave) {
-			mapFolder += "\\gdx_autosave\\";
+			mapFolder += Path.DirectorySeparatorChar + "gdx_autosave";
 			DateTime time = DateTime.Now;
 			backupNotation = " (" +
 			                 time.Date.Year + "-" +
@@ -288,7 +276,7 @@ public static class MapData {
 			}
 		}
 
-		string mapRoot = mapFolder + "\\" + MapName;
+		string mapRoot = mapFolder + Path.DirectorySeparatorChar + MapName;
 
 		Stream gnsStream = File.Create(mapRoot + backupNotation + ".GNS");
 		gnsStream.Write(Gns.RawData.ToArray());
@@ -319,7 +307,7 @@ public static class MapData {
 	}
 
 	public static void SaveMapAs(string newFolder, string mapName) {
-		_mapFolder = newFolder;
+		MapFolder = newFolder;
 		MapName = mapName;
 		SaveMap();
 	}

@@ -21,7 +21,7 @@ public static class GuiMenuBar {
 				if (ImGui.MenuItem("New", "Ctrl+Shift + N", false, false)) { }
 
 				if (ImGui.MenuItem("Open", "Ctrl + O")) {
-					GuiWindowFileBrowser.Open(GuiWindowFileBrowser.DialogBoxes.OpenMap);
+					FileBrowser.OpenMapDialog();
 				}
 				
 				if (ImGui.MenuItem("Reload Map", "Ctrl + Shift + R", false, MapData.MapIsLoaded)) {
@@ -33,7 +33,7 @@ public static class GuiMenuBar {
 				}
 
 				if (ImGui.MenuItem("Save As", "Ctrl + Shift + S", false, MapData.MapIsLoaded)) {
-					GuiWindowFileBrowser.Open(GuiWindowFileBrowser.DialogBoxes.SaveMapAs);
+					FileBrowser.SaveMapAsDialog();
 				}
 
 				ImGui.Separator();
@@ -116,22 +116,22 @@ public static class GuiMenuBar {
 				ImGui.Separator();
 					
 				if (ImGui.MenuItem("Import Texture", "Ctrl + I", false, MapData.MapIsLoaded)) {
-					GuiWindowFileBrowser.Open(GuiWindowFileBrowser.DialogBoxes.ImportTexture);
+					FileBrowser.ImportTextureDialog();
 				}
 
 				if (ImGui.MenuItem("Export Texture", "Ctrl + E", false, MapData.MapIsLoaded)) {
-					GuiWindowFileBrowser.Open(GuiWindowFileBrowser.DialogBoxes.ExportTexture);
+					FileBrowser.ExportTextureDialog();
 				}
 
 				bool canReimportTexture = MapData.MapIsLoaded && 
-				                          GuiWindowFileBrowser.LastImportedTextureFile != String.Empty;
+				                          FileBrowser.LastImportedTextureFile != String.Empty;
 
 				if (ImGui.MenuItem("Re-Import Texture", "Ctrl + R", false, canReimportTexture)) {
-					MapData.ImportTexture(GuiWindowFileBrowser.LastImportedTextureFile);
+					MapData.ImportTexture(FileBrowser.LastImportedTextureFile);
 				}
 
 				if (ImGui.MenuItem("Export UV Map", "Ctrl + U", false, MapData.MapIsLoaded)) {
-					GuiWindowFileBrowser.Open(GuiWindowFileBrowser.DialogBoxes.ExportUvMap);
+					FileBrowser.ExportUvsDialog();
 				}
 
 				ImGui.Separator();

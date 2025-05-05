@@ -1,4 +1,6 @@
 ﻿using System.Numerics;
+using GaneshaDx.Common;
+using GaneshaDx.Resources;
 using GaneshaDx.UserInterface.GuiDefinitions;
 using ImGuiNET;
 
@@ -35,7 +37,7 @@ public static class GuiWindowExportGlb {
 			GuiStyle.AddSpace();
 
 			if (ImGui.Button("Export")) {
-				GuiWindowFileBrowser.Open(GuiWindowFileBrowser.DialogBoxes.ExportGlb);
+				FileBrowser.ExportGlbDialog();
 				windowIsOpen = false;
 			}
 
