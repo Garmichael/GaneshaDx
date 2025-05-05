@@ -31,8 +31,8 @@ public class TerrainTile {
 	public bool RotatesSouthwestBottom;
 	public bool RotatesSoutheastBottom;
 	public bool RotatesNortheastBottom;
-	public int Unknown0A;
-	public int Unknown0B;
+	public bool Unknown0A;
+	public bool Unknown0B;
 	public int Unknown1;
 	public bool Unknown5A;
 	public bool Unknown5B;
@@ -211,7 +211,9 @@ public class TerrainTile {
 			}
 		}
 
-		string binary = Unknown0A + Unknown0B + Utilities.GetBinaryFromInt(surfaceTypeId, 6);
+		string binary = (Unknown0A ? "1" : "0") +
+		                (Unknown0B ? "1" : "0") +
+		                Utilities.GetBinaryFromInt(surfaceTypeId, 6);
 		rawData.Add((byte) Utilities.GetIntFromBinary(binary));
 		rawData.Add((byte) Unknown1);
 		rawData.Add((byte) Height);

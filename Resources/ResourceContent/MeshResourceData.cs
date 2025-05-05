@@ -719,8 +719,8 @@ public class MeshResourceData : ResourceData {
 				for (int indexX = 0; indexX < width; indexX++) {
 					string binary = Utilities.GetBinaryFromInt(RawData[_currentByteIndex]);
 
-					int unknown0A = Utilities.GetIntFromBinary(binary.Substring(0, 1));
-					int unknown0B = Utilities.GetIntFromBinary(binary.Substring(1, 1));
+					bool unknown0A = Utilities.GetIntFromBinary(binary.Substring(0, 1)) == 1;
+					bool unknown0B = Utilities.GetIntFromBinary(binary.Substring(1, 1)) == 1;;
 
 					int surfaceTypeId = Utilities.GetIntFromBinary(binary.Substring(2));
 					TerrainSurfaceType surfaceType = CommonLists.TerrainSurfaceTypes[surfaceTypeId];

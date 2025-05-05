@@ -332,15 +332,14 @@ public static class GuiPanelTerrain {
 
 				if (Configuration.Properties.ShowUnknownValues) {
 					GuiStyle.AddSpace();
-					ImGui.Text("Unknown0A");
-
+					
+					ImGui.Text("Unknown 0A");
 					ImGui.NextColumn();
 					GuiStyle.AddSpace();
-
-					int beforeUnknown0A = tiles[tileIndex].Unknown0A;
-					ImGui.InputInt("###Unknown0A" + tileIndex, ref tiles[tileIndex].Unknown0A, 1);
-					tiles[tileIndex].Unknown0A = Utilities.Min(tiles[tileIndex].Unknown0A, 0);
-
+					
+					ImGui.PushItemWidth(GuiStyle.CheckBoxWidth);
+					bool beforeUnknown0A = tiles[tileIndex].Unknown0A;
+					ImGui.Checkbox("###unknown0a" + tileIndex, ref tiles[tileIndex].Unknown0A);
 					if (beforeUnknown0A != tiles[tileIndex].Unknown0A) {
 						foreach (TerrainTile otherTerrainTile in Selection.SelectedTerrainTiles) {
 							if (otherTerrainTile != tiles[tileIndex] &&
@@ -353,13 +352,12 @@ public static class GuiPanelTerrain {
 
 					ImGui.NextColumn();
 
-					ImGui.Text("Unknown0B");
+					ImGui.Text("Unknown 0B");
 					ImGui.NextColumn();
 
-					int beforeUnknown0B = tiles[tileIndex].Unknown0B;
-					ImGui.InputInt("###Unknown0B" + tileIndex, ref tiles[tileIndex].Unknown0B, 1);
-					tiles[tileIndex].Unknown0B = Utilities.Min(tiles[tileIndex].Unknown0B, 0);
-
+					ImGui.PushItemWidth(GuiStyle.CheckBoxWidth);
+					bool beforeUnknown0B = tiles[tileIndex].Unknown0B;
+					ImGui.Checkbox("###unknown0b" + tileIndex, ref tiles[tileIndex].Unknown0B);
 					if (beforeUnknown0B != tiles[tileIndex].Unknown0B) {
 						foreach (TerrainTile otherTerrainTile in Selection.SelectedTerrainTiles) {
 							if (otherTerrainTile != tiles[tileIndex] &&
@@ -371,13 +369,13 @@ public static class GuiPanelTerrain {
 					}
 
 					ImGui.NextColumn();
-
+					
 					ImGui.Text("Unknown1");
 					ImGui.NextColumn();
 
 					int beforeUnknown1 = tiles[tileIndex].Unknown1;
 					ImGui.InputInt("###Unknown1" + tileIndex, ref tiles[tileIndex].Unknown1, 1);
-					tiles[tileIndex].Unknown1 = Utilities.Min(tiles[tileIndex].Unknown1, 0);
+					tiles[tileIndex].Unknown1 = Utilities.Clamp(tiles[tileIndex].Unknown1, 0, 255);
 
 					if (beforeUnknown1 != tiles[tileIndex].Unknown1) {
 						foreach (TerrainTile otherTerrainTile in Selection.SelectedTerrainTiles) {
@@ -432,7 +430,7 @@ public static class GuiPanelTerrain {
 
 					ImGui.PushItemWidth(GuiStyle.CheckBoxWidth);
 					bool beforeUnknown5C = tiles[tileIndex].Unknown5C;
-					ImGui.Checkbox("###unknown5b" + tileIndex, ref tiles[tileIndex].Unknown5C);
+					ImGui.Checkbox("###unknown5c" + tileIndex, ref tiles[tileIndex].Unknown5C);
 					if (beforeUnknown5C != tiles[tileIndex].Unknown5C) {
 						foreach (TerrainTile otherTerrainTile in Selection.SelectedTerrainTiles) {
 							if (otherTerrainTile != tiles[tileIndex] &&
