@@ -23,7 +23,7 @@ public static class GuiMenuBar {
 				if (ImGui.MenuItem("Open", "Ctrl + O")) {
 					FileBrowser.OpenMapDialog();
 				}
-				
+
 				if (ImGui.MenuItem("Reload Map", "Ctrl + Shift + R", false, MapData.MapIsLoaded)) {
 					MapData.ReloadCurrentMap();
 				}
@@ -38,7 +38,36 @@ public static class GuiMenuBar {
 
 				ImGui.Separator();
 
-				ImGui.MenuItem("Preferences", "Ctrl + P", ref Gui.ShowPreferencesWindow, MapData.MapIsLoaded);
+				if (ImGui.MenuItem("Import Texture", "Ctrl + I", false, MapData.MapIsLoaded)) {
+					FileBrowser.ImportTextureDialog();
+				}
+
+				bool canReimportTexture = MapData.MapIsLoaded &&
+				                          FileBrowser.LastImportedTextureFile != String.Empty;
+
+				if (ImGui.MenuItem("Re-Import Texture", "Ctrl + R", false, canReimportTexture)) {
+					MapData.ImportTexture(FileBrowser.LastImportedTextureFile);
+				}
+
+				ImGui.Separator();
+
+				if (ImGui.MenuItem("Export Texture", "Ctrl + E", false, MapData.MapIsLoaded)) {
+					FileBrowser.ExportTextureDialog();
+				}
+
+				if (ImGui.MenuItem("Export UV Map", "Ctrl + U", false, MapData.MapIsLoaded)) {
+					FileBrowser.ExportUvsDialog();
+				}
+
+				if (ImGui.MenuItem("Export GLB Model", "Ctrl + Shift + E", Gui.ShowExportGlbWindow, MapData.MapIsLoaded)) {
+					Gui.ShowExportGlbWindow = !Gui.ShowExportGlbWindow;
+				}
+
+				ImGui.Separator();
+
+				if (ImGui.MenuItem("Manage Mesh Resources", "M", false, MapData.MapIsLoaded)) {
+					Gui.ToggleManageResourcesWindow();
+				}
 
 				ImGui.Separator();
 
@@ -50,6 +79,20 @@ public static class GuiMenuBar {
 			}
 
 			if (ImGui.BeginMenu("Edit")) {
+				ImGui.MenuItem("Create Polygon", "Ctrl + N", ref Gui.ShowAddPolygonWindow, MapData.MapIsLoaded);
+
+				ImGui.Separator();
+
+				if (ImGui.MenuItem("Clone Selection", "Ctrl + D", false, MapData.MapIsLoaded)) {
+					CurrentMapState.CloneSelection();
+				}
+
+				if (ImGui.MenuItem("Delete Selection", "DEL", false, MapData.MapIsLoaded)) {
+					CurrentMapState.DeleteSelection();
+				}
+
+				ImGui.Separator();
+
 				bool canCopyOrPasteVertexPositions = Gui.Widget == WidgetSelectionMode.PolygonVertexTranslate &&
 				                                     Selection.SelectedPolygons.Count == 1;
 
@@ -62,19 +105,6 @@ public static class GuiMenuBar {
 				}
 
 				ImGui.Separator();
-
-				ImGui.MenuItem("Add Polygon", "Ctrl + N", ref Gui.ShowAddPolygonWindow, MapData.MapIsLoaded);
-
-				if (ImGui.MenuItem("Clone Selection", "Ctrl + D", false, MapData.MapIsLoaded)) {
-					CurrentMapState.CloneSelection();
-				}
-
-				if (ImGui.MenuItem("Delete Selection", "DEL", false, MapData.MapIsLoaded)) {
-					CurrentMapState.DeleteSelection();
-				}
-
-				ImGui.Separator();
-
 
 				if (ImGui.MenuItem("Set Local Normals", "Ctrl + L", false, MapData.MapIsLoaded && Selection.SelectedPolygons.Count > 0)) {
 					foreach (Polygon selectedPolygon in Selection.SelectedPolygons) {
@@ -91,7 +121,7 @@ public static class GuiMenuBar {
 				}
 
 				ImGui.Separator();
-					
+
 				if (ImGui.MenuItem("Break Polygons", "Ctrl + B", false, MapData.MapIsLoaded && Selection.SelectedPolygons.Count > 0)) {
 					List<Polygon> newPolys = new List<Polygon>();
 					foreach (Polygon selectedPolygon in Selection.SelectedPolygons) {
@@ -104,7 +134,7 @@ public static class GuiMenuBar {
 						Selection.AddPolyToSelection(newPolygon);
 					}
 				}
-					
+
 				if (ImGui.MenuItem("Flip Normals", "Ctrl + F", false, MapData.MapIsLoaded && Selection.SelectedPolygons.Count > 0)) {
 					foreach (Polygon selectedPolygon in Selection.SelectedPolygons) {
 						selectedPolygon.FlipNormals();
@@ -112,33 +142,10 @@ public static class GuiMenuBar {
 
 					Utilities.AverageNormals();
 				}
-					
-				ImGui.Separator();
-					
-				if (ImGui.MenuItem("Import Texture", "Ctrl + I", false, MapData.MapIsLoaded)) {
-					FileBrowser.ImportTextureDialog();
-				}
-
-				if (ImGui.MenuItem("Export Texture", "Ctrl + E", false, MapData.MapIsLoaded)) {
-					FileBrowser.ExportTextureDialog();
-				}
-
-				bool canReimportTexture = MapData.MapIsLoaded && 
-				                          FileBrowser.LastImportedTextureFile != String.Empty;
-
-				if (ImGui.MenuItem("Re-Import Texture", "Ctrl + R", false, canReimportTexture)) {
-					MapData.ImportTexture(FileBrowser.LastImportedTextureFile);
-				}
-
-				if (ImGui.MenuItem("Export UV Map", "Ctrl + U", false, MapData.MapIsLoaded)) {
-					FileBrowser.ExportUvsDialog();
-				}
 
 				ImGui.Separator();
 
-				if (ImGui.MenuItem("Export to GLB", "Ctrl + Shift + E", Gui.ShowExportGlbWindow, MapData.MapIsLoaded)) {
-					Gui.ShowExportGlbWindow = !Gui.ShowExportGlbWindow;
-				}
+				ImGui.MenuItem("Preferences", "Ctrl + P", ref Gui.ShowPreferencesWindow, MapData.MapIsLoaded);
 
 				ImGui.EndMenu();
 			}
@@ -157,9 +164,9 @@ public static class GuiMenuBar {
 				if (ImGui.MenuItem("Focus on Selection", "Z", false, MapData.MapIsLoaded)) {
 					StageCamera.FocusOnSelection();
 				}
-					
+
 				ImGui.Separator();
-					
+
 				bool beforeAllowBackSelection = Configuration.Properties.AllowBackfaceSelection;
 				ImGui.MenuItem(
 					"Select BackFaces",
@@ -171,9 +178,9 @@ public static class GuiMenuBar {
 				if (beforeAllowBackSelection != Configuration.Properties.AllowBackfaceSelection) {
 					Configuration.SaveConfiguration();
 				}
-					
+
 				ImGui.Separator();
-					
+
 				if (ImGui.MenuItem(
 					    "Grow Polygon Selection",
 					    "+",
@@ -249,6 +256,8 @@ public static class GuiMenuBar {
 					TransformWidget.SelectNextVertex(true);
 				}
 
+				ImGui.Separator();
+
 				if (ImGui.MenuItem(
 					    "Select Next Edge",
 					    "F",
@@ -275,7 +284,6 @@ public static class GuiMenuBar {
 			}
 
 			if (ImGui.BeginMenu("View")) {
-					
 				bool beforeHighlightSelectedPoly = Configuration.Properties.HighlightSelectedPoly;
 				ImGui.MenuItem(
 					"Highlight Selected Polygons",
@@ -287,7 +295,7 @@ public static class GuiMenuBar {
 				if (beforeHighlightSelectedPoly != Configuration.Properties.HighlightSelectedPoly) {
 					Configuration.SaveConfiguration();
 				}
-					
+
 				bool beforeOrthoModeChange = Configuration.Properties.RenderFftOrtho;
 				ImGui.MenuItem(
 					"FFT Ortho Mode",
@@ -311,7 +319,7 @@ public static class GuiMenuBar {
 				if (beforeShowGameViewOverlay != Configuration.Properties.ShowGameViewOverlay) {
 					Configuration.SaveConfiguration();
 				}
-					
+
 				bool beforeLightingModeChange = Configuration.Properties.RenderPolygonsInLightingMode;
 				ImGui.MenuItem(
 					"Lighting Mode",
@@ -372,7 +380,7 @@ public static class GuiMenuBar {
 					Configuration.SaveConfiguration();
 				}
 
-					
+
 				bool beforePlayMalformedTextureAnimations = Configuration.Properties.PlaysScriptedTextureAnimations;
 				ImGui.MenuItem(
 					"Play Scripted Texture Animations",
@@ -384,53 +392,39 @@ public static class GuiMenuBar {
 				if (beforePlayMalformedTextureAnimations != Configuration.Properties.PlaysScriptedTextureAnimations) {
 					Configuration.SaveConfiguration();
 				}
-					
+
 				ImGui.Separator();
 
-				ImGui.MenuItem("Camera Controls", "C", ref Gui.ShowCameraControlWindow, MapData.MapIsLoaded);
-					
-				ImGui.MenuItem("Polygon List", "P", ref Gui.ShowPolygonListWindow, MapData.MapIsLoaded);
-
-				if (ImGui.MenuItem(
-					    "Manage Mesh Resources",
-					    "M",
-					    false,
-					    MapData.MapIsLoaded)
-				   ) {
-					Gui.ToggleManageResourcesWindow();
-				}
-					
-				bool canEditMeshAnimations = MapData.MapIsLoaded && CurrentMapState.StateData.MeshAnimationSet != null;
-
-				if (ImGui.MenuItem(
-					    "Edit Mesh Animations",
-					    "A",
-					    Gui.ShowMeshAnimationsWindow,
-					    canEditMeshAnimations)
-				   ) {
-					Gui.ShowMeshAnimationsWindow = !Gui.ShowMeshAnimationsWindow;
-				}
-
-				ImGui.MenuItem("Show Raw Terrain Data", "Ctrl + T", ref Gui.ShowRawTerrainDataWindow, MapData.MapIsLoaded);
-
-				ImGui.MenuItem("Gns Data", "G", ref Gui.ShowGnsDataWindow, MapData.MapIsLoaded);
-					
-				ImGui.Separator();
-
-				if (ImGui.MenuItem(
-					    "Screenshot Mode",
-					    "F12",
-					    false,
-					    MapData.MapIsLoaded
-				    )) {
+				if (ImGui.MenuItem("Screenshot Mode", "F12", false, MapData.MapIsLoaded)) {
 					Stage.ToggleScreenshotMode();
 				}
 
 				ImGui.EndMenu();
 			}
 
+			if (ImGui.BeginMenu("Window")) {
+				ImGui.MenuItem("Camera Controls", "C", ref Gui.ShowCameraControlWindow, MapData.MapIsLoaded);
+
+				ImGui.MenuItem("Polygon List", "P", ref Gui.ShowPolygonListWindow, MapData.MapIsLoaded);
+
+				ImGui.MenuItem("Show Raw Terrain Data", "Ctrl + T", ref Gui.ShowRawTerrainDataWindow, MapData.MapIsLoaded);
+
+				
+				bool canEditMeshAnimations = MapData.MapIsLoaded && CurrentMapState.StateData.MeshAnimationSet != null;
+
+				if (ImGui.MenuItem("Edit Mesh Animations", "A", Gui.ShowMeshAnimationsWindow, canEditMeshAnimations)) {
+					Gui.ShowMeshAnimationsWindow = !Gui.ShowMeshAnimationsWindow;
+				}
+
+				ImGui.Separator();
+				
+				ImGui.MenuItem("Gns Data", "G", ref Gui.ShowGnsDataWindow, MapData.MapIsLoaded);
+
+				ImGui.EndMenu();
+			}
+
 			if (ImGui.BeginMenu("Help")) {
-				if (ImGui.MenuItem("Video Tutorial Series", "", false, true)) {
+				if (ImGui.MenuItem("Video Tutorial Series", "F2", false, true)) {
 					Process.Start(new ProcessStartInfo {
 						FileName = "https://www.youtube.com/playlist?list=PLh_iA7J_8dx3XcC5xZU3MkRoYFrsLOe0D",
 						UseShellExecute = true
@@ -439,7 +433,7 @@ public static class GuiMenuBar {
 
 				ImGui.Separator();
 
-				if (ImGui.MenuItem("About", "", ref Gui.ShowAboutWindow, true)) { }
+				if (ImGui.MenuItem("About", "F1", ref Gui.ShowAboutWindow, true)) { }
 
 				ImGui.EndMenu();
 			}

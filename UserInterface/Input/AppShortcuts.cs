@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using GaneshaDx.Common;
 using GaneshaDx.Environment;
 using GaneshaDx.Resources;
@@ -15,18 +16,22 @@ public static class AppShortcuts {
 		if (!Gui.LockModeling && AppInput.ControlHeld && AppInput.KeyJustPressed(Keys.O)) {
 			FileBrowser.OpenMapDialog();
 		}
-			
+
 		if (MapData.MapIsLoaded && AppInput.KeyJustPressed(Keys.F12)) {
 			Stage.ToggleScreenshotMode();
 		}
-			
+
+		if (MapData.MapIsLoaded && Stage.ScreenshotMode && AppInput.KeyJustPressed(Keys.Escape)) {
+			Stage.ToggleScreenshotMode();
+		}
+
 		if (MapData.MapIsLoaded && !Gui.LockModeling) {
 			bool noneHeld = !AppInput.ControlHeld && !AppInput.ShiftHeld && !AppInput.AltHeld;
 			bool justControlHeld = AppInput.ControlHeld && !AppInput.ShiftHeld && !AppInput.AltHeld;
 			bool controlShiftHeld = AppInput.ControlHeld && AppInput.ShiftHeld && !AppInput.AltHeld;
 			bool justShiftHeld = !AppInput.ControlHeld && AppInput.ShiftHeld && !AppInput.AltHeld;
 			bool controlShiftAltHeld = AppInput.ControlHeld && AppInput.ShiftHeld && AppInput.AltHeld;
-				
+
 			if (noneHeld) {
 				if (AppInput.KeyJustPressed(Keys.D1)) {
 					Gui.SelectedTab = RightPanelTab.Polygon;
@@ -135,7 +140,7 @@ public static class AppShortcuts {
 					Configuration.Properties.HideRedTiles = !Configuration.Properties.HideRedTiles;
 					Configuration.SaveConfiguration();
 				}
-					
+
 				if (AppInput.KeyJustPressed(Keys.F)) {
 					if (Gui.Widget == WidgetSelectionMode.PolygonEdgeTranslate) {
 						TransformWidget.SelectNextEdge(AppInput.ShiftHeld);
@@ -186,6 +191,17 @@ public static class AppShortcuts {
 				if (AppInput.KeyJustPressed(Keys.I)) {
 					Configuration.Properties.HighlightSelectedPoly = !Configuration.Properties.HighlightSelectedPoly;
 					Configuration.SaveConfiguration();
+				}
+
+				if (AppInput.KeyJustPressed(Keys.F1)) {
+					Gui.ShowAboutWindow = !Gui.ShowAboutWindow;
+				}
+
+				if (AppInput.KeyJustPressed(Keys.F2)) {
+					Process.Start(new ProcessStartInfo {
+						FileName = "https://www.youtube.com/playlist?list=PLh_iA7J_8dx3XcC5xZU3MkRoYFrsLOe0D",
+						UseShellExecute = true
+					});
 				}
 			}
 
@@ -316,7 +332,7 @@ public static class AppShortcuts {
 					}
 				}
 			}
-			
+
 			if (justShiftHeld) {
 				if (AppInput.KeyJustPressed(Keys.F)) {
 					if (Gui.Widget == WidgetSelectionMode.PolygonEdgeTranslate) {

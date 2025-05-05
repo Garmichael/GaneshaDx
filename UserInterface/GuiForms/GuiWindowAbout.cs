@@ -16,7 +16,7 @@ public static class GuiWindowAbout {
 		                               ImGuiWindowFlags.AlwaysAutoResize |
 		                               ImGuiWindowFlags.NoCollapse;
 
-		ImGui.SetNextWindowSize(new Vector2(260, 210));
+		ImGui.SetNextWindowSize(new Vector2(300, 250));
 		ImGui.Begin("About GaneshaDx", ref windowIsOpen, flags);
 		{
 			GuiStyle.SetFont(Fonts.Default);
@@ -31,8 +31,11 @@ public static class GuiWindowAbout {
 			ImGui.Text("GLB Exporter by CalamityCoder");
 
 			GuiStyle.AddSpace();
-			ImGui.Text("Copyright 2021 - Present");
-			ImGui.Text("Storm Garden Studio");
+			ImGui.Text("Copyright \u00a9 2021 - Present");
+			ImGui.Text("Garret Bright, Storm Garden Studio");
+			
+			GuiStyle.AddSpace();
+			ImGui.Text("Licensed under GNU General Public License v3.0");
 		}
 		ImGui.End();
 

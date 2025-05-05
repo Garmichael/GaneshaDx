@@ -27,7 +27,7 @@ public static class GuiWindowAddPolygon {
 		                               ImGuiWindowFlags.AlwaysAutoResize |
 		                               ImGuiWindowFlags.NoCollapse;
 
-		ImGui.Begin("Add New Polygon", ref windowIsOpen, flags);
+		ImGui.Begin("Create New Polygon", ref windowIsOpen, flags);
 		{
 			GuiStyle.SetFont(Fonts.Default);
 			ImGui.Columns(2, "AddNewPolygonColumns", false);
