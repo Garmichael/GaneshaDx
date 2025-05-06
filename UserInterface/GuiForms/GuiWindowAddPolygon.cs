@@ -85,7 +85,9 @@ public static class GuiWindowAddPolygon {
 					uvs.Add(new Vector2(27, 27));
 				}
 
-				CurrentMapState.CreatePolygon(vertices, uvs, GuiPanelMeshSelector.SelectedMesh);
+				Polygon newPolygon = CurrentMapState.CreatePolygon(vertices, uvs, GuiPanelMeshSelector.SelectedMesh);
+				Selection.SelectedPolygons.Clear();
+				Selection.SelectedPolygons.Add(newPolygon);
 			}
 		}
 		ImGui.End();

@@ -8,7 +8,7 @@ namespace GaneshaDx.Common;
 
 public static class FileBrowser {
 	public static string LastImportedTextureFile = "";
-	
+
 	public static void OpenMapDialog() {
 		NfdFilter[] filters = { new() { Specification = "gns", Description = "GNS File" } };
 		NfdDialogResult result = Nfd.FileOpen(filters);

@@ -17,6 +17,7 @@ public static class Gui {
 	public static WidgetSelectionMode Widget = WidgetSelectionMode.PolygonTranslate;
 
 	public static bool LockModeling;
+	public static bool GuiInUse;
 
 	private static bool _showDebugPanel;
 	public static bool ShowCameraControlWindow;
@@ -113,6 +114,9 @@ public static class Gui {
 
 				if (ImGui.GetIO().WantCaptureKeyboard || ImGui.GetIO().WantCaptureMouse) {
 					LockModeling = true;
+					GuiInUse = true;
+				} else {
+					GuiInUse = false;
 				}
 			}
 		}

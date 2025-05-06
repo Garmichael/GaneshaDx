@@ -68,7 +68,11 @@ public static class GuiMenuBar {
 				if (ImGui.MenuItem("Manage Mesh Resources", "M", false, MapData.MapIsLoaded)) {
 					Gui.ToggleManageResourcesWindow();
 				}
+				
+				ImGui.Separator();
 
+				ImGui.MenuItem("Preferences", "Ctrl + P", ref Gui.ShowPreferencesWindow, MapData.MapIsLoaded);
+				
 				ImGui.Separator();
 
 				if (ImGui.MenuItem("Quit", "Ctrl + Q")) {
@@ -142,10 +146,6 @@ public static class GuiMenuBar {
 
 					Utilities.AverageNormals();
 				}
-
-				ImGui.Separator();
-
-				ImGui.MenuItem("Preferences", "Ctrl + P", ref Gui.ShowPreferencesWindow, MapData.MapIsLoaded);
 
 				ImGui.EndMenu();
 			}

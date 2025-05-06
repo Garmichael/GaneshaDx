@@ -41,7 +41,7 @@ public static class GuiWindowPreferences {
 			ImGui.Checkbox("###PreferencesSwapCameraControls", ref Configuration.Properties.SwapCameraControls);
 			ImGui.NextColumn();
 
-			ImGui.Text("Control+Drag Modifier");
+			ImGui.Text("Control+Drag Multiplier");
 			ImGui.NextColumn();
 
 			ImGui.SetNextItemWidth(GuiStyle.WidgetWidth);

@@ -214,8 +214,6 @@ public static class CurrentMapState {
 				}
 			}
 
-			Selection.SelectedPolygons.Clear();
-			Selection.SelectedPolygons.Add(newPolygon);
 			newPolygon.GuessNormals();
 		}
 

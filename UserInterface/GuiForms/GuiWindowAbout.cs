@@ -16,7 +16,7 @@ public static class GuiWindowAbout {
 		                               ImGuiWindowFlags.AlwaysAutoResize |
 		                               ImGuiWindowFlags.NoCollapse;
 
-		ImGui.SetNextWindowSize(new Vector2(300, 250));
+		ImGui.SetNextWindowSize(new Vector2(300, 270));
 		ImGui.Begin("About GaneshaDx", ref windowIsOpen, flags);
 		{
 			GuiStyle.SetFont(Fonts.Default);
@@ -29,6 +29,7 @@ public static class GuiWindowAbout {
 
 			ImGui.Text("Developed by Garret Bright");
 			ImGui.Text("GLB Exporter by CalamityCoder");
+			ImGui.Text("Terrain Generator by Duodecimus");
 
 			GuiStyle.AddSpace();
 			ImGui.Text("Copyright \u00a9 2021 - Present");
