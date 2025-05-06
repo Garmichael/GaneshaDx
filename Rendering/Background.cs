@@ -1,4 +1,5 @@
-﻿using GaneshaDx.Environment;
+﻿using System.Collections.Generic;
+using GaneshaDx.Environment;
 using GaneshaDx.Resources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -6,21 +7,37 @@ using Microsoft.Xna.Framework.Graphics;
 namespace GaneshaDx.Rendering;
 
 public static class Background {
+	public static bool UseScreenshotBackground = false;
+	public static int ScreenshotBackgroundIndex = 0;
 	private static Texture2D _background;
 	private static readonly Texture2D GaneshaLogo;
 	private static readonly Texture2D StormGardenStudioLogo;
 	private static SpriteFont _font;
-		
+	
+	public static readonly Dictionary<string, Color> ScreenshotBackgroundColors = new() {
+		{ "Magenta", Color.Magenta },
+		{ "Lime Green", Color.Lime },
+		{ "Yellow", Color.Yellow },
+		{ "White", Color.White },
+		{ "Black", Color.Black },
+		{ "Sky Blue", Color.LightBlue },
+	};
+	
+	private static readonly List<Texture2D> ScreenshotBackgroundTextures = new();
+
 	static Background() {
 		GaneshaLogo = Stage.Content.Load<Texture2D>("GaneshaLogo");
 		StormGardenStudioLogo = Stage.Content.Load<Texture2D>("StormGardenStudioLogo");
+		CreateScreenshotBackgrounds();
 	}
 
 	public static void Render() {
 		Stage.SpriteBatch.Begin();
-			
+
 		Stage.SpriteBatch.Draw(
-			_background,
+			UseScreenshotBackground
+				? ScreenshotBackgroundTextures[ScreenshotBackgroundIndex]
+				: _background,
 			MapData.MapIsLoaded
 				? Stage.ModelingViewport.Bounds
 				: Stage.GraphicsDevice.PresentationParameters.Bounds,
@@ -38,12 +55,12 @@ public static class Background {
 		_font ??= Stage.Content.Load<SpriteFont>("OverlayFont");
 		float versionNumberBrightness = .2f;
 		Stage.SpriteBatch.DrawString(
-			_font, 
+			_font,
 			"Ver. " + Program.Version,
-			new Vector2(15, Stage.WholeViewport.Height  - 30), 
-			new Color(versionNumberBrightness,versionNumberBrightness,versionNumberBrightness,1)
+			new Vector2(15, Stage.WholeViewport.Height - 30),
+			new Color(versionNumberBrightness, versionNumberBrightness, versionNumberBrightness, 1)
 		);
-			
+
 		Stage.SpriteBatch.Draw(
 			GaneshaLogo,
 			new Vector2(
@@ -97,6 +114,20 @@ public static class Background {
 
 		backgroundTex.SetData(backgroundColors);
 		_background = backgroundTex;
+	}
+
+	private static void CreateScreenshotBackgrounds() {
+		foreach (KeyValuePair<string, Color> background in ScreenshotBackgroundColors) {
+			Texture2D backgroundTex = new(Stage.GraphicsDevice, 10, 10);
+			Color[] backgroundColors = new Color[100];
+
+			for (int i = 0; i < backgroundColors.Length; i++) {
+				backgroundColors[i] = background.Value;
+			}
+
+			backgroundTex.SetData(backgroundColors);
+			ScreenshotBackgroundTextures.Add(backgroundTex);
+		}
 	}
 
 	public static void SetAsTexture(Texture2D texture2D) {

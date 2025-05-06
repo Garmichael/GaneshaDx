@@ -27,6 +27,8 @@ public static class GuiMenuBar {
 				if (ImGui.MenuItem("Reload Map", "Ctrl + Shift + R", false, MapData.MapIsLoaded)) {
 					MapData.ReloadCurrentMap();
 				}
+				
+				ImGui.Separator();
 
 				if (ImGui.MenuItem("Save", "Ctrl + S", false, MapData.MapIsLoaded)) {
 					MapData.SaveMap();

@@ -53,6 +53,7 @@ public static class Gui {
 				LockModeling = true;
 			} else if (Stage.ScreenshotMode) {
 				LockModeling = true;
+				GuiWindowScreenshotBackgroundSelector.Render();
 			} else {
 				GuiMenuBar.Render();
 				GuiWindowTexturePreview.Render();
