@@ -26,9 +26,12 @@ public static class GuiPanelTerrain {
 			RenderTerrainTileProperties();
 		}
 
-		RenderResizeTerrainPanel();
+		if (Selection.SelectedTerrainTiles.Count == 0 || ResizeTerrainMode) {
+			RenderResizeTerrainPanel();
+		}
 
-		if (!ResizeTerrainMode) {
+		if (!ResizeTerrainMode && Selection.SelectedTerrainTiles.Count == 0) {
+			RenderTerrainGenerator();
 			RenderGreyboxingForm();
 		}
 
@@ -91,9 +94,9 @@ public static class GuiPanelTerrain {
 				resettingTile.RotatesSouthwestTop = false;
 			}
 		}
-		
+
 		GuiStyle.AddSpace();
-		
+
 		for (int tileIndex = 0; tileIndex < 2; tileIndex++) {
 			GuiStyle.SetNewUiToDefaultStyle();
 			GuiStyle.SetElementStyle(ElementStyle.Header);
@@ -332,11 +335,11 @@ public static class GuiPanelTerrain {
 
 				if (Configuration.Properties.ShowUnknownValues) {
 					GuiStyle.AddSpace();
-					
+
 					ImGui.Text("Unknown 0A");
 					ImGui.NextColumn();
 					GuiStyle.AddSpace();
-					
+
 					ImGui.PushItemWidth(GuiStyle.CheckBoxWidth);
 					bool beforeUnknown0A = tiles[tileIndex].Unknown0A;
 					ImGui.Checkbox("###unknown0a" + tileIndex, ref tiles[tileIndex].Unknown0A);
@@ -369,7 +372,7 @@ public static class GuiPanelTerrain {
 					}
 
 					ImGui.NextColumn();
-					
+
 					ImGui.Text("Unknown1");
 					ImGui.NextColumn();
 
@@ -388,7 +391,7 @@ public static class GuiPanelTerrain {
 					}
 
 					ImGui.NextColumn();
-					
+
 					ImGui.Text("Unknown 5A");
 					ImGui.NextColumn();
 
@@ -406,7 +409,7 @@ public static class GuiPanelTerrain {
 					}
 
 					ImGui.NextColumn();
-					
+
 					ImGui.Text("Unknown 5B");
 					ImGui.NextColumn();
 
@@ -424,7 +427,7 @@ public static class GuiPanelTerrain {
 					}
 
 					ImGui.NextColumn();
-					
+
 					ImGui.Text("Unknown 5C");
 					ImGui.NextColumn();
 
@@ -442,7 +445,7 @@ public static class GuiPanelTerrain {
 					}
 
 					ImGui.NextColumn();
-					
+
 					ImGui.Text("Unknown 6B");
 					ImGui.NextColumn();
 
@@ -677,6 +680,22 @@ public static class GuiPanelTerrain {
 		}
 	}
 
+	private static void RenderTerrainGenerator() {
+		GuiStyle.SetNewUiToDefaultStyle();
+		GuiStyle.SetElementStyle(ElementStyle.Header);
+		if (ImGui.CollapsingHeader("Generation Terrain", ImGuiTreeNodeFlags.DefaultOpen)) {
+			GuiStyle.SetNewUiToDefaultStyle();
+			ImGui.Indent();
+			if (ImGui.Button("Generate Terrain from Polygons")) {
+				TerrainGenerator.Generate();
+			}
+
+			ImGui.Unindent();
+
+			GuiStyle.AddSpace();
+		}
+	}
+
 	private static void RenderGreyboxingForm() {
 		GuiStyle.SetNewUiToDefaultStyle();
 		GuiStyle.SetElementStyle(ElementStyle.Header);
@@ -687,7 +706,8 @@ public static class GuiPanelTerrain {
 
 			GuiStyle.SetElementStyle(ElementStyle.Header);
 			GuiStyle.SetFont(Fonts.Default);
-			if(ImGui.CollapsingHeader("About Greyboxing")){
+
+			if (ImGui.CollapsingHeader("About Greyboxing")) {
 				ImGui.Indent();
 				GuiStyle.SetNewUiToDefaultStyle();
 				ImGui.Text("Greyboxing will delete all the polygons in");
@@ -697,18 +717,22 @@ public static class GuiPanelTerrain {
 				ImGui.Text("own details.");
 				GuiStyle.AddSpace();
 				ImGui.Text("Painting the Texture will update the map ");
-				ImGui.Text("texture on Page 0 in the top left corner."); 
+				ImGui.Text("texture on Page 0 in the top left corner.");
 				GuiStyle.AddSpace();
 				ImGui.Text("Modifying the Palette will overwrite the ");
 				ImGui.Text("first and second colors of the first two ");
 				ImGui.Text("palettes.");
+				GuiStyle.AddSpace();
+				ImGui.Text("Single-Poly Walls will make each wall a ");
+				ImGui.Text("single polygon instead of a quad for every ");
+				ImGui.Text("height elevation.");
 				ImGui.Unindent();
 			}
 
 			GuiStyle.SetNewUiToDefaultStyle();
 
 			GuiStyle.AddSpace();
-			
+
 			ImGui.Columns(2, "Greybox Settings", false);
 
 			ImGui.SetColumnWidth(0, GuiStyle.LabelWidth - 20);
