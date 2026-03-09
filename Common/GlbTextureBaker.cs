@@ -26,7 +26,7 @@ public readonly struct GlbBakedTextureData {
 public static class GlbTextureBaker {
 	private const int TextureAtlasWidth = 256;
 	private const int TextureAtlasHeight = 1024;
-	private const int TexturePadding = 1;
+	private const int TexturePadding = 8;
 
 	private static readonly RasterizerState NoCullRasterizer = new() {
 		CullMode = CullMode.None
@@ -76,6 +76,9 @@ public static class GlbTextureBaker {
 
 		Color[] bakedColors = new Color[textureBounds.Width * textureBounds.Height];
 		renderTarget.GetData(bakedColors);
+
+		bool[] uvIslandMask = BuildUvIslandMask(polygon, textureBounds);
+		ApplyUvPadding(bakedColors, uvIslandMask, textureBounds.Width, textureBounds.Height, TexturePadding);
 
 		using Texture2D bakedTexture = new(Stage.GraphicsDevice, textureBounds.Width, textureBounds.Height);
 		bakedTexture.SetData(bakedColors);
@@ -171,6 +174,157 @@ public static class GlbTextureBaker {
 		return textureVertices;
 	}
 
+	private static bool[] BuildUvIslandMask(Polygon polygon, Rectangle textureBounds)
+	{
+		bool[] uvIslandMask = new bool[textureBounds.Width * textureBounds.Height];
+		XnaVector2[] localUvs = BuildLocalUvCoordinates(polygon, textureBounds);
+
+		for (int y = 0; y < textureBounds.Height; y++)
+		{
+			for (int x = 0; x < textureBounds.Width; x++)
+			{
+				XnaVector2 point = new(x + 0.5f, y + 0.5f);
+				int pixelIndex = x + y * textureBounds.Width;
+				uvIslandMask[pixelIndex] = polygon.IsQuad
+					? PointIsWithinTriangleInclusive(point, localUvs[0], localUvs[1], localUvs[2]) ||
+						PointIsWithinTriangleInclusive(point, localUvs[2], localUvs[1], localUvs[3])
+					: PointIsWithinTriangleInclusive(point, localUvs[0], localUvs[1], localUvs[2]);
+			}
+		}
+
+		return uvIslandMask;
+	}
+
+	private static XnaVector2[] BuildLocalUvCoordinates(Polygon polygon, Rectangle textureBounds)
+	{
+		XnaVector2[] localUvs = new XnaVector2[polygon.UvCoordinates.Count];
+
+		for (int vertexIndex = 0; vertexIndex < polygon.UvCoordinates.Count; vertexIndex++)
+		{
+			float atlasY = polygon.UvCoordinates[vertexIndex].Y + polygon.TexturePage * 256;
+			localUvs[vertexIndex] = new XnaVector2(
+				polygon.UvCoordinates[vertexIndex].X - textureBounds.X,
+				atlasY - textureBounds.Y
+			);
+		}
+
+		return localUvs;
+	}
+
+	private static bool PointIsWithinTriangleInclusive(
+		XnaVector2 point,
+		XnaVector2 trianglePointA,
+		XnaVector2 trianglePointB,
+		XnaVector2 trianglePointC
+	)
+	{
+		float denominator =
+			(trianglePointB.Y - trianglePointC.Y) * (trianglePointA.X - trianglePointC.X) +
+			(trianglePointC.X - trianglePointB.X) * (trianglePointA.Y - trianglePointC.Y);
+
+		if (Math.Abs(denominator) < 0.0001f)
+		{
+			return false;
+		}
+
+		float alpha =
+			((trianglePointB.Y - trianglePointC.Y) * (point.X - trianglePointC.X) +
+			 (trianglePointC.X - trianglePointB.X) * (point.Y - trianglePointC.Y)) /
+			denominator;
+		float beta =
+			((trianglePointC.Y - trianglePointA.Y) * (point.X - trianglePointC.X) +
+			 (trianglePointA.X - trianglePointC.X) * (point.Y - trianglePointC.Y)) /
+			denominator;
+		float gamma = 1f - alpha - beta;
+
+		const float epsilon = -0.001f;
+		return alpha >= epsilon && beta >= epsilon && gamma >= epsilon;
+	}
+
+	private static void ApplyUvPadding(
+		Color[] bakedColors,
+		bool[] uvIslandMask,
+		int textureWidth,
+		int textureHeight,
+		int paddingSize
+	)
+	{
+		Color[] currentColors = new Color[bakedColors.Length];
+		Array.Copy(bakedColors, currentColors, bakedColors.Length);
+
+		for (int paddingStep = 0; paddingStep < paddingSize; paddingStep++)
+		{
+			Color[] nextColors = new Color[currentColors.Length];
+			Array.Copy(currentColors, nextColors, currentColors.Length);
+
+			for (int y = 0; y < textureHeight; y++)
+			{
+				for (int x = 0; x < textureWidth; x++)
+				{
+					int pixelIndex = x + y * textureWidth;
+
+					if (uvIslandMask[pixelIndex] || currentColors[pixelIndex].A != 0)
+					{
+						continue;
+					}
+
+					if (TryGetPaddingSourceColor(currentColors, textureWidth, textureHeight, x, y, out Color sourceColor))
+					{
+						nextColors[pixelIndex] = sourceColor;
+					}
+				}
+			}
+
+			currentColors = nextColors;
+		}
+
+		Array.Copy(currentColors, bakedColors, bakedColors.Length);
+	}
+
+	private static bool TryGetPaddingSourceColor(
+		Color[] sourceColors,
+		int textureWidth,
+		int textureHeight,
+		int x,
+		int y,
+		out Color sourceColor
+	)
+	{
+		sourceColor = Color.Transparent;
+		XnaVector2[] directions = {
+			new XnaVector2(0, -1),
+			new XnaVector2(-1, 0),
+			new XnaVector2(1, 0),
+			new XnaVector2(0, 1),
+			new XnaVector2(-1, -1),
+			new XnaVector2(1, -1),
+			new XnaVector2(-1, 1),
+			new XnaVector2(1, 1)
+		};
+
+		foreach (XnaVector2 direction in directions)
+		{
+			int sampleX = x + (int)direction.X;
+			int sampleY = y + (int)direction.Y;
+
+			if (sampleX < 0 || sampleX >= textureWidth || sampleY < 0 || sampleY >= textureHeight)
+			{
+				continue;
+			}
+
+			Color candidateColor = sourceColors[sampleX + sampleY * textureWidth];
+			if (candidateColor.A == 0)
+			{
+				continue;
+			}
+
+			sourceColor = candidateColor;
+			return true;
+		}
+
+		return false;
+	}
+
 	private static XnaVector2[] BuildExportUvs(Polygon polygon, Rectangle textureBounds) {
 		XnaVector2[] exportUvs = new XnaVector2[polygon.UvCoordinates.Count];
 
@@ -189,5 +343,3 @@ public static class GlbTextureBaker {
 		return new XnaVector2(uv.X / 256f, (uv.Y + texturePage * 256) / 1024f);
 	}
 }
-
-
