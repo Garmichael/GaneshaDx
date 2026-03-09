@@ -4,6 +4,7 @@ using GaneshaDx.Environment;
 using GaneshaDx.Rendering;
 using GaneshaDx.Resources;
 using DirectionalLight = GaneshaDx.Resources.ContentDataTypes.DirectionalLight;
+using Palette = GaneshaDx.Resources.ContentDataTypes.Palettes.Palette;
 using GaneshaDx.Resources.ContentDataTypes.Polygons;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -31,6 +32,8 @@ public static class GlbTextureBaker {
 	private static readonly RasterizerState NoCullRasterizer = new() {
 		CullMode = CullMode.None
 	};
+	private static Texture2D _cachedStateTexture;
+	private static Color[] _cachedStateTextureColors = Array.Empty<Color>();
 
 	public static GlbBakedTextureData BakePolygonTexture(Polygon polygon) {
 		Rectangle textureBounds = GetTextureBounds(polygon);
@@ -78,7 +81,12 @@ public static class GlbTextureBaker {
 		renderTarget.GetData(bakedColors);
 
 		bool[] uvIslandMask = BuildUvIslandMask(polygon, textureBounds);
-		ApplyUvPadding(bakedColors, uvIslandMask, textureBounds.Width, textureBounds.Height, TexturePadding);
+		bool polygonUsesValidTransparency = PolygonUsesValidTransparency(polygon, textureBounds, uvIslandMask);
+
+		if (!polygonUsesValidTransparency) {
+			FillTransparentIslandPixels(bakedColors, uvIslandMask, textureBounds.Width, textureBounds.Height);
+			ApplyUvPadding(bakedColors, uvIslandMask, textureBounds.Width, textureBounds.Height, TexturePadding);
+		}
 
 		using Texture2D bakedTexture = new(Stage.GraphicsDevice, textureBounds.Width, textureBounds.Height);
 		bakedTexture.SetData(bakedColors);
@@ -123,7 +131,9 @@ public static class GlbTextureBaker {
 		Stage.FftPolygonEffect.Parameters["World"].SetValue(Matrix.Identity);
 		Stage.FftPolygonEffect.Parameters["WorldInverseTranspose"].SetValue(Matrix.Identity);
 		Stage.FftPolygonEffect.Parameters["ModelTexture"].SetValue(CurrentMapState.StateData.Texture);
-		Stage.FftPolygonEffect.Parameters["PaletteColors"].SetValue(SceneRenderer.AnimationAdjustedPalettes[polygon.PaletteId].ShaderColors);
+		Stage.FftPolygonEffect.Parameters["PaletteColors"].SetValue(
+			BuildExportPaletteColors(SceneRenderer.AnimationAdjustedPalettes[polygon.PaletteId])
+		);
 
 		bool isUnlit = polygon.RenderingProperties != null && !polygon.RenderingProperties.LitTexture;
 		Stage.FftPolygonEffect.Parameters["AmbientColor"].SetValue(
@@ -147,6 +157,16 @@ public static class GlbTextureBaker {
 		Stage.FftPolygonEffect.Parameters["HighlightBright"].SetValue(false);
 		Stage.FftPolygonEffect.Parameters["HighlightDim"].SetValue(false);
 		Stage.FftPolygonEffect.Parameters["MaxAlpha"].SetValue(1f);
+	}
+
+	private static XnaVector4[] BuildExportPaletteColors(Palette palette) {
+		XnaVector4[] shaderColors = new XnaVector4[palette.Colors.Count];
+
+		for (int colorIndex = 0; colorIndex < palette.Colors.Count; colorIndex++) {
+			shaderColors[colorIndex] = palette.Colors[colorIndex].ToColor(false).ToVector4();
+		}
+
+		return shaderColors;
 	}
 
 	private static VertexPositionNormalTexture[] BuildTextureRenderVertices(Polygon polygon, Rectangle textureBounds) {
@@ -174,20 +194,17 @@ public static class GlbTextureBaker {
 		return textureVertices;
 	}
 
-	private static bool[] BuildUvIslandMask(Polygon polygon, Rectangle textureBounds)
-	{
+	private static bool[] BuildUvIslandMask(Polygon polygon, Rectangle textureBounds) {
 		bool[] uvIslandMask = new bool[textureBounds.Width * textureBounds.Height];
 		XnaVector2[] localUvs = BuildLocalUvCoordinates(polygon, textureBounds);
 
-		for (int y = 0; y < textureBounds.Height; y++)
-		{
-			for (int x = 0; x < textureBounds.Width; x++)
-			{
+		for (int y = 0; y < textureBounds.Height; y++) {
+			for (int x = 0; x < textureBounds.Width; x++) {
 				XnaVector2 point = new(x + 0.5f, y + 0.5f);
 				int pixelIndex = x + y * textureBounds.Width;
 				uvIslandMask[pixelIndex] = polygon.IsQuad
 					? PointIsWithinTriangleInclusive(point, localUvs[0], localUvs[1], localUvs[2]) ||
-						PointIsWithinTriangleInclusive(point, localUvs[2], localUvs[1], localUvs[3])
+					  PointIsWithinTriangleInclusive(point, localUvs[2], localUvs[1], localUvs[3])
 					: PointIsWithinTriangleInclusive(point, localUvs[0], localUvs[1], localUvs[2]);
 			}
 		}
@@ -195,12 +212,10 @@ public static class GlbTextureBaker {
 		return uvIslandMask;
 	}
 
-	private static XnaVector2[] BuildLocalUvCoordinates(Polygon polygon, Rectangle textureBounds)
-	{
+	private static XnaVector2[] BuildLocalUvCoordinates(Polygon polygon, Rectangle textureBounds) {
 		XnaVector2[] localUvs = new XnaVector2[polygon.UvCoordinates.Count];
 
-		for (int vertexIndex = 0; vertexIndex < polygon.UvCoordinates.Count; vertexIndex++)
-		{
+		for (int vertexIndex = 0; vertexIndex < polygon.UvCoordinates.Count; vertexIndex++) {
 			float atlasY = polygon.UvCoordinates[vertexIndex].Y + polygon.TexturePage * 256;
 			localUvs[vertexIndex] = new XnaVector2(
 				polygon.UvCoordinates[vertexIndex].X - textureBounds.X,
@@ -211,19 +226,80 @@ public static class GlbTextureBaker {
 		return localUvs;
 	}
 
+	private static bool PolygonUsesValidTransparency(Polygon polygon, Rectangle textureBounds, bool[] uvIslandMask) {
+		Palette palette = SceneRenderer.AnimationAdjustedPalettes[polygon.PaletteId];
+		bool[] transparentPaletteIndices = new bool[palette.Colors.Count];
+		bool paletteContainsTransparency = false;
+
+		for (int colorIndex = 0; colorIndex < palette.Colors.Count; colorIndex++) {
+			transparentPaletteIndices[colorIndex] = palette.Colors[colorIndex].ToColor(false).A == 0;
+			paletteContainsTransparency |= transparentPaletteIndices[colorIndex];
+		}
+
+		Color[] textureColors = GetStateTextureColors();
+
+		for (int y = 0; y < textureBounds.Height; y++) {
+			for (int x = 0; x < textureBounds.Width; x++) {
+				int pixelIndex = x + y * textureBounds.Width;
+				if (!uvIslandMask[pixelIndex]) {
+					continue;
+				}
+
+				int atlasX = x + textureBounds.X;
+				int atlasY = y + textureBounds.Y;
+				Color textureColor = textureColors[atlasX + atlasY * TextureAtlasWidth];
+				if (textureColor.A < 255) {
+					return true;
+				}
+
+				if (!paletteContainsTransparency) {
+					continue;
+				}
+
+				int paletteIndex = GetPaletteIndex(textureColor);
+				if (paletteIndex >= 0 && transparentPaletteIndices[paletteIndex]) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	private static Color[] GetStateTextureColors() {
+		Texture2D stateTexture = CurrentMapState.StateData.Texture;
+		if (!ReferenceEquals(_cachedStateTexture, stateTexture) || _cachedStateTextureColors.Length != stateTexture.Width * stateTexture.Height) {
+			_cachedStateTexture = stateTexture;
+			_cachedStateTextureColors = new Color[stateTexture.Width * stateTexture.Height];
+			stateTexture.GetData(_cachedStateTextureColors);
+		}
+
+		return _cachedStateTextureColors;
+	}
+
+	private static int GetPaletteIndex(Color textureColor) {
+		float red = textureColor.R / 255f;
+
+		for (int index = 0; index < 16; index++) {
+			if (red >= index * 16f / 255f && red <= index * 18f / 255f) {
+				return index;
+			}
+		}
+
+		return -1;
+	}
+
 	private static bool PointIsWithinTriangleInclusive(
 		XnaVector2 point,
 		XnaVector2 trianglePointA,
 		XnaVector2 trianglePointB,
 		XnaVector2 trianglePointC
-	)
-	{
+	) {
 		float denominator =
 			(trianglePointB.Y - trianglePointC.Y) * (trianglePointA.X - trianglePointC.X) +
 			(trianglePointC.X - trianglePointB.X) * (trianglePointA.Y - trianglePointC.Y);
 
-		if (Math.Abs(denominator) < 0.0001f)
-		{
+		if (Math.Abs(denominator) < 0.0001f) {
 			return false;
 		}
 
@@ -241,35 +317,123 @@ public static class GlbTextureBaker {
 		return alpha >= epsilon && beta >= epsilon && gamma >= epsilon;
 	}
 
+	private static void FillTransparentIslandPixels(
+		Color[] bakedColors,
+		bool[] uvIslandMask,
+		int textureWidth,
+		int textureHeight
+	) {
+		Color[] repairedColors = new Color[bakedColors.Length];
+		Array.Copy(bakedColors, repairedColors, bakedColors.Length);
+		int maxSearchDistance = Math.Max(textureWidth, textureHeight);
+
+		for (int y = 0; y < textureHeight; y++) {
+			for (int x = 0; x < textureWidth; x++) {
+				int pixelIndex = x + y * textureWidth;
+				if (!uvIslandMask[pixelIndex] || bakedColors[pixelIndex].A != 0) {
+					continue;
+				}
+
+				if (TryGetNearestIslandColor(
+					bakedColors,
+					uvIslandMask,
+					textureWidth,
+					textureHeight,
+					x,
+					y,
+					maxSearchDistance,
+					out Color sourceColor
+				)) {
+					repairedColors[pixelIndex] = sourceColor;
+				}
+			}
+		}
+
+		Array.Copy(repairedColors, bakedColors, bakedColors.Length);
+	}
+
+	private static bool TryGetNearestIslandColor(
+		Color[] sourceColors,
+		bool[] uvIslandMask,
+		int textureWidth,
+		int textureHeight,
+		int x,
+		int y,
+		int maxSearchDistance,
+		out Color sourceColor
+	) {
+		sourceColor = Color.Transparent;
+		float nearestDistanceSquared = float.MaxValue;
+
+		for (int searchDistance = 1; searchDistance <= maxSearchDistance; searchDistance++) {
+			bool foundSourcePixel = false;
+			int minX = Math.Max(0, x - searchDistance);
+			int maxX = Math.Min(textureWidth - 1, x + searchDistance);
+			int minY = Math.Max(0, y - searchDistance);
+			int maxY = Math.Min(textureHeight - 1, y + searchDistance);
+
+			for (int sampleY = minY; sampleY <= maxY; sampleY++) {
+				for (int sampleX = minX; sampleX <= maxX; sampleX++) {
+					bool isPerimeterPixel =
+						sampleX == minX || sampleX == maxX || sampleY == minY || sampleY == maxY;
+					if (!isPerimeterPixel) {
+						continue;
+					}
+
+					int sampleIndex = sampleX + sampleY * textureWidth;
+					if (!uvIslandMask[sampleIndex]) {
+						continue;
+					}
+
+					Color candidateColor = sourceColors[sampleIndex];
+					if (candidateColor.A == 0) {
+						continue;
+					}
+
+					float deltaX = sampleX - x;
+					float deltaY = sampleY - y;
+					float distanceSquared = deltaX * deltaX + deltaY * deltaY;
+					if (distanceSquared >= nearestDistanceSquared) {
+						continue;
+					}
+
+					nearestDistanceSquared = distanceSquared;
+					sourceColor = candidateColor;
+					foundSourcePixel = true;
+				}
+			}
+
+			if (foundSourcePixel) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	private static void ApplyUvPadding(
 		Color[] bakedColors,
 		bool[] uvIslandMask,
 		int textureWidth,
 		int textureHeight,
 		int paddingSize
-	)
-	{
+	) {
 		Color[] currentColors = new Color[bakedColors.Length];
 		Array.Copy(bakedColors, currentColors, bakedColors.Length);
 
-		for (int paddingStep = 0; paddingStep < paddingSize; paddingStep++)
-		{
+		for (int paddingStep = 0; paddingStep < paddingSize; paddingStep++) {
 			Color[] nextColors = new Color[currentColors.Length];
 			Array.Copy(currentColors, nextColors, currentColors.Length);
 
-			for (int y = 0; y < textureHeight; y++)
-			{
-				for (int x = 0; x < textureWidth; x++)
-				{
+			for (int y = 0; y < textureHeight; y++) {
+				for (int x = 0; x < textureWidth; x++) {
 					int pixelIndex = x + y * textureWidth;
 
-					if (uvIslandMask[pixelIndex] || currentColors[pixelIndex].A != 0)
-					{
+					if (uvIslandMask[pixelIndex] || currentColors[pixelIndex].A != 0) {
 						continue;
 					}
 
-					if (TryGetPaddingSourceColor(currentColors, textureWidth, textureHeight, x, y, out Color sourceColor))
-					{
+					if (TryGetPaddingSourceColor(currentColors, textureWidth, textureHeight, x, y, out Color sourceColor)) {
 						nextColors[pixelIndex] = sourceColor;
 					}
 				}
@@ -288,8 +452,7 @@ public static class GlbTextureBaker {
 		int x,
 		int y,
 		out Color sourceColor
-	)
-	{
+	) {
 		sourceColor = Color.Transparent;
 		XnaVector2[] directions = {
 			new XnaVector2(0, -1),
@@ -302,19 +465,16 @@ public static class GlbTextureBaker {
 			new XnaVector2(1, 1)
 		};
 
-		foreach (XnaVector2 direction in directions)
-		{
-			int sampleX = x + (int)direction.X;
-			int sampleY = y + (int)direction.Y;
+		foreach (XnaVector2 direction in directions) {
+			int sampleX = x + (int) direction.X;
+			int sampleY = y + (int) direction.Y;
 
-			if (sampleX < 0 || sampleX >= textureWidth || sampleY < 0 || sampleY >= textureHeight)
-			{
+			if (sampleX < 0 || sampleX >= textureWidth || sampleY < 0 || sampleY >= textureHeight) {
 				continue;
 			}
 
 			Color candidateColor = sourceColors[sampleX + sampleY * textureWidth];
-			if (candidateColor.A == 0)
-			{
+			if (candidateColor.A == 0) {
 				continue;
 			}
 
@@ -343,3 +503,5 @@ public static class GlbTextureBaker {
 		return new XnaVector2(uv.X / 256f, (uv.Y + texturePage * 256) / 1024f);
 	}
 }
+
+
