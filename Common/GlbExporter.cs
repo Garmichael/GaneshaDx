@@ -1,4 +1,5 @@
-﻿using GaneshaDx.Resources.ContentDataTypes.Polygons;
+﻿using System;
+using GaneshaDx.Resources.ContentDataTypes.Polygons;
 using System.Numerics;
 using System.Text.Json;
 using SharpGLTF.Geometry;
@@ -10,8 +11,8 @@ using System.IO;
 using GaneshaDx.Resources;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
-using System.Linq;
 using FreeImageAPI;
+using GaneshaDx.Rendering;
 using GaneshaDx.Resources.ContentDataTypes.MeshAnimations;
 using Microsoft.Xna.Framework;
 using Vector4 = System.Numerics.Vector4;
@@ -28,7 +29,10 @@ using VertexPosition = SharpGLTF.Geometry.VertexTypes.VertexPosition;
 namespace GaneshaDx.Common;
 
 public static class GlbExporter {
-	private const float ReduceScaleFactor = 50;
+	// Scale to 1 tile is roughly 1cm x 1cm.
+	private const float ReduceScaleFactorX = 0.000321F;
+	private const float ReduceScaleFactorY = 0.000321F;
+	private const float ReduceScaleFactorZ = 0.000335F;
 
 	private static readonly List<Color> GreyPalette = new() {
 		Utilities.GetColorFromHex("000000"),
@@ -50,32 +54,13 @@ public static class GlbExporter {
 	};
 
 	public static void Export(string filePath) {
-		Dictionary<MeshType, MeshBuilder<VertexPosition, VertexTexture1>> meshes = new() {
-			{ MeshType.PrimaryMesh, new MeshBuilder<VertexPosition, VertexTexture1>("PrimaryMesh") },
-			{ MeshType.AnimatedMesh1, new MeshBuilder<VertexPosition, VertexTexture1>("AnimatedMesh1") },
-			{ MeshType.AnimatedMesh2, new MeshBuilder<VertexPosition, VertexTexture1>("AnimatedMesh2") },
-			{ MeshType.AnimatedMesh3, new MeshBuilder<VertexPosition, VertexTexture1>("AnimatedMesh3") },
-			{ MeshType.AnimatedMesh4, new MeshBuilder<VertexPosition, VertexTexture1>("AnimatedMesh4") },
-			{ MeshType.AnimatedMesh5, new MeshBuilder<VertexPosition, VertexTexture1>("AnimatedMesh5") },
-			{ MeshType.AnimatedMesh6, new MeshBuilder<VertexPosition, VertexTexture1>("AnimatedMesh6") },
-			{ MeshType.AnimatedMesh7, new MeshBuilder<VertexPosition, VertexTexture1>("AnimatedMesh7") },
-			{ MeshType.AnimatedMesh8, new MeshBuilder<VertexPosition, VertexTexture1>("AnimatedMesh8") },
-		};
+		SceneRenderer.Update();
 
-		Dictionary<MeshType, List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>> texturedPrimitives = new() {
-			{ MeshType.PrimaryMesh, new List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>() },
-			{ MeshType.AnimatedMesh1, new List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>() },
-			{ MeshType.AnimatedMesh2, new List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>() },
-			{ MeshType.AnimatedMesh3, new List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>() },
-			{ MeshType.AnimatedMesh4, new List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>() },
-			{ MeshType.AnimatedMesh5, new List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>() },
-			{ MeshType.AnimatedMesh6, new List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>() },
-			{ MeshType.AnimatedMesh7, new List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>() },
-			{ MeshType.AnimatedMesh8, new List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>() },
-		};
-
-		CreateTextures(texturedPrimitives, meshes);
-
+		Dictionary<MeshType, MeshBuilder<VertexPosition, VertexTexture1>> meshes = CreateMeshes();
+		Dictionary<MeshType, PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>> untexturedPrimitives =
+			CreateUntexturedPrimitives(meshes);
+		Dictionary<MeshType, List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>> texturedPrimitives =
+			GuiWindowExportGlb.BakeSceneLightingIntoTextures ? null : CreateSharedTexturePrimitives(meshes);
 
 		foreach (Polygon polygon in CurrentMapState.StateData.PolygonCollectionBucket) {
 			if (polygon.IsQuad) {
@@ -90,15 +75,18 @@ public static class GlbExporter {
 				};
 
 				if (polygon.IsTextured) {
+					PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty> primitiveBuilder =
+						GetTexturedPrimitiveBuilder(polygon, meshes, texturedPrimitives, out List<Vector2> exportUvs);
+
 					// 0,1,3,2 is FFT vertex order, reversing here to correct facing/back-culling.
-					texturedPrimitives[polygon.MeshType][polygon.PaletteId].AddQuadrangle(
-						(ConvertAndScaleVector3(animatedVertices[2]), GetAdjustedUvCoordinates(uvs[2], polygon.TexturePage)),
-						(ConvertAndScaleVector3(animatedVertices[3]), GetAdjustedUvCoordinates(uvs[3], polygon.TexturePage)),
-						(ConvertAndScaleVector3(animatedVertices[1]), GetAdjustedUvCoordinates(uvs[1], polygon.TexturePage)),
-						(ConvertAndScaleVector3(animatedVertices[0]), GetAdjustedUvCoordinates(uvs[0], polygon.TexturePage))
+					primitiveBuilder.AddQuadrangle(
+						(ConvertAndScaleVector3(animatedVertices[2]), exportUvs[2]),
+						(ConvertAndScaleVector3(animatedVertices[3]), exportUvs[3]),
+						(ConvertAndScaleVector3(animatedVertices[1]), exportUvs[1]),
+						(ConvertAndScaleVector3(animatedVertices[0]), exportUvs[0])
 					);
 				} else {
-					texturedPrimitives[polygon.MeshType].Last().AddQuadrangle(
+					untexturedPrimitives[polygon.MeshType].AddQuadrangle(
 						ConvertAndScaleVector3ToVertexPosition(animatedVertices[2]),
 						ConvertAndScaleVector3ToVertexPosition(animatedVertices[3]),
 						ConvertAndScaleVector3ToVertexPosition(animatedVertices[1]),
@@ -116,13 +104,16 @@ public static class GlbExporter {
 				};
 
 				if (polygon.IsTextured) {
-					texturedPrimitives[polygon.MeshType][polygon.PaletteId].AddTriangle(
-						(ConvertAndScaleVector3(animatedVertices[2]), GetAdjustedUvCoordinates(uvs[2], polygon.TexturePage)),
-						(ConvertAndScaleVector3(animatedVertices[1]), GetAdjustedUvCoordinates(uvs[1], polygon.TexturePage)),
-						(ConvertAndScaleVector3(animatedVertices[0]), GetAdjustedUvCoordinates(uvs[0], polygon.TexturePage))
+					PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty> primitiveBuilder =
+						GetTexturedPrimitiveBuilder(polygon, meshes, texturedPrimitives, out List<Vector2> exportUvs);
+
+					primitiveBuilder.AddTriangle(
+						(ConvertAndScaleVector3(animatedVertices[2]), exportUvs[2]),
+						(ConvertAndScaleVector3(animatedVertices[1]), exportUvs[1]),
+						(ConvertAndScaleVector3(animatedVertices[0]), exportUvs[0])
 					);
 				} else {
-					texturedPrimitives[polygon.MeshType].Last().AddTriangle(
+					untexturedPrimitives[polygon.MeshType].AddTriangle(
 						ConvertAndScaleVector3ToVertexPosition(animatedVertices[2]),
 						ConvertAndScaleVector3ToVertexPosition(animatedVertices[1]),
 						ConvertAndScaleVector3ToVertexPosition(animatedVertices[0])
@@ -154,10 +145,50 @@ public static class GlbExporter {
 		model.SaveGLB(filePath, settings);
 	}
 
-	private static void CreateTextures(
-		Dictionary<MeshType, List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>> texturedPrimitives,
-		Dictionary<MeshType, MeshBuilder<VertexPosition, VertexTexture1>> texturedMesh
+	private static Dictionary<MeshType, MeshBuilder<VertexPosition, VertexTexture1>> CreateMeshes() {
+		return new Dictionary<MeshType, MeshBuilder<VertexPosition, VertexTexture1>> {
+			{ MeshType.PrimaryMesh, new MeshBuilder<VertexPosition, VertexTexture1>("PrimaryMesh") },
+			{ MeshType.AnimatedMesh1, new MeshBuilder<VertexPosition, VertexTexture1>("AnimatedMesh1") },
+			{ MeshType.AnimatedMesh2, new MeshBuilder<VertexPosition, VertexTexture1>("AnimatedMesh2") },
+			{ MeshType.AnimatedMesh3, new MeshBuilder<VertexPosition, VertexTexture1>("AnimatedMesh3") },
+			{ MeshType.AnimatedMesh4, new MeshBuilder<VertexPosition, VertexTexture1>("AnimatedMesh4") },
+			{ MeshType.AnimatedMesh5, new MeshBuilder<VertexPosition, VertexTexture1>("AnimatedMesh5") },
+			{ MeshType.AnimatedMesh6, new MeshBuilder<VertexPosition, VertexTexture1>("AnimatedMesh6") },
+			{ MeshType.AnimatedMesh7, new MeshBuilder<VertexPosition, VertexTexture1>("AnimatedMesh7") },
+			{ MeshType.AnimatedMesh8, new MeshBuilder<VertexPosition, VertexTexture1>("AnimatedMesh8") },
+		};
+	}
+
+	private static Dictionary<MeshType, PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>> CreateUntexturedPrimitives(
+		Dictionary<MeshType, MeshBuilder<VertexPosition, VertexTexture1>> meshes
 	) {
+		MaterialBuilder blackMaterial = new();
+		blackMaterial.WithBaseColor(new Vector4(0, 0, 0, 1));
+		blackMaterial.WithUnlitShader();
+
+		Dictionary<MeshType, PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>> untexturedPrimitives = new();
+		foreach (KeyValuePair<MeshType, MeshBuilder<VertexPosition, VertexTexture1>> mesh in meshes) {
+			untexturedPrimitives.Add(mesh.Key, mesh.Value.UsePrimitive(blackMaterial));
+		}
+
+		return untexturedPrimitives;
+	}
+
+	private static Dictionary<MeshType, List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>> CreateSharedTexturePrimitives(
+		Dictionary<MeshType, MeshBuilder<VertexPosition, VertexTexture1>> meshes
+	) {
+		Dictionary<MeshType, List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>> texturedPrimitives = new() {
+			{ MeshType.PrimaryMesh, new List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>() },
+			{ MeshType.AnimatedMesh1, new List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>() },
+			{ MeshType.AnimatedMesh2, new List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>() },
+			{ MeshType.AnimatedMesh3, new List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>() },
+			{ MeshType.AnimatedMesh4, new List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>() },
+			{ MeshType.AnimatedMesh5, new List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>() },
+			{ MeshType.AnimatedMesh6, new List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>() },
+			{ MeshType.AnimatedMesh7, new List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>() },
+			{ MeshType.AnimatedMesh8, new List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>() },
+		};
+
 		MTex2D stateTexture = CurrentMapState.StateData.Texture;
 
 		foreach (Palette palette in CurrentMapState.StateData.Palettes) {
@@ -165,46 +196,59 @@ public static class GlbExporter {
 			stateTexture.GetData(textureColors);
 
 			byte[] textureBytes = GeneratePngBytesFromColors(textureColors, ApplyPaletteAnimation(palette));
-
-			MemoryImage memoryImage = new(textureBytes);
-			MaterialBuilder material = new MaterialBuilder().WithAlpha(AlphaMode.MASK);
-
-			if (GuiWindowExportGlb.ExportUnlit) {
-				material.WithUnlitShader();
-			} else {
-				material.WithMetallicRoughnessShader();
-				material.WithMetallicRoughness(0, 1);
-				material.WithSpecularFactor(memoryImage, 0);
-				material.WithSpecularColor(memoryImage, Vector3.Zero);
-			}
-
-			material.WithChannelImage(KnownChannel.BaseColor, memoryImage);
-			material.UseChannel(KnownChannel.BaseColor)
-				.Texture
-				.WithSampler(
-					TextureWrapMode.CLAMP_TO_EDGE,
-					TextureWrapMode.MIRRORED_REPEAT,
-					TextureMipMapFilter.NEAREST_MIPMAP_NEAREST,
-					TextureInterpolationFilter.NEAREST
-				);
+			MaterialBuilder material = CreateTexturedMaterial(new MemoryImage(textureBytes), false);
 
 			foreach (
 				KeyValuePair<MeshType, List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>> texturedPrimitive
 				in texturedPrimitives
 			) {
-				texturedPrimitive.Value.Add(texturedMesh[texturedPrimitive.Key].UsePrimitive(material));
+				texturedPrimitive.Value.Add(meshes[texturedPrimitive.Key].UsePrimitive(material));
 			}
 		}
 
-		MaterialBuilder blackMaterial = new();
-		blackMaterial.WithBaseColor(new Vector4(0, 0, 0, 1));
-		blackMaterial.WithUnlitShader();
-		foreach (
-			KeyValuePair<MeshType, List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>> texturedPrimitive
-			in texturedPrimitives
-		) {
-			texturedPrimitive.Value.Add(texturedMesh[texturedPrimitive.Key].UsePrimitive(blackMaterial));
+		return texturedPrimitives;
+	}
+
+	private static PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty> GetTexturedPrimitiveBuilder(
+		Polygon polygon,
+		Dictionary<MeshType, MeshBuilder<VertexPosition, VertexTexture1>> meshes,
+		Dictionary<MeshType, List<PrimitiveBuilder<MaterialBuilder, VertexPosition, VertexTexture1, VertexEmpty>>> texturedPrimitives,
+		out List<Vector2> exportUvs
+	) {
+		if (GuiWindowExportGlb.BakeSceneLightingIntoTextures) {
+			GlbBakedTextureData bakedTexture = GlbTextureBaker.BakePolygonTexture(polygon);
+			exportUvs = ConvertUvCoordinates(bakedTexture.UvCoordinates);
+			MaterialBuilder material = CreateTexturedMaterial(new MemoryImage(bakedTexture.TextureBytes), true);
+			return meshes[polygon.MeshType].UsePrimitive(material);
 		}
+
+		exportUvs = GetAdjustedUvCoordinates(polygon.UvCoordinates, polygon.TexturePage);
+		return texturedPrimitives[polygon.MeshType][polygon.PaletteId];
+	}
+
+	private static MaterialBuilder CreateTexturedMaterial(MemoryImage memoryImage, bool useUnlitShader) {
+		MaterialBuilder material = new MaterialBuilder().WithAlpha(AlphaMode.MASK);
+
+		if (useUnlitShader) {
+			material.WithUnlitShader();
+		} else {
+			material.WithMetallicRoughnessShader();
+			material.WithMetallicRoughness(0, 1);
+			material.WithSpecularFactor(memoryImage, 0);
+			material.WithSpecularColor(memoryImage, Vector3.Zero);
+		}
+
+		material.WithChannelImage(KnownChannel.BaseColor, memoryImage);
+		material.UseChannel(KnownChannel.BaseColor)
+			.Texture
+			.WithSampler(
+				TextureWrapMode.CLAMP_TO_EDGE,
+				TextureWrapMode.MIRRORED_REPEAT,
+				TextureMipMapFilter.NEAREST_MIPMAP_NEAREST,
+				TextureInterpolationFilter.NEAREST
+			);
+
+		return material;
 	}
 
 	private static Palette ApplyPaletteAnimation(Palette palette) {
@@ -290,11 +334,11 @@ public static class GlbExporter {
 	}
 
 	private static Vector3 ConvertAndScaleVector3(Microsoft.Xna.Framework.Vector3 vector3) {
-		return new Vector3(vector3.X / ReduceScaleFactor, vector3.Y / ReduceScaleFactor, vector3.Z / ReduceScaleFactor);
+		return new Vector3(vector3.X * ReduceScaleFactorX, vector3.Y * ReduceScaleFactorY, vector3.Z * ReduceScaleFactorZ);
 	}
 
 	private static VertexPosition ConvertAndScaleVector3ToVertexPosition(Microsoft.Xna.Framework.Vector3 vector3) {
-		return new VertexPosition(vector3.X / ReduceScaleFactor, vector3.Y / ReduceScaleFactor, vector3.Z / ReduceScaleFactor);
+		return new VertexPosition(vector3.X * ReduceScaleFactorX, vector3.Y * ReduceScaleFactorY, vector3.Z * ReduceScaleFactorZ);
 	}
 
 	private static Microsoft.Xna.Framework.Vector3 TranslateVertexToAnimatedPosition(Vertex vertex, MeshType meshType) {
@@ -336,7 +380,25 @@ public static class GlbExporter {
 		return animatedPosition;
 	}
 
-	private static Vector2 GetAdjustedUvCoordinates(Microsoft.Xna.Framework.Vector2 uv, int texturePage) {
+	private static List<Vector2> ConvertUvCoordinates(IReadOnlyList<Microsoft.Xna.Framework.Vector2> uvs) {
+		List<Vector2> convertedUvs = new();
+		foreach (Microsoft.Xna.Framework.Vector2 uv in uvs) {
+			convertedUvs.Add(new Vector2(uv.X, uv.Y));
+		}
+
+		return convertedUvs;
+	}
+
+	private static List<Vector2> GetAdjustedUvCoordinates(IReadOnlyList<Microsoft.Xna.Framework.Vector2> uvs, int texturePage) {
+		List<Vector2> adjustedUvs = new();
+		foreach (Microsoft.Xna.Framework.Vector2 uv in uvs) {
+			adjustedUvs.Add(GetAdjustedUvCoordinate(uv, texturePage));
+		}
+
+		return adjustedUvs;
+	}
+
+	private static Vector2 GetAdjustedUvCoordinate(Microsoft.Xna.Framework.Vector2 uv, int texturePage) {
 		double adjustedX = uv.X / 256f;
 		double adjustedY = (uv.Y + 256 * texturePage) / 1024f;
 		return new Vector2((float) adjustedX, (float) adjustedY);
