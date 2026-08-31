@@ -195,7 +195,7 @@ public static class StageCamera {
 	}
 
 	private static void HandleInput() {
-		if ((!AppInput.MouseIsWithinModelViewport) || Gui.LockModeling) {
+		if ((!AppInput.MouseIsWithinModelViewport) || Gui.LockCamera) {
 			return;
 		}
 
@@ -221,49 +221,47 @@ public static class StageCamera {
 			HandlePanning();
 		}
 
-		if (!Gui.GuiInUse) {
-			if (AppInput.KeyJustPressed(Keys.Up)) {
-				SpinCameraTo(CameraElevation.Top);
-			}
+		if (AppInput.KeyJustPressed(Keys.Up)) {
+			SpinCameraTo(CameraElevation.Top);
+		}
 
-			if (AppInput.KeyJustPressed(Keys.Down)) {
-				SpinCameraTo(CameraElevation.Bottom);
-			}
+		if (AppInput.KeyJustPressed(Keys.Down)) {
+			SpinCameraTo(CameraElevation.Bottom);
+		}
 
-			if (AppInput.KeyJustPressed(Keys.Left)) {
-				if (CameraHorizontalAngle >= CameraValues[CameraView.Southwest] &&
-				    CameraHorizontalAngle < CameraValues[CameraView.Northwest]
-				   ) {
-					SpinCameraTo(CameraView.Northwest);
-				} else if (CameraHorizontalAngle >= CameraValues[CameraView.Northwest] &&
-				           CameraHorizontalAngle < CameraValues[CameraView.Northeast]
-				          ) {
-					SpinCameraTo(CameraView.Northeast);
-				} else if (CameraHorizontalAngle >= CameraValues[CameraView.Northeast] ||
-				           CameraHorizontalAngle < CameraValues[CameraView.Southeast]
-				          ) {
-					SpinCameraTo(CameraView.Southeast);
-				} else {
-					SpinCameraTo(CameraView.Southwest);
-				}
+		if (AppInput.KeyJustPressed(Keys.Left)) {
+			if (CameraHorizontalAngle >= CameraValues[CameraView.Southwest] &&
+			    CameraHorizontalAngle < CameraValues[CameraView.Northwest]
+			   ) {
+				SpinCameraTo(CameraView.Northwest);
+			} else if (CameraHorizontalAngle >= CameraValues[CameraView.Northwest] &&
+			           CameraHorizontalAngle < CameraValues[CameraView.Northeast]
+			          ) {
+				SpinCameraTo(CameraView.Northeast);
+			} else if (CameraHorizontalAngle >= CameraValues[CameraView.Northeast] ||
+			           CameraHorizontalAngle < CameraValues[CameraView.Southeast]
+			          ) {
+				SpinCameraTo(CameraView.Southeast);
+			} else {
+				SpinCameraTo(CameraView.Southwest);
 			}
+		}
 
-			if (AppInput.KeyJustPressed(Keys.Right)) {
-				if (CameraHorizontalAngle <= CameraValues[CameraView.Northwest] &&
-				    CameraHorizontalAngle > CameraValues[CameraView.Southwest]
-				   ) {
-					SpinCameraTo(CameraView.Southwest);
-				} else if (CameraHorizontalAngle <= CameraValues[CameraView.Southwest] &&
-				           CameraHorizontalAngle > CameraValues[CameraView.Southeast]
-				          ) {
-					SpinCameraTo(CameraView.Southeast);
-				} else if (CameraHorizontalAngle <= CameraValues[CameraView.Southeast] ||
-				           CameraHorizontalAngle > CameraValues[CameraView.Northeast]
-				          ) {
-					SpinCameraTo(CameraView.Northeast);
-				} else {
-					SpinCameraTo(CameraView.Northwest);
-				}
+		if (AppInput.KeyJustPressed(Keys.Right)) {
+			if (CameraHorizontalAngle <= CameraValues[CameraView.Northwest] &&
+			    CameraHorizontalAngle > CameraValues[CameraView.Southwest]
+			   ) {
+				SpinCameraTo(CameraView.Southwest);
+			} else if (CameraHorizontalAngle <= CameraValues[CameraView.Southwest] &&
+			           CameraHorizontalAngle > CameraValues[CameraView.Southeast]
+			          ) {
+				SpinCameraTo(CameraView.Southeast);
+			} else if (CameraHorizontalAngle <= CameraValues[CameraView.Southeast] ||
+			           CameraHorizontalAngle > CameraValues[CameraView.Northeast]
+			          ) {
+				SpinCameraTo(CameraView.Northeast);
+			} else {
+				SpinCameraTo(CameraView.Northwest);
 			}
 		}
 	}
