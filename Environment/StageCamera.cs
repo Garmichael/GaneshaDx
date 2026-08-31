@@ -195,7 +195,7 @@ public static class StageCamera {
 	}
 
 	private static void HandleInput() {
-		if ((!Stage.ScreenshotMode && !AppInput.MouseIsWithinModelViewport) || Gui.LockModeling) {
+		if ((!AppInput.MouseIsWithinModelViewport) || Gui.LockModeling) {
 			return;
 		}
 

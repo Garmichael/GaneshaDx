@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using GaneshaDx.Environment;
 using GaneshaDx.Resources;
+using GaneshaDx.UserInterface;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -35,7 +36,7 @@ public static class Background {
 		Stage.SpriteBatch.Begin();
 
 		Stage.SpriteBatch.Draw(
-			UseScreenshotBackground
+			UseScreenshotBackground && Stage.ScreenshotMode
 				? ScreenshotBackgroundTextures[ScreenshotBackgroundIndex]
 				: _background,
 			MapData.MapIsLoaded

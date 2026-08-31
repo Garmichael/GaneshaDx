@@ -52,7 +52,6 @@ public static class Gui {
 				GuiWindowManageResources.Render();
 				LockModeling = true;
 			} else if (Stage.ScreenshotMode) {
-				LockModeling = true;
 				GuiWindowScreenshotBackgroundSelector.Render();
 			} else {
 				GuiMenuBar.Render();
