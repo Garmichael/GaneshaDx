@@ -1,4 +1,4 @@
-﻿using System.Numerics;
+using System.Numerics;
 using GaneshaDx.Common;
 using GaneshaDx.Resources;
 using GaneshaDx.UserInterface.GuiDefinitions;
@@ -7,7 +7,7 @@ using ImGuiNET;
 namespace GaneshaDx.UserInterface.GuiForms;
 
 public static class GuiWindowExportGlb {
-	public static bool ExportUnlit;
+	public static bool BakeSceneLightingIntoTextures = true;
 
 	public static void Render() {
 		;
@@ -19,7 +19,7 @@ public static class GuiWindowExportGlb {
 		                               ImGuiWindowFlags.AlwaysAutoResize |
 		                               ImGuiWindowFlags.NoCollapse;
 
-		ImGui.SetNextWindowSize(new Vector2(270, 100));
+		ImGui.SetNextWindowSize(new Vector2(340, 130));
 		ImGui.Begin("Export Glb", ref windowIsOpen, flags);
 		{
 			GuiStyle.SetFont(Fonts.Default);
@@ -28,11 +28,12 @@ public static class GuiWindowExportGlb {
 			ImGui.SetColumnWidth(0, 200);
 			ImGui.SetColumnWidth(1, GuiStyle.WidgetWidth + 10);
 
-			ImGui.Text("Export with Unlit Materials");
+			ImGui.Text("Bake Scene Lighting Into Textures");
 			ImGui.NextColumn();
-			ImGui.Checkbox("##exportAsUnlit", ref ExportUnlit);
+			ImGui.Checkbox("##bakeSceneLighting", ref BakeSceneLightingIntoTextures);
 			ImGui.NextColumn();
 
+			ImGui.TextWrapped("Baked exports use unlit materials so the GLB matches the current editor lighting.");
 			ImGui.NextColumn();
 			GuiStyle.AddSpace();
 
