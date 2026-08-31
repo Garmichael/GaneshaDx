@@ -131,6 +131,7 @@ public static class Stage {
 		}
 
 		GraphicsDevice.Viewport = WholeViewport;
+		UpdateWindowTitle();
 	}
 
 	public static void UpdateEffects() {
@@ -178,5 +179,22 @@ public static class Stage {
 
 	private static void DroppedFileIn(object sender, FileDropEventArgs e) {
 		MapData.LoadMapDataFromFullPath(e.Files[0]);
+	}
+
+	private static void UpdateWindowTitle() {
+		string currentTitle = Window.Title;
+		string newTitle = "GaneshaDx";
+		
+		if (MapData.MapIsLoaded) {
+			newTitle += " - " + MapData.MapName;
+		}
+
+		if (ScreenshotMode){
+			newTitle += "       | SCREENSHOT MODE (Press F12 to exit) |";
+		}
+		
+		if (newTitle != currentTitle) {
+			Window.Title = newTitle;
+		}
 	}
 }

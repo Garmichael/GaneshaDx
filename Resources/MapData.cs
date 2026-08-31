@@ -55,7 +55,6 @@ public static class MapData {
 		SetResourceFileData(MapFolder + Path.DirectorySeparatorChar + MapName);
 
 		if (AllResourcesLoaded()) {
-			Stage.Window.Title = "GaneshaDx - " + MapName;
 			MapIsLoaded = true;
 			TimeSinceLastSave = Stage.GameTime.TotalGameTime.TotalSeconds;
 			CurrentMapState.SetState(MapArrangementState.Primary, MapTime.Day, MapWeather.None);
@@ -301,7 +300,6 @@ public static class MapData {
 		}
 
 		TimeSinceLastSave = Stage.GameTime.TotalGameTime.TotalSeconds;
-		Stage.Window.Title = "GaneshaDx - " + MapName;
 
 		OverlayConsole.AddMessage(isAutoSave ? "Map Backed up to \\gdx_autosave\\" +  MapName + backupNotation : "Map Saved");
 	}
