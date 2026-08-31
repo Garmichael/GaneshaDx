@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Ganesha Dx"
-#define MyAppVersion "0.96.0"
+#define MyAppVersion "0.97.1"
 #define MyAppPublisher "Storm Garden Studio"
 #define MyAppURL "https://www.stormgardenstudio.com/"
 #define MyAppExeName "GaneshaDx.exe"
@@ -26,9 +26,9 @@ ChangesAssociations=yes
 DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
-OutputDir=C:\Users\Garmy\Documents\Work Files\GaneshaDx\bin
+OutputDir=C:\Users\Storm\Documents\Work Files\GaneshaDx\bin
 OutputBaseFilename=GaneshaDxSetup
-SetupIconFile=C:\Users\Garmy\Documents\Work Files\GaneshaDx\Icon.ico
+SetupIconFile=C:\Users\Storm\Documents\Work Files\GaneshaDx\Icon.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern   
@@ -42,8 +42,8 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\Users\Garmy\Documents\Work Files\GaneshaDx\bin\Release\net6.0\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Garmy\Documents\Work Files\GaneshaDx\bin\Release\net6.0\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Users\Storm\Documents\Work Files\GaneshaDx\bin\Release\net6.0\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\Storm\Documents\Work Files\GaneshaDx\bin\Release\net6.0\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]
